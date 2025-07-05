@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>WMTS-原生接口</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      // 全局变量
+      let viewer, wmtsLayer
+
+       // MapGIS函数类
+      const { WebMapTileServiceImageryProvider } = zondy.cesium
+
+      // 定义WMTS图层服务的基地址
+      const url = 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/HuBei_4326/WMTSServer'
+
+      // 添加WMTS图层
+      async function addWMTSLayer() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/WebMapTileServiceImageryProvider.html
+        const provider = await WebMapTileServiceImageryProvider.fromUrl(url)
+        viewer.imageryLayers.addImageryProvider(provider)
+      }
+
+      // 飞到指定视角
+      function flyTo() {
+        // 跳转到指定范围
+        viewer.camera.flyTo({
+          destination: Cesium.Rectangle.fromDegrees(
+            -2.778023144855979e-9,
+            -89.99999999722198,
+            179.99999999444395,
+            90
+          ),
+          duration: 2
+        })
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化地图视图对象
+        viewer = new Cesium.Viewer('mapgis-3d-viewer')
+      }
+
+      // 初始化函数
+      function init() {
+        // 初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // 添加WMTS图层
+        addWMTSLayer()
+        // 图层加载成功后的回调，视角定位到图层区域
+        viewer.imageryLayers.layerAdded.addEventListener((event) => {
+          flyTo()
+        })
+      }
+    </script>
+</head>
+
+<body onload="init()">
+<div id="mapgis-3d-viewer"></div>
+</body>
+</html>

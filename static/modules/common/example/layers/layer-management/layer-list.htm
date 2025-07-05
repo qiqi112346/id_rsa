@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>图层列表</title>
+    <!-- 引入地图引擎库 -->
+    <script
+      include="jquery,fancytree"
+      src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"
+    ></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/analyse.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义视图的主要类
+      let map,
+        view,
+        igsMapImageLayer,
+        igsTileLayer,
+        igsVectorTileLayer,
+        wmsLayer,
+        wmtsLayer,
+        groupLayer,
+        spGroupLayer,
+        igsFeatureLayer,
+        geojsonLayer,
+        wfsLayer,
+        graphicsLayer
+      const { Map, MapView, SceneView, Basemap, Collection, Color, Feature } =
+        zondy
+      const {
+        IGSTileLayer,
+        IGSMapImageLayer,
+        IGSVectorTileLayer,
+        IGSFeatureLayer,
+        GeoJSONLayer,
+        WMTSLayer,
+        WMSLayer,
+        WFSLayer,
+        GraphicsLayer,
+        GroupLayer
+      } = zondy.layer
+      const { SimpleRenderer, RandomRenderer } = zondy.renderer
+      const { SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol } =
+        zondy.symbol
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加IGS地图图层
+        addIGSMapImageLayer()
+        // 添加瓦片图层
+        addIGSTileLayer()
+        // 添加WMS图层
+        addWMSLayer()
+        // 添加WMTS图层
+        addWMTSLayer()
+        // 添加矢量瓦片图层
+        addIGSVectorTileLayer()
+        // 添加同空间参考系不同裁图方式瓦片叠加用例
+        addSpatialReferenceGroupLayer()
+        // 添加要素图层
+        addIGSFeatureLayer()
+        // 添加GeoJOSN图层
+        addGeoJSONLayer()
+        // 添加WFS图层
+        addWFSLayer()
+        // 添加几何图元图层
+        addGraphicLayer()
+        // 添加组图层
+        addGroupLayer()
+        // 添加UI
+        allLayerLoaded()
+      }
+
+      // 初始地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 获取引擎类型
+        let type = localStorage.getItem('engine-type')
+        // 是MapBox引擎，设置雪碧图和字体参数
+        if (type === 'mapboxgl') {
+          view = new zondy.mapboxgl.MapView({
+            viewId: 'mapgis-viewer',
+            map: map,
+            extensionOptions: {
+              style: {
+                glyphs: "http://webclient.smaryun.com:8089/igs/rest/services/VectorTile/湖北省3857矢量瓦片/VectorTileServer/fonts/{fontstack}?range={range}.pbf&f=pbf",
+                sprite: "http://webclient.smaryun.com:8089/igs/rest/services/VectorTile/湖北省3857矢量瓦片/VectorTileServer/sprites/sprite"
+              }
+            }
+          })
+        } else {
+          // 初始化地图视图对象
+          view = createView('mapgis-viewer', map)
+        }
+      }
+
+      // 添加地图服务图层
+      function addIGSMapImageLayer() {
+        // 创建地图服务图层
+        igsMapImageLayer = new IGSMapImageLayer({
+          //服务地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省3857/MapServer',
+          // 设置出图模式
+          renderMode: 'image',
+          // 设置子图层
+          sublayers: [
+            {
+              id: '0'
+            },
+            {
+              id: '2',
+              sublayers: [
+                {
+                  id: '2-23'
+                },
+                {
+                  id: '2-24'
+                },
+                {
+                  id: '2-25'
+                }
+              ]
+            }
+          ],
+          // 图层名称
+          title: '湖北省地图服务图层'
+        })
+        map.add(igsMapImageLayer)
+      }
+
+      // 添加瓦片图层
+      function addIGSTileLayer() {
+        // 创建地图图片图层
+        igsTileLayer = new IGSTileLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_3857_normal_3-10/TileServer',
+          // 图层名称
+          title: '湖北省瓦片图层',
+          // 显示或隐藏
+          visible: false
+        })
+        igsTileLayer.on('layerview-created', function (result) {
+          //视点跳转
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+        map.add(igsTileLayer)
+      }
+
+      // 添加WMS图层
+      function addWMSLayer() {
+        // 创建WMS图层
+        wmsLayer = new WMSLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省3857/WMSServer',
+          // 图层名称
+          title: '湖北省WMS图层',
+          // 显示或隐藏
+          visible: false
+        })
+        map.add(wmsLayer)
+      }
+      // 添加WMTS图层
+      function addWMTSLayer() {
+        // 创建WMTS图层
+        wmtsLayer = new WMTSLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省3857/WMTSServer',
+          // 图层名称
+          title: '湖北省WMTS图层',
+          // 显示或隐藏
+          visible: false
+        })
+        map.add(wmtsLayer)
+      }
+      // 添加矢量瓦片图层
+      function addIGSVectorTileLayer() {
+        // 创建矢量瓦片图层
+        igsVectorTileLayer = new IGSVectorTileLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/VectorTile/湖北省3857矢量瓦片/VectorTileServer',
+          // 图层名称
+          title: '湖北省矢量瓦片图层',
+          // 显示或隐藏
+          visible: false
+        })
+        igsVectorTileLayer.on('layerview-created', function (result) {
+          igsVectorTileLayer.setStyleLayerVisibility('背景', false)
+        })
+        map.add(igsVectorTileLayer)
+      }
+      // 添加同空间参考系（3857）不同裁图方式图层叠加用例
+      function addSpatialReferenceGroupLayer() {
+        const wuhan_3857_256_custom_mvt = new IGSVectorTileLayer({
+          url:"http://webclient.smaryun.com:8089/igs/rest/services/VectorTile/wuhan_3857_256_custom_mvt/VectorTileServer",
+          title: "自定义原点分辨率矢量瓦片",
+          // 显示或隐藏
+          visible: true
+        })
+        // 创建组图层
+        spGroupLayer = new GroupLayer({
+          title: '同空间参考系不同裁图方式瓦片的叠加',
+          layers: [
+            new IGSTileLayer({
+              url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/wuhan_3857_512_custom/TileServer',
+              title: '自定义原点分辨率瓦片'
+            }),
+            wuhan_3857_256_custom_mvt
+          ]
+        })
+        wuhan_3857_256_custom_mvt.on('layerview-created', function (result) {
+          wuhan_3857_256_custom_mvt.setStyleLayerVisibility('背景', false)
+        })
+        map.add(spGroupLayer)
+      }
+
+      // 添加要素图层
+      function addIGSFeatureLayer() {
+        // 创建要素图层
+        igsFeatureLayer = new IGSFeatureLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省3857/FeatureServer',
+          title: '湖北省要素图层',
+          sublayerId: 0,
+          opacity: 0.3,
+          // 显示或隐藏
+          visible: false,
+          renderer: new SimpleRenderer({
+            symbol: new SimpleFillSymbol({
+              // 填充颜色
+              color: 'rgba(0,255,252,1)',
+              // 外边线样式
+              outline: new SimpleLineSymbol({
+                //线颜色
+                color: new Color(255, 1, 0, 1),
+                //线宽
+                width: 1,
+                //线样式
+                style: 'dot'
+              })
+            })
+          })
+        })
+        map.add(igsFeatureLayer)
+      }
+      // 添加GeoJOSN图层
+      function addGeoJSONLayer() {
+        // 创建GeoJOSN图层
+        geojsonLayer = new GeoJSONLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8200/Vector/json/populationSizeGeoJson_2017.json',
+          // 设置渲染样式-随机专题图
+          renderer: new SimpleRenderer({
+            symbol: new SimpleFillSymbol({
+              color: 'rgba(255,0,0,0.3)',
+              outline: {
+                color: 'rgba(0,0,0,0.5)',
+                style: 'long-dash-dot-dot',
+                width: 2
+              }
+            })
+          }),
+          // 显示或隐藏
+          visible: true,
+          // 图层名称
+          title: '武汉行政区规划GeoJSON图层'
+        })
+        map.add(geojsonLayer)
+      }
+
+      // 添加WFS图层
+      function addWFSLayer() {
+        // 创建WFS图层
+        wfsLayer = new WFSLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/WFSServer',
+          // 图层名称
+          title: '湖北省WFS图层',
+          // 显示或隐藏
+          visible: false,
+          // 指定显示一个子图层
+          sublayerId: 'Map_湖北省4326:t70',
+          // 设置渲染样式-统一专题图
+          renderer: new SimpleRenderer({
+            // 因为该数据的几何类型为区，因此设置区样式
+            symbol: new SimpleMarkerSymbol({
+              // 半径
+              size: 20,
+              // 填充颜色
+              color: new Color(0, 0, 255),
+              // 外边线样式
+              outline: new SimpleLineSymbol({
+                // 外边线颜色
+                color: new Color(255, 102, 25),
+                // 外边线宽度
+                width: 2
+              })
+            })
+          })
+        })
+        map.add(wfsLayer)
+      }
+      // 添加几何图元图层
+      function addGraphicLayer() {
+        graphicsLayer = new GraphicsLayer({
+          title: '标绘物-几何图元图层',
+          graphics: [
+            new Feature({
+              symbol: new SimpleMarkerSymbol({
+                color: '#ff0000',
+                size: 40,
+                outline: new SimpleLineSymbol({
+                  color: '#ffffff',
+                  width: 3
+                })
+              }),
+              geometry: {
+                type: 'MultiPoint',
+                coordinates: [
+                  [114, 31],
+                  [114, 29],
+                  [114.11, 32.2],
+                  [114.55, 31.2]
+                ]
+              }
+            })
+          ]
+        })
+        map.add(graphicsLayer)
+      }
+
+      // 添加组图层
+      function addGroupLayer() {
+        // 创建组图层
+        groupLayer = new GroupLayer({
+          title: '组图层',
+          layers: [
+            new IGSFeatureLayer({
+              url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省3857/FeatureServer/1-8',
+              title: '要素图层-大学位置',
+              renderer: new SimpleRenderer({
+                symbol: new SimpleMarkerSymbol({
+                  color: '#00ff00'
+                })
+              })
+            }),
+            new IGSFeatureLayer({
+              url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省3857/FeatureServer/8',
+              title: '要素图层-地级市',
+              renderer: new SimpleRenderer({
+                symbol: new SimpleMarkerSymbol({
+                  color: '#0000ff'
+                })
+              })
+            })
+          ]
+        })
+        map.add(groupLayer)
+      }
+
+      // 确认所以图层加载完毕
+      function allLayerLoaded() {
+        function getMapImageSubLayer(list, arr) {
+          list.forEach((layer) => {
+            const childArr = []
+            getMapImageSubLayer(layer.sublayers.items, childArr)
+            arr.push({
+              title: layer.name,
+              key: layer.id,
+              children: childArr,
+              isMapImageSublayer: true,
+              layer: layer,
+              selected: layer.visible
+            })
+          })
+        }
+
+        function getLayerTreeData(list, arr) {
+          list.forEach((layer) => {
+            if (layer.type === 'group') {
+              const childArr = []
+              getLayerTreeData(layer.layers.items, childArr)
+              arr.push({
+                title: layer.title,
+                key: layer.id,
+                folder: true,
+                children: childArr,
+                layer: layer,
+                selected: layer.visible
+              })
+            } else {
+              // 针对地图服务图层
+              if (layer.type === 'igs-map-image') {
+                const sublayerChildArr = []
+                getMapImageSubLayer(layer.sublayers.items, sublayerChildArr)
+                arr.push({
+                  folder: false,
+                  title: layer.title,
+                  key: layer.id,
+                  layer: layer,
+                  selected: layer.visible,
+                  children: sublayerChildArr
+                })
+              } else {
+                arr.push({
+                  folder: false,
+                  title: layer.title,
+                  key: layer.id,
+                  layer: layer,
+                  selected: layer.visible
+                })
+              }
+            }
+          })
+        }
+
+        map.once('map-layer-loaded', () => {
+          const treeData = []
+          getLayerTreeData(map.layers.items, treeData)
+          $('#layer-list-panel').fancytree({
+            extensions: ['dnd5', 'multi'],
+            checkbox: true,
+            selectMode: 3,
+            source: treeData,
+            select: function (event, data) {
+              // 扁平化的所有keys
+              const selNodesKeys = $.map(
+                data.tree.getSelectedNodes(),
+                function (node) {
+                  return node.key
+                }
+              )
+
+              const allLayers = map.allLayers.items.forEach((layer) => {
+                if(layer.type === 'group') return
+                // 判断是否为igsMapImageLayer
+                if (layer.type === 'igs-map-image') {
+                  const sublayers = layer.allSublayers.items
+                  sublayers.forEach((sublayer) => {
+                    if (selNodesKeys.some((v) => sublayer.id === v)) {
+                      if (sublayer.visible !== true) {
+                        sublayer.visible = true
+                      }
+                    } else {
+                      if (sublayer.visible !== false) {
+                        sublayer.visible = false
+                      }
+                    }
+                  })
+                  return
+                }
+
+                if (selNodesKeys.some((v) => layer.id === v)) {
+                  if (layer.visible !== true) {
+                    layer.visible = true
+                  }
+                } else {
+                  if (layer.visible !== false) {
+                    layer.visible = false
+                  }
+                }
+              })
+            },
+            dnd5: {
+              preventVoidMoves: true, // Prevent moving nodes 'before self', etc.
+              preventRecursion: true, // Prevent dropping nodes on own descendants
+              preventSameParent: false, // Prevent dropping nodes under the same direct parent
+              autoExpandMS: 1000,
+              multiSource: false, // drag all selected nodes (plus current node)
+              dragStart: function (node, data) {
+                if (node.data.isMapImageSublayer) {
+                  return false
+                }
+                return true
+              },
+              dragEnter: function (node, data) {
+                if (node.parent !== data.otherNode.parent) {
+                  return false
+                }
+                // Don't allow dropping *over* a node (would create a child)
+                return ['before', 'after']
+              },
+              dragDrop: function (node, data) {
+                const sourceNodes = data.otherNodeList
+                $.each(sourceNodes, function (i, o) {
+                  o.moveTo(node, data.hitMode)
+                  const sourceTargetLayer = o.data.layer
+                  if (node.data && node.data.layer && sourceTargetLayer) {
+                    // 判断是地图容器图层还是组图层
+                    const layer = node.data.layer
+                    const group = groupLayer.findLayerById(sourceTargetLayer.id)
+                      ? groupLayer
+                      : map
+
+                    let index = group.layers.items
+                      .filter((v) => v.id !== sourceTargetLayer.id)
+                      .findIndex((v) => v.id === layer.id)
+
+                    if (data.hitMode === 'after') {
+                      index += 1
+                    }
+                    group.reorder(sourceTargetLayer, index)
+                  }
+                })
+                node.setExpanded()
+              }
+            }
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div
+      id="mapgis-viewer"
+      style="position: absolute; width: 100%; height: 100%"
+    ></div>
+    <div
+      class="layui-panel layui-panel-right"
+      style="width: 330px; height: 500px; cursor: pointer"
+    >
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label">图层列表</label>
+        </div>
+        <div id="layer-list-panel" class="layui-form-item"></div>
+        <div id="layer-list-tips">
+          Tips:拖动列表内图层可实现图层排序,排序功能参考Api文档
+        </div>
+      </form>
+    </div>
+  </body>
+
+  <style>
+    .layui-form-label {
+      font-size: 20px;
+      font-family: simHei;
+    }
+    #layer-list-panel {
+      padding: 5px;
+      background-color: azure;
+      overflow-y: scroll;
+      max-height: 300px;
+    }
+    #layer-list-tips {
+      padding: 5px;
+      font-family: simHei;
+    }
+  </style>
+</html>

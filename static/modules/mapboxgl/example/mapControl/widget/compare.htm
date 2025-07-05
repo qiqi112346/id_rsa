@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>插值</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <!--引入Mapboxgl库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.css"/>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--引入Mapboxgl-compare库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/mapboxgl-plugins/mapbox-gl-compare/dist/mapbox-gl-compare.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/mapboxgl-plugins/mapbox-gl-compare/dist/mapbox-gl-compare.css"/>
+    <!--示例公共样式-->
+    <link href="http://webclient.smaryun.com/static/modules/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div id="wrapper">
+        <div id="before" class="map"></div>
+        <div id="after" class="map"></div>
+        <div id="mouse-position">
+        </div>
+    </div>
+    <script>
+        var tiandituKey = getTDTToken();
+        var before = new mapboxgl.Map({
+            crs: 'EPSG:4326', //经纬度一定要设置crs参数
+            maxBounds: [
+                [-180, -90],
+                [180, 90]
+            ],
+            zoom: 3,
+            container: 'before',
+            style: {
+                version: 8,
+                sources: {
+                    'tianditu-4326-vector': {
+                        //来源类型为栅格瓦片
+                        type: 'raster',
+                        tiles: [
+                            //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                            'http://t' +
+                            Math.round(Math.random() * 7) +
+                            '.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                            '&TILECOL=' +
+                            '{x}' +
+                            '&TILEROW=' +
+                            '{y}' +
+                            '&TILEMATRIX=' +
+                            '{z}' +
+                            '&tk=' +
+                            tiandituKey
+                        ],
+                        //栅格瓦片的分辨率
+                        tileSize: 256
+                    }
+                },
+                layers: [
+                    {
+                        id: 'tianditu-4326-vector',
+                        type: 'raster',
+                        source: 'tianditu-4326-vector',
+                        minzoom: 0,
+                        maxzoom: 22
+                    }
+                ]
+            },
+            center: [116.35, 30.92]
+        });
+        var after = new mapboxgl.Map({
+            crs: 'EPSG:4326', //经纬度一定要设置crs参数
+            maxBounds: [
+                [-180, -90],
+                [180, 90]
+            ],
+            zoom: 3,
+            container: 'after',
+            style: {
+                version: 8,
+                sources: {
+                    'tianditu-4326-image': {
+                        //来源类型为栅格瓦片
+                        type: 'raster',
+                        tiles: [
+                            //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                            'http://t' +
+                            Math.round(Math.random() * 7) +
+                            '.tianditu.gov.cn/img_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0' +
+                            '&LAYER=img&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                            '&TILECOL={x}&TILEROW={y}&TILEMATRIX={z}' +
+                            '&tk=' +
+                            tiandituKey
+                        ],
+                        //栅格瓦片的分辨率
+                        tileSize: 256
+                    }
+                },
+                layers: [
+                    {
+                        id: 'tianditu-4326-image',
+                        type: 'raster',
+                        source: 'tianditu-4326-image',
+                        minzoom: 0,
+                        maxzoom: 22
+                    }
+                ]
+            },
+            center: [116.35, 30.92]
+        });
+
+        var wrapperSelector = '#wrapper';
+        var options = {
+            mousemove: true,
+            orientation: 'horizontal'
+        };
+
+        window.compare = new mapboxgl.Compare(
+            before,
+            after,
+            wrapperSelector
+            // options
+        );
+
+        //注册鼠标移动事件
+        before.on('mousemove', function (e) {
+            document.getElementById('mouse-position').innerHTML = "经度：" + e.lngLat.lng.toFixed(2) + "，纬度：" + e.lngLat.lat.toFixed(2);
+        });
+        after.on('mousemove', function (e) {
+            document.getElementById('mouse-position').innerHTML = "经度：" + e.lngLat.lng.toFixed(2) + "，纬度：" + e.lngLat.lat.toFixed(2);
+        });
+    </script>
+</body>
+
+</html>

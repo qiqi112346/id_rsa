@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>基本要素查询</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, graphicsLayer, featureServer
+      //点数据
+      let pointData = {
+        coordinates: [113, 31]
+      }
+      //线数据
+      let lineStringData = {
+        coordinates: [
+          [112.1, 31.1],
+          [112.6, 30.8],
+          [113.2, 30.3]
+        ]
+      }
+      //区数据
+      let polygonData = {
+        coordinates: [
+          [
+            [112.3, 31.75],
+            [114.4, 31.75],
+            [114.2, 30.25],
+            [112.0, 30.25],
+            [112.3, 31.75]
+          ]
+        ]
+      }
+      //范围数据
+      let ExtentData = {
+        xmin: 112.3,
+        ymin: 30.25,
+        xmax: 113.4,
+        ymax: 31.75
+      }
+      //圆数据
+      let circleData = {
+        center: [113, 31],
+        radius: 1
+      }
+      //圆图层
+      let circleLayerData = {
+        center: [113, 31],
+        // 绘制圆图层的radius和圆查询的radius单位不一样
+        radius: 110000
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //蓝黑版深色地图
+        addBlueImage()
+        //加载FeatureServer服务数据
+        addFeatureServer()
+        //初始化要素服务
+        initFeatureServer()
+        //添加几何图形图层
+        addGraphicsLayer()
+        //初始化示例UI操作
+        initUI()
+      }
+
+      //构造三维视图类（视图容器div的id，三维视图设置参数）
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      // 蓝黑版深色地图
+      function addBlueImage() {
+        let blueImage = new zondy.cesium.UrlTemplateImageryProvider({
+          url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
+          tilingScheme: new Cesium.WebMercatorTilingScheme(),
+          maximumLevel: 18
+        })
+        viewer.imageryLayers.addImageryProvider(blueImage)
+      }
+
+      //加载FeatureServer服务数据
+      function addFeatureServer() {
+        let featureServer = new zondy.layer.IGSFeatureLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer',
+          sublayerId: 0,
+          renderer: new zondy.renderer.UniqueValueRenderer({
+            field: 'NAME',
+            defaultSymbol: new zondy.symbol.SimpleFillSymbol({
+              //线符号颜色
+              color: new zondy.Color(37, 120, 180, 0.1),
+              outline: new zondy.symbol.SimpleLineSymbol({
+                color: new zondy.Color(37, 120, 180, 1),
+                width: 2
+              })
+            })
+          })
+        })
+        map.add(featureServer)
+        // 图层加载完毕
+        featureServer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          //视点跳转
+          sceneView.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      // 添加几何图形图层
+      function addGraphicsLayer() {
+        graphicsLayer = new zondy.layer.GraphicsLayer()
+        map.add(graphicsLayer)
+        // 图层加载完毕
+        graphicsLayer.on('layerview-created', function (result) {
+          console.log('graphicsLayer加载完毕:', result.layer)
+          // 关闭地形深度检测
+          viewer.scene.globe.depthTestAgainstTerrain = false
+        })
+      }
+
+      // 初始化要素服务
+      function initFeatureServer() {
+        featureServer = new zondy.service.FeatureServer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer'
+        })
+      }
+
+      //添加点
+      function addPoint() {
+        let feature = new zondy.Feature({
+          //不填则创建一个随机的guid
+          id: '你的id',
+          //构建几何
+          geometry: new zondy.geometry.Point(pointData),
+          //设置样式
+          symbol: new zondy.symbol.SimpleFillSymbol({
+            //设置颜色
+            color: new zondy.Color(241, 188, 0, 1),
+            opacity: 1
+          })
+        })
+        // 添加要素图层
+        graphicsLayer.add(feature)
+      }
+
+      // 进行点要素查询
+      function queryPoint() {
+        // 指定图层的要素查询
+        featureServer
+          .queryFeatures({
+            // 图层id
+            layerId: '0',
+            // 点几何查询对象
+            geometry: new zondy.geometry.Point(pointData)
+          })
+          .then((result) => {
+            console.log('查询成功:', result)
+            // 添加要素图层
+            for (let feature of result.data.featureSet.features) {
+              graphicsLayer.add(feature)
+            }
+          })
+      }
+
+      // 添加线
+      function addLineString() {
+        // 创建要素
+        let feature = new zondy.Feature({
+          //构建几何
+          geometry: new zondy.geometry.LineString(lineStringData),
+          //设置样式
+          symbol: new zondy.symbol.SimpleFillSymbol({
+            //设置颜色
+            color: new zondy.Color(241, 188, 0, 1),
+            opacity: 0.5
+          })
+        })
+        // 添加要素图层
+        graphicsLayer.add(feature)
+      }
+
+      // 进行线要素查询
+      function queryLineString() {
+        // 指定图层的要素查询
+        featureServer
+          .queryFeatures({
+            // 图层id
+            layerId: '0',
+            // 线几何查询对象
+            geometry: new zondy.geometry.LineString(lineStringData)
+          })
+          .then((result) => {
+            console.log('查询成功:', result)
+            // 添加要素图层
+            for (let feature of result.data.featureSet.features) {
+              graphicsLayer.add(feature)
+            }
+          })
+      }
+
+      // 添加区
+      function addPolygon() {
+        // 创建要素
+        let feature = new zondy.Feature({
+          //构建几何
+          geometry: new zondy.geometry.Polygon(polygonData),
+          //设置样式
+          symbol: new zondy.symbol.SimpleFillSymbol({
+            //设置颜色
+            color: new zondy.Color(241, 188, 0, 1),
+            opacity: 0.5
+          })
+        })
+        // 添加要素图层
+        graphicsLayer.add(feature)
+      }
+
+      // 进行区要素查询
+      function queryPolygon() {
+        // 指定图层的要素查询
+        featureServer
+          .queryFeatures({
+            // 图层id
+            layerId: '0',
+            // 区几何查询对象
+            geometry: new zondy.geometry.Polygon(polygonData)
+          })
+          .then((result) => {
+            console.log('查询成功:', result)
+            // 添加要素图层
+            for (let feature of result.data.featureSet.features) {
+              graphicsLayer.add(feature)
+            }
+          })
+      }
+
+      // 添加范围
+      function addExtent() {
+        // 创建要素
+        let feature = new zondy.Feature({
+          //构建范围对象
+          geometry: new zondy.geometry.Extent(ExtentData),
+          //设置样式
+          symbol: new zondy.symbol.SimpleFillSymbol({
+            //设置颜色
+            color: new zondy.Color(241, 188, 0, 1),
+            opacity: 0.5
+          })
+        })
+        // 添加要素图层
+        graphicsLayer.add(feature)
+      }
+
+      // 进行范围要素查询
+      function queryExtent() {
+        // 指定图层的要素查询
+        featureServer
+          .queryFeatures({
+            // 图层id
+            layerId: '0',
+            // 范围几何查询对象
+            geometry: new zondy.geometry.Extent(ExtentData)
+          })
+          .then((result) => {
+            console.log('查询成功:', result)
+            // 添加要素图层
+            for (let feature of result.data.featureSet.features) {
+              graphicsLayer.add(feature)
+            }
+          })
+      }
+
+      // 添加圆
+      function addCircle() {
+        // 创建要素
+        let feature = new zondy.Feature({
+          //构建几何
+          geometry: new zondy.geometry.Circle(circleLayerData),
+          //设置样式
+          symbol: new zondy.symbol.SimpleFillSymbol({
+            //设置颜色
+            color: new zondy.Color(241, 188, 0, 1),
+            opacity: 0.5
+          })
+        })
+        // 添加要素图层
+        graphicsLayer.add(feature)
+      }
+
+      // 进行圆要素查询
+      function queryCircle() {
+        // 指定图层的要素查询
+        featureServer
+          .queryFeatures({
+            // 图层id
+            layerId: '0',
+            // 圆几何查询对象
+            geometry: new zondy.geometry.Circle(circleData)
+          })
+          .then((result) => {
+            console.log('查询成功:', result)
+            // 添加要素图层
+            for (let feature of result.data.featureSet.features) {
+              graphicsLayer.add(feature)
+            }
+          })
+      }
+
+      // 删除全部要素
+      function removeAll() {
+        graphicsLayer.removeAll()
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          var layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form
+          //切换地图类型
+          form.on('select(type)', function (data) {
+            let type = $('#type').val()
+            // 删除全部要素
+            removeAll()
+            switch (type) {
+              case 'point':
+                addPoint()
+                setTimeout(queryPoint, 200)
+                break
+              case 'lineString':
+                addLineString()
+                setTimeout(queryLineString, 200)
+                break
+              case 'polygon':
+                addPolygon()
+                setTimeout(queryPolygon, 200)
+                break
+              case 'extent':
+                addExtent()
+                setTimeout(queryExtent, 200)
+                break
+              case 'circle':
+                addCircle()
+                setTimeout(queryCircle, 200)
+                break
+              default:
+                break
+            }
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div
+          class="layui-form-item sample-main-panel"
+          style="border-bottom: none"
+        >
+          <label class="layui-form-label">查询方式</label>
+          <div class="layui-input-block layui-input-block-select">
+            <select id="type" name="type" lay-filter="type">
+              <option value="">请选择</option>
+              <option value="point">点查询</option>
+              <option value="lineString">线查询</option>
+              <option value="polygon">区查询</option>
+              <option value="extent">范围查询</option>
+              <option value="circle">圆查询</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

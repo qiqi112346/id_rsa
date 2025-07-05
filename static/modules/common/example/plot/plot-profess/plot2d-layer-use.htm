@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>二维标绘图层使用</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha384-SOnAn/m2fVJCwnbEYgD4xzrPtvsXdElhOVvR8ND1YjB5nhGNwwf7nBQlhfAwHAZC"
+      crossorigin="anonymous"
+    />
+    <!--引入行业标绘脚本库-->
+    <script
+      include="panel,2D"
+      src="./static/libs/include-plot-local.js"
+    ></script>
+    <script>
+      'use strict'
+
+      //地图初始化函数
+      function init() {
+        /**
+         * ***********************地图框架部分***************************
+         */
+
+        const view = window.initView('content')
+
+        /**
+         * ***********************行业标绘库部分***************************
+         */
+
+        const zondy = window.zondy
+        const Plot = zondy.plot
+        const {
+          PlotLayer2D,
+          PlotLayer2DGroup,
+          SymbolManager,
+          TimeLine,
+          DrawTool,
+          PlotRegister,
+          PlotUtilBase,
+          FabricLayer
+        } = Plot
+
+        const symbolUrl = `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/symbolLib.json`
+        const symbolOptions = {
+          fontURL: `http://webclient.smaryun.com:8200/Plot/plot-sample/fonts/`,
+          baseUrl: `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/`
+        }
+
+        let layer1,
+          layer2,
+          plotLayer2DGroup,
+          timeline,
+          drawTool,
+          plotEditor,
+          currentPlot
+        // 获取overlay图层
+        const canvas = new FabricLayer(view, PlotLayer2DGroup)
+        // 创建符号管理器
+        const manager = new SymbolManager(symbolUrl, symbolOptions)
+        // 请求获取符号库
+        manager.getSymbols().then(() => {
+          // 创建二维图层组
+          plotLayer2DGroup = canvas.getFabricCanvas()
+          // 创建二维图层
+          layer1 = new PlotLayer2D()
+          // 添加图层
+          plotLayer2DGroup.addLayer(layer1)
+          // 选取对象
+          layer1.editable = true
+          layer1.pickPlot = (plot) => {
+            currentPlot = plot
+          }
+        })
+
+        /**
+         * ***********************ui部分***************************
+         */
+        const panel = new window.webclientPlot.PlotPanel('plot-show-table', {
+          titleText: '图层使用',
+          panelWidth: 250
+        })
+        const contentBody = panel.getBody()
+        contentBody.style.display = 'flex'
+        contentBody.style.flexDirection = 'column'
+
+        const list1 = document.createElement('div')
+        const btn1 = document.createElement('button')
+        list1.setAttribute('class', 'listdom')
+        btn1.setAttribute('class', 'btn')
+        btn1.innerText = `加载保存数据`
+        btn1.onclick = () => {
+          // 读取保存的标绘物数据
+          $.getJSON(
+            `http://webclient.smaryun.com:8200/Plot/plot-sample/layers/bbbbb.json`,
+            (res) => {
+              layer1.fromJSON(res)
+            }
+          )
+        }
+        list1.appendChild(btn1)
+        contentBody.appendChild(list1)
+
+        const list2 = document.createElement('div')
+        const btn2 = document.createElement('button')
+        list2.setAttribute('class', 'listdom')
+        btn2.setAttribute('class', 'btn')
+        btn2.innerText = `导出标绘数据`
+        btn2.onclick = () => {
+          // 读取保存的标绘物数据
+          const a = document.createElement('a')
+          const datastr =
+            'data:text/json;charset=utf-8,' +
+            encodeURIComponent(JSON.stringify(layer1.toJSON()))
+          a.href = datastr
+          a.setAttribute('download', '测试数据.json')
+          a.style.display = 'none'
+          a.click()
+        }
+        list2.appendChild(btn2)
+        contentBody.appendChild(list2)
+
+        const list3 = document.createElement('div')
+        const input3 = document.createElement('input')
+        const span3 = document.createElement('span')
+        list3.setAttribute('class', 'listdom')
+        input3.setAttribute('class', 'input')
+        input3.setAttribute('type', 'file')
+        input3.onchange = (e) => {
+          const file = e.target.files[0]
+          var reader = new FileReader()
+          reader.readAsText(file, 'utf8')
+          reader.onload = function () {
+            layer1.fromJSON(JSON.parse(this.result))
+          }
+        }
+        span3.innerText = '上传标绘数据'
+        span3.setAttribute('class', 'span')
+        span3.style.position = 'absolute'
+        list3.appendChild(span3)
+        list3.appendChild(input3)
+        contentBody.appendChild(list3)
+
+        const list_title = document.createElement('div')
+        list_title.setAttribute('class', 'listdom')
+        list_title.style = `background-color: rgb(58, 133, 198);
+                color: rgb(255, 255, 255);
+                margin-top: 5px;`
+
+        list_title.innerText = `选中标绘对象后使用删除修改功能`
+        contentBody.appendChild(list_title)
+
+        const list4 = document.createElement('div')
+        const div4 = document.createElement('div')
+        const div4_1 = document.createElement('div')
+        list4.setAttribute('class', 'listdom')
+        div4.setAttribute('class', 'list-item')
+        div4.innerText = `添加标绘`
+        div4.addEventListener('click', () => {
+          layer1.addGeoJSONObject({
+            type: 'Feature',
+            featureId: '44f7b761-2c93-40e7-917d-cc61a58a4175',
+            properties: {
+              show: true,
+              symbolId: '56',
+              nodeStyles: {
+                path12770: {
+                  strokeStyle: 'rgba(255,0,0,1)'
+                }
+              }
+            },
+            geometry: {
+              type: 'MultiPoint',
+              coordinates: [[117.18944441797595, 34.2390284961602]]
+            }
+          })
+          layer1.addGeoJSONObject({
+            type: 'Feature',
+            properties: {
+              show: true,
+              featureId: '85ecc668-eec4-4476-9c27-2f1fc4780a6d',
+              symbolId: '39',
+              symbolName: '撤离线'
+            },
+            geometry: {
+              type: 'MultiPoint',
+              coordinates: [
+                [117.3701360274617, 34.15566255198262],
+                [117.26718426641384, 34.103216223599446],
+                [117.1508839238758, 34.08738778399195]
+              ]
+            }
+          })
+        })
+        div4_1.setAttribute('class', 'list-item')
+        div4_1.innerText = `删除标绘`
+        div4_1.addEventListener('click', () => {
+          if (currentPlot) {
+            layer1.removePlot(currentPlot)
+            currentPlot = null
+          }
+        })
+        list4.appendChild(div4)
+        list4.appendChild(div4_1)
+        contentBody.appendChild(list4)
+
+        const list5 = document.createElement('div')
+        const div5 = document.createElement('div')
+        const div5_1 = document.createElement('div')
+        list5.setAttribute('class', 'listdom')
+        div5.setAttribute('class', 'list-item')
+        div5.innerText = `修改标绘`
+        div5.addEventListener('click', () => {
+          if (currentPlot) {
+            const style = currentPlot.getStyle()
+            const nodeStyles = style.nodeStyles
+            const keys = Object.keys(nodeStyles)
+
+            keys.forEach((key) => {
+              if (typeof nodeStyles[key].strokeStyle !== 'undefined') {
+                nodeStyles[key].strokeStyle = `rgba(${parseInt(
+                  Math.random() * 255
+                )},${parseInt(Math.random() * 255)},${parseInt(
+                  Math.random() * 255
+                )},1)`
+              }
+              if (typeof nodeStyles[key].fillStyle !== 'undefined') {
+                nodeStyles[key].fillStyle = `rgba(${parseInt(
+                  Math.random() * 255
+                )},${parseInt(Math.random() * 255)},${parseInt(
+                  Math.random() * 255
+                )},1)`
+              }
+            })
+            currentPlot.setStyleJSON(style)
+          }
+        })
+        div5_1.setAttribute('class', 'list-item')
+        div5_1.innerText = `查询标绘`
+        div5_1.addEventListener('click', () => {
+          const queryLists = layer1.queryPlotsByBounds({
+            left: 0,
+            top: 0,
+            right: 500,
+            bottom: 500
+          })
+          console.log('查询结果:', queryLists)
+        })
+        list5.appendChild(div5)
+        list5.appendChild(div5_1)
+        contentBody.appendChild(list5)
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-2d-viewer">
+      <div id="content" style="position: relative">
+        <div id="plot-show-table"></div>
+      </div>
+    </div>
+  </body>
+  <style>
+    #mapgis-2d-viewer {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      position: relative;
+    }
+    #content {
+      height: 100%;
+      flex: 6.5;
+      position: relative;
+    }
+    #plot-show-table {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      z-index: 999;
+    }
+    #plot-show-table .listdom {
+      font-family: Arial;
+      margin-bottom: 5px;
+      width: 100%;
+      border-color: #1970fc;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #plot-show-table .listdom .btn,
+    .span {
+      display: block;
+      padding: 5px 12px;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.53846154;
+      text-align: center;
+      white-space: nowrap;
+      cursor: pointer;
+      color: #fff;
+      background-color: #3a85c6;
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #plot-show-table .listdom .input {
+      opacity: 0;
+      display: block;
+      padding: 5px 12px;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.53846154;
+      text-align: center;
+      white-space: nowrap;
+      cursor: pointer;
+      color: #fff;
+      background-color: #3a85c6;
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #plot-show-table .listdom .list-item {
+      flex: 1;
+      height: 100%;
+      padding: 5px 12px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background-color: #3a85c6;
+      cursor: pointer;
+      color: #fff;
+      box-sizing: border-box;
+      margin: 1px;
+      text-align: center;
+    }
+  </style>
+</html>

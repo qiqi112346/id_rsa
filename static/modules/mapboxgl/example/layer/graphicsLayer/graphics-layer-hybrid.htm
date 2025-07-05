@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>几何图层-混合开发</title>
+    <!--引入Mapboxgl库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.css"/>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-mapboxgl-plugin.min.js"></script>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      let view
+      const { Feature, Color } = zondy
+      const { GraphicsLayer, IGSTileLayer } = zondy.layer
+      const { Point, LineString, Polygon, GeometryEngine } = zondy.geometry
+      const { SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, PictureMarkerSymbol, TextSymbol, PictureFillSymbol } = zondy.symbol
+      const { RandomRenderer } = zondy.renderer
+      const { initializeOptions } = zondy.mapboxgl.util
+
+      // 初始地图视图
+      function initViewer() {
+        view = new mapboxgl.Map({
+          // 容器ID
+          container: 'mapgis-viewer',
+          // 地图视图坐标系ID
+          crs: 'EPSG:3857',
+          // 初始化中心点
+          center: [112.45, 31.09],
+          // 初始化级数
+          zoom: 6,
+          // 样式
+          style: {
+            // 矢量瓦片版本号
+            version: 8,
+            // 数据源
+            sources: {},
+            // 数据图层
+            layers:[],
+            // 字体
+            glyphs: 'http://webclient.smaryun.com:8089/igs/rest/services/VectorTile/湖北省3857矢量瓦片/VectorTileServer/fonts/{fontstack}?range={range}.pbf&f=pbf'
+          }
+        })
+      }
+
+      // 添加GeoJSON图层
+      function addLayer() {
+        // 构造一个带三点弧段的线几何对象
+        const line = new LineString({
+          coordinates: [
+            [111, 32.75],
+            [111.5, 32.75],
+            [112, 33.25],
+            [112.5, 32.75],
+            [114, 32.75]
+          ]
+        })
+
+        // 通过几何中的三点弧段数据，构造离散后的几何对象
+        const arcLine = GeometryEngine.getArcFromGeometry({
+          // 几何对象
+          geometry: line,
+          // 弧段信息参数，必填项
+          arcInfo: [
+            {
+              // 弧段在第几个环上
+              "ringIndex": 0,
+              // 弧段在该环的起始位置，位置从1开始
+              "centerPointIndex": 2
+            }
+          ],
+          // 弧段中点的数量
+          numberOfPoints: 360
+        })
+
+        // 构造一个带三点弧段的区几何对象
+        const polygon = new Polygon({
+          coordinates: [
+            [
+              [112.5, 30.5],
+              [112.5, 30],
+              [113.5, 30],
+              [113.5, 30.5],
+              [113.3, 30.5],
+              [113.0, 30.8],
+              [112.7, 30.5],
+              [112.5, 30.5]
+            ]
+          ]
+        })
+
+        // 通过几何中的三点弧段数据，构造离散后的几何对象
+        const polygonArc = GeometryEngine.getArcFromGeometry({
+          // 几何对象
+          geometry: polygon,
+          // 弧段信息参数，必填项
+          arcInfo: [
+            {
+              // 弧段在第几个环上
+              "ringIndex": 0,
+              // 弧段在该环的起始位置，位置从1开始
+              "centerPointIndex": 5
+            }
+          ],
+          // 弧段中点的数量
+          numberOfPoints: 360
+        })
+
+        const layer = new GraphicsLayer({
+          graphics: [
+            new Feature({
+              geometry: new Point({
+                coordinates: [111, 34]
+              }),
+              symbol: new SimpleMarkerSymbol({
+                color: 'rgba(244,0,0,0.5)',
+                outline: new SimpleLineSymbol({
+                  color: '#000000'
+                })
+              })
+            }),
+            new Feature({
+              geometry: new Point({
+                coordinates: [112, 34]
+              }),
+              symbol: new SimpleMarkerSymbol({
+                color: 'rgba(0,0,255,0.5)',
+                path: 'M300 300 L0 300 L150 0 L300 300',
+                outline: new SimpleLineSymbol({
+                  color: 'rgba(0,255,0,0.3)',
+                  width: 4
+                })
+              })
+            }),
+            new Feature({
+              geometry: new Point({
+                coordinates: [113, 34]
+              }),
+              symbol: new PictureMarkerSymbol({
+                url: 'http://webclient.smaryun.com/static/assets/logo/mapgis_logo_blue.png'
+              })
+            }),
+            new Feature({
+              geometry: new Point({
+                coordinates: [114, 34]
+              }),
+              symbol: new TextSymbol({
+                text: '文字',
+                color: '#ffffff',
+                font: {
+                  family: '黑体',
+                  size: 30,
+                  decoration:'underline'
+                },
+                haloSize: 5,
+                haloColor: '#cccccc'
+              })
+            }),
+            new Feature({
+              symbol: new SimpleLineSymbol({
+                width: 2,
+                color:'#3a85c6'
+              }),
+              geometry: {
+                type: 'LineString',
+                coordinates: [
+                  [111, 32.5],
+                  [114, 32.5]
+                ]
+              }
+            }),
+            new Feature({
+              symbol: new SimpleLineSymbol({
+                style: 'short-dash-dot-dot',
+                width: 3
+              }),
+              geometry: {
+                type: 'LineString',
+                coordinates: [
+                  [111, 32.25],
+                  [114, 32.25]
+                ]
+              }
+            }),
+            new Feature({
+              symbol: new SimpleLineSymbol({
+                width: 2,
+                marker: {
+                  color: '#3a85c6',
+                  placement: 'begin-end',
+                  style: 'diamond'
+                }
+              }),
+              geometry: {
+                type: 'LineString',
+                coordinates: [
+                  [111, 32],
+                  [114, 32]
+                ]
+              }
+            }),
+            new Feature({
+              symbol: new SimpleLineSymbol({
+                width: 2
+              }),
+              geometry: arcLine
+            }),
+            new Feature({
+              symbol: new SimpleFillSymbol({
+                color: new Color(255, 0, 0, 0.3),
+                outline: new SimpleLineSymbol({
+                  color: '#3a85c6',
+                  width: 3
+                })
+              }),
+              geometry: {
+                type: "Polygon",
+                coordinates: [
+                  [
+                    [111, 31.5],
+                    [111, 31],
+                    [112, 31],
+                    [112, 31.5],
+                    [111, 31.5],
+                  ],
+                ],
+              },
+            }),
+            new Feature({
+              symbol: new PictureFillSymbol({
+                style:'cross',
+                url: "http://webclient.smaryun.com/static/assets/logo/mapgis_logo_blue.png",
+                width: 12,
+                height: 12,
+                xoffset:0,
+                yoffset:0,
+                color: "#ff0000",
+                outline: {
+                  color: "#ff0000",
+                  width: 1,
+                },
+              }),
+              geometry: {
+                type: "Polygon",
+                coordinates: [
+                  [
+                    [112.5, 31.5],
+                    [112.5, 31],
+                    [113.5, 31],
+                    [113.5, 31.5],
+                    [112.5, 31.5],
+                  ],
+                ],
+              },
+            }),
+            new Feature({
+              symbol: new PictureFillSymbol({
+                style:'cross',
+                url: "http://webclient.smaryun.com/static/assets/logo/mapgis_logo_blue.png",
+                width: 12,
+                height: 12,
+                xoffset:0,
+                yoffset:0,
+                color: "#ff0000",
+                outline: {
+                  color: "#ff0000",
+                  width: 1,
+                },
+              }),
+              geometry: polygonArc
+            })
+          ]
+        })
+        // 加载图层元数据
+        layer.load().then(() => {
+          // 构建mapboxgl引擎需要的样式
+          const style = initializeOptions(layer, {
+            // 地图视图对象
+            mapboxglMap: view
+          })
+          // 添加到mapboxgl地图对象中
+          addStyleToMapboxglMap(style)
+        })
+      }
+
+      // 添加到mapboxgl地图对象中
+      function addStyleToMapboxglMap(style) {
+        const { sources, layers } = style
+        const sourcesArr = Object.entries(sources)
+        for (let i = 0; i < sourcesArr.length; i++) {
+          const sourceArr = sourcesArr[i]
+          view.addSource(sourceArr[0], sourceArr[1])
+        }
+        for (let j = 0; j < layers.length; j++) {
+          view.addLayer(layers[j])
+        }
+        return true
+      }
+
+      // 添加瓦片图层
+      function addTileLayer() {
+        const tileLayer = new IGSTileLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_3857_normal_3-10/TileServer'
+        })
+        // 加载图层元数据
+        tileLayer.load().then(() => {
+          // 构建mapboxgl引擎需要的样式
+          const style = initializeOptions(tileLayer)
+          // 添加到mapboxgl地图对象中
+          addStyleToMapboxglMap(style)
+          // 添加几何图层
+          addLayer()
+        })
+      }
+
+      // 地图初始化函数
+      function init() {
+        // 初始地图视图
+        initViewer()
+        // 在样式加载完毕后添加几何图层
+        view.once('style.load', function () {
+          // 先添加瓦片图层，瓦片图层添加完毕后，再添加几何图层
+          addTileLayer()
+        })
+      }
+    </script>
+</head>
+
+<body onload="init()">
+<div id="mapgis-viewer"></div>
+</body>
+</html>

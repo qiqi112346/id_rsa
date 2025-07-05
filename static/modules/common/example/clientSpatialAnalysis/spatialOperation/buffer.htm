@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>缓冲分析</title>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!-- 获取天地图token -->
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view, geometryServer, featureServer, graphicsLayer
+      const {
+        WMTSLayer,
+        GraphicsLayer
+      } = zondy.layer
+      const { Map, Color, Feature } = zondy
+      const { GeometryServer, FeatureServer } = zondy.service
+      const { Polygon, Point, MultiPolygon, GeometryEngine } = zondy.geometry
+      const { SimpleFillSymbol, SimpleLineSymbol } = zondy.symbol
+
+      // 要执行缓冲分析的几何
+      let geometry
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加WMTS图层
+        addWMTSLayer()
+        // 添加标绘图层
+        addGraphicsLayer()
+        // 初始化server对象
+        initServer()
+        // 要素查询
+        query()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 初始化server对象
+      function initServer() {
+        geometryServer = new GeometryServer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/system/GeometryServer'
+        });
+        featureServer = new FeatureServer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer'
+        })
+      }
+
+      // 缓冲分析
+      function buffer() {
+        const bufferGeometry = GeometryEngine.buffer(
+          // 要缓冲的几何
+          geometry,
+          // 缓冲半径，单位米，可自行设置单位
+          10000,
+          // 缓冲半径单位
+          'meters'
+        )
+        console.log("bufferGeometry:", bufferGeometry)
+        // 绘制缓冲后的几何
+        graphicsLayer.add(
+          new Feature({
+            geometry: bufferGeometry,
+            symbol: new SimpleFillSymbol({
+              color: new Color(255, 23, 23, 0.5),
+              outline: new SimpleLineSymbol({
+                color: new Color(0, 52, 82, 1),
+                width: 2
+              })
+            })
+          })
+        )
+      }
+
+      // 要素查询
+      function query() {
+        // 开始查询
+        featureServer.queryFeatures({
+          layerId: "0",
+          geometry: new Point({
+            coordinates: [114, 30.45214]
+          })
+        }).then(function (result) {
+          console.log("查询成功：", result)
+          // 清空绘制的要素
+          graphicsLayer.removeAll()
+          const features = result.data.featureSet.features
+          if (features.length > 0) {
+            features[0].symbol = new SimpleFillSymbol({
+              color: new Color(51, 136, 255, 1),
+              outline: new SimpleLineSymbol({
+                width: 2,
+                color: new Color(153, 204, 255, 1)
+              })
+            })
+            // 绘制要缓冲的几何
+            graphicsLayer.add(features[0])
+            // 更新缓冲几何
+            geometry = features[0].geometry
+          }
+        })
+      }
+
+
+      // 添加WMTS图层
+      function addWMTSLayer() {
+        const wmtsLayer = new WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(wmtsLayer)
+        // 图层加载完毕
+        wmtsLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          view.flyTo({
+            center: window.center,
+            zoom: 7
+          })
+        })
+      }
+
+      // 添加标绘图层
+      function addGraphicsLayer() {
+        // 创建Graphics图层对象
+        graphicsLayer = new GraphicsLayer({
+          graphics: []
+        })
+        // 添加图层对象到地图文档中
+        map.add(graphicsLayer)
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <!--  示例UI  -->
+    <div class="layui-panel layui-panel-right" style="width: auto">
+        <form class="layui-form" action="">
+            <div class="layui-form-item" style="float: right;padding-top: 10px">
+                <button type="button" class="layui-btn" onclick="buffer()">缓冲分析</button>
+            </div>
+        </form>
+    </div>
+  </body>
+</html>

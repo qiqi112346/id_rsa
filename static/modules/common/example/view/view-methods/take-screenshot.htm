@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>屏幕快照</title>
+    <!-- 引入地图引擎库 -->
+    <script
+      include="leaflet,mapboxgl"
+      src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"
+    ></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/analyse.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view
+      const {
+        IGSTileLayer
+      } = zondy.layer
+      const { Map } = zondy
+      const { PictureFormat } = zondy.enum
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加瓦片图层
+        addIGSTileLayer()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 添加瓦片图层
+      function addIGSTileLayer() {
+        const igsTileLayer = new IGSTileLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        })
+        map.add(igsTileLayer)
+        igsTileLayer.on('layerview-created', (result) => {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      // 屏幕快照
+      function takeScreenshot() {
+        // 设置屏幕快照参数
+        const screenshotOptions = {
+          format: PictureFormat.png
+        }
+
+        // 开始屏幕快照
+        view.takeScreenshot(screenshotOptions).then((result) => {
+          // 获取base64格式的url字符串
+          console.log("dataUrl:", result.dataUrl)
+        })
+      }
+    </script>
+    <style>
+        .layui-panel {
+            width: auto;
+            z-index: 9999;
+        }
+    </style>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <div class="layui-panel layui-panel-right">
+        <form class="layui-form" action="">
+            <div class="sample-button-panel">
+                <button
+                        type="button"
+                        class="layui-btn layui-btn-sm layui-btn-normal"
+                        onclick="takeScreenshot()"
+                >
+                    屏幕快照
+                </button>
+            </div>
+        </form>
+    </div>
+  </body>
+</html>

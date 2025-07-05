@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>文本</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--html2canvas库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/html2canvas/html2canvas.min.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/graphic.css"
+    />
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, graphicsLayer, text
+      //取得jquery对象
+      let $ = layui.$
+      //颜色管理器对象
+      let colorpicker = layui.colorpicker
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //初始化标绘图层
+        addGraphicLayer()
+        //添加模型
+        addModel()
+        //区域文字
+        addText()
+        //墙体文字
+        addWallText()
+        //墙体文字
+        addWallText2()
+        //区域闪烁文字
+        addFlashText()
+        //加载天地图底图
+        addTDT()
+        //初始化示例UI
+        initUI()
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //显示鼠标位置
+        viewer.showPosition()
+      }
+
+      //初始化标绘图层
+      function addGraphicLayer() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/GraphicsLayer.html
+        graphicsLayer = new zondy.cesium.GraphicsLayer(viewer, {
+          clickGraphic: function (graphic) {
+            text = graphic
+            //将各类文本框隐藏
+            $('#text-offsetHeight').parents('.layui-form-item').hide()
+            $('#text-extrudedHeight').parents('.layui-form-item').hide()
+            $('#text-stRotation').parents('.layui-form-item').hide()
+            //颜色
+            colorpicker.render({
+              elem: '#text-color',
+              color: text.style.material.fillColor.toCssHexString(),
+              done: function (color) {
+                $('#text-color-input').val(color)
+                const material = Object.assign({}, text.style.material)
+                material.fillColor = Cesium.Color.fromCssColorString(color)
+                text.style.material = material
+              }
+            })
+            $('#text-color-input').val(
+              text.style.material.fillColor.toCssHexString()
+            )
+            $('#text-text').val(text.style.material.text)
+            if (text.type === 'polygon') {
+              if (typeof text.style.stRotation === 'undefined') {
+                $('#text-stRotation').val(Cesium.Math.toDegrees(0))
+              } else {
+                $('#text-stRotation').val(
+                  Cesium.Math.toDegrees(text.style.stRotation)
+                )
+              }
+              $('#text-stRotation').parents('.layui-form-item').show()
+            } else if (text.type === 'wall') {
+              $('#text-offsetHeight').val(text.style.height)
+              $('#text-extrudedHeight').val(text.style.extrudedHeight)
+              $('#text-offsetHeight').parents('.layui-form-item').show()
+              $('#text-extrudedHeight').parents('.layui-form-item').show()
+            }
+            //这个时候展开编辑面板
+            $('#editPanel').show()
+          },
+          getGraphic: function () {
+            graphicsLayer.stopDrawing()
+          }
+        })
+      }
+
+      //添加模型
+      function addModel() {
+        let M3DLayer = new zondy.layer.M3DModelCacheLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D//1.0/ZondyFaceModels/ZondyFaceModels.mcj',
+          // 初始化参数
+          extensionOptions: {
+            // 开启自动跳转
+            autoReset: true
+          }
+        })
+        map.add(M3DLayer)
+        // 图层加载完毕
+        M3DLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+        })
+      }
+
+      //矩形文字
+      function addText() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let textGraphic5 = new zondy.cesium.Graphic({
+          //类型
+          type: 'polygon',
+          //几何点坐标
+          positions: [
+            Cesium.Cartesian3.fromDegrees(
+              114.40159327660864,
+              30.46595474170495,
+              0
+            ),
+            Cesium.Cartesian3.fromDegrees(
+              114.40164829492898,
+              30.466157058413273,
+              0
+            ),
+            Cesium.Cartesian3.fromDegrees(
+              114.40176352930673,
+              30.46613578706277,
+              0
+            ),
+            Cesium.Cartesian3.fromDegrees(
+              114.40170507975466,
+              30.465938106481918,
+              0
+            )
+          ],
+          //样式
+          style: {
+            //颜色
+            color: Cesium.Color.BLUEVIOLET,
+            //材质类型
+            materialType: 'text',
+            classificationType: 2, //贴模型1，贴高程0，都贴2
+            //贴地文字材质
+            material: {
+              //文字
+              text: '师生林',
+              //文字颜色
+              fillColor: Cesium.Color.DEEPPINK,
+              //背景颜色
+              backgroundColor: Cesium.Color.WHITE.withAlpha(0),
+              //字体
+              font: 'bolder 40px MicroSoft YaHei'
+            },
+            stRotation: Cesium.Math.toRadians(-80)
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(textGraphic5)
+      }
+
+      //墙体文字
+      function addWallText() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let textGraphic6 = new zondy.cesium.Graphic({
+          //类型
+          type: 'wall',
+          //几何点数组
+          positions: [
+            Cesium.Cartesian3.fromDegrees(
+              114.40118813558269,
+              30.466223171488977,
+              0
+            ),
+            Cesium.Cartesian3.fromDegrees(
+              114.40140096574984,
+              30.46693346207298,
+              0
+            )
+          ],
+          //样式
+          style: {
+            extrudedHeight: 8,
+            height: 60,
+            //材质类型
+            materialType: 'text',
+            //材质
+            material: {
+              //文字
+              text: '中地大楼(辅楼)',
+              //文字颜色
+              fillColor: Cesium.Color.AQUA,
+              font: 'bolder 40px MicroSoft YaHei'
+            }
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(textGraphic6)
+      }
+
+      //墙体文字
+      function addWallText2() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let textGraphic6 = new zondy.cesium.Graphic({
+          //类型
+          type: 'wall',
+          //几何点数组
+          positions: [
+            Cesium.Cartesian3.fromDegrees(
+              114.40058721240943,
+              30.46738208954342,
+              0
+            ),
+            Cesium.Cartesian3.fromDegrees(
+              114.40211782041278,
+              30.467417142950193,
+              0
+            )
+          ],
+          //样式
+          style: {
+            extrudedHeight: 15,
+            height: 115,
+            //材质类型
+            materialType: 'text',
+            //材质
+            material: {
+              //文字
+              text: '中地大楼',
+              //文字颜色
+              fillColor: Cesium.Color.RED,
+              font: 'bolder 40px MicroSoft YaHei'
+            }
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(textGraphic6)
+      }
+
+      //闪烁矩形文字
+      function addFlashText() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let textGraphic7 = new zondy.cesium.Graphic({
+          //类型
+          type: 'polygon',
+          //几何点数组
+          positions: [
+            Cesium.Cartesian3.fromDegrees(
+              114.40182121287017,
+              30.46674446376773,
+              0
+            ),
+            Cesium.Cartesian3.fromDegrees(
+              114.40187727728555,
+              30.466694993961703,
+              0
+            ),
+            Cesium.Cartesian3.fromDegrees(
+              114.40221895709654,
+              30.466937817238602,
+              0
+            ),
+            Cesium.Cartesian3.fromDegrees(
+              114.40216508376157,
+              30.46698943287328,
+              0
+            )
+          ],
+          //样式
+          style: {
+            //矩形颜色
+            color: Cesium.Color.BLUEVIOLET,
+            classificationType: 2,
+            //材质类型
+            materialType: 'text',
+            //贴地文字材质
+            material: {
+              //文字
+              text: '新中地教育',
+              //文字颜色
+              fillColor: Cesium.Color.DEEPPINK,
+              //背景颜色
+              backgroundColor: Cesium.Color.LIGHTSEAGREEN,
+              //字体
+              font: 'bolder 40px MicroSoft YaHei',
+              //启用闪烁
+              breathingLight: true,
+              //闪烁间隔
+              duration: 1000
+            },
+            stRotation: Cesium.Math.toRadians(-40)
+          }
+        })
+        //将标绘添加入标绘图层
+        graphicsLayer.addGraphic(textGraphic7)
+      }
+
+      //加载天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //初始化UI
+      function initUI() {
+        layui.use('colorpicker', function () {
+          //离地高度
+          $('#text-offsetHeight').bind('input propertychange', function () {
+            text.style.height = clampNumberValue($('#text-offsetHeight').val())
+          })
+
+          $('#text-extrudedHeight').bind('input propertychange', function () {
+            text.style.extrudedHeight = clampNumberValue(
+              $('#text-extrudedHeight').val()
+            )
+          })
+
+          $('#text-stRotation').bind('input propertychange', function () {
+            text.style.stRotation = Cesium.Math.toRadians(
+              clampNumberValue($('#text-stRotation').val())
+            )
+          })
+
+          $('#text-text').bind('input propertychange', function () {
+            const material = Object.assign({}, text.style.material)
+            material.text = $('#text-text').val()
+            text.style.material = material
+          })
+        })
+      }
+
+      function startDrawing(drawType) {
+        $('#editPanel').hide()
+        //构建两套不同的style
+        let style = {
+          materialType: 'text'
+        }
+        let material = {
+          font: 'bolder 40px MicroSoft YaHei',
+          //文字颜色
+          fillColor: Cesium.Color.DEEPPINK
+        }
+        if (drawType === 'polygon') {
+          material.text = '贴地文本'
+          style.classificationType = 2
+        } else {
+          material.text = '竖立文本'
+          style.height = 0
+          style.extrudedHeight = 15
+        }
+        style.material = material
+        graphicsLayer.startDrawing({
+          type: drawType,
+          style: style
+        })
+      }
+
+      //删除标绘
+      function deleteText() {
+        text.remove()
+        $('#editPanel').hide()
+      }
+      // 获取合法的number数据输入
+      function clampNumberValue(inputValue, limits) {
+        let max, min
+        if (Array.isArray(limits) && limits.length > 0) {
+          if (limits.length === 1) {
+            min = limits[0]
+          } else {
+            max = limits[1]
+          }
+        }
+        let value = Number(inputValue)
+        if (Number.isNaN(value)) {
+          if (typeof min === 'number') {
+            return min
+          } else {
+            return 0
+          }
+        }
+        if (typeof min === 'number' && value <= min) {
+          return min
+        }
+        if (typeof max === 'number' && value >= max) {
+          return max
+        }
+        return value
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div
+      class="layui-panel layui-panel-right"
+      style="text-align: center; width: 340px; padding: 0 10px"
+    >
+      <button
+        onclick="startDrawing('polygon')"
+        style="width: 140px; margin: 0 auto !important; display: inline-block"
+        type="button"
+        class="layui-btn layui-btn-normal graphic-button-margin"
+      >
+        添加文本(贴地)
+      </button>
+      <button
+        onclick="startDrawing('wall')"
+        style="
+          width: 140px;
+          margin: 10px auto !important;
+          display: inline-block;
+        "
+        type="button"
+        class="layui-btn layui-btn-normal graphic-button-margin"
+      >
+        添加文本(竖立)
+      </button>
+    </div>
+    <div
+      class="layui-panel layui-panel-right"
+      id="editPanel"
+      style="display: none; top: 70px"
+    >
+      <form class="layui-form" action="" lay-filter="example">
+        <div class="sample-main-panel">
+          <div class="layui-form-item">
+            <label class="layui-form-label">文本颜色</label>
+            <div
+              class="layui-input-inline"
+              style="width: 145px; margin-left: 10px"
+            >
+              <input type="text" class="layui-input" id="text-color-input" />
+            </div>
+            <div class="layui-inline">
+              <div id="text-color"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">文本内容</label>
+            <div class="layui-input-block" style="width: 183px">
+              <input id="text-text" type="text" class="layui-input" />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">离地高度</label>
+            <div class="layui-input-block" style="width: 183px">
+              <input id="text-offsetHeight" type="text" class="layui-input" />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">拉伸高度</label>
+            <div class="layui-input-block">
+              <input id="text-extrudedHeight" type="text" class="layui-input" />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">旋转角度</label>
+            <div class="layui-input-block">
+              <input id="text-stRotation" type="text" class="layui-input" />
+            </div>
+          </div>
+        </div>
+        <div class="sample-button-panel">
+          <button
+            onclick="$('#editPanel').hide()"
+            style="float: right; width: auto; margin-right: 0 !important"
+            type="button"
+            class="layui-btn layui-btn-normal graphic-button-margin"
+          >
+            关闭面板
+          </button>
+          <span
+            onclick="deleteText()"
+            style="
+              cursor: pointer;
+              float: right;
+              line-height: 32px;
+              margin-right: 15px;
+            "
+            >删除文本</span
+          >
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

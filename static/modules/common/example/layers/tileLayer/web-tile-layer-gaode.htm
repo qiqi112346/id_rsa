@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>网络瓦片图层-高德栅格瓦片地图</title>
+    <!-- 引入地图引擎库 -->
+    <script
+      include="engine:cesium mapboxgl"
+      src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"
+    ></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map,
+        view,
+        layer,
+        layerOpacity = 1
+      const { WebTileLayer } = zondy.layer
+      const { Map, SpatialReference, TileInfo } = zondy
+      const { Point, Extent } = zondy.geometry
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 初始化示例UI
+        initUI()
+        // 添加瓦片图层
+        addLayer()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 添加无偏高德地图
+      function addUnbiasedLayer() {
+        deleteLayer()
+        addLayer(
+          new SpatialReference({
+            wkid: zondy.enum.CustomWKID.gcj02mc
+            // wkid: 20010202
+          })
+        )
+      }
+
+      // 添加有偏高德地图
+      function addBiasedLayer() {
+        deleteLayer()
+        addLayer(
+          new SpatialReference({
+            wkid: 3857
+          })
+        )
+      }
+
+      // 添加瓦片图层
+      function addLayer(spatialReference) {
+        // 如果layer存在，先删除图层
+        if (layer) {
+          deleteLayer()
+        }
+        // 构建参考系对象
+        if (!spatialReference) {
+          spatialReference = new SpatialReference({
+            wkid: 3857
+          })
+        }
+
+        layer = new WebTileLayer({
+          // 加载经纬度的影像地图。目前
+          url: 'http://webst04.is.autonavi.com/appmaptile?=&size=1&scale=1&x={x}&y={y}&z={z}&style=7',
+          // 指定坐标系
+          spatialReference: spatialReference
+        })
+        // 添加图层
+        map.add(layer)
+      }
+
+      // 删除图层
+      function deleteLayer() {
+        map.remove(layer)
+      }
+
+      // 显隐图层
+      function toggleLayer() {
+        layer.visible = !layer.visible
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          layui.slider.render({
+            elem: '#moveStep',
+            value: 100,
+            min: 0,
+            max: 100,
+            step: 1,
+            theme: 'rgb(21, 134, 238)',
+            //自定义提示文本
+            setTips: function (value) {
+              layerOpacity = value / 100
+              return value + '%'
+            },
+            change: function (value) {
+              layer.opacity = layerOpacity
+            }
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div
+      id="mapgis-viewer"
+      style="position: absolute; width: 100%; height: 100%"
+    ></div>
+    <!--  示例UI  -->
+    <div class="layui-panel layui-panel-right tile-layer-panel">
+      <form class="layui-form" action="">
+        <div class="layui-form-item" style="width: 320px">
+          <label class="layui-form-label" style="width: 100px"
+            >图层透明度</label
+          >
+          <div class="layui-input-block sample-slider" style="width: 200px">
+            <div id="moveStep"></div>
+          </div>
+        </div>
+        <div class="line"></div>
+        <div class="layui-form-item" style="margin-bottom: 10px">
+          <button
+            type="button"
+            class="layui-btn"
+            onclick="addUnbiasedLayer()"
+            style="margin-left: 6px"
+          >
+            添加无偏高德地图
+          </button>
+          <button
+            type="button"
+            class="layui-btn"
+            onclick="addBiasedLayer()"
+            style="margin-left: 6px"
+          >
+            添加有偏高德地图
+          </button>
+        </div>
+        <div class="layui-form-item">
+          <button
+            type="button"
+            class="layui-btn"
+            onclick="deleteLayer()"
+            style="margin-left: 6px"
+          >
+            删除图层
+          </button>
+          <button
+            type="button"
+            class="layui-btn"
+            onclick="toggleLayer()"
+            style="margin-left: 6px"
+          >
+            显隐图层
+          </button>
+        </div>
+      </form>
+    </div>
+    <style>
+      .layui-panel {
+        width: auto;
+      }
+      .layui-btn-normal {
+        margin-right: 1px !important;
+        font-size: 15px;
+        padding: 0px 7px;
+      }
+    </style>
+  </body>
+</html>

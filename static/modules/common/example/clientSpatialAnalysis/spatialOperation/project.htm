@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>投影变换</title>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!-- 获取天地图token -->
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view, geometryServer, featureServer, graphicsLayer
+      const {
+        WMTSLayer
+      } = zondy.layer
+      const { Map, SpatialReference } = zondy
+      const { Projection, Point } = zondy.geometry
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加WMTS图层
+        addWMTSLayer()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 投影变换
+      function project() {
+        const point = new Point({
+          coordinates: [113, 30]
+        })
+        const projectGeometry = Projection.project(
+          point,
+          new SpatialReference({
+            wkid: document.getElementById("wkid").value,
+            wkt: document.getElementById("wkt").value
+          })
+        )
+        document.getElementById("project-x").value = projectGeometry.coordinates[0]
+        document.getElementById("project-y").value = projectGeometry.coordinates[1]
+      }
+
+
+      // 添加WMTS图层
+      function addWMTSLayer() {
+        const wmtsLayer = new WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(wmtsLayer)
+        // 图层加载完毕
+        wmtsLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          view.flyTo({
+            center: window.center,
+            zoom: 7
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <!--  示例UI  -->
+    <div class="layui-panel layui-panel-right" style="width: 360px">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: auto">投影后坐标X：</label>
+                <div class="layui-input-block" style="margin-bottom: 6px;width: 220px">
+                    <input id="project-x" value="0" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: auto">投影后坐标Y：</label>
+                <div class="layui-input-block" style="margin-bottom: 6px;width: 220px">
+                    <input id="project-y" value="0" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">WKID：</label>
+                <div class="layui-input-block" style="margin-bottom: 6px;width: 220px">
+                    <input id="wkid" value="3857" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">WKT：</label>
+                <div class="layui-input-block" style="margin-bottom: 6px;width: 220px">
+                    <input id="wkt" value="" placeholder="没有WKID时,请传入WKT信息" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="float: right;padding-top: 10px">
+                <button type="button" class="layui-btn" onclick="project()">投影变换</button>
+            </div>
+        </form>
+    </div>
+  </body>
+</html>

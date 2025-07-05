@@ -1,0 +1,12687 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Global</title>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+                <h1> MapGIS Client for JavaScript API</h1>
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/common/api/common-mapgis/index.html"
+                        >
+                            Common
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/cesium/api/cesium-mapgis/index.html"
+                        >
+                            Cesium-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/mapboxgl/api/mapboxgl-mapgis/index.html"
+                        >
+                            MapboxGL-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/leaflet/api/leaflet-mapgis/index.html"
+                        >
+                            Leaflet-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/openlayers/api/openLayers-mapgis/index.html"
+                        >
+                            OpenLayers-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/video/api/video-mapgis/index.html"
+                        >
+                            Video-Plugin
+                        </a>
+                    
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            <div>
+                <span class="mapgis-api-document-span"><a href="index.html">API文档</a></span>
+            </div>
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="搜索文档..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <div class="category"><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">扩展模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISMapImageLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISMapImageLayer.html">ArcGISMapImageLayer</a><span style="display: none;"><p>ArcGIS地图图片图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISTileLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISTileLayer.html">ArcGISTileLayer</a><span style="display: none;"><p>ArcGIS瓦片图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="EchartsLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="EchartsLayer.html">EchartsLayer</a><span style="display: none;"><p>Echarts图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="FeatureLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FeatureLayer.html">FeatureLayer</a><span style="display: none;"><p>要素图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="IGSMapImageLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="IGSMapImageLayer.html">IGSMapImageLayer</a><span style="display: none;"><p>地图图片图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="IGSTileLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="IGSTileLayer.html">IGSTileLayer</a><span style="display: none;"><p>IGS瓦片图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapLayer.html">MapLayer</a><span style="display: none;"><p>屏幕出一张图图层基类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapVLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapVLayer.html">MapVLayer</a><span style="display: none;"><p>MapV图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TileLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TileLayer.html">TileLayer</a><span style="display: none;"><p>带裁剪功能的瓦片图层基类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TileLayerWMS"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TileLayerWMS.html">TileLayerWMS</a><span style="display: none;"><p>WMS图层基类(相比于原生的L.TileLayer.WMS, 此图层支持空间裁剪功能)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="VectorTileLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="VectorTileLayer.html">VectorTileLayer</a><span style="display: none;"><p>矢量瓦片图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebMapServiceLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapServiceLayer.html">WebMapServiceLayer</a><span style="display: none;"><p>WMS图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebMapTileServiceLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapTileServiceLayer.html">WebMapTileServiceLayer</a><span style="display: none;"><p>WMTS图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebTileLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebTileLayer.html">WebTileLayer</a><span style="display: none;"><p>网络瓦片图层(Leaflet)</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">工具类模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="FeatureLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FeatureLayerUtil.html">FeatureLayerUtil</a><span style="display: none;"><p>要素图层工具类(Leaflet)</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">视图模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapView"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapView.html">MapView</a><span style="display: none;"><p>二维场景视图(leaflet引擎)，对地图引擎进行管理，如果要对地图图层进行管理请参考<code>Map</code>，<br/>
+参考示例：
+<a href='#MapView'>[初始化二维场景视图]</a>
+<br>[ES5引入方式]：<br/>
+zondy.leaflet.MapView() <br/>
+[ES6引入方式]：<br/>
+import { MapView } from '@mapgis/webclient-leaflet-plugin' <br/></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Popup"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Popup.html">Popup</a><span style="display: none;"><p>二维场景信息弹窗(leaflet引擎)
+参考示例：
+<a href='#MapView'>[初始化二维场景视图]</a>
+[ES6引入方式]：<br/>
+import { Popup } from '@mapgis/webclient-leaflet-plugin' <br/>
+自定义样式说明：<br/>
+zondy-popup__content 弹窗容器样式<br/>
+zondy-popup__tip 弹窗对话框箭头样式<br/>
+zondy-popup__header 弹窗头部样式<br/>
+zondy-popup__content 弹窗主体样式<br/>
+zondy-popup__footer 弹窗底部样式<br/></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Screenshot"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Screenshot.html">Screenshot</a><span style="display: none;"><p>屏幕打印工具</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">草图编辑模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SketchEditorLeaflet"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SketchEditorLeaflet.html">SketchEditorLeaflet</a><span style="display: none;"><p>二维Leaflet引擎草图编辑类<br/>
+<br>[ES5引入方式]：<br/>
+const { SketchEditor } = zondy.leaflet.tool.sketch <br/>
+[ES6引入方式]：<br/>
+import { SketchEditor } from &quot;@mapgis/webclient-leaflet-plugin&quot; <br/></p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">渲染器模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="zondy.themelayer.GraphThemeLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="zondy.themelayer.GraphThemeLayer.html">GraphThemeLayer</a><span style="display: none;"><p>统计专题图通过为每个要素绘制统计图表来反映其对应的专题值的大小。它可同时表示多个字段属性信息，在区域本身与各区域之间形成横向和纵向的对比。<br>统计专题图多用于具有相关数量特征的地图上，比如表示不同地区多年的粮食产量、GDP、人口等，不同时段客运量、地铁流量等。目前提供的统计图类型有：柱状图（Bar），折线图（Line），饼图（Pie），三维柱状图（Bar3D），点状图（Point），环状图（Ring）。</p></span></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header id="page-title" class="page-title">
+                    <span class="page-title-main">类名</span>
+                    <span class="page-title-sub">Global</span>
+                </header>
+                
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='member'>成员变量</h3>
+            <div class="members">
+            
+                <div class="member">
+
+<h4 class="name" id="canvasProto">
+    <a class="href-link" href="#canvasProto">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        canvasProto
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>L.Canvas</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="divOverlayProto">
+    <a class="href-link" href="#divOverlayProto">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        divOverlayProto
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>L.DivOverlay</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="domUtilProto">
+    <a class="href-link" href="#domUtilProto">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        domUtilProto
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>L.DomUtil</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="gridLayerProto">
+    <a class="href-link" href="#gridLayerProto">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        gridLayerProto
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>L.GridLayer</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="ImageOverlay">
+    <a class="href-link" href="#ImageOverlay">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        ImageOverlay
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>L.ImageOverlay</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="mapProto">
+    <a class="href-link" href="#mapProto">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        mapProto
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>L.Map</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="markerProto">
+    <a class="href-link" href="#markerProto">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        markerProto
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>L.Marker</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="popupProto">
+    <a class="href-link" href="#popupProto">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        popupProto
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>L.Popup</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="rendererProto">
+    <a class="href-link" href="#rendererProto">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        rendererProto
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>L.Renderer</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="tooltipProto">
+    <a class="href-link" href="#tooltipProto">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        tooltipProto
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>L.Tooltip</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='function'>方法</h3>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_adjustClusterOrMarkerStatus">
+        <a class="href-link" href="#_adjustClusterOrMarkerStatus">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _adjustClusterOrMarkerStatus<span class="signature">(marker, rbush, zoom)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>marker</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>rbush</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>zoom</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_animationCreateMarkerIcon">
+        <a class="href-link" href="#_animationCreateMarkerIcon">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _animationCreateMarkerIcon<span class="signature">(nm)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>nm</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_calcAdjustPoint">
+        <a class="href-link" href="#_calcAdjustPoint">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _calcAdjustPoint<span class="signature">(rbush, point, rbushItem, cell)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>rbush</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>point</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>rbushItem</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>cell</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_calcRotateOffset">
+        <a class="href-link" href="#_calcRotateOffset">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _calcRotateOffset<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_getAdjustPoint">
+        <a class="href-link" href="#_getAdjustPoint">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _getAdjustPoint<span class="signature">(p1, p2, cell)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>p1</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>p2</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>cell</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_getClippingAreaPx">
+        <a class="href-link" href="#_getClippingAreaPx">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _getClippingAreaPx<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>计算裁剪区几何对象并缓存</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>裁剪区几何对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Array.&lt;Object></span>
+|
+
+<span class="param-type">null</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_getTileZoom">
+        <a class="href-link" href="#_getTileZoom">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _getTileZoom<span class="signature">(tileCRS)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取最小和最大zoom</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>tileCRS</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">L.CRS</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>CRS对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>算好的minTileZoom和maxTileZoom</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_initCRS">
+        <a class="href-link" href="#_initCRS">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _initCRS<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_isValidTile">
+        <a class="href-link" href="#_isValidTile">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _isValidTile<span class="signature">(coords)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>coords</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_isValidTileZoom">
+        <a class="href-link" href="#_isValidTileZoom">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _isValidTileZoom<span class="signature">(tileZoom)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>tileZoom</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_resetGrid">
+        <a class="href-link" href="#_resetGrid">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _resetGrid<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_setZoomTransform">
+        <a class="href-link" href="#_setZoomTransform">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _setZoomTransform<span class="signature">(level, center, zoom)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>level</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>center</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>zoom</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>地图的zoom</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_tileCoordsToBounds">
+        <a class="href-link" href="#_tileCoordsToBounds">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _tileCoordsToBounds<span class="signature">(coords)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>coords</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_tileCoordsToNwSe">
+        <a class="href-link" href="#_tileCoordsToNwSe">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _tileCoordsToNwSe<span class="signature">(coords)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>coords</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_toMapZoom">
+        <a class="href-link" href="#_toMapZoom">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _toMapZoom<span class="signature">(zoom)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>zoom</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_toTileZoom">
+        <a class="href-link" href="#_toTileZoom">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _toTileZoom<span class="signature">(zoom)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>zoom</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_toTurfGeometry">
+        <a class="href-link" href="#_toTurfGeometry">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _toTurfGeometry<span class="signature">(geojson)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取turf几何体</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>geojson</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>geojson对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>turf几何对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Array.&lt;Geometry></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_updateLevels">
+        <a class="href-link" href="#_updateLevels">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _updateLevels<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="buildRequestImageSrc">
+        <a class="href-link" href="#buildRequestImageSrc">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                buildRequestImageSrc<span class="signature">(url, params)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>构建图片Src地址</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>url</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>服务基地址</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>需要请求地址后面拼接的参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>请求对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Promise</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="buildRequestImageSrc">
+        <a class="href-link" href="#buildRequestImageSrc">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                buildRequestImageSrc<span class="signature">(url, params)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>构建图片Src地址</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>url</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>服务基地址</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>需要请求地址后面拼接的参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>请求对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Promise</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="buildRequestParamsObject">
+        <a class="href-link" href="#buildRequestParamsObject">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                buildRequestParamsObject<span class="signature">(options, imageWidth, imageHeight, bbox)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>构建请求参数对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>额外初始化参数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>imageWidth</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>瓦片宽度</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>imageHeight</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>瓦片高度</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>bbox</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>瓦片显示范围</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>请求参数对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="buildRequestParamsObject">
+        <a class="href-link" href="#buildRequestParamsObject">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                buildRequestParamsObject<span class="signature">(options, imageWidth, imageHeight, bbox)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>构建请求参数对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>额外初始化参数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>imageWidth</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>瓦片宽度</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>imageHeight</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>瓦片高度</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>bbox</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>瓦片显示范围</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>请求参数对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="convertClusterSymbol">
+        <a class="href-link" href="#convertClusterSymbol">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                convertClusterSymbol<span class="signature">(symbol)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>symbol</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="convertFeature">
+        <a class="href-link" href="#convertFeature">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                convertFeature<span class="signature">(feature)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>转换要素为几何图形</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>feature</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Feature</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="createGraphic">
+        <a class="href-link" href="#createGraphic">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                createGraphic<span class="signature">(type, coords, style)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据类型创建marker</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>type</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>coords</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>style</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="createTile">
+        <a class="href-link" href="#createTile">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                createTile<span class="signature">(coords, done)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>创建瓦片图片对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>coords</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>瓦片行列号对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>done</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>绘制完成的回调函数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>瓦片图片对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Image</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="findClusterInfo">
+        <a class="href-link" href="#findClusterInfo">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                findClusterInfo<span class="signature">(clusterInfos, value)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>clusterInfos</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>value</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="fixPosition">
+        <a class="href-link" href="#fixPosition">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                fixPosition<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>拖动的时候和放大缩小的时候自定义图层不见得会和地图的像素坐标同步计算
+因此再绘制自定义图层的时候需要重新计算对应的位置,这里主要是对齐左上角</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getBoundByExtent">
+        <a class="href-link" href="#getBoundByExtent">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getBoundByExtent<span class="signature">(extent)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据common的Extent计算出Leaflet的范围对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>extent</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Extent</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>范围对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Leaflet的范围对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">L.latLngBounds</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getBounds">
+        <a class="href-link" href="#getBounds">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getBounds<span class="signature">(layer)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取地图范围，仅在4326相关坐标系下生效，其他坐标系在地图视图的坐标系中设置了范围</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>基础图层对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>leaflet的范围对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getClippingArea">
+        <a class="href-link" href="#getClippingArea">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getClippingArea<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>GeoJSON对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getCrsOptionsByLayer">
+        <a class="href-link" href="#getCrsOptionsByLayer">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getCrsOptionsByLayer<span class="signature">(layer)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getMapImageLayerOptions">
+        <a class="href-link" href="#getMapImageLayerOptions">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getMapImageLayerOptions<span class="signature">(layer)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取地图图片图层的初始化参数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="IGSMapImageLayer.html">IGSMapImageLayer</a></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>IGSMapImageLayer对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>地图图片图层的初始化参数</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getMapRotateBounds">
+        <a class="href-link" href="#getMapRotateBounds">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getMapRotateBounds<span class="signature">(leafletMap)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>leafletMap</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getParamsString">
+        <a class="href-link" href="#getParamsString">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getParamsString<span class="signature">(params)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取请求参数链接，空值的请求参数不会出现在链接中</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>请求参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>请求参数链接字符串</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">String</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getPixelWorldBounds">
+        <a class="href-link" href="#getPixelWorldBounds">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getPixelWorldBounds<span class="signature">(zoom)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>zoom</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getScaleZoom">
+        <a class="href-link" href="#getScaleZoom">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getScaleZoom<span class="signature">(scale, fromZoom)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>scale</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fromZoom</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getTextByLabelSymbolExpression">
+        <a class="href-link" href="#getTextByLabelSymbolExpression">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getTextByLabelSymbolExpression<span class="signature">(textExpressionEx, clusterCount)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>textExpressionEx</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Expression</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>数值表达式解析器</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>clusterCount</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getTileUrl">
+        <a class="href-link" href="#getTileUrl">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getTileUrl<span class="signature">(coords)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>构造并获取瓦片请求的URL</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>coords</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>瓦片行列号对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>瓦片请求的URL</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">string</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getTileUrl">
+        <a class="href-link" href="#getTileUrl">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getTileUrl<span class="signature">(coords)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>构造并获取瓦片请求的URL</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>coords</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>瓦片行列号对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>瓦片请求的URL</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">String</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getTileUrl">
+        <a class="href-link" href="#getTileUrl">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getTileUrl<span class="signature">(coords)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取瓦片的请求地址</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>coords</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>当前地图中心点</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>当请求类型为get时返回请求地址，当请求类型为post时返回的时post的请求参数对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getTileUrl">
+        <a class="href-link" href="#getTileUrl">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getTileUrl<span class="signature">(coords)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>构造并获取瓦片请求的URL</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>coords</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>瓦片行列号对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>瓦片请求的URL</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">string</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getTileUrl">
+        <a class="href-link" href="#getTileUrl">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getTileUrl<span class="signature">(coords)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>构造并获取瓦片请求的URL</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>coords</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>瓦片行列号对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>瓦片请求的URL</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">String</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getValueByValueExpression">
+        <a class="href-link" href="#getValueByValueExpression">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getValueByValueExpression<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getZoomScale">
+        <a class="href-link" href="#getZoomScale">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getZoomScale<span class="signature">(toZoom, fromZoom)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>toZoom</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fromZoom</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="initBaseUrl">
+        <a class="href-link" href="#initBaseUrl">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                initBaseUrl<span class="signature">(url, options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>初始化基地址</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>url</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>服务基地址</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>额外初始化参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="initBaseUrl">
+        <a class="href-link" href="#initBaseUrl">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                initBaseUrl<span class="signature">(url, options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>初始化基地址</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>url</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>服务基地址</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>额外初始化参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="initialize">
+        <a class="href-link" href="#initialize">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                initialize<span class="signature">(url, options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>初始化函数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>url</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>服务基地址</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>额外参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="initialize">
+        <a class="href-link" href="#initialize">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                initialize<span class="signature">(url, options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>初始化函数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>url</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>服务基地址</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>额外参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="initialize">
+        <a class="href-link" href="#initialize">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                initialize<span class="signature">(url, options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>初始化图层</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>url</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>服务基地址</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>初始化参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="initialize">
+        <a class="href-link" href="#initialize">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                initialize<span class="signature">(url, options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>初始化函数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>url</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>服务基地址</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>额外构造参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="initialize">
+        <a class="href-link" href="#initialize">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                initialize<span class="signature">(url, options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>初始化函数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>url</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>服务基地址</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>额外参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="initialize">
+        <a class="href-link" href="#initialize">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                initialize<span class="signature">(url, options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>初始化函数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>url</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>服务基地址</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>额外参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="initializeCRS">
+        <a class="href-link" href="#initializeCRS">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                initializeCRS<span class="signature">(layer, allLayers)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>使用图层对象来构造Leaflet视图的CRS参数对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Layer</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>参考图层，使用其裁图原点、地图范围、级数和分辨率来构造CRS参数对象，支持ArcGISMapImageLayer、ArcGISTileLayer、ArcGISVectorTileLayer、
+IGSFeatureLayer、IGSMapImageLayer、IGSTileLayer、MapGISVectorTileLayer、WMSLayer、WMTSLayer、WFSLayer、WebTileLayer</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>allLayers</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Layer></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>可选参数，当需要在地图视图中，叠加多个裁图原点相同，裁图方案不同的图层时，可使用此参数，使用多个图层来构配合参考图层构造CRS参数对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Leaflet视图的CRS参数</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="initializeOptions">
+        <a class="href-link" href="#initializeOptions">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                initializeOptions<span class="signature">(layer)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>通过Common的图层对象构建Leaflet图层对象的初始化参数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Layer</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>Common层的地图对象，支持ArcGISMapImageLayer、ArcGISTileLayer、ArcGISVectorTileLayer、
+IGSMapImageLayer、IGSTileLayer、MapGISVectorTileLayer、WMSLayer、WMTSLayer、WebTileLayer</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Leaflet图层对象的初始化参数</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="onAdd">
+        <a class="href-link" href="#onAdd">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                onAdd<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>leaflet修改说明：GridLayer上支持同空间参考系不同裁图方式瓦片的叠加，因改动范围较大，将内核库内重写的代码全部放置在此注释段内
+此部分统改的包含两部分
+1、投影关系的改变，采用瓦片独立的像素系
+map.project =&gt; this.project
+map.unproject =&gt; this.unproject
+2、视图zoom层级的改变，把触发视图刷新入口的地图zoom换算成当前zoom
+this._toMapZoom
+this._toTileZoom
+修改人:赵凯 2024年5月17日
+------------------------- 同空间参考系不同裁图方式扩展 ------------------------------</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="onAdd">
+        <a class="href-link" href="#onAdd">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                onAdd<span class="signature">(map)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>添加图层完毕事件</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>map</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">L.map</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>Leaflet地图视图对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="onAdd">
+        <a class="href-link" href="#onAdd">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                onAdd<span class="signature">(map)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>添加图层完毕事件</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>map</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">L.map</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>Leaflet地图视图对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="onAdd">
+        <a class="href-link" href="#onAdd">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                onAdd<span class="signature">(map)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>图层添加事件</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>map</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">L.map</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>leaflet地图视图对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="onAdd">
+        <a class="href-link" href="#onAdd">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                onAdd<span class="signature">(map)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>图层添加事件</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>map</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">L.map</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>leaflet地图视图对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="onAdd">
+        <a class="href-link" href="#onAdd">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                onAdd<span class="signature">(map)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>添加图层完毕事件</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>map</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">L.map</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>Leaflet地图视图对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="onAdd">
+        <a class="href-link" href="#onAdd">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                onAdd<span class="signature">(map)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>添加图层完毕事件</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>map</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">L.map</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>Leaflet地图视图对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="project">
+        <a class="href-link" href="#project">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                project<span class="signature">(latlng, zoom)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>latlng</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>zoom</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="refreshClusters">
+        <a class="href-link" href="#refreshClusters">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                refreshClusters<span class="signature">(layers)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Updates the icon of all clusters which are parents of the given marker(s).
+In singleMarkerMode, also updates the given marker(s) icon.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layers</code></td>
+  
+
+  <td class="type">
+  
+  </td>
+
+  
+
+  <td class="description last"><p>L.MarkerClusterGroup|L.LayerGroup|Array(L.Marker)|Map(L.Marker)|
+L.MarkerCluster|L.Marker (optional) list of markers (or single marker) whose parent
+clusters need to be updated. If not provided, retrieves all child markers of this.</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">L.MarkerClusterGroup</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="refreshIconOptions">
+        <a class="href-link" href="#refreshIconOptions">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                refreshIconOptions<span class="signature">(options, directlyRefreshClusters)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Updates the given options in the marker's icon and refreshes the marker.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+  </td>
+
+  
+
+  <td class="description last"><p>map object of icon options.</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>directlyRefreshClusters</code></td>
+  
+
+  <td class="type">
+  
+  </td>
+
+  
+
+  <td class="description last"><p>boolean (optional) true to trigger
+MCG.refreshClustersOf() right away with this single marker.</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">L.Marker</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="setClippingArea">
+        <a class="href-link" href="#setClippingArea">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                setClippingArea<span class="signature">(图层空间裁剪区域，需要传入geojson对象。仅支持多多边形裁剪、多边形裁剪。)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>图层空间裁剪区域，需要传入geojson对象。仅支持多多边形裁剪、多边形裁剪。</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="setClippingArea">
+        <a class="href-link" href="#setClippingArea">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                setClippingArea<span class="signature">(图层空间裁剪区域，需要传入geojson对象。仅支持多多边形裁剪、多边形裁剪。)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>图层空间裁剪区域，需要传入geojson对象。仅支持多多边形裁剪、多边形裁剪。</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="setVisible">
+        <a class="href-link" href="#setVisible">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                setVisible<span class="signature">(visible)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>visible</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>图层是否可见</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="setZIndex">
+        <a class="href-link" href="#setZIndex">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                setZIndex<span class="signature">(index)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>index</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="unproject">
+        <a class="href-link" href="#unproject">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                unproject<span class="signature">(point, zoom)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>point</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>zoom</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="wrapLatLngBounds">
+        <a class="href-link" href="#wrapLatLngBounds">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                wrapLatLngBounds<span class="signature">(latlng)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>latlng</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+        <div class='vertical-section'>
+            <h1>类型定义</h1>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="complete">
+        <a class="href-link" href="#complete">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                complete<span class="signature">(result)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>绘制完成的回调函数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>result</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>回调参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>type</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>几何类型</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>feature</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Feature</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>绘制完成后返回的要素对象</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>drawConfig</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>绘制配置</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>文档生成<a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="http://www.smaryun.com" target="_blank">司马云</a> <span>© 2023 云生态圈</span>
+                        <a href="http://webclient.smaryun.com:8086/#/index" target="_blank">MapGIS Client for JavaScript</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#page-title">构造函数</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#member">成员变量</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#function">方法</a>
+            </div>
+            <div>
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#event">事件</a>
+            </div>
+        </div>
+    </div>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

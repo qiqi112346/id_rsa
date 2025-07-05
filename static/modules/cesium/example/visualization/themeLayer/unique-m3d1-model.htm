@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>M3D(1.0)-单值专题图</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, renderer_unique
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加天地图
+        addTDT()
+        //设置专题图参数
+        setRender()
+        //添加M3D专题图
+        addM3DThemeLayer()
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //添加天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //添加M3D专题图
+      function addM3DThemeLayer() {
+        let url =
+          'http://192.168.88.204:8089/M3D/1.0/%E7%99%BD%E6%A8%A1/dltbti.mcj'
+        //添加M3D白膜数据
+        viewer.scene.layers.appendM3DLayer(url, {
+          //设置render参数，渲染专题图
+          renderer: renderer_unique
+        })
+      }
+
+      //设置专题图参数
+      function setRender() {
+        //单值专题图参数
+        renderer_unique = {
+          //专题图字段
+          field: 'OID',
+          //专题图类型-单值
+          type: 'unique-value',
+          //专题图着色参数
+          uniqueValueInfos: []
+        }
+        //初始化专题图着色参数，设置oid从1到20000的颜色为半透明蓝色
+        for (let i = 1; i < 110000; i++) {
+          renderer_unique.uniqueValueInfos.push({
+            //单值过滤条件
+            value: i,
+            //渲染符号
+            symbol: {
+              //渲染类型为M3D
+              type: 'mesh-3d',
+              //覆盖物图层
+              symbolLayers: [
+                {
+                  //图层类型-颜色填充
+                  type: 'fill',
+                  //图层材质
+                  material: {
+                    //填充颜色
+                    color: new Cesium.Color(1.0, 0.0, 1.0, 0.8)
+                  }
+                }
+              ]
+            }
+          })
+        }
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

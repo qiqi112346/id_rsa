@@ -1,0 +1,38 @@
+#mapgis-viewer {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+/* 鼠标位置控件层样式设置 */
+#mouse-position {
+  margin-left: 20px;
+  color: red;
+  position: absolute;
+  bottom: 20px;
+  z-index: 1;
+  font-size: 16px;
+  right: 20px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.controls {
+  position: absolute;
+  background: #ffffff;
+  top: 20px;
+  right: 20px;
+  padding: 12px;
+  border-radius: 6px;
+}

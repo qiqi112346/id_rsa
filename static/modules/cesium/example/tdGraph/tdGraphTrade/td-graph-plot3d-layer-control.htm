@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>三维标绘图层使用</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha384-SOnAn/m2fVJCwnbEYgD4xzrPtvsXdElhOVvR8ND1YjB5nhGNwwf7nBQlhfAwHAZC" crossorigin="anonymous"/>
+    <!-- jquery -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/jquery/jquery-3.7.1.min.js"></script>
+    <!-- cesium -->
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!-- plot -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-plot.min.js"></script>
+    <!-- panel -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotPanel/index.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotPanel/index.css"/>
+    <!--layui-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/plot/plot3d-layer-control.css"
+    />
+    <script>
+      'use strict'
+
+      //定义三维视图的主要类
+      let map,
+        sceneView,
+        viewer,
+        plotLayer1,
+        plotLayer2,
+        plotLayer3DGroup,
+        manager
+      // 获取Zondy类
+      const zondy = window.zondy
+      // 获取标绘类
+      const plot= zondy.plot
+      const {
+        // 三维图层
+        PlotLayer3D,
+        // 三维图层组
+        PlotLayer3DGroup,
+        // 符号管理器
+        SymbolManager
+      } = plot
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加天地图
+        addTDT()
+        //视图跳转
+        flyTo()
+        //初始化标绘管理器
+        initPlotManager(SymbolManager, function () {
+          //确保符号获取完毕后，初始化标绘图层
+          initPlotLayer(PlotLayer3D, PlotLayer3DGroup)
+          //初始化UI
+          initUI()
+        })
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //显示鼠标位置
+        viewer.showPosition()
+        //抗锯齿处理
+        viewer.scene.fxaa = true
+        viewer.scene.postProcessStages.fxaa.enabled = true
+      }
+
+      //加载天地图底图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //视角跳转
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [117.18944441797595, 34.2390284961602, 80000],
+          duration: 2
+        })
+      }
+
+      /**
+       * 初始化标绘符号管理器
+       * @param SymbolManager 标绘符号管理器
+       * @param callback 回调函数
+       * */
+      function initPlotManager(SymbolManager, callback) {
+        // 符号库路径
+        const symbolUrl = `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/symbolLib.json`
+        const symbolOptions = {
+          // 符号库字体路径
+          fontURL: `http://webclient.smaryun.com:8200/Plot/plot-sample/fonts/`,
+          // 静态资源路径
+          baseUrl: `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/`
+        }
+
+        // 创建符号管理器
+        const manager = new SymbolManager(symbolUrl, symbolOptions)
+        // 请求获取符号库
+        manager.getSymbols().then(() => {
+          //获取符号库后执行回调
+          callback()
+        })
+      }
+
+      /**
+       * 初始化标绘图层
+       * @param PlotLayer3D 标绘图层构造函数
+       * @param PlotLayer3DGroup 标绘图层组构造函数
+       * */
+      function initPlotLayer(PlotLayer3D, PlotLayer3DGroup) {
+        // 创建图层组
+        plotLayer3DGroup = new PlotLayer3DGroup(viewer)
+        // 创建三维图层
+        plotLayer1 = new PlotLayer3D(Cesium, viewer, {})
+        plotLayer2 = new PlotLayer3D(Cesium, viewer, {})
+        // 添加图层
+        plotLayer3DGroup.addLayer(plotLayer1)
+        plotLayer3DGroup.addLayer(plotLayer2)
+        // 读取保存的标绘物数据
+        plotLayer1.addGeoJSONObject({
+          type: 'Feature',
+          properties: {
+            show: true,
+            symbolId: '56',
+            nodeStyles: {
+              path12770: {
+                strokeStyle: 'rgba(255,0,0,1)'
+              }
+            }
+          },
+          geometry: {
+            type: 'MultiPoint',
+            coordinates: [[117.18944441797595, 34.2390284961602]]
+          }
+        })
+
+        // 读取保存的标绘物数据
+        plotLayer2.addGeoJSONObject({
+          type: 'Feature',
+          properties: {
+            show: true,
+            symbolId: '57',
+            nodeStyles: {
+              path12770: {
+                strokeStyle: 'rgba(0,0,0,1)'
+              }
+            }
+          },
+          geometry: {
+            type: 'MultiPoint',
+            coordinates: [[117.29944441797595, 34.2390284961602]]
+          }
+        })
+      }
+      //初始化UI
+      function initUI() {
+        $('.plot-panel-container').draggable({
+          container: `#plot-show-table`,
+          handle: '.panel-heading'
+        })
+      }
+
+      function hideOrShowLayer(layerName, e) {
+        let plotLayer = null
+        let btnIndex = null
+        if (layerName === 'plotLayer1') {
+          plotLayer = plotLayer1
+          btnIndex = 0
+        } else {
+          plotLayer = plotLayer2
+          btnIndex = 1
+        }
+        let status = $(e).attr('attr-status')
+        if (status === 'show') {
+          //代表当前是展示，那么切换成隐藏
+          $(e).attr('attr-status', 'hide')
+          $(e)[0].innerHTML = '显示'
+          plotLayer.setVisible(false)
+          //屏蔽编辑按钮
+          $('.edit-btn').eq(btnIndex).addClass('btn-disabled')
+        } else {
+          $(e).attr('attr-status', 'show')
+          $(e)[0].innerHTML = '隐藏'
+          plotLayer.setVisible(true)
+          $('.edit-btn').eq(btnIndex).removeClass('btn-disabled')
+        }
+      }
+
+      function editLayer(layerName, e) {
+        let plotLayer = null
+        if (layerName === 'plotLayer1') {
+          plotLayer = plotLayer1
+        } else {
+          plotLayer = plotLayer2
+        }
+        let status = $(e).attr('attr-status')
+        if (status === 'close') {
+          //代表当前是关闭状态，点击打开
+          $(e).attr('attr-status', 'open')
+          $(e)[0].innerHTML = '关闭编辑'
+          plotLayer.editable = true
+          //提示
+          layer.msg('点击选中图层进行编辑')
+        } else {
+          $(e).attr('attr-status', 'close')
+          $(e)[0].innerHTML = '开启编辑'
+          plotLayer.editable = false
+        }
+      }
+
+      function getAllLayer() {
+        let layers = plotLayer3DGroup.getLayers()
+        let ids = []
+        for (let i = 1; i < layers.length; i++) {
+          let ly = layers[i]
+          ids.push(ly.id)
+        }
+        layer.msg(`共${ids.length}张图层，图层ID为：${ids.join(';')}`)
+      }
+
+      function removeAllLayer() {
+        plotLayer3DGroup.removeLayer(plotLayer1)
+        plotLayer3DGroup.removeLayer(plotLayer2)
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer">
+      <div id="content">
+        <div id="plot-show-table" style="display: inline">
+          <div
+            class="plot-panel-container panel"
+            style="border: none; width: 320px"
+          >
+            <div class="panel-heading">
+              <div class="fas fa-edit">图层控制</div>
+            </div>
+            <div class="panel-body">
+              <div class="div-item">
+                <span>图层一：</span>
+                <div
+                  attr-status="show"
+                  class="custom-btn short-btn"
+                  onclick="hideOrShowLayer('plotLayer1',this)"
+                >
+                  隐藏
+                </div>
+                <div
+                  class="custom-btn short-btn edit-btn"
+                  attr-status="close"
+                  onclick="editLayer('plotLayer1',this)"
+                >
+                  开启编辑
+                </div>
+              </div>
+              <div class="div-item">
+                <span>图层二：</span>
+                <div
+                  attr-status="show"
+                  class="custom-btn short-btn"
+                  onclick="hideOrShowLayer('plotLayer2',this)"
+                >
+                  隐藏
+                </div>
+                <div
+                  class="custom-btn short-btn edit-btn"
+                  attr-status="close"
+                  onclick="editLayer('plotLayer2',this)"
+                >
+                  开启编辑
+                </div>
+              </div>
+              <div class="div-item">
+                <div class="custom-btn long-btn" onclick="getAllLayer()">
+                  获取图层信息
+                </div>
+              </div>
+              <div class="div-item">
+                <div class="custom-btn long-btn" onclick="removeAllLayer()">
+                  清除所有图层
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <style>
+    #content{
+      position: absolute;
+      margin: 10px;
+    }
+
+    .div-item {
+      color: #fff;
+      font-size: 13px !important;
+      margin-bottom: 15px;
+    }
+
+    .custom-btn {
+      padding: 5px 20px;
+      font-size: 13px;
+      font-weight: 400;
+      text-align: center;
+      white-space: nowrap;
+      cursor: pointer;
+      color: #fff;
+      background-color: rgba(24, 144, 255, 1);
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      box-sizing: border-box;
+    }
+
+    .short-btn {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 15px;
+      width: 30%;
+    }
+
+    .long-btn {
+      width: 100%;
+    }
+
+    .btn-disabled {
+      background-color: #666666;
+      color: #333;
+    }
+  </style>
+</html>

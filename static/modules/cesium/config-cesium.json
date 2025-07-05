@@ -1,0 +1,2155 @@
+{
+  "name": "cesium",
+  "title": "MapGIS WebClinet-Cesium",
+  "mapmode": "cesium",
+  "childs": [
+    {
+      "name": "数据图层",
+      "folder": "layer",
+      "childs": [
+        {
+          "name": "互联网图层",
+          "folder": "internetLayer",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "天地图",
+              "file": "tdt",
+              "icon": "tdt.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "百度地图",
+              "file": "baidu",
+              "icon": "baidu.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "高德地图",
+              "file": "gaode",
+              "icon": "gaode.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "自定义裁图方式地图",
+              "file": "custom",
+              "icon": "baidu.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "OGC图层",
+          "folder": "OGCLayer",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "WMS(MapGIS)-4326",
+              "file": "wms-mapgis-4326",
+              "icon": "wms-mapgis-4326.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "WMS(MapGIS)-3857",
+              "file": "wms-mapgis-3857",
+              "icon": "wms-mapgis-3857.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "WMS(MapGIS)-custom",
+              "file": "wms-mapgis-custom",
+              "icon": "wms-mapgis-custom.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "WMS-混合接口",
+              "file": "wms-mapgis-hybrid",
+              "icon": "wms-mapgis-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "wms-mapgis-hybrid",
+                "WMSLayer",
+                "OGC图层",
+                "WMS图层",
+                "WMS地图服务",
+                "混合接口",
+                "OGC",
+                "hybrid"
+              ]
+            },
+            {
+              "name": "WMS-原生接口",
+              "file": "wms-mapgis-native",
+              "icon": "wms-mapgis-native.png",
+              "diffcult": "1",
+              "tags": [
+                "wms-mapgis-native",
+                "WMSLayer",
+                "OGC图层",
+                "WMS图层",
+                "WMS地图服务",
+                "原生接口",
+                "OGC",
+                "hybrid"
+              ]
+            },
+            {
+              "name": "WMTS(MapGIS)-4326",
+              "file": "wmts-mapgis-4326",
+              "icon": "wmts-mapgis-4326.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "WMTS(MapGIS)-3857",
+              "file": "wmts-mapgis-3857",
+              "icon": "wmts-mapgis-3857.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "WMTS(MapGIS)-自定义坐标系",
+              "file": "wmts-mapgis-custom",
+              "icon": "wmts-mapgis-custom.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "WMTS-混合接口",
+              "file": "wmts-mapgis-hybrid",
+              "icon": "wmts-mapgis-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "wmts-mapgis-hybrid",
+                "WMTSLayer",
+                "OGC图层",
+                "WMTS图层",
+                "WMTS地图服务",
+                "混合接口",
+                "OGC",
+                "hybrid"
+              ]
+            },
+            {
+              "name": "WMTS-原生接口",
+              "file": "wmts-mapgis-native",
+              "icon": "wmts-mapgis-native.png",
+              "diffcult": "1",
+              "tags": [
+                "wmts-mapgis-native",
+                "WMTSLayer",
+                "OGC图层",
+                "WMTS图层",
+                "WMTS地图服务",
+                "原生接口",
+                "OGC",
+                "hybrid"
+              ]
+            },
+            {
+              "name": "WFS(MapGIS)-4326",
+              "file": "wfs-mapgis-4326",
+              "icon": "wfs-mapgis-4326.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "WFS(MapGIS)-3857",
+              "file": "wfs-mapgis-3857",
+              "icon": "wfs-mapgis-3857.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "WFS(MapGIS)-混合接口",
+              "file": "wfs-mapgis-hybrid",
+              "icon": "wfs-mapgis-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "WFS(MapGIS)-混合接口",
+                "hybrid",
+                "WFS",
+                "OGC",
+                "Feature",
+                "geojson"
+              ]
+            },
+            {
+              "name": "WFS(MapGIS)-原生接口",
+              "file": "wfs-mapgis-native",
+              "icon": "wfs-mapgis-native.png",
+              "diffcult": "1",
+              "tags": [
+                "WFS(MapGIS)-原生接口",
+                "native",
+                "WFS",
+                "OGC",
+                "Feature",
+                "geojson"
+              ]
+            },
+            {
+              "name": "WMS(ArcGIS)",
+              "file": "wms-arcgis",
+              "icon": "wms-arcgis.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "WMTS(ArcGIS)",
+              "file": "wmts-arcgis",
+              "icon": "wmts-arcgis.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "WFS(MapGIS)-设置高度模式",
+              "file": "wfs-mapgis-elevation",
+              "icon": "wfs-mapgis-elevation.png",
+              "diffcult": "1",
+              "tags": [
+                "WFS(MapGIS)-设置高度模式",
+                "wfs-mapgis-elevation",
+                "gaodumoshi",
+                "elevationInfo"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "地图图片图层",
+          "folder": "mapPictureLayer",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "MapGIS地图服务-4326",
+              "file": "mapgis-map-image-layer-4326",
+              "icon": "mapgis-map-image-layer-4326.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS地图服务-3857",
+              "file": "mapgis-map-image-layer-3857",
+              "icon": "mapgis-map-image-layer-3857.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS地图服务-自定义坐标系",
+              "file": "mapgis-map-image-layer-custom",
+              "icon": "mapgis-map-image-layer-custom.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS图层服务",
+              "file": "mapgis-layer-service",
+              "icon": "mapgis-layer-service.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS地图服务-混合接口",
+              "file": "mapgis-map-image-layer-hybrid",
+              "icon": "mapgis-map-image-layer-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "mapgis-map-image-layer-hybrid",
+                "IGSMapImageLayer",
+                "地图图片图层",
+                "MapGIS地图服务",
+                "混合接口",
+                "ditutupiantuceng",
+                "mapimage",
+                "hybrid"
+              ]
+            },
+            {
+              "name": "MapGIS地图服务-原生接口",
+              "file": "mapgis-map-image-layer-native",
+              "icon": "mapgis-map-image-layer-native.png",
+              "diffcult": "1",
+              "tags": [
+                "mapgis-map-image-layer-native",
+                "IGSMapImageLayer",
+                "地图图片图层",
+                "MapGIS地图服务",
+                "原生接口",
+                "ditutupiantuceng",
+                "mapimage",
+                "native"
+              ]
+            },
+            {
+              "name": "ArcGIS地图服务-混合接口",
+              "file": "arcgis-map-image-layer-hybrid",
+              "icon": "arcgis-map-image-layer-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "arcgis-map-image-layer-hybrid",
+                "ArcGISMapImageLayer",
+                "地图图片图层",
+                "ArcGIS地图服务",
+                "混合接口",
+                "ditutupiantuceng",
+                "mapimage",
+                "hybrid"
+              ]
+            },
+            {
+              "name": "ArcGIS地图服务-原生接口",
+              "file": "arcgis-map-image-layer-native",
+              "icon": "arcgis-map-image-layer-native.png",
+              "diffcult": "1",
+              "tags": [
+                "arcgis-map-image-layer-native",
+                "ArcGISMapImageLayer",
+                "地图图片图层",
+                "ArcGIS地图服务",
+                "原生接口",
+                "ditutupiantuceng",
+                "mapimage",
+                "native"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "瓦片图层",
+          "folder": "tileLayer",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "MapGIS瓦片服务-4326",
+              "file": "mapgis-tile-4326",
+              "icon": "mapgis-tile-4326.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS瓦片服务-3857",
+              "file": "mapgis-tile-3857",
+              "icon": "mapgis-tile-3857.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS瓦片服务-自定义坐标系",
+              "file": "mapgis-tile-custom",
+              "icon": "mapgis-tile-custom.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS瓦片服务-原生接口",
+              "file": "mapgis-tile-native",
+              "icon": "mapgis-tile-native.png",
+              "diffcult": "1",
+              "tags": [
+                "mapgis-tile-native",
+                "IGSTileLayer",
+                "瓦片图层",
+                "MapGIS瓦片服务",
+                "原生接口",
+                "wapiantuceng",
+                "tileimage",
+                "native"
+              ]
+            },
+            {
+              "name": "MapGIS瓦片服务-混合接口",
+              "file": "mapgis-tile-hybrid",
+              "icon": "mapgis-tile-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "mapgis-tile-hybrid",
+                "IGSTileLayer",
+                "瓦片图层",
+                "MapGIS瓦片服务",
+                "混合接口",
+                "wapiantuceng",
+                "tileimage",
+                "hybrid"
+              ]
+            },
+            {
+              "name": "ArcGIS瓦片服务-混合接口",
+              "file": "arcgis-tile-hybrid",
+              "icon": "arcgis-tile-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "arcgis-tile-hybrid",
+                "ArcGISTileLayer",
+                "瓦片图层",
+                "ArcGIS瓦片服务",
+                "混合接口",
+                "wapiantuceng",
+                "tileimage",
+                "hybrid"
+              ]
+            },
+            {
+              "name": "ArcGIS瓦片服务-原生接口",
+              "file": "arcgis-tile-native",
+              "icon": "arcgis-tile-native.png",
+              "diffcult": "1",
+              "tags": [
+                "arcgis-tile-native",
+                "ArcGISTileLayer",
+                "瓦片图层",
+                "ArcGIS瓦片服务",
+                "原生接口",
+                "wapiantuceng",
+                "tileimage",
+                "native"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "要素图层",
+          "folder": "featureLayer",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "MapGIS要素服务-4326",
+              "file": "mapgis-feature-4326",
+              "icon": "mapgis-feature-4326.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS要素服务-3857",
+              "file": "mapgis-feature-3857",
+              "icon": "mapgis-feature-3857.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS要素服务-自定义坐标系",
+              "file": "mapgis-feature-custom",
+              "icon": "mapgis-feature-custom.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS要素服务-设置高度模式",
+              "file": "mapgis-feature-elevation",
+              "icon": "mapgis-feature-elevation.png",
+              "diffcult": "1",
+              "tags": [
+                "MapGIS要素服务-设置高度模式",
+                "mapgis-feature-elevation",
+                "gaodumoshi",
+                "elevationInfo"
+              ]
+            },
+            {
+              "name": "MapGIS要素服务-混合接口",
+              "file": "mapgis-feature-hybrid",
+              "icon": "mapgis-feature-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "MapGIS要素服务-混合接口",
+                "mapgis-feature-hybrid",
+                "hybrid",
+                "Feature",
+                "yaosufuwu"
+              ]
+            },
+            {
+              "name": "MapGIS要素服务(gdbp)-混合接口",
+              "file": "mapgis-feature-gdbp-hybrid",
+              "icon": "mapgis-feature-gdbp-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "MapGIS要素服务-混合接口",
+                "gdbp",
+                "mapgis-feature-hybrid",
+                "hybrid",
+                "Feature",
+                "yaosufuwu"
+              ]
+            },
+            {
+              "name": "MapGIS要素服务-原生接口",
+              "file": "mapgis-feature-native",
+              "icon": "mapgis-feature-native.png",
+              "diffcult": "1",
+              "tags": [
+                "MapGIS要素服务-原生接口",
+                "mapgis-feature-native",
+                "native",
+                "Feature",
+                "yaosufuwu"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "GeoJson图层",
+          "folder": "GeoJsonLayer",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "GeoJSON",
+              "file": "geojson",
+              "icon": "geojson.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "GeoJson图层-设置高度模式",
+              "file": "geojson-elevation",
+              "icon": "geojson-elevation.png",
+              "diffcult": "1",
+              "tags": [
+                "GeoJson图层-设置高度模式",
+                "geojson-elevation",
+                "gaodumoshi",
+                "elevationInfo"
+              ]
+            },
+            {
+              "name": "GeoJSON-混合接口",
+              "file": "geojson-hybrid",
+              "icon": "geojson-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "GeoJson-混合接口",
+                "geojson-hybrid",
+                "hybrid",
+                "Feature",
+                "geojson"
+              ]
+            },
+            {
+              "name": "GeoJson图层-原生接口",
+              "file": "geojson-native",
+              "icon": "geojson-native.png",
+              "diffcult": "1",
+              "tags": [
+                "GeoJson图层-原生接口",
+                "geojson-native",
+                "native",
+                "Feature",
+                "geojson"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "KML图层",
+          "folder": "KMLLayer",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "KML",
+              "file": "kml",
+              "icon": "kml.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "KMZ",
+              "file": "kmz",
+              "icon": "kmz.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "CZML图层",
+          "folder": "CZMLLayer",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "CZML",
+              "file": "czml",
+              "icon": "czml.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "矢量瓦片图层",
+          "folder": "vectorTile",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "矢量瓦片(MapGIS)-4326",
+              "file": "vector-tile-mapgis-4326",
+              "icon": "vector-tile-mapgis-4326.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "矢量瓦片(MapGIS)-3857",
+              "file": "vector-tile-mapgis-3857",
+              "icon": "vector-tile-mapgis-3857.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "矢量瓦片(MapGIS)-自定义坐标系",
+              "file": "vector-tile-mapgis-custom",
+              "icon": "vector-tile-mapgis-custom.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "矢量瓦片(MapGIS)-混合接口",
+              "file": "vector-tile-hybrid",
+              "icon": "vector-tile-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "vector-tile-hybrid",
+                "MapGISVectorTileLayer",
+                "矢量瓦片图层",
+                "MapGIS矢量瓦片服务",
+                "混合接口",
+                "shiliangwapiantuceng",
+                "vectortileimage",
+                "hybrid"
+              ]
+            },
+            {
+              "name": "矢量瓦片(MapGIS)-原生接口",
+              "file": "vector-tile-native",
+              "icon": "vector-tile-native.png",
+              "diffcult": "1",
+              "tags": [
+                "vector-tile-native",
+                "MapGISVectorTileLayer",
+                "矢量瓦片图层",
+                "MapGIS矢量瓦片服务",
+                "原生接口",
+                "shiliangwapiantuceng",
+                "vectortileimage",
+                "native"
+              ]
+            },
+            {
+              "name": "矢量瓦片(ArcGIS)-混合接口",
+              "file": "arcgis-vector-tile-hybrid",
+              "icon": "arcgis-vector-tile-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "vector-tile-hybrid",
+                "ArcGISVectorTileLayer",
+                "矢量瓦片图层",
+                "ArcGIS矢量瓦片服务",
+                "混合接口",
+                "shiliangwapiantuceng",
+                "vectortileimage",
+                "hybrid"
+              ]
+            },
+            {
+              "name": "矢量瓦片(ArcGIS)-原生接口",
+              "file": "arcgis-vector-tile-native",
+              "icon": "arcgis-vector-tile-native.png",
+              "diffcult": "1",
+              "tags": [
+                "vector-tile-native",
+                "ArcGISVectorTileLayer",
+                "矢量瓦片图层",
+                "ArcGIS矢量瓦片服务",
+                "原生接口",
+                "shiliangwapiantuceng",
+                "vectortileimage",
+                "native"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "地形缓存图层",
+          "folder": "terrain",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "STK地形缓存-自定义服务",
+              "file": "stk-terrain-custom-service",
+              "icon": "stk-terrain-custom-service.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "IGS地形服务",
+              "file": "terrainService",
+              "icon": "terrainService.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "STK地形缓存-混合接口",
+              "file": "stk-terrain-hybrid",
+              "icon": "stk-terrain-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "STK地形缓存-混合接口",
+                "stk-terrain-hybrid",
+                "hybrid",
+                "dixinghuancun"
+              ]
+            },
+            {
+              "name": "STK地形缓存-原生接口",
+              "file": "stk-terrain-native",
+              "icon": "stk-terrain-native.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "场景图层",
+          "folder": "sceneLayer",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "MapGIS地形服务",
+              "file": "mapgis-terrain",
+              "icon": "mapgis-terrain.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "倾斜摄影(MapGIS-场景服务)",
+              "file": "oblique-mapgis-g3d",
+              "icon": "oblique-mapgis-g3d.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS注记服务",
+              "file": "mapgis-annotation-server",
+              "icon": "mapgis-annotation-server.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS场景服务(组图层)",
+              "file": "geologic-body-mapgis-group",
+              "icon": "geologic-body-mapgis-group.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "IS场景服务",
+              "file": "s3m-is-scene-layer",
+              "icon": "s3m-is-scene-layer.png",
+              "diffcult": "1",
+              "tags": [
+                "IS场景服务",
+                "s3m",
+                "s3m-is-scene-layer",
+                "SceneLayer",
+                "ISSceneLayer"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "模型缓存图层",
+          "folder": "modelCacheLayer",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "粗模(M3D-文件服务)",
+              "file": "rough-model",
+              "icon": "rough-model.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "倾斜摄影(M3D-M3D服务)",
+              "file": "oblique-mapgis-m3d",
+              "icon": "oblique-mapgis-m3d.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "倾斜摄影(M3D-MeshOpt)",
+              "file": "oblique-mapgis-m3d-MeshOpt",
+              "icon": "oblique-mapgis-m3d-MeshOpt.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "点云(M3D-文件服务)",
+              "file": "point-cloud-model-fileserver",
+              "icon": "point-cloud-model-fileserver.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "景观模型(M3D-文件服务)",
+              "file": "landscape-model",
+              "icon": "landscape-model.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "BIM(M3D-文件服务)",
+              "file": "bim-model",
+              "icon": "bim-model.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "地质体网格(M3D-文件服务)",
+              "file": "geologic-body-grid-mapgis",
+              "icon": "geologic-body-grid-mapgis.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "地质建模(M3D-文件服务)",
+              "file": "geologic-body-fileserver",
+              "icon": "geologic-body-fileserver.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "地质钻孔(M3D-文件服务)",
+              "file": "borehole-mapgis",
+              "icon": "borehole-mapgis.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "地下管网(M3D-文件服务)",
+              "file": "under-pipe-net",
+              "icon": "under-pipe-net.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "倾斜摄影(3DTiles-文件服务)",
+              "file": "oblique-mapgis-3dtiles",
+              "icon": "oblique-mapgis-3dtiles.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "倾斜摄影(3DTiles-IGS服务)",
+              "file": "oblique-mapgis-3dtilesIGSServer",
+              "icon": "oblique-mapgis-3dtilesIGSServer.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "倾斜摄影(3DTiles-MeshOpt)",
+              "file": "oblique-mapgis-3dtiles-MeshOpt",
+              "icon": "oblique-mapgis-3dtiles-MeshOpt.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "点云(3DTiles-文件服务)",
+              "file": "cloud-point-3dtiles",
+              "icon": "cloud-point-3dtiles.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "BIM构件树(M3D-文件服务)",
+              "file": "bim-structuretree",
+              "icon": "bim-structuretree.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "BIM构件树(M3D-M3D服务)",
+              "file": "bim-structuretree-m3d",
+              "icon": "bim-structuretree-m3d.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "栅格体元(M3D-M3D服务)-原生接口",
+              "file": "voxel-model",
+              "icon": "voxel-model.png",
+              "diffcult": "1",
+              "tags": [
+                "栅格体元(M3D-M3D服务)-原生接口",
+                "shangetiyuan",
+                "voxel-model"
+              ]
+            },
+            {
+              "name": "模型缓存-混合接口",
+              "file": "geologic-body-hybrid",
+              "icon": "geologic-body-hybrid.png",
+              "diffcult": "1",
+              "tags": [
+                "模型缓存-混合接口",
+                "geologic-body-hybrid",
+                "hybrid",
+                "sanweituceng"
+              ]
+            },
+            {
+              "name": "模型缓存-原生接口",
+              "file": "geologic-body-native",
+              "icon": "geologic-body-native.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "倾斜摄影(I3S-I3S服务)",
+              "file": "i3s",
+              "icon": "i3s.png",
+              "diffcult": "1",
+              "tags": ["倾斜摄影(I3S-I3S服务)", "I3S图层", "i3s", "I3S"]
+            },
+            {
+              "name": "倾斜摄影(3DTiles1.1-文件服务)",
+              "file": "3dtiles1_1",
+              "icon": "3dtiles1_1.png",
+              "diffcult": "1",
+              "tags": [
+                "倾斜摄影(3DTiles1.1-文件服务)",
+                "3dtiles1_1",
+                "3DTiles1.1",
+                "3dtiles1.1"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "动态图层",
+          "folder": "dynamic",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "交通仿真",
+              "file": "traffic-simulation",
+              "icon": "traffic-simulation.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "飞机航线",
+              "file": "airline",
+              "icon": "airline.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "图形图层",
+          "folder": "graphicsLayer",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "几何图层 - 4326",
+              "file": "graphic-layer-4326",
+              "icon": "graphic-layer-4326.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "几何图层 - 3857",
+              "file": "graphic-layer-3857",
+              "icon": "graphic-layer-3857.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "几何图层 - custom",
+              "file": "graphic-layer-custom",
+              "icon": "graphic-layer-custom.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "简单Marker符号",
+              "file": "simple-marker-symbol",
+              "icon": "simple-marker-symbol.png",
+              "diffcult": "1",
+              "tags": ["SimpleMarkerSymbol"]
+            },
+            {
+              "name": "图片Marker符号",
+              "file": "picture-marker-symbol",
+              "icon": "picture-marker-symbol.png",
+              "diffcult": "1",
+              "tags": ["PictureMarkerSymbol"]
+            },
+            {
+              "name": "简单线符号",
+              "file": "simple-line-symbol",
+              "icon": "simple-line-symbol.png",
+              "diffcult": "1",
+              "tags": ["SimpleLineSymbol"]
+            },
+            {
+              "name": "简单填充符号",
+              "file": "simple-fill-symbol",
+              "icon": "simple-fill-symbol.png",
+              "diffcult": "1",
+              "tags": ["SimpleFillSymbol"]
+            },
+            {
+              "name": "文字符号",
+              "file": "text-symbol",
+              "icon": "text-symbol.png",
+              "diffcult": "1",
+              "tags": ["TextSymbol"]
+            },
+            {
+              "name": "MapGIS文字符号",
+              "file": "mapgis-text-symbol",
+              "icon": "mapgis-text-symbol.png",
+              "diffcult": "1",
+              "tags": ["MapGISTextSymbol"]
+            },
+            {
+              "name": "几何图层 - 混合接口",
+              "file": "graphic-layer-hybrid",
+              "icon": "graphic-layer-hybrid.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "图层控制",
+          "folder": "layerControl",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "地图图片图层",
+              "file": "mapgis-map-image-layers",
+              "icon": "mapgis-map-image-layers.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "影像图层高程模式设置",
+              "file": "image-layer-elevation-mode-setting",
+              "icon": "image-layer-elevation-mode-setting.png",
+              "diffcult": "1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "场景视图",
+      "folder": "sceneControl",
+      "childs": [
+        {
+          "name": "场景设置",
+          "folder": "scene",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "显示模式",
+              "file": "earth",
+              "icon": "earth.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "场景参数",
+              "file": "scene-params",
+              "icon": "scene-params.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "场景夸张",
+              "file": "scene-exaggeration",
+              "icon": "scene-exaggeration.png",
+              "diffcult": "1",
+              "tags": ["场景夸张", "scene-exaggeration", "exaggeration"]
+            },
+            {
+              "name": "视图参数",
+              "file": "view-params",
+              "icon": "view-params.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "地表透明度独立控制",
+              "file": "globe-independent-translucency",
+              "icon": "globe-independent-translucency.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "M3D缓存透明度整体控制",
+              "file": "m3d-translucency-control",
+              "icon": "m3d-translucency-control.png",
+              "diffcult": "1",
+              "tags": [
+                "M3D缓存透明度整体控制",
+                "m3d-translucency-control",
+                "toumingduzhengtikongzhi",
+                "translucencyControl"
+              ]
+            },
+            {
+              "name": "金字塔缓存透明度整体控制",
+              "file": "pyramid-translucency-control",
+              "icon": "pyramid-translucency-control.jpg",
+              "diffcult": "1",
+              "tags": [
+                "金字塔缓存透明度整体控制",
+                "pyramid-translucency-control",
+                "toumingduzhengtikongzhi",
+                "translucencyControl"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "场景操作",
+          "folder": "sceneOperation",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "截图",
+              "file": "screenshot",
+              "icon": "screenshot.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "相机",
+          "folder": "camera",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "相机",
+              "file": "camera",
+              "icon": "camera.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "绕点旋转",
+              "file": "point-rotate",
+              "icon": "point-rotate.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "坐标互转",
+              "file": "screen-position-transition",
+              "icon": "screen-position-transition.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "键盘漫游",
+              "file": "keyboard-roaming",
+              "icon": "keyboard-roaming.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "控件",
+          "folder": "widget",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "控件",
+              "file": "widget-control",
+              "icon": "widget-control.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "自定义导航控件",
+              "file": "navigation",
+              "icon": "navigation.png",
+              "diffcult": "1",
+              "tags": [
+                "自定义导航控件",
+                "navigation",
+                "rotate",
+                "camera",
+                "控件"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "数据查询",
+      "folder": "query",
+      "childs": [
+        {
+          "name": "服务端查询",
+          "folder": "serverQuery",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "基本要素查询",
+              "file": "basic-feature-query",
+              "icon": "basic-feature-query.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "动态单体化(MapGIS要素服务)",
+              "file": "dynamic-monomer-mapgis-feature",
+              "icon": "dynamic-monomer-mapgis-feature.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "客户端查询",
+          "folder": "clientQuery",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "静态单体化(M3D1.0)",
+              "file": "static-monomer-m3d1",
+              "icon": "static-monomer-m3d1.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "静态单体化(M3D2.0)",
+              "file": "static-monomer-m3d2",
+              "icon": "static-monomer-m3d2.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "根据OID显隐图元(M3D-2.0)",
+              "file": "hide-m3d2-model",
+              "icon": "hide-m3d2-model.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "根据OID调整图元透明度(M3D)",
+              "file": "transparent-m3d-model",
+              "icon": "transparent-m3d-model.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "模型线框和轮廓显示",
+              "file": "model-wireframe-and-outline-display",
+              "icon": "model-wireframe-and-outline-display.png",
+              "diffcult": "1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "通用工具",
+      "folder": "tool",
+      "childs": [
+        {
+          "name": "测量",
+          "folder": "measure",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "测量工具",
+              "file": "measure-tool",
+              "icon": "measure-tool.png",
+              "diffcult": "1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "编辑",
+      "folder": "edit",
+      "childs": [
+        {
+          "name": "模型编辑",
+          "folder": "modelEditor",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "模型编辑(M3D)",
+              "file": "m3d-model-editor",
+              "icon": "m3d-model-editor.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "模型编辑(GLTF)",
+              "file": "gltf-model-editor",
+              "icon": "gltf-model-editor.png",
+              "diffcult": "1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "三维标绘",
+      "folder": "tdGraph",
+      "childs": [
+        {
+          "name": "基础标绘",
+          "folder": "tdGraphBase",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "气泡弹窗(Graphic类型)",
+              "file": "label-popup-graphic",
+              "icon": "label-popup-graphic.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "点",
+              "file": "td-graph-point",
+              "icon": "td-graph-point.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "广告牌",
+              "file": "td-graph-billboard",
+              "icon": "td-graph-billboard.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "标注",
+              "file": "td-graph-label",
+              "icon": "td-graph-label.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "标注+广告牌",
+              "file": "td-graph-marker",
+              "icon": "td-graph-marker.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "文本",
+              "file": "td-graph-text",
+              "icon": "td-graph-text.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "线",
+              "file": "td-graph-polyline",
+              "icon": "td-graph-polyline.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "圆",
+              "file": "td-graph-circle",
+              "icon": "td-graph-circle.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "多边形",
+              "file": "td-graph-polygon",
+              "icon": "td-graph-polygon.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "矩形",
+              "file": "td-graph-rectangle",
+              "icon": "td-graph-rectangle.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "正方形",
+              "file": "td-graph-square",
+              "icon": "td-graph-square.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "管线",
+              "file": "td-graph-polyline-volume",
+              "icon": "td-graph-polyline-volume.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "圆球",
+              "file": "td-graph-sphere",
+              "icon": "td-graph-sphere.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "圆锥",
+              "file": "td-graph-circular",
+              "icon": "td-graph-circular.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "墙",
+              "file": "td-graph-wall",
+              "icon": "td-graph-wall.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "动态河流",
+              "file": "td-graph-river",
+              "icon": "td-graph-river.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "行业标绘",
+          "folder": "tdGraphTrade",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "符号库使用",
+              "file": "td-graph-symbol",
+              "icon": "td-graph-symbol.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "符号库查询",
+              "file": "td-graph-symbol-search",
+              "icon": "td-graph-symbol-search.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "标绘使用",
+              "file": "td-graph-plot3d",
+              "icon": "td-graph-plot3d.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "标绘使用(场景)",
+              "file": "td-graph-plot3d-scene",
+              "icon": "td-graph-plot3d-scene.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "标绘使用(地形)",
+              "file": "td-graph-plot3d-terrain",
+              "icon": "td-graph-plot3d-terrain.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "属性编辑",
+              "file": "td-graph-plot3d-edit",
+              "icon": "td-graph-plot3d-edit.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "图层控制",
+              "file": "td-graph-plot3d-layer-control",
+              "icon": "td-graph-plot3d-layer-control.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "图层使用",
+              "file": "td-graph-plot3d-layer-use",
+              "icon": "td-graph-plot3d-layer-use.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "动效设置",
+              "file": "td-graph-add-animation",
+              "icon": "td-graph-add-animation.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "态势图管理",
+              "file": "td-graph-load-animation",
+              "icon": "td-graph-load-animation.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "三维态势推演",
+              "file": "td-graph-plot3d-animation",
+              "icon": "td-graph-plot3d-animation.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "算法扩展",
+              "file": "td-graph-register",
+              "icon": "td-graph-register.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "二三维联动标绘",
+              "file": "td-graph-link",
+              "icon": "td-graph-link.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "态势推演二三维联动",
+              "file": "td-graph-link-animation",
+              "icon": "td-graph-link-animation.png",
+              "diffcult": "1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "分析",
+      "folder": "analyse",
+      "childs": [
+        {
+          "name": "空间分析",
+          "folder": "turfAnalyse",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "缓冲分析(要素缓冲)",
+              "file": "buffer",
+              "icon": "buffer.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "泰森多边形构建",
+              "file": "voronoi",
+              "icon": "voronoi.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "Tin三角网构建",
+              "file": "tin",
+              "icon": "tin.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "中心点计算",
+              "file": "centroid",
+              "icon": "centroid.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "空间插值",
+              "file": "along",
+              "icon": "along.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "曲线光滑",
+              "file": "bezierspline",
+              "icon": "bezierspline.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "拓扑关系判断",
+              "file": "topology",
+              "icon": "topology.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "对比分析",
+          "folder": "compareAnalyse",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "卷帘",
+              "file": "roller-shutter",
+              "icon": "roller-shutter.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "三维分析",
+          "folder": "commonAnalyse",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "可视域",
+              "file": "viewshed",
+              "icon": "viewshed.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "天际线",
+              "file": "skyline",
+              "icon": "skyline.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "通视",
+              "file": "visibility",
+              "icon": "visibility.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "阴影率分析",
+              "file": "shadow_rate_analyse",
+              "icon": "shadow_rate_analyse.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "限高",
+              "file": "height-limited",
+              "icon": "height-limited.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "路径漫游",
+              "file": "path-roaming",
+              "icon": "path-roaming.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "飞行漫游",
+              "file": "fly-roaming",
+              "icon": "fly-roaming.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "多视图漫游",
+              "file": "multi-view-roaming",
+              "icon": "multi-view-roaming.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "实时漫游",
+              "file": "real-time-roaming",
+              "icon": "real-time-roaming.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "室内漫游",
+              "file": "indoor-roaming",
+              "icon": "indoor-roaming.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "碰撞检测",
+              "file": "keyboard-roaming",
+              "icon": "keyboard-roaming.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "模型沿地形漫游",
+              "file": "model-terrain-roaming",
+              "icon": "model-terrain-roaming.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "无人机视频投放",
+              "file": "projector-uav",
+              "icon": "projector-uav.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "场景投放",
+              "file": "projector",
+              "icon": "projector.png",
+              "tags": ["HLS视频"],
+              "diffcult": "1"
+            },
+            {
+              "name": "压平分析",
+              "file": "model-flatten",
+              "icon": "model-flatten.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "地形分析",
+          "folder": "terrainAnalyse",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "剖面分析",
+              "file": "profile",
+              "icon": "profile.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "等高线(面)",
+              "file": "contour",
+              "icon": "contour.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "坡度坡向",
+              "file": "slope",
+              "icon": "slope.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "填挖方",
+              "file": "cutfill",
+              "icon": "cutfill.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "洪水淹没",
+              "file": "flood",
+              "icon": "flood.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "地形压平",
+              "file": "terrain-flatten",
+              "icon": "terrain-flatten.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "地形开挖",
+              "file": "terrain-excavation",
+              "icon": "terrain-excavation.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "模型分析",
+          "folder": "modelAnalyse",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "模型空间过滤",
+              "file": "model-filter",
+              "icon": "model-filter.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "模型爆炸",
+              "file": "model-explosion",
+              "icon": "model-explosion.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "动态剖切",
+              "file": "model-cutting",
+              "icon": "model-cutting.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "纹理缩放",
+              "file": "model-texture-coord-scale",
+              "icon": "model-texture-coord-scale.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "地质体分析",
+          "folder": "geologyAnalyse",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "地质体封边",
+              "file": "model-banding",
+              "icon": "model-banding.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "地质体夸张显示",
+              "file": "model-draw",
+              "icon": "model-draw.png",
+              "diffcult": "1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "可视化",
+      "folder": "visualization",
+      "childs": [
+        {
+          "name": "专题图",
+          "folder": "themeLayer",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "统一",
+              "file": "simple",
+              "icon": "simple.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "单值",
+              "file": "unique",
+              "icon": "unique.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "分段",
+              "file": "breaks",
+              "icon": "breaks.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "分段-混合接口",
+              "file": "breaks-hybrid",
+              "icon": "breaks-hybrid.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "分段(M3D-2.0)",
+              "file": "breaks-m3d2-model",
+              "icon": "breaks-m3d2-model.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "单值(M3D-2.0)",
+              "file": "unique-m3d2-model",
+              "icon": "unique-m3d2-model.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "统计图",
+              "file": "statistic",
+              "icon": "statistic.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "动态注记",
+              "file": "dynamic-label",
+              "icon": "dynamic-label.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "热力图",
+              "file": "heat-map",
+              "icon": "heat-map.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "聚合图",
+              "file": "cluster",
+              "icon": "cluster.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "EChart",
+          "folder": "EChart",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "热力图-空气质量",
+              "file": "echart-heater",
+              "icon": "echart-heater.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "散点图-微博签到",
+              "file": "echart-weibo",
+              "icon": "echart-weibo.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "散点图-空气质量",
+              "file": "echart-air",
+              "icon": "echart-air.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "散点图-纽约热力",
+              "file": "echart-big-point",
+              "icon": "echart-big-point.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "散点图-世界GPS",
+              "file": "echart-gps",
+              "icon": "echart-gps.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "路径图-模拟迁徙",
+              "file": "echart-migrate",
+              "icon": "echart-migrate.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "路径图-渐进绘制",
+              "file": "echart-line",
+              "icon": "echart-line.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "路径图-公交路线",
+              "file": "echart-line-animate",
+              "icon": "echart-line-animate.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "路径图-中国主干",
+              "file": "echart-big-road",
+              "icon": "echart-big-road.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "渐进线-纽约街道",
+              "file": "echart-big-line",
+              "icon": "echart-big-line.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "自定义-网格专题",
+              "file": "echart-grid",
+              "icon": "echart-grid.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "MapV",
+          "folder": "MapV",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "轨迹汇聚",
+              "file": "mapv-path-converge",
+              "icon": "mapv-path-converge.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "热力图",
+              "file": "mapv-heater",
+              "icon": "mapv-heater.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "迁移图",
+              "file": "mapv-migrate",
+              "icon": "mapv-migrate.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "区数据渲染",
+              "file": "mapv-polygon-render",
+              "icon": "mapv-polygon-render.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "点数据播放",
+              "file": "mapv-point-animate",
+              "icon": "mapv-point-animate.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "方形网格密度",
+              "file": "mapv-grid",
+              "icon": "mapv-grid.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "蜂窝形密度",
+              "file": "mapv-honey-comb",
+              "icon": "mapv-honey-comb.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "点重叠播放",
+              "file": "mapv-point-multi-animate",
+              "icon": "mapv-point-multi-animate.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "点微博数据",
+              "file": "mapv-point-weibo",
+              "icon": "mapv-point-weibo.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "单一迁移轨迹",
+              "file": "mapv-simple-migrate",
+              "icon": "mapv-simple-migrate.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "动态轨迹",
+              "file": "mapv-tracker",
+              "icon": "mapv-tracker.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "交通轨迹",
+              "file": "mapv-tracker-line",
+              "icon": "mapv-tracker-line.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "场景美化",
+          "folder": "commonVisualization",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "自定义片元着色器",
+              "file": "custom-shader-m3d-fragment",
+              "icon": "custom-shader-m3d-fragment.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "自定义顶点着色器",
+              "file": "custom-shader-m3d-vertex",
+              "icon": "custom-shader-m3d-vertex.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "自定义着色器(动态泛光)",
+              "file": "custom-shader-m3d-callback",
+              "icon": "custom-shader-m3d-callback.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "自定义着色器(要素高亮)",
+              "file": "custom-shader-m3d-oid",
+              "icon": "custom-shader-m3d-oid.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "三维纹理",
+          "folder": "Texture3D",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "纹理使用",
+              "file": "texture3D-use",
+              "icon": "texture3D-use.png",
+              "diffcult": "1",
+              "tags": [
+                "三维纹理-纹理使用",
+                "texture3D-use",
+                "sanweiwenli ",
+                "texture3D"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "模拟仿真",
+      "folder": "simulation",
+      "leaffolder": true,
+      "childs": [
+        {
+          "name": "风场可视化",
+          "file": "wind3D",
+          "icon": "wind3D.png",
+          "diffcult": "1"
+        }
+      ]
+    },
+    {
+      "name": "环境特效",
+      "folder": "environmentEffects",
+      "childs": [
+        {
+          "name": "粒子特效",
+          "folder": "particleEffect",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "烟雾",
+              "file": "smoke",
+              "icon": "smoke.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "火焰",
+              "file": "flame",
+              "icon": "flame.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "喷泉",
+              "file": "fountain",
+              "icon": "fountain.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "天气特效",
+          "folder": "weatherEffect",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "天气效果(雾)",
+              "file": "weather-fog",
+              "icon": "weather-fog.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "天气效果(雨)",
+              "file": "weather-rain",
+              "icon": "weather-rain.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "天气效果(雪)",
+              "file": "weather-snow",
+              "icon": "weather-snow.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "积雨",
+              "file": "rain-area",
+              "icon": "rain-area.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "水面特效",
+          "folder": "waterEffect",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "水面倒影特效",
+              "file": "water-reflection-effect",
+              "icon": "water-reflection-effect.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "光效",
+          "folder": "lightEffect",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "方向光",
+              "file": "directional-lighter",
+              "icon": "directional-lighter.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "点光源",
+              "file": "point-lighter",
+              "icon": "point-lighter.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "聚光源",
+              "file": "spot-lighter",
+              "icon": "spot-lighter.png",
+              "diffcult": "1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "综合示例",
+      "folder": "comprehensive",
+      "leaffolder": true,
+      "childs": [
+        {
+          "name": "模型坐标网格显示",
+          "file": "model-coordinate-grid",
+          "icon": "model-coordinate-grid.png",
+          "diffcult": "1"
+        },
+        {
+          "name": "目标检测与跟踪",
+          "file": "target-detection-and-tracking",
+          "icon": "target-detection-and-tracking.png",
+          "diffcult": "1"
+        },
+        {
+          "name": "隧道开挖模拟",
+          "file": "tunnel-excavation",
+          "icon": "tunnel-excavation.png",
+          "diffcult": "1"
+        },
+        {
+          "name": "无人机图像拼接",
+          "file": "stitch-drone-images",
+          "icon": "stitch-drone-images.jpg",
+          "diffcult": "1"
+        }
+      ]
+    }
+  ]
+}

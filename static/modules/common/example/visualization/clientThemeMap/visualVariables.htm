@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>视觉变量</title>
+    <!-- 引入地图引擎库 -->
+    <script include="engine:leaflet cesium" src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <script>
+      'use strict'
+      // 定义三维视图的主要类
+      let map, view
+      // 点、线、区要素图层
+      let layerOfPoint, layerOfRegion
+      // 样式颜色是否随机的标识
+      let isRandom = false
+      // 当前视觉变量效果
+      let currentVisualVariables = 'none'
+      // 获取构造函数
+      const { renderer, Map, Color } = zondy
+      const { SimpleRenderer } = renderer
+      const { SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol } = zondy.symbol
+      const { IGSFeatureLayer } = zondy.layer
+
+      // 清除视觉变量效果
+      function setNullVariable() {
+        if (layerOfPoint) {
+          layerOfPoint.renderer.visualVariables = []
+        }
+        if (layerOfRegion) {
+          layerOfRegion.renderer.visualVariables = []
+        }
+      }
+
+      // 设置Color视觉变量
+      function setColorVariable() {
+        if (layerOfRegion) {
+          /*使用说明*/
+          // 根据字段GDP2016取值设置layerOfRegion图层从rgba(255,252,212,1)到rgba(53,2,66,1)的过渡颜色值
+          // GDP2016取值小于0时，显示颜色rgba(255,252,212,1)
+          // GDP2016取值大于1350时，显示颜色rgba(53,2,66,1)
+          // GDP2016取值在0-1350之间时，显示颜色过渡值
+          layerOfRegion.renderer.visualVariables = [
+            {
+              // 视觉变量类型
+              type: 'color',
+              // 视觉变量字段表达式
+              valueExpression: '$feature.GDP2016',
+              // 颜色分段数组
+              stops: [
+                {
+                  color: 'rgba(255,252,212,1)',
+                  value: 0
+                },
+                {
+                  color: 'rgba(53,2,66,1)',
+                  value: 1350
+                }
+              ]
+            }
+          ]
+        }
+      }
+
+      // 设置Size视觉变量（size视觉变量只针对点要素）
+      function setSizeVariable() {
+        if (layerOfPoint) {
+          /*使用说明*/
+          // 根据字段population取值设置layerOfPoint图层符号大小
+          // population取值小于100万时，设置符号大小为5
+          // population取值在100万-300万之间时，设置符号大小为10
+          // population取值在300万-500万之间时，设置符号大小为15
+          // population取值大于500万时 ，设置符号大小为20
+
+          // 第一种用法，此方法不能设置多段阈值，如果需要，请使用第二种方法
+          // layerOfPoint.renderer.visualVariables = [
+          //   {
+          //     type: 'size',
+          //     valueExpression: '$feature.population',
+          //     minDataValue: 0,
+          //     maxDataValue: 500,
+          //     minSize: 5,
+          //     maxSize: 20
+          //   }
+          // ]
+          // 第二种用法
+          layerOfPoint.renderer.visualVariables = [
+            {
+              // 视觉变量类型
+              type: 'size',
+              // 视觉变量字段表达式
+              valueExpression: '$feature.population',
+              // 颜色分段数组
+              stops: [
+                {
+                  size: 5,
+                  value: 0
+                },
+                {
+                  size: 10,
+                  value: 1000000
+                },
+                {
+                  size: 15,
+                  value: 3000000
+                },
+                {
+                  size: 20,
+                  value: 5000000
+                }
+              ]
+            }
+          ]
+        }
+      }
+
+      // 设置Opacity视觉变量
+      function setOpacityVariable() {
+        if (layerOfRegion) {
+          /*使用说明*/
+          // 根据字段GDP2016取值设置layerOfRegion图层透明度
+          // GDP2016取值小于0时，设置符号颜色透明度为0.2
+          // GDP2016取值大于1350时 ，设置符号颜色透明度为1.0
+          // GDP2016取值在0-1350之间时，显示符号颜色透明度过渡值
+          layerOfRegion.renderer.visualVariables = [
+            {
+              // 视觉变量类型
+              type: 'opacity',
+              // 视觉变量字段表达式
+              valueExpression: '$feature.GDP2016',
+              // 颜色分段数组
+              stops: [
+                {
+                  opacity: 0.2,
+                  value: 0
+                },
+                {
+                  opacity: 1.0,
+                  value: 1350
+                }
+              ]
+            }
+          ]
+        }
+      }
+
+      // 获取点renderer
+      function getRendererOfPoint() {
+        return new SimpleRenderer({
+          symbol: new SimpleMarkerSymbol({
+            // 填充颜色
+            color: isRandom ? randomColor() : '#FFD08F',
+            // 点的半径
+            size: 25,
+            //外边线样式
+            outline: new SimpleLineSymbol({
+              //线符号颜色
+              color: isRandom ? randomColor() : '#82F7FE',
+              //线宽
+              width: 1
+            })
+          })
+        })
+      }
+
+      // 获取区renderer
+      function getRendererOfRegion() {
+        return new SimpleRenderer({
+          symbol: new SimpleFillSymbol({
+            color: isRandom ? randomColor() : '#2578B499',
+            outline: new SimpleLineSymbol({
+              color: isRandom ? randomColor() : '#2578B4',
+              width: 1
+            })
+          })
+        })
+      }
+
+      // GeoJSONLayer点要素
+      function addGeoJSONLayerOfPoint() {
+        if (layerOfPoint) {
+          map.remove(layerOfPoint)
+        }
+        const renderer = getRendererOfPoint()
+        layerOfPoint = new IGSFeatureLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer/5',
+          renderer: renderer
+        })
+        //加载图层
+        map.add(layerOfPoint)
+        // 图层加载完毕
+        layerOfPoint.on('layerview-created', function (result) {
+          console.log('点加载完毕:', result.layer)
+        })
+      }
+
+      // GeoJSONLayer区要素
+      function addGeoJSONLayerOfRegion() {
+        if (layerOfRegion) {
+          map.remove(layerOfRegion)
+        }
+        const renderer = getRendererOfRegion()
+        layerOfRegion = new IGSFeatureLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer/0',
+          renderer: renderer
+        })
+        //加载图层
+        map.add(layerOfRegion)
+      }
+
+      // GeoJSON点、线、区要素
+      function addGeoJSONLayer(featureType = 'all') {
+        switch (featureType) {
+          case 'region':
+            addGeoJSONLayerOfRegion()
+            break
+          case 'point':
+            addGeoJSONLayerOfPoint()
+            break
+          case 'all':
+          default:
+            addGeoJSONLayerOfRegion()
+            addGeoJSONLayerOfPoint()
+            break
+        }
+      }
+
+      // 通过type切换视觉变量
+      function changeVisualVariables(currentVisualVariables) {
+        switch (currentVisualVariables) {
+          case 'none':
+            setNullVariable()
+            document.getElementById('colorVariables').style.display = 'none'
+            document.getElementById('sizeVariables').style.display = 'none'
+            document.getElementById('opacityVariables').style.display = 'none'
+            break
+          case 'color':
+            if (layerOfPoint) {
+              map.remove(layerOfPoint)
+            }
+            addGeoJSONLayerOfRegion()
+            setColorVariable()
+            document.getElementById('colorVariables').style.display =
+              'inline-block'
+            document.getElementById('sizeVariables').style.display = 'none'
+            document.getElementById('opacityVariables').style.display = 'none'
+            break
+          case 'size':
+            addGeoJSONLayerOfPoint()
+            setSizeVariable()
+            document.getElementById('sizeVariables').style.display =
+              'inline-block'
+            document.getElementById('colorVariables').style.display = 'none'
+            document.getElementById('opacityVariables').style.display = 'none'
+            break
+          case 'opacity':
+            if (layerOfPoint) {
+              map.remove(layerOfPoint)
+            }
+            addGeoJSONLayerOfRegion()
+            setOpacityVariable()
+            document.getElementById('sizeVariables').style.display = 'none'
+            document.getElementById('colorVariables').style.display = 'none'
+            document.getElementById('opacityVariables').style.display =
+              'inline-block'
+            break
+          default:
+            break
+        }
+      }
+
+      // 随机颜色值
+      function randomColor() {
+        return new zondy.Color(
+          parseInt(Math.random() * 255),
+          parseInt(Math.random() * 255),
+          parseInt(Math.random() * 255),
+          0.6
+        )
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          var layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form
+
+          //切换视觉变量
+          form.on('select(visualVariables)', function (data) {
+            isRandom = false
+            currentVisualVariables = data.value
+            // 清空视觉变量效果
+            setNullVariable()
+            // 切换对应视觉变量效果
+            changeVisualVariables(currentVisualVariables)
+          })
+        })
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //添加专题图
+        addGeoJSONLayer('region')
+        // 初始化UI操作
+        initUI()
+        // 设置视觉变量
+        changeVisualVariables('color')
+        // 视点跳转
+        view.on('loaded', function () {
+          view.flyTo({
+            center: [113, 31],
+            zoom: 1
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label">视觉变量</label>
+          <div class="layui-input-block layui-input-block-select">
+            <select
+              id="visualVariables"
+              name="visualVariables"
+              lay-filter="visualVariables"
+            >
+              <option value="color">COLOR</option>
+              <option value="size">SIZE</option>
+              <option value="opacity">OPACITY</option>
+              <option value="none">NONE</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div
+      id="colorVariables"
+      class="layui-panel layui-panel-bottom"
+      style="display: none"
+    >
+      <div>
+        <h3 class="heading-legend">视觉变量图例说明</h3>
+        <div class="main-legend">
+          <div class="legend-title">根据"GDP2016"字段改变区要素的color</div>
+          <div class="legend-body">
+            <div class="legend-color"></div>
+            <div class="legend-stop stop1">＞0</div>
+            <div class="legend-stop stop4">＜1350</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="sizeVariables"
+      class="layui-panel layui-panel-bottom"
+      style="display: none"
+    >
+      <div>
+        <h3 class="heading-legend">视觉变量图例说明</h3>
+        <div class="main-legend">
+          <div class="legend-title">根据"population"字段改变点要素的size</div>
+          <div class="legend-body" style="margin-top: 0px">
+            <div class="list-title">
+              <div
+                class="layui-icon layui-icon-circle-dot circle1"
+                style="flex: 0.5"
+              ></div>
+              <div style="flex: 3">＜100万</div>
+            </div>
+            <div class="list-title">
+              <div
+                class="layui-icon layui-icon-circle-dot circle2"
+                style="flex: 0.5"
+              ></div>
+              <div style="flex: 3">100万-300万</div>
+            </div>
+            <div class="list-title">
+              <div
+                class="layui-icon layui-icon-circle-dot circle3"
+                style="flex: 0.5"
+              ></div>
+              <div style="flex: 3">300万-500万</div>
+            </div>
+            <div class="list-title">
+              <div
+                class="layui-icon layui-icon-circle-dot circle4"
+                style="flex: 0.5"
+              ></div>
+              <div style="flex: 3">＞500万</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="opacityVariables"
+      class="layui-panel layui-panel-bottom"
+      style="display: none"
+    >
+      <div>
+        <h3 class="heading-legend">视觉变量图例说明</h3>
+        <div class="main-legend">
+          <div class="legend-title">根据"GDP2016"字段改变区要素的opacity</div>
+          <div class="legend-body">
+            <div
+              class="legend-color"
+              style="
+                background-image: linear-gradient(
+                  rgba(55, 130, 184, 0.2),
+                  rgba(110, 160, 196, 1)
+                );
+              "
+            ></div>
+            <div class="legend-stop stop1">＞0</div>
+            <div class="legend-stop stop4">＜1350</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style type="text/css">
+      .layui-panel-right {
+        width: 345px;
+        z-index: 999;
+      }
+      .layui-form-label {
+        width: 86px;
+      }
+      .layui-panel-bottom {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        z-index: 999;
+        width: 295px;
+        height: 195px;
+        box-shadow: 0 1px 2px #0000004d;
+      }
+      .heading-legend {
+        font-size: 15px;
+        color: #323232;
+        margin: 10px 10px 0.5rem;
+        font-weight: 600;
+        box-sizing: inherit;
+      }
+      .main-legend {
+        padding: 0px 15px;
+        margin-left: -5px;
+      }
+      .legend-title {
+        word-break: break-word;
+        padding: 8px 0;
+      }
+      .legend-body {
+        position: relative;
+        width: auto;
+        height: 83px;
+        margin: 10px 0px;
+      }
+      .legend-color {
+        width: 24px;
+        height: 75px;
+        background-image: linear-gradient(
+          rgba(255, 252, 212, 1),
+          rgba(53, 2, 66, 1)
+        );
+        position: absolute;
+        top: 1px;
+        left: 0px;
+      }
+      .legend-stop {
+        white-space: nowrap;
+        padding: 0 9px;
+        font-size: 12px;
+        line-height: 1em;
+        position: absolute;
+        left: 26px;
+        margin-bottom: 4px;
+      }
+      .stop1 {
+        top: -3px;
+      }
+      .stop2 {
+        top: 20px;
+      }
+      .stop3 {
+        top: 45px;
+      }
+      .stop4 {
+        bottom: 1px;
+      }
+      .legend-stop:before {
+        content: '';
+        border: 2px solid #0000;
+        border-left-width: 0;
+        border-right: 4px solid #323232cc;
+        width: 0;
+        height: 0;
+        display: block;
+        position: absolute;
+        top: 4px;
+        left: 1px;
+      }
+      .layui-icon-circle-dot {
+        color: #ffd08f;
+        padding: 5px;
+        text-align: center;
+      }
+      .circle1 {
+        font-size: 6px;
+      }
+      .circle2 {
+        font-size: 9px;
+      }
+      .circle3 {
+        font-size: 12px;
+      }
+      .circle4 {
+        font-size: 16px;
+      }
+      .list-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 25px;
+        margin-left: -12px;
+      }
+    </style>
+  </body>
+</html>

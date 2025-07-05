@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>M3D- 根据OID调整图元透明度</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/visual.css"/>
+    <script>
+      'use strict'
+      // 定义三维视图的主要类
+      let map, sceneView, viewer, renderer_unique, layer
+      let transparent = 50
+
+      // 地图初始化函数
+      function init() {
+        // 初始化三维球体
+        initViewer()
+        // 创建切换Cesium版本的按钮
+        createChangeTab()
+        // 添加M3D专题图
+        addM3DThemeLayer()
+        // 添加透明度调整拖动条
+        addSlideBar()
+      }
+
+      // 初始化三维球体
+      function initViewer() {
+        // 初始化图层管理容器
+        map = new zondy.Map()
+        // 初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          // 视图id
+          viewId: 'mapgis-3d-viewer',
+          // 图层管理容器
+          map: map
+        })
+        // 获取视图对象
+        viewer = sceneView.getInnerView()
+        viewer.scene.globe.show = false
+
+        // 针对cesium10.7.4.10版本隐藏大气环境光
+        if (viewer.scene.skyAtmosphere) {
+          viewer.scene.skyAtmosphere.show = false
+        }
+        if (viewer.scene.sun.show) {
+          viewer.scene.sun.show = false
+        }
+        if (viewer.scene.moon.show) {
+          viewer.scene.moon.show = false
+        }
+        if (viewer.scene.globe.showGroundAtmosphere) {
+          viewer.scene.globe.showGroundAtmosphere = false
+        }
+      }
+
+      // 根据OID调整要素的透明度
+      function transparentByOid(transparent) {
+        layer.style = new Cesium.Cesium3DTileStyle({
+          defines: {
+            transparent: transparent
+          },
+          color: {
+            conditions: [
+              ['${OID} > 0 && ${OID} < 5', "color('white', ${transparent})"]
+            ]
+          }
+        })
+      }
+
+      // 操作面板添加一个拖动条
+      function addSlideBar() {
+        document.getElementById('slideBarDivPanel').style.display = 'block'
+        layui.slider.render({
+          elem: '#transparentSlide',
+          value: transparent,
+          max: 100,
+          min: 0,
+          input: true,
+          theme: 'rgb(102, 147, 251)',
+          change: function (value) {
+            // 将透明度调整到0.0~1.0之间
+            transparent = 1 - value / 100
+            transparentByOid(transparent)
+          }
+        })
+      }
+
+      // 添加M3D专题图
+      function addM3DThemeLayer() {
+        const url =
+          'http://webclient.smaryun.com:8089/igs/rest/services/Scene/地质体模型/SceneServer'
+        // 使用旧版Cesium时必须在options参数中传入viewer对象
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/MapGISM3DSet.html
+        zondy.cesium.MapGISM3DSet.fromUrl(url, { viewer }).then((M3D) => {
+          viewer.scene.primitives.add(M3D)
+          const boundingSphere = M3D.boundingSphere
+          const orientation = new Cesium.HeadingPitchRange(
+            0.0,
+            -0.5,
+            boundingSphere.radius * 2.5
+          )
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Camera.html
+          viewer.camera.flyToBoundingSphere(boundingSphere, {
+            duration: 0,
+            offset: orientation
+          })
+          layer = M3D
+          // 根据OID调整要素的透明度
+          transparentByOid(0.5)
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div
+      class="layui-panel layui-panel-right"
+      id="slideBarDivPanel"
+      style="top: 10px; width: 350px; display: none"
+    >
+      <div class="slideBarDiv">
+        透明度控制：
+        <div id="transparentSlide" class="demo-slider"></div>
+      </div>
+    </div>
+  </body>
+  <style>
+    .slideBarDiv {
+      color: #fff;
+    }
+
+    #transparentSlide {
+      width: 200px;
+      display: inline-block;
+    }
+
+    .layui-slider {
+      top: -2px;
+      width: 110px;
+      left: 17px;
+    }
+
+    .layui-slider-input {
+      top: -16px;
+      right: -16px;
+    }
+  </style>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>M3D（2.0）- 根据OID隐藏图元</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/visual.css"/>
+    <script>
+      'use strict'
+      // 定义三维视图的主要类
+      let map,
+        sceneView,
+        viewer,
+        renderer_unique,
+        layers = []
+
+      // 地图初始化函数
+      function init() {
+        // 初始化三维球体
+        initViewer()
+        // 创建切换Cesium版本的按钮
+        createChangeTab()
+        // 添加M3D专题图
+        addM3DThemeLayer()
+      }
+
+      // 初始化三维球体
+      function initViewer() {
+        // 初始化图层管理容器
+        map = new zondy.Map()
+        // 初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          // 视图id
+          viewId: 'mapgis-3d-viewer',
+          // 图层管理容器
+          map: map
+        })
+        // 获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      // 添加M3D专题图
+      function addM3DThemeLayer() {
+        let url =
+          'http://webclient.smaryun.com:8089/igs/rest/services/Scene/高级住所模型/SceneServer'
+
+        const currentCesiumVersion = localStorage.getItem(
+          'currentCesiumVersion'
+        )
+        if (currentCesiumVersion === '10.7.2.10') {
+          // 添加M3D白膜数据
+          viewer.scene.layers.appendSceneLayer(url, {
+            loaded: function (m3dset) {
+              layers.push(m3dset)
+            }
+          })
+        } else {
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/MapGISM3DSet.html
+          Cesium.MapGISM3DSet.fromUrl(url).then((m3dset) => {
+            const boundingSphere = m3dset.boundingSphere
+            const orientation = new Cesium.HeadingPitchRange(
+              0.0,
+              -0.5,
+              boundingSphere.radius * 2.5
+            )
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Camera.html
+            viewer.camera.flyToBoundingSphere(boundingSphere, {
+              duration: 0,
+              offset: orientation
+            })
+            viewer.scene.primitives.add(m3dset)
+            layers.push(m3dset)
+          })
+        }
+      }
+
+      // 根据OID隐藏要素
+      function hideByOid() {
+        for (let i = 0; i < layers.length; i++) {
+          layers[i].style = new Cesium.Cesium3DTileStyle({
+            show: '${OID} > 0 && ${OID} < 400'
+          })
+        }
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div
+      class="layui-panel layui-panel-right"
+      style="height: 65px; width: 150px"
+    >
+      <button
+        type="button"
+        onclick="hideByOid()"
+        class="layui-btn layui-btn-primary layui-btn-fluid"
+      >
+        根据OID隐藏图元
+      </button>
+    </div>
+  </body>
+</html>

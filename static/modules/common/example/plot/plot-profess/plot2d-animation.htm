@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>二维态势推演</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha384-SOnAn/m2fVJCwnbEYgD4xzrPtvsXdElhOVvR8ND1YjB5nhGNwwf7nBQlhfAwHAZC"
+      crossorigin="anonymous"
+    />
+    <!--引入行业标绘脚本库-->
+    <script
+      include="panel,2D"
+      src="./static/libs/include-plot-local.js"
+    ></script>
+
+    <script>
+      'use strict'
+
+      //地图初始化函数
+      function init() {
+        /**
+         * ***********************地图框架部分***************************
+         */
+
+        const view = window.initView('content')
+
+        /**
+         * ***********************行业标绘库部分***************************
+         */
+
+        const zondy = window.zondy
+        const Plot = zondy.plot
+        const {
+          PlotLayer2D,
+          PlotLayer2DGroup,
+          SymbolManager,
+          TimeLine,
+          DrawTool,
+          PlotRegister,
+          PlotUtilBase,
+          FabricLayer
+        } = Plot
+
+        const symbolUrl = `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/symbolLib.json`
+        const symbolOptions = {
+          fontURL: `http://webclient.smaryun.com:8200/Plot/plot-sample/fonts/`,
+          baseUrl: `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/`
+        }
+
+        let layer1,
+          layer2,
+          plotLayer2DGroup,
+          timeline,
+          drawTool,
+          plotEditor,
+          currentPlot
+        // 获取overlay图层
+        const canvas = new FabricLayer(view, PlotLayer2DGroup)
+        // 创建符号管理器
+        const manager = new SymbolManager(symbolUrl, symbolOptions)
+        // 请求获取符号库
+        manager.getSymbols().then(() => {
+          // 创建二维图层组
+          plotLayer2DGroup = canvas.getFabricCanvas()
+          // 创建二维图层
+          layer1 = new PlotLayer2D()
+          // 添加图层
+          plotLayer2DGroup.addLayer(layer1)
+          // 加载标绘图层
+          $.getJSON(
+            `http://webclient.smaryun.com:8200/Plot/plot-sample/layers/bbbbb.json`,
+            (res) => {
+              layer1.fromJSON(res)
+            }
+          )
+          // 创建时间轴
+          $.getJSON(
+            `http://webclient.smaryun.com:8200/Plot/plot-sample/scripts/abc.json`,
+            (t) => {
+              timeline = new TimeLine(plotLayer2DGroup, {})
+              timeline.fromJSON(t)
+            }
+          )
+          layer1.pickPlot = (plot) => {
+            currentPlot = plot
+          }
+        })
+
+        /**
+         * ***********************ui部分***************************
+         */
+
+        const panel = new window.webclientPlot.PlotPanel('plot-show-table', {
+          titleText: '态势推演',
+          panelWidth: 280
+        })
+        const contentBody = panel.getBody()
+        contentBody.style.display = 'flex'
+        contentBody.style.flexDirection = 'column'
+
+        const items = [
+          {
+            children: [
+              {
+                name: '0.5倍速',
+                action: () => {
+                  timeline.setSpeed(0.5)
+                }
+              },
+              {
+                name: '1倍速',
+                action: () => {
+                  timeline.setSpeed(1)
+                }
+              },
+              {
+                name: '2倍速',
+                action: () => {
+                  timeline.setSpeed(2)
+                }
+              }
+            ]
+          },
+          {
+            children: [
+              {
+                name: '跳转0s',
+                action: () => {
+                  timeline.seek(0)
+                }
+              },
+              {
+                name: '跳转2s',
+                action: () => {
+                  timeline.seek(2000)
+                }
+              },
+              {
+                name: '跳转5s',
+                action: () => {
+                  timeline.seek(5000)
+                }
+              }
+            ]
+          },
+          {
+            children: [
+              {
+                name: '顺序播放',
+                action: () => {
+                  timeline.reversed(false)
+                }
+              },
+              {
+                name: '逆序播放',
+                action: () => {
+                  timeline.reversed(true)
+                }
+              }
+            ]
+          },
+          {
+            name: '重置动画',
+            action: () => {
+              timeline.restore()
+            }
+          },
+          {
+            name: '播放动画',
+            action: () => {
+              timeline.restore()
+              timeline.play()
+            }
+          },
+          {
+            name: '暂停动画',
+            action: () => {
+              timeline.pause()
+            }
+          },
+          {
+            children: [
+              {
+                name: '清空脚本',
+                action: () => {
+                  timeline.pause()
+                  timeline.clear()
+                }
+              },
+              {
+                name: '保存脚本',
+                action: () => {
+                  const a = document.createElement('a')
+                  const datastr =
+                    'data:text/json;charset=utf-8,' +
+                    encodeURIComponent(JSON.stringify(timeline.toJSON()))
+                  a.href = datastr
+                  a.setAttribute('download', 'animation.json')
+                  a.style.display = 'none'
+                  a.click()
+                }
+              }
+            ]
+          }
+        ]
+
+        items.forEach((item) => {
+          const f = (v) => {
+            const div = document.createElement('div')
+            div.setAttribute('class', 'list-item')
+            div.innerText = v.name
+            div.addEventListener('click', v.action.bind(this))
+            return div
+          }
+          const list = document.createElement('div')
+          list.setAttribute('class', 'listdom')
+          if (item.children) {
+            item.children.forEach((t) => {
+              list.appendChild(f(t))
+            })
+          } else {
+            list.appendChild(f(item))
+          }
+          contentBody.appendChild(list)
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-2d-viewer">
+      <div id="content" style="position: relative">
+        <div id="plot-show-table"></div>
+      </div>
+    </div>
+  </body>
+  <style>
+    #mapgis-2d-viewer {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      position: relative;
+    }
+    #content {
+      height: 100%;
+      flex: 6.5;
+      position: relative;
+    }
+    #plot-show-table {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      z-index: 999;
+    }
+    #plot-show-table .listdom {
+      font-family: Arial;
+      margin-bottom: 5px;
+      width: 100%;
+      border-color: #1970fc;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #plot-show-table .listdom .btn,
+    .span {
+      display: block;
+      padding: 5px 12px;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.53846154;
+      text-align: center;
+      white-space: nowrap;
+      cursor: pointer;
+      color: #fff;
+      background-color: #3a85c6;
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #plot-show-table .listdom .input {
+      opacity: 0;
+      display: block;
+      padding: 5px 12px;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.53846154;
+      text-align: center;
+      white-space: nowrap;
+      cursor: pointer;
+      color: #fff;
+      background-color: #3a85c6;
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #plot-show-table .listdom .list-item {
+      flex: 1;
+      height: 100%;
+      padding: 5px 12px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background-color: #3a85c6;
+      cursor: pointer;
+      color: #fff;
+      box-sizing: border-box;
+      margin: 1px;
+      text-align: center;
+    }
+  </style>
+</html>

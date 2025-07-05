@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>飞行漫游</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/tool.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, animation
+      //取得jquery对象
+      let $ = layui.$
+      //滑动条管理器对象
+      let slider = layui.slider
+      let headingSlider, pitchSlider
+      //相机滑块禁用
+      let headingSliderDisabled = false
+      let pitchSliderDisabled = false
+      //是否停止漫游
+      let isStop = true
+      //默认漫游参数
+      let defaultOptions = {
+        pitch: 0, // 俯仰角
+        heading: 90 // 方位角
+      }
+
+      //初始化漫游工具
+      function initAnimationTool() {
+        // 坐标数组
+        let pathPositions = [
+          Cesium.Cartesian3.fromDegrees(
+            120.96144802774623,
+            23.488796609325565,
+            9000
+          ),
+          Cesium.Cartesian3.fromDegrees(
+            121.18949251259373,
+            23.618491557566376,
+            5000
+          ),
+          Cesium.Cartesian3.fromDegrees(
+            121.33827000327243,
+            23.725887297550766,
+            5500
+          )
+        ]
+        // 第一人称视角下，相机焦点的偏移值
+        let firstPersonCameraFocusOffset = {
+          offsetX: 58,
+          offsetY: 0,
+          offsetZ: 61
+        }
+        // 定义动画漫游对象
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/AnimationTool.html
+        animation = new zondy.cesium.AnimationTool(viewer, {
+          // 漫游的方向角
+          heading: Cesium.Math.toRadians(defaultOptions.heading),
+          // 漫游的俯仰角
+          pitch: Cesium.Math.toRadians(defaultOptions.pitch),
+          // 相机距离模型的距离（米）
+          range: 800,
+          // 设置漫游的视角类型。0：正常，不移动相机；1：跟随；2：锁定第一视角；3：上帝视角
+          animationType: 2,
+          // 是否循环漫游动画
+          isLoop: true,
+          // 是否显示漫游路径
+          showPath: false,
+          // 漫游路径(世界坐标点数组)
+          positions: pathPositions,
+          // 漫游速度(m/s)
+          speed: 800,
+          // 倍速
+          speedupFactor: 1,
+          // 附加高程
+          exHeight: 0,
+          // 是否显示用时和距离提示信息
+          showInfo: false,
+          // 漫游的模型对象的url，为空表示不显示
+          modelUrl:
+            'http://webclient.smaryun.com:8200/3DData/Model/glb/TravelPlane.glb',
+          //模型对象参数，详见ModelGraphics对象的文档
+          model: {
+            //放大比例
+            scale: 30,
+            //固定大小设为0
+            minimumPixelSize: 0
+          },
+          //模型的方位角
+          modelHeading: 0,
+          //修改模型的俯仰角
+          modelPitch: 0,
+          //修改模型的倾斜角
+          modelRoll: 0,
+          // 完成漫游后的回调函数
+          complete: function () {},
+          // 路径插值算法。可选：拉格朗日算法Cesium.LagrangePolynomialApproximation、线性插值 Cesium.LinearApproximation、埃尔米特插值插值Cesium.HermitePolynomialApproximation
+          interpolationAlgorithm: Cesium.LagrangePolynomialApproximation,
+          //是否需要将较大转弯点处理为圆弧
+          isProcessCorner: true,
+          //设置判断为转弯点的角度的最大值，不超过150的转角会被执行插值，处理为圆弧
+          maxAngle: 15.0,
+          //转弯处往圆弧曲线上插值点的步长，点个数=1/curveStep
+          curveStep: 0.01,
+          // 是否挂载动态扫描特效
+          isAddScanEffect: false,
+          // 是否获取路径点的真实高程
+          isGetRealHeight: false,
+          //是否让无人机模型的姿态按照矢量速度方向变化
+          isSetModelPosture: true,
+          // 当点经过设置的路径点时，返回路径点坐标和index索引号
+          callback: function (result) {
+            // 刚开始的第一个点设置heading和pitch
+            if (
+              result.routePointIndex === 0 &&
+              result.currenPositionStatus === 1
+            ) {
+              animation.heading = Cesium.Math.toRadians(
+                $('#heading input').val()
+              )
+              animation.pitch = Cesium.Math.toRadians($('#pitch input').val())
+            }
+          },
+          // 第一人称视角下，相机焦点的偏移值
+          firstPersonCameraFocusOffset: firstPersonCameraFocusOffset
+        })
+      }
+
+      //不同漫游视角类型初始化
+      function initAnimationOfType() {
+        let type = $('#romaing-type').val()
+        animation.heading = Cesium.Math.toRadians(defaultOptions.heading)
+        animation.pitch = Cesium.Math.toRadians(defaultOptions.pitch)
+        headingSlider.setValue(defaultOptions.heading)
+        pitchSlider.setValue(defaultOptions.pitch)
+      }
+
+      //开始漫游
+      function startRoaming() {
+        stopRoaming()
+        animation.start()
+        initAnimationOfType()
+        isStop = false
+      }
+
+      //暂停/继续漫游
+      function pauseOrContinue() {
+        if (isStop) return
+        if ($('.pause-continue-btn').text() === '暂停漫游') {
+          $('.pause-continue-btn').text('继续漫游')
+        } else {
+          $('.pause-continue-btn').text('暂停漫游')
+        }
+        animation.pause = !animation.pause
+      }
+
+      //结束漫游
+      function stopRoaming() {
+        animation.stop()
+        isStop = true
+      }
+
+      //滑块部分的UI
+      function initSliderUI() {
+        // 相机方位角
+        headingSlider = slider.render({
+          elem: '#heading',
+          value: defaultOptions.heading,
+          min: 0.0,
+          max: 360.0,
+          step: 1,
+          theme: 'rgb(102 147 251)',
+          input: true,
+          change: function (value) {
+            animation.heading = Cesium.Math.toRadians(parseInt(value))
+          }
+        })
+
+        // 相机俯仰角
+        pitchSlider = slider.render({
+          elem: '#pitch',
+          value: defaultOptions.pitch,
+          min: -89.0,
+          max: 90.0,
+          step: 1,
+          theme: 'rgb(102 147 251)',
+          input: true,
+          change: function (value) {
+            animation.pitch = Cesium.Math.toRadians(parseInt(value))
+          }
+        })
+      }
+
+      //初始化示例UI
+      function initUI() {
+        layui.use(function () {
+          //监听内容
+          layui.form.on('select(type)', function (data) {
+            let type = data.value
+            // 0：常规；1：跟随；2：锁定第一视角；3：上帝视角
+            switch (type) {
+              case '0':
+                animation.animationType = 0
+                //相机俯仰和方位无法使用
+                headingSliderDisabled = true
+                pitchSliderDisabled = true
+                //显示漫游路径
+                animation.animationModel.path.show._value = true
+                break
+              case '1':
+                animation.animationType = 1
+                //相机俯仰和方位都可以使用
+                headingSliderDisabled = false
+                pitchSliderDisabled = false
+                //显示漫游路径
+                animation.animationModel.path.show._value = true
+                break
+              case '2':
+                animation.animationType = 2
+                //相机俯仰和方位都可以使用
+                headingSliderDisabled = false
+                pitchSliderDisabled = false
+                //隐藏漫游路径
+                animation.animationModel.path.show._value = false
+                break
+              case '3':
+                animation.animationType = 3
+                //相机方位可以使用，俯仰无法使用
+                headingSliderDisabled = false
+                pitchSliderDisabled = true
+                //隐藏漫游路径
+                animation.animationModel.path.show._value = false
+                break
+              default:
+                break
+            }
+            if (headingSliderDisabled) {
+              $('.layui-form-item-heading').hide()
+            } else {
+              $('.layui-form-item-heading').show()
+            }
+            if (pitchSliderDisabled) {
+              $('.layui-form-item-pitch').hide()
+            } else {
+              $('.layui-form-item-pitch').show()
+            }
+            initSliderUI()
+            initAnimationOfType()
+          })
+
+          //初始化相机方位角、俯仰角滑块UI
+          initSliderUI()
+
+          // 模型方位角
+          slider.render({
+            elem: '#modelHeading',
+            value: 0,
+            min: 0.0,
+            max: 360.0,
+            step: 1,
+            theme: 'rgb(102 147 251)',
+            input: true,
+            change: function (value) {
+              animation.modelHeading = parseInt(value)
+            }
+          })
+
+          // 模型俯仰角
+          slider.render({
+            elem: '#modelPitch',
+            value: 0,
+            min: -180.0,
+            max: 180.0,
+            step: 1,
+            theme: 'rgb(102 147 251)',
+            input: true,
+            change: function (value) {
+              animation.modelPitch = parseInt(value)
+            }
+          })
+
+          // 模型倾斜角
+          slider.render({
+            elem: '#modelRoll',
+            value: 0,
+            min: -180.0,
+            max: 180.0,
+            step: 1,
+            theme: 'rgb(102 147 251)',
+            input: true,
+            change: function (value) {
+              animation.modelRoll = parseInt(value)
+            }
+          })
+
+          // 模型运动姿态是否改变
+          layui.form.on('switch(isSetModelPosture)', function (data) {
+            animation.isSetModelPosture = data.elem.checked
+          })
+        })
+      }
+
+      //添加地形数据
+      function addTerrain() {
+        let layer = new zondy.layer.IGSSceneLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Scene/TwTerrain/SceneServer'
+        })
+        map.add(layer)
+      }
+
+      //加载天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //开启抗锯齿
+        viewer.scene.fxaa = true
+        viewer.scene.postProcessStages.fxaa.enabled = true
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //加载天地图
+        addTDT()
+        //加载地形
+        addTerrain()
+        //初始化漫游工具
+        initAnimationTool()
+        //初始化UI
+        initUI()
+        //开启动画漫游
+        startRoaming()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" style="width: 352px">
+      <form class="layui-form" action="">
+        <div class="sample-main-panel">
+          <div class="layui-form-item">
+            <label class="layui-form-label">漫游视角</label>
+            <div class="layui-input-block">
+              <select lay-filter="type" id="romaing-type">
+                <option value="0">常规</option>
+                <option value="1">跟随</option>
+                <option value="2" selected>锁定第一视角</option>
+                <option value="3">上帝视角</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item layui-form-item-heading">
+            <div class="slideBarDiv">
+              相机方位角
+              <div id="heading" class="demo-slider"></div>
+            </div>
+          </div>
+          <div class="layui-form-item layui-form-item-pitch">
+            <div class="slideBarDiv">
+              相机俯仰角
+              <div id="pitch" class="demo-slider"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="slideBarDiv">
+              模型方位角
+              <div id="modelHeading" class="demo-slider"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="slideBarDiv">
+              模型俯仰角
+              <div id="modelPitch" class="demo-slider"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="slideBarDiv">
+              模型倾斜角
+              <div id="modelRoll" class="demo-slider"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 150px"
+              >模型运动姿态是否改变</label
+            >
+            <div class="layui-input-block">
+              <input
+                type="checkbox"
+                lay-filter="isSetModelPosture"
+                lay-skin="switch"
+                lay-text="是|否"
+                checked
+              />
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="sample-button-panel">
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="startRoaming()"
+        >
+          开始漫游
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal pause-continue-btn"
+          onclick="pauseOrContinue()"
+        >
+          暂停漫游
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="stopRoaming()"
+        >
+          结束漫游
+        </button>
+      </div>
+    </div>
+    <style type="text/css">
+      .layui-form-item {
+        margin-bottom: 8px;
+      }
+
+      .sample-main-panel {
+        height: auto;
+        line-height: 37px;
+        margin-bottom: 8px;
+      }
+
+      .layui-slider {
+        top: -20px;
+        width: 115px;
+        left: 94px;
+      }
+
+      .layui-slider-input {
+        top: -34px;
+      }
+    </style>
+  </body>
+</html>

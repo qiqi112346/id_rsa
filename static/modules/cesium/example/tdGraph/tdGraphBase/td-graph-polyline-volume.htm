@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>管线</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--html2canvas库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/html2canvas/html2canvas.min.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/graphic.css"
+    />
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, graphicsLayer, polylineVolume
+      //取得jquery对象
+      let $ = layui.$
+      //颜色管理器对象
+      let colorpicker = layui.colorpicker
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //初始化标绘图层
+        addGraphicLayer()
+        //纯色管线
+        addColorPolylineVolume()
+        //html材质管线
+        addHtmlPolylineVolume()
+        //流动管线
+        addTrailPolylineVolume()
+        //网状管线
+        addNetPolylineVolume()
+        //条纹栅格
+        addGridPolylineVolume()
+        //棋盘管线
+        addCheckerboard()
+        //渐隐管线
+        addFadePolylineVolume()
+        //纯色方管线
+        addColorCorridor()
+        //流动方管线
+        addTrailCorridor()
+        //栅格方管线
+        addGridCorridor()
+        //纯色方管线
+        addColorCorridorRoad()
+        //纯色圆管线
+        addColorPolylineVolumeRoad()
+        //加载天地图底图
+        addTDT()
+        //视点跳转
+        flyTo()
+        //初始化示例UI
+        initUI()
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //显示鼠标位置
+        viewer.showPosition()
+      }
+
+      //添加标绘图层
+      function addGraphicLayer() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/GraphicsLayer.html
+        graphicsLayer = new zondy.cesium.GraphicsLayer(viewer, {
+          //点击标绘对象的回调函数
+          clickGraphic: function (graphic) {
+            if (!graphic) return
+            polylineVolume = graphic
+            //将各类文本框隐藏
+            $('#polylineVolume-color-input').parents('.layui-form-item').hide()
+            $('#polylineVolume-extrudedHeight')
+              .parents('.layui-form-item')
+              .hide()
+            $('#polylineVolume-image').parents('.layui-form-item').hide()
+            $('#polylineVolume-repeatX').parents('.layui-form-item').hide()
+            $('#polylineVolume-repeatY').parents('.layui-form-item').hide()
+            $('#polylineVolume-duration').parents('.layui-form-item').hide()
+            $('#polylineVolume-direction').parents('.layui-form-item').hide()
+            $('#polylineVolume-cellAlpha').parents('.layui-form-item').hide()
+            $('#polylineVolume-lineCountX').parents('.layui-form-item').hide()
+            $('#polylineVolume-lineCountY').parents('.layui-form-item').hide()
+            $('#polylineVolume-lineThicknessX')
+              .parents('.layui-form-item')
+              .hide()
+            $('#polylineVolume-lineThicknessY')
+              .parents('.layui-form-item')
+              .hide()
+            $('#polylineVolume-horizontal').parents('.layui-form-item').hide()
+            $('#polylineVolume-evenColor-input')
+              .parents('.layui-form-item')
+              .hide()
+            $('#polylineVolume-oddColor-input')
+              .parents('.layui-form-item')
+              .hide()
+            $('#polylineVolume-repeat').parents('.layui-form-item').hide()
+            $('#polylineVolume-lightColor-input')
+              .parents('.layui-form-item')
+              .hide()
+            $('#polylineVolume-darkColor-input')
+              .parents('.layui-form-item')
+              .hide()
+            $('#polylineVolume-fadeInColor-input')
+              .parents('.layui-form-item')
+              .hide()
+            $('#polylineVolume-fadeOutColor-input')
+              .parents('.layui-form-item')
+              .hide()
+            $('#polylineVolume-maximumDistance')
+              .parents('.layui-form-item')
+              .hide()
+            $('#polylineVolume-fadeRepeat').parents('.layui-form-item').hide()
+            $('#polylineVolume-fadeDirectionX')
+              .parents('.layui-form-item')
+              .hide()
+            $('#polylineVolume-fadeDirectionY')
+              .parents('.layui-form-item')
+              .hide()
+            //更新样式面板
+            $('#polylineVolume-width').val(polylineVolume.style.width)
+            let material = polylineVolume.style.material
+            if (typeof material === 'undefined') {
+              $('#polylineVolume-color-input').val(
+                polylineVolume.style.color.toCssHexString()
+              )
+              colorpicker.render({
+                elem: '#polylineVolume-color',
+                color: polylineVolume.style.color.toCssHexString(),
+                done: function (color) {
+                  $('#polylineVolume-color-input').val(color)
+                  polylineVolume.style.color =
+                    Cesium.Color.fromCssColorString(color)
+                }
+              })
+              $('#polylineVolume-color-input')
+                .parents('.layui-form-item')
+                .show()
+              if (polylineVolume.type === 'corridor') {
+                $('#polylineVolume-extrudedHeight').val(
+                  polylineVolume.style.extrudedHeight
+                    ? polylineVolume.style.extrudedHeight
+                    : 0
+                )
+                $('#polylineVolume-extrudedHeight')
+                  .parents('.layui-form-item')
+                  .show()
+              }
+            } else {
+              if (
+                typeof polylineVolume.style.material.uniforms.color !==
+                'undefined'
+              ) {
+                $('#polylineVolume-color-input').val(
+                  polylineVolume.style.material.uniforms.color.toCssHexString()
+                )
+                colorpicker.render({
+                  elem: '#polylineVolume-color',
+                  color:
+                    polylineVolume.style.material.uniforms.color.toCssHexString(),
+                  done: function (color) {
+                    $('#polylineVolume-color-input').val(color)
+                    polylineVolume.style.material.uniforms.color =
+                      Cesium.Color.fromCssColorString(color)
+                  }
+                })
+                $('#polylineVolume-color-input')
+                  .parents('.layui-form-item')
+                  .show()
+              }
+              switch (material.type) {
+                case 'Image':
+                  $('#polylineVolume-image').val(
+                    polylineVolume.style.material.uniforms.image
+                  )
+                  $('#polylineVolume-repeatX').val(
+                    polylineVolume.style.material.uniforms.repeat.x
+                  )
+                  $('#polylineVolume-repeatY').val(
+                    polylineVolume.style.material.uniforms.repeat.y
+                  )
+                  $('#polylineVolume-image').parents('.layui-form-item').show()
+                  $('#polylineVolume-repeatX')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-repeatY')
+                    .parents('.layui-form-item')
+                    .show()
+                  break
+                case 'PolylineTrailLink':
+                  $('#polylineVolume-image').val(
+                    polylineVolume.style.material.uniforms.image
+                  )
+                  $('#polylineVolume-repeatX').val(
+                    polylineVolume.style.material.uniforms.repeat.x
+                  )
+                  $('#polylineVolume-repeatY').val(
+                    polylineVolume.style.material.uniforms.repeat.y
+                  )
+                  $('#polylineVolume-duration').val(
+                    polylineVolume.style.material.uniforms.duration
+                  )
+                  $('#polylineVolume-direction').val(
+                    polylineVolume.style.material.uniforms.direction
+                  )
+                  $('#polylineVolume-image').parents('.layui-form-item').show()
+                  $('#polylineVolume-repeatX')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-repeatY')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-duration')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-direction')
+                    .parents('.layui-form-item')
+                    .show()
+                  break
+                case 'Grid':
+                  $('#polylineVolume-cellAlpha').val(
+                    polylineVolume.style.material.uniforms.cellAlpha
+                  )
+                  $('#polylineVolume-lineCountX').val(
+                    polylineVolume.style.material.uniforms.lineCount.x
+                  )
+                  $('#polylineVolume-lineCountY').val(
+                    polylineVolume.style.material.uniforms.lineCount.y
+                  )
+                  $('#polylineVolume-lineThicknessX').val(
+                    polylineVolume.style.material.uniforms.lineThickness.x
+                  )
+                  $('#polylineVolume-lineThicknessY').val(
+                    polylineVolume.style.material.uniforms.lineThickness.y
+                  )
+                  $('#polylineVolume-cellAlpha')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-lineCountX')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-lineCountY')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-lineThicknessX')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-lineThicknessY')
+                    .parents('.layui-form-item')
+                    .show()
+                  break
+                case 'Stripe':
+                  $('#polylineVolume-horizontal').val(
+                    polylineVolume.style.material.uniforms.horizontal
+                      ? '1'
+                      : '0'
+                  )
+                  $('#polylineVolume-evenColor-input').val(
+                    polylineVolume.style.material.uniforms.evenColor.toCssHexString()
+                  )
+                  colorpicker.render({
+                    elem: '#polylineVolume-evenColor',
+                    color:
+                      polylineVolume.style.material.uniforms.evenColor.toCssHexString(),
+                    done: function (color) {
+                      $('#polylineVolume-evenColor-input').val(color)
+                      polylineVolume.style.material.uniforms.evenColor =
+                        Cesium.Color.fromCssColorString(color)
+                    }
+                  })
+                  $('#polylineVolume-oddColor-input').val(
+                    polylineVolume.style.material.uniforms.oddColor.toCssHexString()
+                  )
+                  colorpicker.render({
+                    elem: '#polylineVolume-oddColor',
+                    color:
+                      polylineVolume.style.material.uniforms.oddColor.toCssHexString(),
+                    done: function (color) {
+                      $('#polylineVolume-oddColor-input').val(color)
+                      polylineVolume.style.material.uniforms.oddColor =
+                        Cesium.Color.fromCssColorString(color)
+                    }
+                  })
+                  $('#polylineVolume-repeat').val(
+                    polylineVolume.style.material.uniforms.repeat
+                  )
+                  $('#polylineVolume-horizontal')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-evenColor-input')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-oddColor-input')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-repeat').parents('.layui-form-item').show()
+                  break
+                case 'Checkerboard':
+                  $('#polylineVolume-repeatX').val(
+                    polylineVolume.style.material.uniforms.repeat.x
+                  )
+                  $('#polylineVolume-repeatY').val(
+                    polylineVolume.style.material.uniforms.repeat.y
+                  )
+                  $('#polylineVolume-lightColor-input').val(
+                    polylineVolume.style.material.uniforms.lightColor.toCssHexString()
+                  )
+                  colorpicker.render({
+                    elem: '#polylineVolume-lightColor',
+                    color:
+                      polylineVolume.style.material.uniforms.lightColor.toCssHexString(),
+                    done: function (color) {
+                      $('#polylineVolume-lightColor-input').val(color)
+                      polylineVolume.style.material.uniforms.lightColor =
+                        Cesium.Color.fromCssColorString(color)
+                    }
+                  })
+                  $('#polylineVolume-darkColor-input').val(
+                    polylineVolume.style.material.uniforms.darkColor.toCssHexString()
+                  )
+                  colorpicker.render({
+                    elem: '#polylineVolume-darkColor',
+                    color:
+                      polylineVolume.style.material.uniforms.darkColor.toCssHexString(),
+                    done: function (color) {
+                      $('#polylineVolume-darkColor-input').val(color)
+                      polylineVolume.style.material.uniforms.darkColor =
+                        Cesium.Color.fromCssColorString(color)
+                    }
+                  })
+                  $('#polylineVolume-repeatX')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-repeatY')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-lightColor-input')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-darkColor-input')
+                    .parents('.layui-form-item')
+                    .show()
+                  break
+                case 'Fade':
+                  $('#polylineVolume-fadeInColor-input').val(
+                    polylineVolume.style.material.uniforms.fadeInColor.toCssHexString()
+                  )
+                  colorpicker.render({
+                    elem: '#polylineVolume-fadeInColor',
+                    color:
+                      polylineVolume.style.material.uniforms.fadeInColor.toCssHexString(),
+                    done: function (color) {
+                      $('#polylineVolume-fadeInColor-input').val(color)
+                      polylineVolume.style.material.uniforms.fadeInColor =
+                        Cesium.Color.fromCssColorString(color)
+                    }
+                  })
+                  $('#polylineVolume-fadeOutColor-input').val(
+                    polylineVolume.style.material.uniforms.fadeOutColor.toCssHexString()
+                  )
+                  colorpicker.render({
+                    elem: '#polylineVolume-fadeOutColor',
+                    color:
+                      polylineVolume.style.material.uniforms.fadeOutColor.toCssHexString(),
+                    done: function (color) {
+                      $('#polylineVolume-fadeOutColor-input').val(color)
+                      polylineVolume.style.material.uniforms.fadeOutColor =
+                        Cesium.Color.fromCssColorString(color)
+                    }
+                  })
+                  $('#polylineVolume-maximumDistance').val(
+                    polylineVolume.style.material.uniforms.maximumDistance
+                  )
+                  $('#polylineVolume-fadeRepeat').val(
+                    polylineVolume.style.material.uniforms.repeat ? '1' : '0'
+                  )
+                  $('#polylineVolume-fadeDirectionX').val(
+                    polylineVolume.style.material.uniforms.fadeDirection.x
+                      ? '1'
+                      : '0'
+                  )
+                  $('#polylineVolume-fadeDirectionY').val(
+                    polylineVolume.style.material.uniforms.fadeDirection.y
+                      ? '1'
+                      : '0'
+                  )
+                  $('#polylineVolume-fadeDirectionX')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-fadeDirectionY')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-fadeInColor-input')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-fadeOutColor-input')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-maximumDistance')
+                    .parents('.layui-form-item')
+                    .show()
+                  $('#polylineVolume-fadeRepeat')
+                    .parents('.layui-form-item')
+                    .show()
+                  break
+              }
+            }
+            layui.form.render('select')
+            //这个时候展开编辑面板
+            $('#editPanel').show()
+          },
+          getGraphic: function () {
+            graphicsLayer.stopDrawing()
+          }
+        })
+      }
+
+      //纯色管线
+      function addColorPolylineVolume() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let polylineVolumeGraphic = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'polylineVolume',
+          //标绘位置
+          positions: [
+            Cesium.Cartesian3.fromDegrees(114.4052, 30.463, 0),
+            Cesium.Cartesian3.fromDegrees(114.4852, 30.463, 0)
+          ],
+          //标绘样式
+          style: {
+            //颜色
+            color: Cesium.Color.RED,
+            // 宽度
+            width: 100
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(polylineVolumeGraphic)
+      }
+
+      //html材质管线
+      function addHtmlPolylineVolume() {
+        //先将html可见
+        document.getElementById('htmlGraph').style.display = 'block'
+        //再利用html2canvas转换成图片
+        html2canvas(document.getElementById('htmlGraph'), {
+          //canvas宽度
+          width: 100,
+          //canvas高度
+          height: 20,
+          //canvas分辨率，越大越清晰
+          scale: 2
+        }).then(function (canvas) {
+          document.getElementById('htmlGraph').style.display = 'none'
+          //在这里可以拿到base64编码的图片
+          let dataUrl = canvas.toDataURL('image/png', 1.0)
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+          let polylineVolumeGraphic = new zondy.cesium.Graphic({
+            //标绘类型
+            type: 'polylineVolume',
+            //标绘位置
+            positions: [
+              Cesium.Cartesian3.fromDegrees(114.4052, 30.443, 0),
+              Cesium.Cartesian3.fromDegrees(114.4852, 30.443, 0)
+            ],
+            //标绘样式
+            style: {
+              // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Material.html
+              material: Cesium.Material.fromType(Cesium.Material.ImageType, {
+                //图片路径
+                image: dataUrl,
+                //x、y轴重复次数
+                repeat: new Cesium.Cartesian2(8.0, 1.0),
+                //颜色
+                color: Cesium.Color.AQUA
+              }),
+              // 宽度
+              width: 100
+            }
+          })
+          //将标绘点添加入标绘图层
+          graphicsLayer.addGraphic(polylineVolumeGraphic)
+        })
+      }
+
+      //流动管线
+      function addTrailPolylineVolume() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let polylineVolumeGraphic2 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'polylineVolume',
+          //标绘位置
+          positions: [
+            Cesium.Cartesian3.fromDegrees(114.4052, 30.423, 0),
+            Cesium.Cartesian3.fromDegrees(114.4852, 30.423, 0)
+          ],
+          //标绘样式
+          style: {
+            // 宽度
+            width: 100,
+            // 材质
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Cesium.Material.html
+            material: Cesium.Material.fromType(
+              Cesium.Material.PolylineTrailLinkType,
+              {
+                // 图片url
+                image:
+                  'http://webclient.smaryun.com:8200/NoneSpatialData/image/lineClr.png',
+                // 持续时间
+                duration: 2000,
+                // 方向
+                direction: 1.0,
+                // 颜色
+                color: Cesium.Color.AQUA,
+                // x、y轴重复次数
+                repeat: new Cesium.Cartesian2(4.0, 1.0)
+              }
+            )
+          }
+        })
+        //将标绘添加入标绘图层
+        graphicsLayer.addGraphic(polylineVolumeGraphic2)
+      }
+
+      //网状管线
+      function addNetPolylineVolume() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let polylineVolumeGraphic3 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'polylineVolume',
+          //标绘位置
+          positions: [
+            Cesium.Cartesian3.fromDegrees(114.4052, 30.403, 0),
+            Cesium.Cartesian3.fromDegrees(114.4852, 30.403, 0)
+          ],
+          //标绘样式
+          style: {
+            // 宽度
+            width: 100,
+            // 栅格材质
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Material.html
+            material: Cesium.Material.fromType(Cesium.Material.GridType, {
+              // 材质颜色
+              color: Cesium.Color.CORNFLOWERBLUE,
+              // 栅格透明度
+              cellAlpha: 0.2,
+              // 栅格数量
+              lineCount: new Cesium.Cartesian2(8.0, 8.0),
+              // 栅格x、y轴重复次数
+              lineThickness: new Cesium.Cartesian2(1.0, 1.0)
+            })
+          }
+        })
+        //将标绘添加入标绘图层
+        graphicsLayer.addGraphic(polylineVolumeGraphic3)
+      }
+
+      //条纹栅格
+      function addGridPolylineVolume() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let polylineVolumeGraphic4 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'polylineVolume',
+          //标绘位置
+          positions: [
+            Cesium.Cartesian3.fromDegrees(114.4052, 30.383, 0),
+            Cesium.Cartesian3.fromDegrees(114.4852, 30.383, 0)
+          ],
+          //标绘样式
+          style: {
+            // 宽度
+            width: 100,
+            // 条纹材质
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Material.html
+            material: Cesium.Material.fromType(Cesium.Material.StripeType, {
+              // 纵置还是横置
+              horizontal: false,
+              // 偶数条纹颜色
+              evenColor: new Cesium.Color(1.0, 1.0, 1.0, 1),
+              // 奇数条纹颜色
+              oddColor: new Cesium.Color(0.0, 0.0, 1.0, 1),
+              // 重复数量
+              repeat: 40
+            })
+          }
+        })
+        //将标绘添加入标绘图层
+        graphicsLayer.addGraphic(polylineVolumeGraphic4)
+      }
+
+      //棋盘管线
+      function addCheckerboard() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let polylineVolumeGraphic5 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'polylineVolume',
+          //标绘位置
+          positions: [
+            Cesium.Cartesian3.fromDegrees(114.4052, 30.363, 0),
+            Cesium.Cartesian3.fromDegrees(114.4852, 30.363, 0)
+          ],
+          //标绘样式
+          style: {
+            //宽度
+            width: 100,
+            // 棋盘材质
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Material.html
+            material: Cesium.Material.fromType(
+              Cesium.Material.CheckerboardType,
+              {
+                // 浅色棋盘格颜色
+                lightColor: new Cesium.Color(1.0, 1.0, 1.0, 1),
+                // 深色棋盘格颜色
+                darkColor: new Cesium.Color(0.0, 0.0, 0.0, 1),
+                // x、y轴重复此时
+                repeat: new Cesium.Cartesian2(10.0, 10.0)
+              }
+            )
+          }
+        })
+        //将标绘添加入标绘图层
+        graphicsLayer.addGraphic(polylineVolumeGraphic5)
+      }
+
+      //渐隐管线
+      function addFadePolylineVolume() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let polylineVolumeGraphic6 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'polylineVolume',
+          //标绘位置
+          positions: [
+            Cesium.Cartesian3.fromDegrees(114.4052, 30.343, 0),
+            Cesium.Cartesian3.fromDegrees(114.4852, 30.343, 0)
+          ],
+          //标绘样式
+          style: {
+            // 宽度
+            width: 100,
+            // 渐隐材质
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Material.html
+            material: Cesium.Material.fromType(Cesium.Material.FadeType, {
+              // 淡入颜色
+              fadeInColor: new Cesium.Color(1.0, 0.0, 0.0, 1.0),
+              // 淡出颜色
+              fadeOutColor: new Cesium.Color(0.0, 0.0, 0.0, 0.0),
+              // 最大渐变距离
+              maximumDistance: 0.5,
+              // 是否重复
+              repeat: true,
+              // 渐隐方向
+              fadeDirection: {
+                x: true,
+                y: false
+              }
+            })
+          }
+        })
+        //将标绘添加入标绘图层
+        graphicsLayer.addGraphic(polylineVolumeGraphic6)
+      }
+
+      //纯色方管线
+      function addColorCorridor() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let polylineVolumeGraphic7 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'corridor',
+          //标绘位置
+          positions: [
+            Cesium.Cartesian3.fromDegrees(114.5052, 30.463, 0),
+            Cesium.Cartesian3.fromDegrees(114.5852, 30.463, 0)
+          ],
+          //标绘样式
+          style: {
+            // 颜色
+            color: Cesium.Color.MEDIUMPURPLE,
+            // 宽度
+            width: 300,
+            // 拉伸高度
+            extrudedHeight: 600
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(polylineVolumeGraphic7)
+      }
+
+      //流动方管线
+      function addTrailCorridor() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let polylineVolumeGraphic8 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'corridor',
+          //标绘位置
+          positions: [
+            Cesium.Cartesian3.fromDegrees(114.5052, 30.443, 0),
+            Cesium.Cartesian3.fromDegrees(114.5852, 30.443, 0)
+          ],
+          //标绘样式
+          style: {
+            //颜色
+            color: Cesium.Color.RED,
+            // 宽度
+            width: 300,
+            // 拉伸高度
+            extrudedHeight: 600,
+            // 材质
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Cesium.Material.html
+            material: Cesium.Material.fromType(
+              Cesium.Material.PolylineTrailLinkType,
+              {
+                // 图片url
+                image:
+                  'http://webclient.smaryun.com:8200/NoneSpatialData/image/color1.png',
+                // 流动速度
+                duration: 2000,
+                // 流动方向
+                direction: 1.0,
+                // x、y轴重复此时
+                repeat: new Cesium.Cartesian2(1.0, 1.0)
+              }
+            )
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(polylineVolumeGraphic8)
+      }
+
+      //栅格方管线
+      function addGridCorridor() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let polylineVolumeGraphic9 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'corridor',
+          //标绘位置
+          positions: [
+            Cesium.Cartesian3.fromDegrees(114.5052, 30.423, 0),
+            Cesium.Cartesian3.fromDegrees(114.5852, 30.423, 0)
+          ],
+          //标绘样式
+          style: {
+            // 宽度
+            width: 300,
+            // 拉伸高度
+            extrudedHeight: 600,
+            // 栅格材质
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Material.html
+            material: Cesium.Material.fromType(Cesium.Material.GridType, {
+              // 颜色
+              color: Cesium.Color.ORANGE,
+              // 栅格透明度
+              cellAlpha: 0.2,
+              // xy轴栅格数量
+              lineCount: new Cesium.Cartesian2(4.0, 4.0),
+              // 栅格厚度
+              lineThickness: new Cesium.Cartesian2(1.0, 1.0)
+            })
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(polylineVolumeGraphic9)
+      }
+
+      //纯色方管线
+      function addColorCorridorRoad() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let polylineVolumeGraphic10 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'corridor',
+          //标绘位置
+          positions: [
+            Cesium.Cartesian3.fromDegrees(114.5052, 30.403, 0),
+            Cesium.Cartesian3.fromDegrees(114.5452, 30.403, 0),
+            Cesium.Cartesian3.fromDegrees(114.5452, 30.363, 0),
+            Cesium.Cartesian3.fromDegrees(114.5052, 30.363, 0),
+            Cesium.Cartesian3.fromDegrees(114.5052, 30.403, 0)
+          ],
+          //标绘样式
+          style: {
+            // 颜色
+            color: Cesium.Color.YELLOW,
+            // 宽度
+            width: 300,
+            // 拉伸高度
+            extrudedHeight: 600
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(polylineVolumeGraphic10)
+      }
+
+      //纯色圆管线
+      function addColorPolylineVolumeRoad() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let polylineVolumeGraphic11 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'polylineVolume',
+          //标绘位置
+          positions: [
+            Cesium.Cartesian3.fromDegrees(114.5552, 30.403, 0),
+            Cesium.Cartesian3.fromDegrees(114.5952, 30.403, 0),
+            Cesium.Cartesian3.fromDegrees(114.5952, 30.393, 0),
+            Cesium.Cartesian3.fromDegrees(114.5552, 30.393, 0),
+            Cesium.Cartesian3.fromDegrees(114.5552, 30.383, 0),
+            Cesium.Cartesian3.fromDegrees(114.5952, 30.383, 0),
+            Cesium.Cartesian3.fromDegrees(114.5952, 30.373, 0),
+            Cesium.Cartesian3.fromDegrees(114.5552, 30.373, 0)
+          ],
+          //标绘样式
+          style: {
+            // 颜色
+            color: Cesium.Color.LIGHTSKYBLUE,
+            // 宽度
+            width: 300,
+            // 拉伸高度
+            extrudedHeight: 600
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(polylineVolumeGraphic11)
+      }
+
+      //加载天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //视点跳转
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [114.4965, 30.4125, 30000]
+        })
+      }
+
+      //初始化示例UI
+      function initUI() {
+        layui.use('colorpicker', function () {
+          //拉伸高度
+          $('#polylineVolume-extrudedHeight').bind(
+            'input propertychange',
+            function () {
+              if (polylineVolume && polylineVolume.type === 'corridor') {
+                polylineVolume.style.extrudedHeight = clampNumberValue(
+                  $('#polylineVolume-extrudedHeight').val()
+                )
+              }
+            }
+          )
+
+          $('#polylineVolume-width').bind('input propertychange', function () {
+            polylineVolume.style.width = clampNumberValue(
+              $('#polylineVolume-width').val()
+            )
+          })
+
+          //是否横向
+          layui.form.on('select(horizontal)', function (data) {
+            polylineVolume.style.material.uniforms.horizontal =
+              clampNumberValue($('#polylineVolume-horizontal').val()) !== 0
+          })
+          layui.form.on('select(fadeRepeat)', function (data) {
+            polylineVolume.style.material.uniforms.repeat =
+              clampNumberValue($('#polylineVolume-fadeRepeat').val()) !== 0
+          })
+          layui.form.on('select(fadeDirectionX)', function (data) {
+            polylineVolume.style.material.uniforms.fadeDirection.x =
+              clampNumberValue($('#polylineVolume-fadeDirectionX').val()) !== 0
+          })
+          layui.form.on('select(fadeDirectionY)', function (data) {
+            polylineVolume.style.material.uniforms.fadeDirection.y =
+              clampNumberValue($('#polylineVolume-fadeDirectionY').val()) !== 0
+          })
+
+          $('#polylineVolume-image').bind('input propertychange', function () {
+            polylineVolume.style.material.uniforms.image = $(
+              '#polylineVolume-image'
+            ).val()
+          })
+          $('#polylineVolume-repeatX').bind(
+            'input propertychange',
+            function () {
+              polylineVolume.style.material.uniforms.repeat.x = $(
+                '#polylineVolume-repeatX'
+              ).val()
+            }
+          )
+          $('#polylineVolume-repeatY').bind(
+            'input propertychange',
+            function () {
+              polylineVolume.style.material.uniforms.repeat.y = $(
+                '#polylineVolume-repeatY'
+              ).val()
+            }
+          )
+          $('#polylineVolume-duration').bind(
+            'input propertychange',
+            function () {
+              polylineVolume.style.material.uniforms.duration =
+                clampNumberValue($('#polylineVolume-duration').val())
+            }
+          )
+          $('#polylineVolume-direction').bind(
+            'input propertychange',
+            function () {
+              polylineVolume.style.material.uniforms.direction =
+                clampNumberValue($('#polylineVolume-direction').val())
+            }
+          )
+          $('#polylineVolume-cellAlpha').bind(
+            'input propertychange',
+            function () {
+              polylineVolume.style.material.uniforms.cellAlpha =
+                clampNumberValue($('#polylineVolume-cellAlpha').val())
+            }
+          )
+          $('#polylineVolume-lineCountX').bind(
+            'input propertychange',
+            function () {
+              polylineVolume.style.material.uniforms.lineCount.x =
+                clampNumberValue($('#polylineVolume-lineCountX').val())
+            }
+          )
+          $('#polylineVolume-lineCountY').bind(
+            'input propertychange',
+            function () {
+              polylineVolume.style.material.uniforms.lineCount.y =
+                clampNumberValue($('#polylineVolume-lineCountY').val())
+            }
+          )
+          $('#polylineVolume-lineThicknessX').bind(
+            'input propertychange',
+            function () {
+              polylineVolume.style.material.uniforms.lineThickness.x =
+                clampNumberValue($('#polylineVolume-lineThicknessX').val(), [0])
+            }
+          )
+          $('#polylineVolume-lineThicknessY').bind(
+            'input propertychange',
+            function () {
+              polylineVolume.style.material.uniforms.lineThickness.y =
+                clampNumberValue($('#polylineVolume-lineThicknessY').val(), [0])
+            }
+          )
+          $('#polylineVolume-repeat').bind('input propertychange', function () {
+            polylineVolume.style.material.uniforms.repeat = clampNumberValue(
+              $('#polylineVolume-repeat').val(),
+              [0]
+            )
+          })
+          $('#polylineVolume-maximumDistance').bind(
+            'input propertychange',
+            function () {
+              polylineVolume.style.material.uniforms.maximumDistance =
+                clampNumberValue($('#polylineVolume-maximumDistance').val(), [
+                  0
+                ])
+            }
+          )
+        })
+      }
+
+      function startDrawingPolylineVolume() {
+        // 展示面板
+        $('#editPanel').hide()
+        // 宽度input框中value中的设置(添加默认值)
+        var width =
+          Number($('#polylineVolume-width').val()) &&
+          !Number.isNaN(Number($('#polylineVolume-width').val()))
+            ? Number($('#polylineVolume-width').val())
+            : 600
+        graphicsLayer.startDrawing({
+          type: 'polylineVolume',
+          style: {
+            // 颜色
+            color: Cesium.Color.fromCssColorString(
+              $('#polylineVolume-color-input').val()
+            ),
+            // 宽度
+            width: width
+          }
+        })
+      }
+
+      function deletePolylineVolume() {
+        polylineVolume.remove()
+        $('#editPanel').hide()
+      }
+      // 获取合法的number数据输入
+      function clampNumberValue(inputValue, limits) {
+        let max, min
+        if (Array.isArray(limits) && limits.length > 0) {
+          if (limits.length === 1) {
+            min = limits[0]
+          } else {
+            max = limits[1]
+          }
+        }
+        let value = Number(inputValue)
+        if (Number.isNaN(value)) {
+          if (typeof min === 'number') {
+            return min
+          } else {
+            return 0
+          }
+        }
+        if (typeof min === 'number' && value <= min) {
+          return min
+        }
+        if (typeof max === 'number' && value >= max) {
+          return max
+        }
+        return value
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div
+      class="layui-panel layui-panel-right"
+      style="text-align: center; width: 140px; padding: 10px"
+    >
+      <button
+        onclick="startDrawingPolylineVolume()"
+        style="width: auto; margin: 0 auto !important"
+        type="button"
+        class="layui-btn layui-btn-normal graphic-button-margin"
+      >
+        添加管线
+      </button>
+    </div>
+    <div
+      class="layui-panel layui-panel-right"
+      id="editPanel"
+      style="display: none; top: 70px"
+    >
+      <form class="layui-form" action="">
+        <div class="sample-main-panel">
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">填充颜色</label>
+            <div
+              class="layui-input-inline"
+              style="width: 145px; margin-left: 10px"
+            >
+              <input
+                type="text"
+                value="#00ffff"
+                placeholder="填充颜色"
+                class="layui-input"
+                id="polylineVolume-color-input"
+              />
+            </div>
+            <div class="layui-inline">
+              <div id="polylineVolume-color"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">宽度</label>
+            <div class="layui-input-block">
+              <input
+                id="polylineVolume-width"
+                type="text"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">拉伸高度</label>
+            <div class="layui-input-block">
+              <input
+                id="polylineVolume-extrudedHeight"
+                type="text"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block" style="width: 183px">
+              <input
+                id="polylineVolume-image"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">X方向重复</label>
+            <div class="layui-input-block">
+              <input
+                id="polylineVolume-repeatX"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">Y方向重复</label>
+            <div class="layui-input-block">
+              <input
+                id="polylineVolume-repeatY"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">持续时间</label>
+            <div class="layui-input-block">
+              <input
+                id="polylineVolume-duration"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">方向</label>
+            <div class="layui-input-block">
+              <input
+                id="polylineVolume-direction"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">栅格透明度</label>
+            <div class="layui-input-block">
+              <input
+                id="polylineVolume-cellAlpha"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">X轴栅格数量</label>
+            <div class="layui-input-block">
+              <input
+                id="polylineVolume-lineCountX"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">Y轴栅格数量</label>
+            <div class="layui-input-block">
+              <input
+                id="polylineVolume-lineCountY"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">X轴栅格厚度</label>
+            <div class="layui-input-block">
+              <input
+                id="polylineVolume-lineThicknessX"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">Y轴栅格厚度</label>
+            <div class="layui-input-block">
+              <input
+                id="polylineVolume-lineThicknessY"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">是否横向</label>
+            <div class="layui-input-block">
+              <select
+                id="polylineVolume-horizontal"
+                name="horizontal"
+                lay-filter="horizontal"
+              >
+                <option value="0">否</option>
+                <option value="1">是</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">偶数条纹颜色</label>
+            <div
+              class="layui-input-inline"
+              style="width: 145px; margin-left: 10px"
+            >
+              <input
+                type="text"
+                placeholder="填充颜色"
+                class="layui-input"
+                id="polylineVolume-evenColor-input"
+              />
+            </div>
+            <div class="layui-inline">
+              <div id="polylineVolume-evenColor"></div>
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">奇数条纹颜色</label>
+            <div
+              class="layui-input-inline"
+              style="width: 145px; margin-left: 10px"
+            >
+              <input
+                type="text"
+                placeholder="填充颜色"
+                class="layui-input"
+                id="polylineVolume-oddColor-input"
+              />
+            </div>
+            <div class="layui-inline">
+              <div id="polylineVolume-oddColor"></div>
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">重复数量</label>
+            <div class="layui-input-block">
+              <input
+                id="polylineVolume-repeat"
+                type="text"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">浅色颜色</label>
+            <div
+              class="layui-input-inline"
+              style="width: 145px; margin-left: 10px"
+            >
+              <input
+                type="text"
+                class="layui-input"
+                id="polylineVolume-lightColor-input"
+              />
+            </div>
+            <div class="layui-inline">
+              <div id="polylineVolume-lightColor"></div>
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">深色颜色</label>
+            <div
+              class="layui-input-inline"
+              style="width: 145px; margin-left: 10px"
+            >
+              <input
+                type="text"
+                class="layui-input"
+                id="polylineVolume-darkColor-input"
+              />
+            </div>
+            <div class="layui-inline">
+              <div id="polylineVolume-darkColor"></div>
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">淡入颜色</label>
+            <div
+              class="layui-input-inline"
+              style="width: 145px; margin-left: 10px"
+            >
+              <input
+                type="text"
+                class="layui-input"
+                id="polylineVolume-fadeInColor-input"
+              />
+            </div>
+            <div class="layui-inline">
+              <div id="polylineVolume-fadeInColor"></div>
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">淡出颜色</label>
+            <div
+              class="layui-input-inline"
+              style="width: 145px; margin-left: 10px"
+            >
+              <input
+                type="text"
+                class="layui-input"
+                id="polylineVolume-fadeOutColor-input"
+              />
+            </div>
+            <div class="layui-inline">
+              <div id="polylineVolume-fadeOutColor"></div>
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">最大渐变距离</label>
+            <div class="layui-input-block">
+              <input
+                id="polylineVolume-maximumDistance"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">是否重复</label>
+            <div class="layui-input-block">
+              <select
+                id="polylineVolume-fadeRepeat"
+                name="fadeRepeat"
+                lay-filter="fadeRepeat"
+              >
+                <option value="1">是</option>
+                <option value="0">否</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">X轴渐变</label>
+            <div class="layui-input-block">
+              <select
+                id="polylineVolume-fadeDirectionX"
+                name="fadeDirectionX"
+                lay-filter="fadeDirectionX"
+              >
+                <option value="1">是</option>
+                <option value="0">否</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">Y轴渐变</label>
+            <div class="layui-input-block">
+              <select
+                id="polylineVolume-fadeDirectionY"
+                name="fadeDirectionY"
+                lay-filter="fadeDirectionY"
+              >
+                <option value="1">是</option>
+                <option value="0">否</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="sample-button-panel">
+          <button
+            onclick="$('#editPanel').hide()"
+            style="float: right; width: auto; margin-right: 0 !important"
+            type="button"
+            class="layui-btn layui-btn-normal graphic-button-margin"
+          >
+            关闭面板
+          </button>
+          <span
+            onclick="deletePolylineVolume()"
+            style="
+              cursor: pointer;
+              float: right;
+              line-height: 32px;
+              margin-right: 15px;
+            "
+            >删除管线</span
+          >
+        </div>
+      </form>
+    </div>
+    <div id="htmlGraph">我是html元素</div>
+  </body>
+  <style>
+    #htmlGraph {
+      width: 100px;
+      height: 20px;
+      background: linear-gradient(
+        -45deg,
+        #0acf00 25%,
+        #78c9db 0,
+        #78c9db 50%,
+        #0acf00 0,
+        #0acf00 75%,
+        #78c9db 0
+      );
+      background-size: 20px 20px;
+      display: none;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 20px;
+      color: red;
+      text-align: center;
+    }
+  </style>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>加载 GeoJson 数据</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, options
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //蓝黑版深色地图
+        addBlueImage()
+        // 添加GeoJSON数据;
+        addGeoJSONLayer()
+        //视角跳转
+        flyTo()
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //蓝黑版深色地图
+      function addBlueImage() {
+        let blueImage = new zondy.cesium.UrlTemplateImageryProvider({
+          url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
+          tilingScheme: new Cesium.WebMercatorTilingScheme(),
+          maximumLevel: 18
+        })
+        viewer.imageryLayers.addImageryProvider(blueImage)
+      }
+
+      //视角跳转
+      function flyTo() {
+        sceneView.flyTo({
+          center: [114.18944441797595, 30.5690284961602, 200000]
+        })
+      }
+
+      // 添加GeoJSON数据;
+      function addGeoJSONLayer() {
+        addPoint()
+        addLine()
+        addPolygon()
+      }
+
+      function addPoint() {
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/GeoJSONLayer.html
+        const layer = new zondy.layer.GeoJSONLayer({
+          url: 'http://webclient.smaryun.com:8200/Vector/json/metroStation.json',
+          // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SimpleRenderer.html
+          renderer: new zondy.renderer.SimpleRenderer({
+            // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/PictureMarkerSymbol.html
+            symbol: new zondy.symbol.PictureMarkerSymbol({
+              width: 20,
+              height: 20,
+              url: 'http://webclient.smaryun.com/static/libs/cdn/cesium/Assets/Textures/maki/rail.png'
+            })
+          })
+        })
+        map.add(layer)
+      }
+
+      // 道路线
+      function addLine() {
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/UniqueValueRenderer.html
+        let renderer = new zondy.renderer.UniqueValueRenderer({
+          field: 'ln',
+          defaultSymbol: new zondy.symbol.SimpleLineSymbol({
+            //线符号颜色
+            color: new zondy.Color(255, 255, 0, 1),
+            width: 20
+          }),
+          uniqueValueInfos: [
+            {
+              value: '1号线',
+              symbol: new zondy.symbol.SimpleLineSymbol({
+                color: '#3786C8',
+                width: 20
+              })
+            },
+            {
+              value: '2号线',
+              symbol: new zondy.symbol.SimpleLineSymbol({
+                color: '#EB7CAE',
+                width: 20
+              })
+            },
+            {
+              value: '3号线',
+              symbol: new zondy.symbol.SimpleLineSymbol({
+                color: '#DEB965',
+                width: 20
+              })
+            },
+            {
+              value: '4号线',
+              symbol: new zondy.symbol.SimpleLineSymbol({
+                color: '#8ECB1F',
+                width: 20
+              })
+            },
+            {
+              value: '5号线',
+              symbol: new zondy.symbol.SimpleLineSymbol({
+                color: '#DE5E53',
+                width: 20
+              })
+            },
+            {
+              value: '6号线',
+              symbol: new zondy.symbol.SimpleLineSymbol({
+                color: '#018634',
+                width: 20
+              })
+            },
+            {
+              value: '7号线',
+              symbol: new zondy.symbol.SimpleLineSymbol({
+                color: '#EF7801',
+                width: 20
+              })
+            },
+            {
+              value: '8号线',
+              symbol: new zondy.symbol.SimpleLineSymbol({
+                color: '#99ADAE',
+                width: 20
+              })
+            },
+            {
+              value: '11号线',
+              symbol: new zondy.symbol.SimpleLineSymbol({
+                color: '#F3D301',
+                width: 20
+              })
+            },
+            {
+              value: '16号线',
+              symbol: new zondy.symbol.SimpleLineSymbol({
+                color: '#D9577D',
+                width: 20
+              })
+            },
+            {
+              value: '21号线',
+              symbol: new zondy.symbol.SimpleLineSymbol({
+                color: '#B60081',
+                width: 20
+              })
+            }
+          ]
+        })
+        const layer = new zondy.layer.GeoJSONLayer({
+          url: 'http://webclient.smaryun.com:8200/Vector/json/metro.json',
+          renderer: renderer
+        })
+        map.add(layer)
+      }
+
+      function addPolygon() {
+        const layer = new zondy.layer.GeoJSONLayer({
+          url: 'http://webclient.smaryun.com:8200/Vector/json/populationSizeGeoJson_2017.json',
+          renderer: new zondy.renderer.SimpleRenderer({
+            symbol: new zondy.symbol.SimpleFillSymbol({
+              //线符号颜色
+              color: '#FFFF0000',
+              outline: new zondy.symbol.SimpleLineSymbol({
+                color: '#FFFF0080',
+                width: 1
+              })
+            })
+          })
+        })
+        map.add(layer)
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

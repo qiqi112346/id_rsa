@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>场景参数</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, igsSceneLayer
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //飞到指定视角
+        flyTo()
+        //初始化示例UI操作
+        initUI()
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //设置球体初始透明度
+        viewer = sceneView.getInnerView()
+        //显示鼠标位置
+        viewer.showPosition()
+      }
+
+      //飞到指定视角
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [116.5258, 41.8054, 20000000]
+        })
+      }
+
+      // 添加地形
+      function addTerrain() {
+        let url =
+          'http://webclient.smaryun.com:8089/igs/rest/services/Scene/TwTerrain/SceneServer'
+        igsSceneLayer = new zondy.layer.IGSSceneLayer({
+          url: url,
+          // 是否自动定位
+          autoReset: false
+        })
+        map.add(igsSceneLayer)
+        // 图层加载完毕
+        igsSceneLayer.on('layerview-created', function (result) {
+          //定位到地形
+          flyToTerrain()
+        })
+      }
+
+      // 移除地形
+      function removeTerrain() {
+        map.remove(igsSceneLayer)
+        flyTo()
+      }
+
+      //定位到地形
+      function flyToTerrain() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [121.0076, 23.3814, 4000.0],
+          orientation: {
+            pitch: Cesium.Math.toRadians(-0.0) //俯仰角
+          }
+        })
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        // 使用支持小数的slider
+        layui
+          .config({
+            //  配置 Layui 第三方扩展模块存放的基础目录
+            base: 'http://webclient.smaryun.com/static/libs/cdn/layui/modules/'
+          })
+          .extend({
+            // 扩展
+            decimalSlider: 'decimalSlider/index'
+          })
+
+        layui.use('decimalSlider', (decimalSlider) => {
+          let layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form,
+            colorpicker = layui.colorpicker,
+            slider = layui.slider
+
+          form.on('switch(skyAtmosphere)', function (data) {
+            // 是否显示地球外圈大气
+            viewer.scene.skyAtmosphere.show = data.elem.checked
+          })
+          form.on('switch(sun)', function (data) {
+            // 是否显示太阳
+            viewer.scene.sun.show = data.elem.checked
+          })
+          form.on('switch(moon)', function (data) {
+            // 是否显示月亮
+            viewer.scene.moon.show = data.elem.checked
+          })
+          form.on('switch(skyBox)', function (data) {
+            // 是否显示天空盒，即地球背景的星空
+            viewer.scene.skyBox.show = data.elem.checked
+          })
+          form.on('switch(fxaa)', function (data) {
+            // 是否开启抗锯齿
+            viewer.scene.fxaa = data.elem.checked
+            viewer.scene.postProcessStages.fxaa.enabled = data.elem.checked
+          })
+          form.on('switch(fog)', function (data) {
+            // 是否开启雾化效果，需要缩放至近地面查看效果
+            viewer.scene.fog.enabled = data.elem.checked
+          })
+          form.on('switch(colorCorrection)', function (data) {
+            // 是否开启颜色校正
+            viewer.scene.colorCorrection.enabled = data.elem.checked
+            if (data.elem.checked) {
+              $(
+                '.layui-form-item-brightness, .layui-form-item-exposure, .layui-form-item-contrast, .layui-form-item-hue, .layui-form-item-saturation'
+              ).show()
+            } else {
+              $(
+                '.layui-form-item-brightness, .layui-form-item-exposure, .layui-form-item-contrast, .layui-form-item-hue, .layui-form-item-saturation'
+              ).hide()
+            }
+          })
+          form.on('switch(earth)', function (data) {
+            // 是否显示地球
+            viewer.scene.globe.show = data.elem.checked
+          })
+          form.on('switch(terrain)', function (data) {
+            if ($('#terrainExLabel').css('display') === 'none') {
+              $('#terrainExLabel').css('display', 'block')
+              addTerrain()
+            } else {
+              $('#terrainExLabel').css('display', 'none')
+              removeTerrain()
+            }
+          })
+          form.on('switch(groundAtmosphere)', function (data) {
+            // 是否开启地球表层大气
+            viewer.scene.globe.showGroundAtmosphere = data.elem.checked
+          })
+          form.on('switch(depthTest)', function (data) {
+            // 是否开启深度检测
+            viewer.scene.globe.depthTestAgainstTerrain = data.elem.checked
+          })
+          // 是否显示地球底图
+          form.on('switch(baseMap)', function (data) {
+            if (data.elem.checked !== undefined) {
+              let num = viewer.scene.globe.imageryLayers._layers.length
+              for (let i = 0; i < num; i++) {
+                viewer.scene.globe.imageryLayers.get(i).show = data.elem.checked
+              }
+            }
+            return false
+          })
+          // 是否开启太阳光照效果，开启后可以看到地球的晨昏效果
+          form.on('switch(lighting)', function (data) {
+            viewer.scene.globe.enableLighting = data.elem.checked
+          })
+          // 是否允许滚轮缩放地球
+          form.on('switch(zoom)', function (data) {
+            viewer.scene.screenSpaceCameraController.enableZoom =
+              data.elem.checked
+          })
+          // 是否允许倾斜地球角度
+          form.on('switch(tilt)', function (data) {
+            viewer.scene.screenSpaceCameraController.enableTilt =
+              data.elem.checked
+          })
+          // 是否允许旋转地球
+          form.on('switch(rotate)', function (data) {
+            viewer.scene.screenSpaceCameraController.enableRotate =
+              data.elem.checked
+          })
+          // 是否允许地球平移
+          form.on('switch(translate)', function (data) {
+            viewer.scene.screenSpaceCameraController.enableTranslate =
+              data.elem.checked
+          })
+          // 是否显示鼠标的经纬度等位置信息
+          form.on('switch(position)', function (data) {
+            if (data.elem.checked) {
+              viewer.showPosition()
+            } else {
+              viewer.hidePosition()
+            }
+          })
+
+          //地球底色，关闭底图后可以预览效果
+          colorpicker.render({
+            elem: '#baseColor', //绑定元素
+            color: 'rgba(0,0,255*0.5,1)',
+            change: function (color) {
+              viewer.scene.globe.baseColor =
+                Cesium.Color.fromCssColorString(color)
+            }
+          })
+          // 宇宙背景色，关闭天空盒后可以看见效果
+          colorpicker.render({
+            elem: '#bgColor',
+            color: 'rgba(0,0,0,1)',
+            change: function (color) {
+              viewer.scene.backgroundColor =
+                Cesium.Color.fromCssColorString(color)
+            }
+          })
+
+          //地形夸张倍数
+          slider.render({
+            elem: '#terrainEx',
+            value: 1.0,
+            min: 1.0,
+            theme: 'rgb(102 147 251)',
+            change: function (value) {
+              const currentCesiumVersion = localStorage.getItem('currentCesiumVersion')
+              if(currentCesiumVersion === '10.7.2.10') {
+                viewer.scene.globe.terrainExaggeration = value
+              } else {
+                viewer.scene.verticalExaggeration = value
+              }
+            }
+          })
+          // 相机缩放的最近距离（米），默认为1.0
+          slider.render({
+            elem: '#minZoomDis',
+            value: 1.0,
+            max: 1000000,
+            input: true,
+            theme: 'rgb(102 147 251)',
+            //自定义提示文本
+            setTips: function (value) {
+              return value + '米'
+            },
+            change: function (value) {
+              viewer.scene.screenSpaceCameraController.minimumZoomDistance =
+                value
+            }
+          })
+          // 相机缩放的最远距离（米），默认为Number.POSITIVE_INFINITY
+          slider.render({
+            elem: '#maxZoomDis',
+            max: 100000000,
+            value: 100000000,
+            input: true,
+            theme: 'rgb(102 147 251)',
+            //自定义提示文本
+            setTips: function (value) {
+              return value + '米'
+            },
+            change: function (value) {
+              viewer.scene.screenSpaceCameraController.maximumZoomDistance =
+                value
+            }
+          })
+
+          // 亮度
+          decimalSlider.render({
+            elem: '#brightness',
+            decimalPlaces: 1,
+            value: 0,
+            min: -1,
+            max: 1,
+            step: 0.1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.brightness = parseFloat(value)
+            }
+          })
+          // 曝光度
+          decimalSlider.render({
+            elem: '#exposure',
+            decimalPlaces: 1,
+            value: 0,
+            min: -1,
+            max: 1,
+            step: 0.1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.exposure = parseFloat(value)
+            }
+          })
+          // 对比度
+          decimalSlider.render({
+            elem: '#contrast',
+            decimalPlaces: 1,
+            value: 1,
+            min: 0,
+            max: 2,
+            step: 0.1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.contrast = parseFloat(value)
+            }
+          })
+          // 色相
+          decimalSlider.render({
+            elem: '#hue',
+            decimalPlaces: 1,
+            value: 0,
+            min: -1,
+            max: 1,
+            step: 0.1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.hue = parseFloat(value)
+            }
+          })
+          // 饱和度
+          decimalSlider.render({
+            elem: '#saturation',
+            decimalPlaces: 1,
+            value: 0,
+            min: -1,
+            max: 1,
+            step: 0.1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.saturation = parseFloat(value)
+            }
+          })
+          //地面大气光强度
+          decimalSlider.render({
+            elem: '#ground-atmosphereLightIntensity',
+            decimalPlaces: 1,
+            value: 10,
+            min: 0,
+            max: 100,
+            step: 1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.globe.atmosphereLightIntensity = Number(value)
+            }
+          })
+          decimalSlider.render({
+            elem: '#ground-atmosphereRayleighCoefficient-r',
+            decimalPlaces: 1,
+            value: 5.5,
+            min: 0,
+            max: 100,
+            step: 1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.globe.atmosphereRayleighCoefficient.x =
+                Number(value) * 1e-6
+            }
+          })
+          decimalSlider.render({
+            elem: '#ground-atmosphereRayleighCoefficient-g',
+            decimalPlaces: 1,
+            value: 13,
+            min: 0,
+            max: 100,
+            step: 1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.globe.atmosphereRayleighCoefficient.y =
+                Number(value) * 1e-6
+            }
+          })
+          decimalSlider.render({
+            elem: '#ground-atmosphereRayleighCoefficient-b',
+            decimalPlaces: 1,
+            value: 28.4,
+            min: 0,
+            max: 100,
+            step: 1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.globe.atmosphereRayleighCoefficient.z =
+                Number(value) * 1e-6
+            }
+          })
+          //地面大气瑞利散射尺度高度
+          decimalSlider.render({
+            elem: '#ground-atmosphereRayleighScaleHeight',
+            decimalPlaces: 1,
+            value: 10000,
+            min: 0,
+            max: 20000,
+            step: 10,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.globe.atmosphereRayleighScaleHeight = Number(value)
+            }
+          })
+          //地面大气米氏散射系数
+          decimalSlider.render({
+            elem: '#ground-atmosphereMieCoefficient',
+            decimalPlaces: 1,
+            value: 0,
+            min: 0,
+            max: 100,
+            step: 1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              const v = Number(value) * 1e-6
+              viewer.scene.globe.atmosphereMieCoefficient = new Cesium.Cartesian3(v, v, v)
+            }
+          })
+          //地面大气米氏散射尺度高度
+          decimalSlider.render({
+            elem: '#ground-atmosphereMieScaleHeight',
+            decimalPlaces: 1,
+            value: 3200,
+            min: 0,
+            max: 10000,
+            step: 10,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.globe.atmosphereMieScaleHeight = Number(value)
+            }
+          })
+          //地面大气米氏散射各向异性
+          decimalSlider.render({
+            elem: '#ground-atmosphereMieAnisotropy',
+            decimalPlaces: 1,
+            value: 0.9,
+            min: -1,
+            max: 1,
+            step: 0.1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.globe.atmosphereMieAnisotropy = Number(value)
+            }
+          })
+
+          // 是否开启天空大气效果
+          form.on('switch(skyAtmosphere)', function (data) {
+            viewer.scene.skyAtmosphere.show = data.elem.checked
+          })
+          //天空大气光强度
+          decimalSlider.render({
+            elem: '#atmosphereLightIntensity',
+            decimalPlaces: 1,
+            value: 50,
+            min: 0,
+            max: 100,
+            step: 1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.skyAtmosphere.atmosphereLightIntensity = Number(value)
+            }
+          })
+          //天空大气瑞利散射系数
+          decimalSlider.render({
+            elem: '#atmosphereRayleighCoefficient-r',
+            decimalPlaces: 1,
+            value: 5.5,
+            min: 0,
+            max: 100,
+            step: 1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.skyAtmosphere.atmosphereRayleighCoefficient.x =
+                Number(value) * 1e-6
+            }
+          })
+          decimalSlider.render({
+            elem: '#atmosphereRayleighCoefficient-g',
+            decimalPlaces: 1,
+            value: 13,
+            min: 0,
+            max: 100,
+            step: 1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.skyAtmosphere.atmosphereRayleighCoefficient.y =
+                Number(value) * 1e-6
+            }
+          })
+          decimalSlider.render({
+            elem: '#atmosphereRayleighCoefficient-b',
+            decimalPlaces: 1,
+            value: 28.4,
+            min: 0,
+            max: 100,
+            step: 1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.skyAtmosphere.atmosphereRayleighCoefficient.z =
+                Number(value) * 1e-6
+            }
+          })
+          //天空大气瑞利散射尺度高度
+          decimalSlider.render({
+            elem: '#atmosphereRayleighScaleHeight',
+            decimalPlaces: 1,
+            value: 10000,
+            min: 0,
+            max: 20000,
+            step: 10,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.skyAtmosphere.atmosphereRayleighScaleHeight = Number(value)
+            }
+          })
+          //天空大气米氏散射系数
+          decimalSlider.render({
+            elem: '#atmosphereMieCoefficient',
+            decimalPlaces: 1,
+            value: 0,
+            min: 0,
+            max: 100,
+            step: 1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              const v = Number(value) * 1e-6
+              viewer.scene.globe.atmosphereMieCoefficient = new Cesium.Cartesian3(v, v, v)
+            }
+          })
+          //天空大气米氏散射尺度高度
+          decimalSlider.render({
+            elem: '#atmosphereMieScaleHeight',
+            decimalPlaces: 1,
+            value: 3200,
+            min: 0,
+            max: 10000,
+            step: 10,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.skyAtmosphere.atmosphereMieScaleHeight = Number(value)
+            }
+          })
+          //天空大气米氏散射各向异性
+          decimalSlider.render({
+            elem: '#atmosphereMieAnisotropy',
+            decimalPlaces: 1,
+            value: 0.9,
+            min: -1,
+            max: 1,
+            step: 0.1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              viewer.scene.skyAtmosphere.atmosphereMieAnisotropy = Number(value)
+            }
+          })
+          if(localStorage.currentCesiumVersion === '10.7.2.10') {
+            var uniqueParamDoms = document.getElementsByClassName('uniqueParam')
+            for(var i= 0; i<uniqueParamDoms.length; i++) {
+              if(uniqueParamDoms[i].style) {
+                uniqueParamDoms[i].style.display='none'
+              }
+            }
+          }
+        })
+      }
+    </script>
+    <style>
+      .layui-form-item .layui-inline {
+        margin-right: 3px;
+      }
+
+      .sample-slider {
+        width: 180px;
+      }
+
+      .layui-form{
+        padding-right: 3px;
+      }
+
+      /* 新版本chrome滚动条样式 */
+      .layui-tab-title, .layui-tab-content {
+        scrollbar-width: thin;
+      }
+      /* 自定义滚动条样式 */
+      ::-webkit-scrollbar {
+      	width: 5px;
+      	height: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background-color: #ffffff50;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb{
+        background-color: rgba(102, 147, 251, 0.5);
+        border-radius: 3px;
+      }
+      /* Firefox浏览器的滚动条轨道样式 */
+      scrollbar-width {
+      	width: 5px;
+      }
+      scrollbar-track {
+        background-color: #ffffff50;
+        border-radius: 3px;
+      }
+      scrollbar-thumb{
+        background-color: rgb(102, 147, 251, 0.5);
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" style="width: 370px;">
+      <div class="layui-tab">
+        <ul class="layui-tab-title" style="overflow-x: auto;">
+          <li class="layui-this">scene参数</li>
+          <li>globe参数</li>
+          <li class="uniqueParam">skyAtmosphere参数</li>
+          <li>交互参数</li>
+        </ul>
+        <div class="layui-tab-content" style="max-height: 400px;overflow: auto;">
+          <div class="layui-tab-item layui-show">
+            <form class="layui-form" action="">
+              <!-- scene参数 -->
+              <div class="layui-form-item">
+                <label class="layui-form-label">大气层</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="skyAtmosphere"
+                    lay-skin="switch"
+                    lay-text="显示|隐藏"
+                    checked
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">太阳</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="sun"
+                    lay-skin="switch"
+                    lay-text="显示|隐藏"
+                    checked
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">月亮</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="moon"
+                    lay-skin="switch"
+                    lay-text="显示|隐藏"
+                    checked
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">天空盒</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="skyBox"
+                    lay-skin="switch"
+                    lay-text="显示|隐藏"
+                    checked
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">宇宙背景色</label>
+                <div class="layui-input-block">
+                  <div id="bgColor"></div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">抗锯齿</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="fxaa"
+                    lay-skin="switch"
+                    lay-text="开启|关闭"
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">HDR</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="HDR"
+                    lay-skin="switch"
+                    lay-text="开启|关闭"
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">雾化效果</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="fog"
+                    lay-skin="switch"
+                    lay-text="开启|关闭"
+                    checked
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">颜色校正</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="colorCorrection"
+                    lay-skin="switch"
+                    lay-text="开启|关闭"
+                    checked
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item layui-form-item-brightness">
+                <label class="layui-form-label">亮度</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="brightness"></div>
+                </div>
+              </div>
+              <div class="layui-form-item layui-form-item-exposure">
+                <label class="layui-form-label">曝光度</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="exposure"></div>
+                </div>
+              </div>
+              <div class="layui-form-item layui-form-item-contrast">
+                <label class="layui-form-label">对比度</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="contrast"></div>
+                </div>
+              </div>
+              <div class="layui-form-item layui-form-item-hue">
+                <label class="layui-form-label">色相</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="hue"></div>
+                </div>
+              </div>
+              <div class="layui-form-item layui-form-item-saturation">
+                <label class="layui-form-label">饱和度</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="saturation"></div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="layui-tab-item">
+            <form class="layui-form" action="">
+              <!-- globe参数 -->
+              <div class="layui-form-item">
+                <label class="layui-form-label">地球</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="earth"
+                    lay-skin="switch"
+                    lay-text="显示|隐藏"
+                    checked
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">加载地形</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="terrain"
+                    lay-skin="switch"
+                    lay-text="显示|隐藏"
+                    unchecked
+                  />
+                </div>
+              </div>
+              <div
+                class="layui-form-item"
+                id="terrainExLabel"
+                style="display: none"
+              >
+                <label class="layui-form-label">地形夸张</label>
+                <div class="layui-input-block sample-slider">
+                  <div id="terrainEx"></div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">光照</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="lighting"
+                    lay-skin="switch"
+                    lay-text="开启|关闭"
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">近地面大气</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="groundAtmosphere"
+                    lay-skin="switch"
+                    lay-text="开启|关闭"
+                    checked
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">深度检测</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="depthTest"
+                    lay-skin="switch"
+                    lay-text="开启|关闭"
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">地球底图</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="baseMap"
+                    lay-skin="switch"
+                    lay-text="开启|关闭"
+                    checked
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">地球底色</label>
+                <div class="layui-input-block">
+                  <div id="baseColor"></div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">光强度</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="ground-atmosphereLightIntensity"></div>
+                </div>
+              </div>
+              <div class="layui-form-item uniqueParam">
+                <label class="layui-form-label">瑞利散射系数-R</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="ground-atmosphereRayleighCoefficient-r"></div>
+                </div>
+              </div>
+              <div class="layui-form-item uniqueParam">
+                <label class="layui-form-label">瑞利散射系数-G</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="ground-atmosphereRayleighCoefficient-g"></div>
+                </div>
+              </div>
+              <div class="layui-form-item uniqueParam">
+                <label class="layui-form-label">瑞利散射系数-B</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="ground-atmosphereRayleighCoefficient-b"></div>
+                </div>
+              </div>
+              <div class="layui-form-item uniqueParam">
+                <label class="layui-form-label">瑞利散射尺度高度</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="ground-atmosphereRayleighScaleHeight"></div>
+                </div>
+              </div>
+              <div class="layui-form-item uniqueParam">
+                <label class="layui-form-label">米氏散射系数</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="ground-atmosphereMieCoefficient"></div>
+                </div>
+              </div>
+              <div class="layui-form-item uniqueParam">
+                <label class="layui-form-label">米氏散射尺度高度</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="ground-atmosphereMieScaleHeight"></div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label uniqueParam">米氏散射各向异性</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="ground-atmosphereMieAnisotropy"></div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="layui-tab-item uniqueParam">
+            <form class="layui-form" action="">
+              <!-- skyAtmosphere参数 -->
+               <div class="layui-form-item">
+                 <label class="layui-form-label">天空大气</label>
+                 <div class="layui-input-block">
+                   <input type="checkbox" lay-filter="skyAtmosphere" lay-skin="switch" lay-text="开启|关闭" checked />
+                 </div>
+               </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">瑞利散射系数-R</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="atmosphereRayleighCoefficient-r"></div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">瑞利散射系数-G</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="atmosphereRayleighCoefficient-g"></div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">瑞利散射系数-B</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="atmosphereRayleighCoefficient-b"></div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">瑞利散射尺度高度</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="atmosphereRayleighScaleHeight"></div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">米氏散射系数</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="atmosphereMieCoefficient"></div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">米氏散射尺度高度</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="atmosphereMieScaleHeight"></div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">米氏散射各向异性</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="atmosphereMieAnisotropy"></div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="layui-tab-item">
+            <form class="layui-form" action="">
+              <!-- 交互参数 -->
+              <div class="layui-form-item">
+                <label class="layui-form-label">地球缩放</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="zoom"
+                    lay-skin="switch"
+                    lay-text="开启|关闭"
+                    checked
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">最近视距</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="minZoomDis"></div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label"">最远视距</label>
+                <div class="layui-input-block decimal-slider">
+                  <div id="maxZoomDis"></div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">相机倾斜</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="tilt"
+                    lay-skin="switch"
+                    lay-text="开启|关闭"
+                    checked
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">地球旋转</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="rotate"
+                    lay-skin="switch"
+                    lay-text="开启|关闭"
+                    checked
+                  />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 100px"
+                  >显示鼠标位置</label
+                >
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="position"
+                    lay-skin="switch"
+                    lay-text="显示|隐藏"
+                    checked
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

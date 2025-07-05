@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>根据OID自定义着色</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加M3D
+        addM3DModelCacheLayer()
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //添加M3D
+      function addM3DModelCacheLayer() {
+        //注意必须是M3D2.0数据，且带有OID
+        let url =
+          'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D/2.0/高级住所模型/高级住所模型.mcj'
+        let M3DLayer = new zondy.layer.M3DModelCacheLayer({
+          url: url,
+          // 初始化参数
+          extensionOptions: {
+            // 开启自动跳转
+            autoReset: true
+          }
+        })
+        map.add(M3DLayer)
+        // 图层加载完毕
+        M3DLayer.on('layerview-created', function (result) {
+          //获取图层
+          //设定一个点击事件,设置点击函数
+          viewer.screenSpaceEventHandler.setInputAction(function onLeftClick(
+            movement
+          ) {
+            let tileSet = sceneView.getInnerLayer(result.layer)
+            let oid
+            //获取OID
+            // 获取Cesium版本号
+            let currentCesiumVersion = localStorage.getItem('currentCesiumVersion')
+            if (currentCesiumVersion === '10.7.2.10') {
+              oid = viewer.scene.pickOid(movement.position)
+            } else {
+              let feature = viewer.scene.pick(movement.position)
+              oid = feature.getProperty('OID')
+            }
+            tileSet.customShader = getOidCustomShader(oid)
+          },
+          Cesium.ScreenSpaceEventType.LEFT_CLICK)
+          layer.msg('点击左键选中模型得到oid之后着色')
+        })
+      }
+
+      function getOidCustomShader(oid) {
+        // 获取Cesium版本号
+        let currentCesiumVersion = localStorage.getItem('currentCesiumVersion')
+        if (currentCesiumVersion === '10.7.2.10') {
+          //指定一个模型里面对应的OID，并将其转为颜色
+          let id = Cesium.Color.fromRgba(oid)
+          //拼装相关shader代码，数值为float类型
+          let OIDToColor = ''
+          if (id.red.toString().indexOf('.') < 0) {
+            OIDToColor += id.red + '.0'
+          } else {
+            OIDToColor += id.red
+          }
+          OIDToColor += ','
+          if (id.green.toString().indexOf('.') < 0) {
+            OIDToColor += id.green + '.0'
+          } else {
+            OIDToColor += id.green
+          }
+          OIDToColor += ','
+          if (id.blue.toString().indexOf('.') < 0) {
+            OIDToColor += id.blue + '.0'
+          } else {
+            OIDToColor += id.blue
+          }
+          OIDToColor += ','
+          if (id.alpha.toString().indexOf('.') < 0) {
+            OIDToColor += id.alpha + '.0'
+          } else {
+            OIDToColor += id.alpha
+          }
+          return new Cesium.CustomShader({
+            fragmentShaderText:
+            //参考1.87以上版本写法，必须重写fragmentMain方法
+            //position：顶点坐标，frameNumber：帧时间，顶点的oid，fragColor：顶点颜色
+              'void fragmentMain(vec4 position, float frameNumber, vec4 oid, inout vec4 fragColor){\n' +
+              //设置外部传入的OID
+              '   vec4 outOID = vec4(' +
+              OIDToColor +
+              ');\n' +
+              //与当前OID相减
+              '   vec4 oidResult =  oid.rgba - outOID.rgba; \n' +
+              //相减后的rgba值小于0.0039(相当于1/255)，就认为是一样的id
+              '   if(abs(oidResult).r < 0.0039 && abs(oidResult).g < 0.0039 && abs(oidResult).b < 0.0039 && abs(oidResult).a < 0.0039){' +
+              //oid相同，把它变成蓝色
+              '       fragColor.b += 1.0;' +
+              '   }' +
+              '}\n'
+          })
+        } else {
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/CustomShader.html
+          return new Cesium.CustomShader({
+            fragmentShaderText: `
+            void fragmentMain(FragmentInput fsInput, inout czm_modelMaterial material)
+            {
+                if(fsInput.featureIds.featureId_0 == ` + oid + `) {
+                    material.diffuse += vec3(0.0, 0.0, 1.0);
+                }
+            }
+          `,
+          })
+        }
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

@@ -1,0 +1,14545 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Global</title>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+                <h1> MapGIS Client for JavaScript API</h1>
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/common/api/common-mapgis/index.html"
+                        >
+                            Common
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/cesium/api/cesium-mapgis/index.html"
+                        >
+                            Cesium-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/mapboxgl/api/mapboxgl-mapgis/index.html"
+                        >
+                            MapboxGL-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/leaflet/api/leaflet-mapgis/index.html"
+                        >
+                            Leaflet-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/openlayers/api/openLayers-mapgis/index.html"
+                        >
+                            OpenLayers-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/video/api/video-mapgis/index.html"
+                        >
+                            Video-Plugin
+                        </a>
+                    
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            <div>
+                <span class="mapgis-api-document-span"><a href="index.html">API文档</a></span>
+            </div>
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="搜索文档..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <div class="category"><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">扩展模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="AlgorithmLib"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AlgorithmLib.html">AlgorithmLib</a><span style="display: none;"><p>通用算法工具集</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="AngulationTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AngulationTool.html">AngulationTool</a><span style="display: none;"><p>角度测量工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="AnimationTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AnimationTool.html">AnimationTool</a><span style="display: none;"><p>场景漫游工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISMapServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISMapServerImageryProvider.html">ArcGISMapServerImageryProvider</a><span style="display: none;"><p>ArcGIS地图图片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISTileServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISTileServerImageryProvider.html">ArcGISTileServerImageryProvider</a><span style="display: none;"><p>ArcGIS瓦片图层，现已不支持通过构造函数(new ArcGISTileServerImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISVectorTileImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISVectorTileImageryProvider.html">ArcGISVectorTileImageryProvider</a><span style="display: none;"><p>ArcGIS矢量瓦片图层，现已不支持通过构造函数(new ArcGISVectorTileImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Cesium3DTileset"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Cesium3DTileset.html">Cesium3DTileset</a><span style="display: none;"><p>Cesium3DTileset对象，现已不支持通过构造函数(new Cesium3DTileset())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Cesium.Material"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Cesium.Material.html">Material</a><span style="display: none;"><p>新增了部分Cesium材质<br>
+《PolylineTrailLink材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-polyline'>《线示例》</a>
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-wall'>《墙示例》</a><br>
+color: 材质颜色，Cesium.Color.WHITE<br>
+image: 材质使用的图片，Cesium.Material.PolylineTrailLinkImage<br>
+duration: 持续时间，100.0<br>
+direction: 方向，1.0<br>
+repeat: 重复次数，new Cesium.Cartesian2(1.0, 1.0)<br><br>
+《CircleWaveMaterial材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a>
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circular'>《圆锥示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+duration: 持续时间，100.0<br>
+count: 方向，1.0<br>
+gradient: 渐变因子，0.1<br><br>
+《RadarMaterial材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color.WHITE<br>
+speed: 速度，1<br><br>
+《AspectArrow材质》
+AspectArrowMap: 箭头图片，Cesium.Material.DefaultImageId<br>
+repeat: 箭头重复次数，Cesium.Cartesian2(1.0, 1.0)<br><br>
+《TextImage材质》<br>
+image: 文字图片，Cesium.Material.DefaultImageId<br>
+repeat: 图片重复次数，Cesium.Cartesian2(1.0, 1.0)<br>
+breathingLight: 是否开启呼吸灯，false<br>
+duration: 运行周期，1000<br><br>
+《LineFlickerMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，5<br><br>
+《CircleScanMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CirclePulseMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleDiffuseMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《ScanlineType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleFadeMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleColorfulMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleSpiralMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleBlurMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《RadarScanMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《RadarLineMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《RiverCoveringMaterial材质》<br>
+color: 材质颜色，Cesium.Color(1, 1, 1, 0.7)<br>
+animationSpeed: 播放速度，0.01<br>
+image: 材质图片，CustomMaterial.DefaultImageId<br>
+repeat: 重复次数，2.0<br><br></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Cesium.Viewer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Cesium.Viewer.html">Viewer</a><span style="display: none;"><p>重写Cesium.Viewer的方法</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CesiumHeatmap"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CesiumHeatmap.html">CesiumHeatmap</a><span style="display: none;"><p>热力图</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CesiumTerrainProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CesiumTerrainProvider.html">CesiumTerrainProvider</a><span style="display: none;"><p>Cesium地形图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CircleWaveMaterialProperty"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CircleWaveMaterialProperty.html">CircleWaveMaterialProperty</a><span style="display: none;"><p>动态圆波纹材质</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CollisionDetectionByRender"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CollisionDetectionByRender.html">CollisionDetectionByRender</a><span style="display: none;">undefined</span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CompatibleFunc"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CompatibleFunc.html">CompatibleFunc</a><span style="display: none;"><p>适配不同版本Cesium接口方法类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="createColorTexture"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="createColorTexture.html">createColorTexture</a><span style="display: none;"><p>天际线分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CustomProjection"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CustomProjection.html">CustomProjection</a><span style="display: none;"><p>实现自定义投影坐标系与地理坐标系经纬度（弧度表示）之间的投影变换</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CustomTilingScheme"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CustomTilingScheme.html">CustomTilingScheme</a><span style="display: none;"><p>自定义瓦片平铺方案，在使用时有如下限制：</p>
+<ol>
+<li>裁图原点必须在地图范围的左上角区域；</li>
+<li>仅支持如同谷歌地图的瓦片组织方式，即Y轴编号从上到下递增，X轴编号从左到右递增；</li>
+</ol></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CutFillAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CutFillAnalysis.html">CutFillAnalysis</a><span style="display: none;"><p>填挖方分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CuttingTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CuttingTool.html">CuttingTool</a><span style="display: none;"><p>三维场景裁剪工具集</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="DrawElement"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="DrawElement.html">DrawElement</a><span style="display: none;"><p>几何绘制类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="DrawTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="DrawTool.html">DrawTool</a><span style="display: none;"><p>绘制工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="DynamicEntityVisualizer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="DynamicEntityVisualizer.html">DynamicEntityVisualizer</a><span style="display: none;"><p>动态实体视图类封装
+1、支持BillBoard、Label、GroundPrimitive等动态显示，处理覆盖问题
+2、动态显隐效果
+3、视窗内性能优化</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="EditTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="EditTool.html">EditTool</a><span style="display: none;"><p>标绘编辑工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="FloodAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FloodAnalysis.html">FloodAnalysis</a><span style="display: none;"><p>洪水淹没分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="FloodAnalysisReflection"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FloodAnalysisReflection.html">FloodAnalysisReflection</a><span style="display: none;"><p>创建反射水面淹没分析的实例化对象</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GlobeIndependentTranslucency"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GlobeIndependentTranslucency.html">GlobeIndependentTranslucency</a><span style="display: none;"><p>单独控制地表透明度和影像图层的透明度，能够在开启地表透明后使部分影像图层不受地表透明的影响。</p>
+<p>实例化该类的对象同时也能够使用原生的地表透明参数，能够直接在实例化对象上修改 <code>GlobeTranslucency</code> 的参数（原生的
+viewer.scene.globe.translucency依然能够使用，但两者同时使用时会造成相互干扰，推荐仅使用GlobeIndependentTranslucency来实现地表透明），
+使用原生的地表透明方式还是该类的地表透明方式由 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 数组是否为空来区分。</p>
+<p>1. 当 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 不为空数组时，使用该类的地表透明方式，此时能够设置并生效的地表透明参数如下：</p>
+<ul>
+<li><code>globeFaceAlpha</code>：地表的透明度，若设置该参数则<code>globeFaceAlphaByDistance</code>不生效；</li>
+<li><code>globeFaceAlphaByDistance</code>：地表的透明度根据视点距离的变化范围，当<code>globeFaceAlpha</code>为<code>undefined</code>时生效；</li>
+</ul>
+<p>2. 当 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 为空数组时，使用原生的地表透明方式，此时能够设置并生效的地表透明参数如下：</p>
+<ul>
+<li><code>frontFaceAlpha</code>：地表正面的透明度；</li>
+<li><code>frontFaceAlphaByDistance </code>：地表正面的透明度根据视点距离的变化范围；</li>
+<li><code>backFaceAlpha</code>：地表背面的透明度；</li>
+<li><code>backFaceAlphaByDistance</code>：地表背面的透明度根据视点距离的变化范围；</li>
+<li><code>rectangle</code>：将地表透明的区域限制在一个矩形范围内。</li>
+</ul></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Graphic"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Graphic.html">Graphic</a><span style="display: none;"><p>标绘图元对象<br>
+请参考以下示例:<br>
+<a href='#example1'>1、初始化标绘图层</a><br>
+<a href='#example2'>2、添加一个多边形图元</a><br>
+<a href='#example3'>3、新增一个类型为div的标绘对象</a><br>
+<a href='http://webclient.smaryun.com/#/example-gallery/cesium#tdGraphBase' target='_blank'>4、更多示例</a></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GraphicsLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GraphicsLayer.html">GraphicsLayer</a><span style="display: none;"><p>标绘图层<br>
+请参考以下示例:<br>
+<a href='#example1'>1、初始化标绘图层</a><br>
+<a href='#example2'>2、重写提示框对象</a><br>
+<a href='http://webclient.smaryun.com/#/example-gallery/cesium#tdGraphBase' target='_blank'>3、更多示例</a></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="HeightLimited"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="HeightLimited.html">HeightLimited</a><span style="display: none;"><p>限高分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="initializeOptions"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="initializeOptions.html">initializeOptions</a><span style="display: none;"><p>构建实例化对象的配置参数</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="isCounterClockwise"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="isCounterClockwise.html">isCounterClockwise</a><span style="display: none;"><p>地形剖切工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="KeyboardCameraController"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="KeyboardCameraController.html">KeyboardCameraController</a><span style="display: none;"><p>场景相机漫游工具，可以实现沉浸式的鼠标键盘漫游功能，具体操作方法如下：</p>
+<p>1. 相机平移操作，这类操作不会改变相机的朝向，只会改变相机的位置：</p>
+<ul>
+<li><code>W</code>：相机位置向前移动</li>
+<li><code>S</code>：相机位置向后移动</li>
+<li><code>A</code>：相机位置向左移动</li>
+<li><code>D</code>：相机位置向右移动</li>
+<li><code>Q</code>：相机位置升高</li>
+<li><code>E</code>：相机位置降低</li>
+</ul>
+<p>2. 相对于相机视点操作，其中<code>U</code>，<code>O</code>，<code>J</code>，<code>L</code>操作会改变相机的位置，也会改变相机的朝向，而<code>I</code>，<code>K</code>操作只会改变相机相较视点的距离（在执行<code>U</code>，<code>O</code>，<code>J</code>，<code>L</code>操作时请勿同时执行其他按键操作）：</p>
+<ul>
+<li><code>I</code>：相机视角靠近屏幕中心点</li>
+<li><code>K</code>：相机视角远离屏幕中心点</li>
+<li><code>J</code>：绕屏幕中心点向左旋转</li>
+<li><code>L</code>：绕屏幕中心点向右旋转</li>
+<li><code>U</code>：绕屏幕中心点向上旋转</li>
+<li><code>O</code>：绕屏幕中心点向下旋转</li>
+</ul>
+<p>3. 相机自身操作，这类操作不会改变相机的位置，只会改变相机的朝向（在全屏状态下可使用鼠标调整相机视角）：</p>
+<ul>
+<li><code>↑</code>：向上抬高视角</li>
+<li><code>↓</code>：向下降低视角</li>
+<li><code>←</code>：向左移动视角</li>
+<li><code>→</code>：向右移动视角</li>
+</ul>
+<p>4. 鼠标操作：</p>
+<ul>
+<li>开启鼠标操作功能后，页面将进入全屏模式，此时相机视角可通过鼠标移动进行操作</li>
+</ul>
+<p>5. 辅助操作：</p>
+<ul>
+<li><code>Shift</code>：加速相机平移操作，调整移动步长为原来的两倍</li>
+<li><code>R</code>：重置视角到初始视角，仅在参数<code>initView</code>定义时有效</li>
+</ul></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISM3DSet"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISM3DSet.html">MapGISM3DSet</a><span style="display: none;"><p>MapGISM3DSet对象</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISMapServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISMapServerImageryProvider.html">MapGISMapServerImageryProvider</a><span style="display: none;"><p>MapGIS地图图片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISTerrainProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTerrainProvider.html">MapGISTerrainProvider</a><span style="display: none;"><p>MapGIS地形图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISTileAvailability"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTileAvailability.html">MapGISTileAvailability</a><span style="display: none;"><p>MapGIS的TileAvailability类，重写了Cesium.TileAvailability的所有方法，支持在内部自动筛选要使用的地形图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISTileServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTileServerImageryProvider.html">MapGISTileServerImageryProvider</a><span style="display: none;"><p>MapGIS瓦片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISVectorTileImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISVectorTileImageryProvider.html">MapGISVectorTileImageryProvider</a><span style="display: none;"><p>MapGIS矢量瓦片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MeasureAreaTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureAreaTool.html">MeasureAreaTool</a><span style="display: none;"><p>面积测量工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MeasureLengthTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureLengthTool.html">MeasureLengthTool</a><span style="display: none;"><p>距离测量</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MeasureSlopeTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureSlopeTool.html">MeasureSlopeTool</a><span style="display: none;"><p>坡度测量</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ModelEditor"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelEditor.html">ModelEditor</a><span style="display: none;"><p>模型矩阵编辑工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ModelFilterTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelFilterTool.html">ModelFilterTool</a><span style="display: none;"><p>模型空间过滤工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ModelTransformTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelTransformTool.html">ModelTransformTool</a><span style="display: none;"><p>模型变换工具集</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="PolylineTrailLinkMaterialProperty"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="PolylineTrailLinkMaterialProperty.html">PolylineTrailLinkMaterialProperty</a><span style="display: none;"><p>流动纹理线材质</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="PostProcessStageLibrary"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="PostProcessStageLibrary.html">PostProcessStageLibrary</a><span style="display: none;"><p>用于创建后处理特效的扩展库</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="RadarMaterialProperty"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="RadarMaterialProperty.html">RadarMaterialProperty</a><span style="display: none;"><p>雷达扫描材质</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ReImg"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ReImg.html">ReImg</a><span style="display: none;"><p>截图(保存图片)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="RoamParticle"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="RoamParticle.html">RoamParticle</a><span style="display: none;"><p>跟随模型移动粒子特效</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="S3MTileset"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="S3MTileset.html">S3MTileset</a><span style="display: none;"><p>S3MTileset类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SelectTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SelectTool.html">SelectTool</a><span style="display: none;"><p>绘制工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ShadowRateAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ShadowRateAnalysis.html">ShadowRateAnalysis</a><span style="display: none;">undefined</span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="StableParticle"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="StableParticle.html">StableParticle</a><span style="display: none;"><p>固定位置粒子特效，可通过更改image与附加参数来实现火焰、喷泉、烟雾等粒子特效</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Style"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Style.html">Style</a><span style="display: none;"><p>标绘图元样式</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TerrainAnalyse"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TerrainAnalyse.html">TerrainAnalyse</a><span style="display: none;"><p>地形分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TerrainProfile"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TerrainProfile.html">TerrainProfile</a><span style="display: none;">undefined</span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ThemeManager"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ThemeManager.html">ThemeManager</a><span style="display: none;"><p>统计图</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TriangulationTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TriangulationTool.html">TriangulationTool</a><span style="display: none;"><p>三角测量</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="UrlTemplateImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="UrlTemplateImageryProvider.html">UrlTemplateImageryProvider</a><span style="display: none;"><p>网络瓦片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="VisiblityAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="VisiblityAnalysis.html">VisiblityAnalysis</a><span style="display: none;"><p>通视分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WaterReflection"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WaterReflection.html">WaterReflection</a><span style="display: none;"><p>创建反射水面的实例化对象</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebMapServiceImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapServiceImageryProvider.html">WebMapServiceImageryProvider</a><span style="display: none;"><p>WMS图层，现已不支持通过构造函数(new WebMapServiceImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebMapTileServiceImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapTileServiceImageryProvider.html">WebMapTileServiceImageryProvider</a><span style="display: none;"><p>WMTS图层，现已不支持通过构造函数(new WebMapTileServiceImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Wind3D"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Wind3D.html">Wind3D</a><span style="display: none;"><p>风场系统</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">工具类模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GeoJSONLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GeoJSONLayerUtil.html">GeoJSONLayerUtil</a><span style="display: none;"><p>GeoJSON图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GraphicsLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GraphicsLayerUtil.html">GraphicsLayerUtil</a><span style="display: none;"><p>几何图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="IGSFeatureLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="IGSFeatureLayerUtil.html">IGSFeatureLayerUtil</a><span style="display: none;"><p>IGSFeature图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WFSLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WFSLayerUtil.html">WFSLayerUtil</a><span style="display: none;"><p>WFS图层的工具类</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">视图模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ISSceneLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ISSceneLayerUtil.html">ISSceneLayerUtil</a><span style="display: none;"><p>IS场景图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Popup"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Popup.html">Popup</a><span style="display: none;"><p>场景信息弹窗(cesium引擎)
+参考示例：
+<a href='#SceneView'>[初始化三维场景视图]</a>
+<br>[ES5引入方式]：<br/>
+zondy.cesium.SceneView() <br/>
+[ES6引入方式]：<br/>
+import { SceneView } from '@mapgis/webclient-cesium-plugin' <br/>
+自定义样式说明：<br/>
+zondy-popup__content 弹窗容器样式<br/>
+zondy-popup__tip 弹窗对话框箭头样式<br/>
+zondy-popup__header 弹窗头部样式<br/>
+zondy-popup__content 弹窗主体样式<br/>
+zondy-popup__footer 弹窗底部样式<br/></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SceneView"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SceneView.html">SceneView</a><span style="display: none;"><p>视图类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Screenshot"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Screenshot.html">Screenshot</a><span style="display: none;"><p>屏幕打印工具</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">草图编辑模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SketchEditorCesium"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SketchEditorCesium.html">SketchEditorCesium</a><span style="display: none;"><p>Cesium引擎草图编辑类<br/>
+<br>[ES5引入方式]：<br/>
+const { SketchEditor } = zondy.tool.sketch  <br/>
+[ES6引入方式]：<br/>
+import { SketchEditor } from &quot;@mapgis/webclient-leaflet-plugin&quot; <br/></p></span></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header id="page-title" class="page-title">
+                    <span class="page-title-main">类名</span>
+                    <span class="page-title-sub">Global</span>
+                </header>
+                
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='member'>成员变量</h3>
+            <div class="members">
+            
+                <div class="member">
+
+<h4 class="name" id="getViewModel">
+    <a class="href-link" href="#getViewModel">#</a>
+    
+    <span class="code-name">
+        getViewModel
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>获取/设置模型编辑器</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">String</span>
+
+
+    </span>
+
+<h4 class="name" id="InitializeOptionsType">
+    <a class="href-link" href="#InitializeOptionsType">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        InitializeOptionsType
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>使用initializeOption接口获取的option对应的实例化对象类型</p>
+</div>
+
+
+
+
+
+    <h5 class="subsection-title">属性:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>MapGISM3DSet</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>MapGISM3DSet：M3D对象</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>MapGISTerrainProvider</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>MapGISTerrainProvider：MapGIS地形对象</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>label</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>注记图层对象：该功能待重构，枚举标签暂时使用label替代</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>MapGISMapServerImageryProvider</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>MapGISMapServerImageryProvider：覆盖物图层IGS 2.0 SceneServer</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>UrlTemplateImageryProvider</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>UrlTemplateImageryProvider：覆盖物图层IGS 1.0 g3d</p></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="materials">
+    <a class="href-link" href="#materials">#</a>
+    
+    <span class="code-name">
+        materials
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Maps sub-material names to RiverMaterial objects.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>undefined</li>
+        </ul></dd>
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="reduceArray">
+    <a class="href-link" href="#reduceArray">#</a>
+    
+    <span class="code-name">
+        reduceArray
+    </span>
+    
+</h4>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-version">Version:</dt>
+    <dd class="tag-version"><ul class="dummy"><li>1.7.1</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-license">License:</dt>
+    <dd class="tag-license"><ul class="dummy"><li>when.js - https://github.com/cujojs/when
+
+  MIT License (c) copyright B Cavalier & J Hann
+A lightweight CommonJS Promises/A and when() implementation
+when is part of the cujo.js family of libraries (http://cujojs.com/)
+
+Licensed under the MIT License at:
+http://www.opensource.org/licenses/mit-license.php</li></ul></dd>
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">String</span>
+
+
+    </span>
+
+<h4 class="name" id="shaderSource">
+    <a class="href-link" href="#shaderSource">#</a>
+    
+    <span class="code-name">
+        shaderSource
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>The glsl shader source for this material.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>undefined</li>
+        </ul></dd>
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="startTime">
+    <a class="href-link" href="#startTime">#</a>
+    
+    <span class="code-name">
+        startTime
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>用于设置漫游开始时间,解决漫游时因时间引起的光照问题</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="terrainProvider">
+    <a class="href-link" href="#terrainProvider">#</a>
+    
+    <span class="code-name">
+        terrainProvider
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>地形，用于地形填挖方分析时计算采样点高程</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+|
+
+<span class="param-type">function</span>
+
+
+    </span>
+
+<h4 class="name" id="translucent">
+    <a class="href-link" href="#translucent">#</a>
+    
+    <span class="code-name">
+        translucent
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>When <code>true</code> or a function that returns <code>true</code>,
+the geometry is expected to appear translucent.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>undefined</li>
+        </ul></dd>
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">String</span>
+
+
+    </span>
+
+<h4 class="name" id="type">
+    <a class="href-link" href="#type">#</a>
+    
+    <span class="code-name">
+        type
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>The material type. Can be an existing type or a new type. If no type is specified in fabric, type is a GUID.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>undefined</li>
+        </ul></dd>
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="uniforms">
+    <a class="href-link" href="#uniforms">#</a>
+    
+    <span class="code-name">
+        uniforms
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Maps uniform names to their values.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>undefined</li>
+        </ul></dd>
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='function'>方法</h3>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_getCurrentRepeatDetail">
+        <a class="href-link" href="#_getCurrentRepeatDetail">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _getCurrentRepeatDetail<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_renderLabelInDecentralize">
+        <a class="href-link" href="#_renderLabelInDecentralize">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                _renderLabelInDecentralize<span class="signature">(polyline3D, collection, startRate, endRate, textArr, id, options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>polyline3D</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>线几何计算类</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>collection</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>注记容器</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>startRate</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>开始分段</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>endRate</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>结束分段</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>textArr</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>文字分段数组</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>id</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>注记id</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>注记选项</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="addBillboardPrimitive">
+        <a class="href-link" href="#addBillboardPrimitive">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                addBillboardPrimitive<span class="signature">(graphic, position, success)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>添加BillboardPrimitive对象，如果设置除绝对高度以外的高程模式，则进行高程采样</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>graphic</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="SimpleMarkerGraphic.html">SimpleMarkerGraphic</a></span>
+|
+
+<span class="param-type"><a href="PictureMarkerGraphic.html">PictureMarkerGraphic</a></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>要采样的绘制对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>position</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartographic</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>要采样的点坐标数组</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>success</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>几何添加完毕回调</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="addMapRefLayer">
+        <a class="href-link" href="#addMapRefLayer">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                addMapRefLayer<span class="signature">(options, innerView)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>添加覆盖物图层</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>覆盖物图层构造参数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>innerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">View</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>Cesium的view对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>覆盖物图层innerLayer对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="addPointPrimitive">
+        <a class="href-link" href="#addPointPrimitive">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                addPointPrimitive<span class="signature">(graphic, position, success)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>添加PointPrimitive对象，如果设置除绝对高度以外的高程模式，则进行高程采样</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>graphic</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="SimpleMarkerGraphic.html">SimpleMarkerGraphic</a></span>
+|
+
+<span class="param-type"><a href="PictureMarkerGraphic.html">PictureMarkerGraphic</a></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>要采样的绘制对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>position</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartographic</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>要采样的点坐标数组</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>success</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>几何添加完毕回调</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="addTerrainLayer">
+        <a class="href-link" href="#addTerrainLayer">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                addTerrainLayer<span class="signature">(innerView, options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>添加地形图层</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>innerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">View</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>Cesium的view对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>构造参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="any">
+        <a class="href-link" href="#any">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                any<span class="signature">(promisesOrValues, onFulfilled<span class="signature-attributes">opt, nullable</span>, onRejected<span class="signature-attributes">opt, nullable</span>, onProgress<span class="signature-attributes">opt, nullable</span>)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Initiates a competitive race, returning a promise that will resolve when
+any one of the supplied promisesOrValues has resolved or will reject when
+<em>all</em> promisesOrValues have rejected.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>promisesOrValues</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array</span>
+|
+
+<span class="param-type"><a href="Promise.html">Promise</a></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>array of anything, may contain a mix
+of <a href="Promise.html"><code>Promise</code></a>s and values</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>onFulfilled</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>resolution handler</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>onRejected</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>rejection handler</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>onProgress</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>progress handler</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>promise that will resolve to the value that resolved first, or
+will reject with an array of all rejected inputs.</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type"><a href="Promise.html">Promise</a></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="appendLabelLayer">
+        <a class="href-link" href="#appendLabelLayer">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                appendLabelLayer<span class="signature">(url, options, layerInfo, innerView)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>添加注记图层</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>url</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>服务地址</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>可选参数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layerInfo</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>从IGS查询到的图层的信息，如最大最小比例尺，避让等</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>innerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">View</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>Cesium的view对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="buildModuleUrl">
+        <a class="href-link" href="#buildModuleUrl">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                buildModuleUrl<span class="signature">(relativeUrl)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Given a relative URL under the MapGIS base URL, returns an absolute URL.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>relativeUrl</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>The relative path.</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>The absolutely URL representation of the provided path.</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">String</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="chain">
+        <a class="href-link" href="#chain">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                chain<span class="signature">(promiseOrValue, resolver, resolveValue<span class="signature-attributes">opt</span>)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Ensure that resolution of promiseOrValue will trigger resolver with the
+value or reason of promiseOrValue, or instead with resolveValue if it is provided.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>promiseOrValue</code></td>
+  
+
+  <td class="type">
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>resolver</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>resolve</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>reject</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+  
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>resolveValue</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type"><a href="Promise.html">Promise</a></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="convertCommonRendererToM3DRenderer">
+        <a class="href-link" href="#convertCommonRendererToM3DRenderer">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                convertCommonRendererToM3DRenderer<span class="signature">(renderer)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>将common层的renderer转为MapGISM3DSet需要的renderer</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>renderer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>common层的renderer的对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>MapGISM3DSet需要的renderer</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="convertMapGISTextToLabelClass">
+        <a class="href-link" href="#convertMapGISTextToLabelClass">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                convertMapGISTextToLabelClass<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>转换文字</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="convertPictureMarkerSymbolToGraphicStyle">
+        <a class="href-link" href="#convertPictureMarkerSymbolToGraphicStyle">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                convertPictureMarkerSymbolToGraphicStyle<span class="signature">(type, paintStyle, symbol)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>转换点符号为Cesium Graphics样式</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>type</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>几何样式</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>paintStyle</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>graphics样式</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>symbol</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>符号</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="convertShadeToGLSL100">
+        <a class="href-link" href="#convertShadeToGLSL100">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                convertShadeToGLSL100<span class="signature">(input, isFragmentShader)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>将GLSL 300转换为GLSL 100，该方法目前仅对一些常见的用例进行转换</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>input</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>GLSL 300版本的Shader代码</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>isFragmentShader</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>是否是片元着色器的Shader代码</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>转换后的Shader代码</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">String</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="convertSimpleFillSymbolToGraphicStyle">
+        <a class="href-link" href="#convertSimpleFillSymbolToGraphicStyle">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                convertSimpleFillSymbolToGraphicStyle<span class="signature">(type, paintStyle, symbol)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>转换填充符号为Cesium Graphics样式</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>type</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>几何样式</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>paintStyle</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>graphics样式</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>symbol</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>符号</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="convertSimpleLineSymbolToGraphicStyle">
+        <a class="href-link" href="#convertSimpleLineSymbolToGraphicStyle">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                convertSimpleLineSymbolToGraphicStyle<span class="signature">(type, paintStyle, symbol)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>转换简单线符号为Cesium Graphics样式</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>type</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>几何样式</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>paintStyle</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>graphics样式</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>symbol</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>符号</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="convertSimpleMarkerSymbolToGraphicStyle">
+        <a class="href-link" href="#convertSimpleMarkerSymbolToGraphicStyle">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                convertSimpleMarkerSymbolToGraphicStyle<span class="signature">(type, paintStyle, symbol)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>转换点符号为Cesium Graphics样式</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>type</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>几何样式</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>paintStyle</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>graphics样式</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>symbol</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>符号</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="createBaseLineMaterial">
+        <a class="href-link" href="#createBaseLineMaterial">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                createBaseLineMaterial<span class="signature">(color, type)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>通过颜色和线(虚线)类型创建材质，是一个基本的颜色填充线</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>color</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>Cesium的颜色对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>type</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>线类型</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>创建好的cesium的线材质对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="createBillboard">
+        <a class="href-link" href="#createBillboard">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                createBillboard<span class="signature">(symbolLayer, position, options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>通过点坐标构造一个billboard的初始化参数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+            <th style="min-width: 100px;">默认值</th>
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>symbolLayer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">IconSymbol3DLayer</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>三维图标图层</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>position</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Number></span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>经纬度坐标，[longitude,latitude,height]</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>额外参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>image</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>billboard的图片url</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>show</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          true
+      
+      </td>
+  
+
+  <td class="description last"><p>是否显示</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>layerOpacity</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          1
+      
+      </td>
+  
+
+  <td class="description last"><p>图层透明度</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>graphic</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="BaseGraphic.html">BaseGraphic</a></span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>三维的几何对象</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>billboard构造参数</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="createGraphic">
+        <a class="href-link" href="#createGraphic">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                createGraphic<span class="signature">(object)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>创建cesium 几何对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>object</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>几何体options</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Cesium.Graphic</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="createObject3DAppearance">
+        <a class="href-link" href="#createObject3DAppearance">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                createObject3DAppearance<span class="signature">(symbolLayer, options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>通过ObjectSymbol3DLayer来构造外观对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+            <th style="min-width: 100px;">默认值</th>
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>symbolLayer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">ObjectSymbol3DLayer</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>三维对象图层</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>额外参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>layerOpacity</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          1
+      
+      </td>
+  
+
+  <td class="description last"><p>额外参数</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>三维的外观对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="defer">
+        <a class="href-link" href="#defer">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                defer<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Creates a new, Deferred with fully isolated resolver and promise parts,
+either or both of which may be given out safely to consumers.
+The Deferred itself has the full API: resolve, reject, progress, and
+then. The resolver has resolve, reject, and progress.  The promise
+only has then.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type"><a href="Deferred.html">Deferred</a></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="demodernizeShader">
+        <a class="href-link" href="#demodernizeShader">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                demodernizeShader<span class="signature">(gl, input, isFragmentShader)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>将GLSL 300转换为GLSL 100，该方法目前仅对一些常见的用例进行转换</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>gl</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">WebGLRenderingContext</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>WebGLRenderingContext对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>input</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>GLSL 300版本的Shader代码</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>isFragmentShader</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>是否是片元着色器的Shader代码</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>转换后的Shader代码</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">String</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getBillboardAnchor">
+        <a class="href-link" href="#getBillboardAnchor">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getBillboardAnchor<span class="signature">(anchor)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据三维Billboard符号的锚点生成Cesium的锚点</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>anchor</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">AnchorType</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>三维Billboard符号的锚点</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Cesium的锚点</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getBillboardAndLabelSample">
+        <a class="href-link" href="#getBillboardAndLabelSample">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getBillboardAndLabelSample<span class="signature">(graphic, position)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取BillboardAndLabel的高程模式和更新高程后的点坐标</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>graphic</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="BaseGraphic.html">BaseGraphic</a></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>三维几何对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>position</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Number></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>经纬度坐标，[longitude,latitude,height]</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>高程模式和更新高程后的点坐标</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getBillboardOptionsFromPictureMarkerSymbol">
+        <a class="href-link" href="#getBillboardOptionsFromPictureMarkerSymbol">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getBillboardOptionsFromPictureMarkerSymbol<span class="signature">(symbol)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>通过符号来构造一个entity的billboard构造参数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>symbol</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Symbol</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>符号对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>entity的点构造参数</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getBillboardOptionsFromSimpleMarkerSymbol">
+        <a class="href-link" href="#getBillboardOptionsFromSimpleMarkerSymbol">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getBillboardOptionsFromSimpleMarkerSymbol<span class="signature">(symbol)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>通过符号来构造一个entity的billboard构造参数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>symbol</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Symbol</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>符号对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>entity的点构造参数</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getCesiumLayerIndex">
+        <a class="href-link" href="#getCesiumLayerIndex">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getCesiumLayerIndex<span class="signature">(layer, innerView)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取图层在cesium中要添加的顺序</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>基础图层对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>innerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>cesium的view对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getClassificationTyp">
+        <a class="href-link" href="#getClassificationTyp">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getClassificationTyp<span class="signature">(elevationMode)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>通过ElevationMode的值来获取Cesium的ClassificationTyp值</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>elevationMode</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">ElevationMode</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>高度模式</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Cesium的ClassificationTyp值</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Number</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getExcludePrimitivesInModelSample">
+        <a class="href-link" href="#getExcludePrimitivesInModelSample">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getExcludePrimitivesInModelSample<span class="signature">(viewer)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取在模型采样中，要排除的primitives</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>viewer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="Cesium.Viewer.html">Cesium.Viewer</a></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>场景视图对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>要排除的primitives</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Array.&lt;Cesium.Primitive></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getFeatureBySymbolLayer">
+        <a class="href-link" href="#getFeatureBySymbolLayer">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getFeatureBySymbolLayer<span class="signature">(symbolLayer, type, position, feature)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据三维符号图层来创建一个要素对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>symbolLayer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Symbol3DLayer</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>三维符号图层对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>type</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">SymbolType</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>符号类型</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>position</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartographic</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>点坐标</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>feature</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Feature</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>关联的要素</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>要素对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Feature</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getLayerIndex">
+        <a class="href-link" href="#getLayerIndex">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getLayerIndex<span class="signature">(items, layer)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取图层在map中的上一个图层的index，如果没有上一个图层，则返回0</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>items</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>图层数组</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>图层对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>图层顺序</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Number</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getLayerToUse">
+        <a class="href-link" href="#getLayerToUse">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getLayerToUse<span class="signature">(layers, level, x, y)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据级数、行号和列号来筛选可用的地形图层</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layers</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Object></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>地形图层数组</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>level</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>级数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>x</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>行号</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>y</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>列号</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>可用的地形图层</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getM3DOptions">
+        <a class="href-link" href="#getM3DOptions">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getM3DOptions<span class="signature">(subLayer)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取m3d构造参数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>subLayer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">IGSSceneSubLayer</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>场景图层子图层对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>m3d构造参数</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getMapGISM3DSetRenderer">
+        <a class="href-link" href="#getMapGISM3DSetRenderer">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getMapGISM3DSetRenderer<span class="signature">(renderer)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>将common层的renderer转为MapGISM3DSet需要的renderer,renderer可以为数组,格式为[{layerID:'', renderer: {}}]</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>renderer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">Array.&lt;Object></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>common层的renderer的对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>MapGISM3DSet需要的renderer</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getMapRefOptions">
+        <a class="href-link" href="#getMapRefOptions">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getMapRefOptions<span class="signature">(subLayer)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取覆盖物图层构造参数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>subLayer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">IGSSceneSubLayer</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>场景图层子图层对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>覆盖物图层构造参数</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getPointOptionsFromSimpleMarkerSymbol">
+        <a class="href-link" href="#getPointOptionsFromSimpleMarkerSymbol">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getPointOptionsFromSimpleMarkerSymbol<span class="signature">(symbol)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>通过符号来构造一个entity的点构造参数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>symbol</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Symbol</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>符号对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>entity的点构造参数</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getProviderExtent">
+        <a class="href-link" href="#getProviderExtent">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getProviderExtent<span class="signature">(layer, tilingSchemeRectangle)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取provider的范围，并将范围统一成4326坐标系</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>基本图层对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>tilingSchemeRectangle</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>瓦片平铺规则的矩形范围</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>cesium中provider的范围</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Extent</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getShadows">
+        <a class="href-link" href="#getShadows">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getShadows<span class="signature">(symbolLayer)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取cesium的阴影模式</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>symbolLayer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>三维符号图层</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Cesium的阴影模式</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Number</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getTerrainAndModelHeight">
+        <a class="href-link" href="#getTerrainAndModelHeight">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getTerrainAndModelHeight<span class="signature">(terrainHeight, modelHeight)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>从地形高程采样和模型高程采样中获取最高高度</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>terrainHeight</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>地形采样高度</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>modelHeight</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>模型采样高度</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>最高高度</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Number</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getTerrainOptions">
+        <a class="href-link" href="#getTerrainOptions">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getTerrainOptions<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取地形参数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>地形参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>地形参数</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getTilingScheme">
+        <a class="href-link" href="#getTilingScheme">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getTilingScheme<span class="signature">(spatialReference, extent, tileInfo, axisDirection)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>从SpatialReference中获取TilingScheme对象给cesium使用</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>spatialReference</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">SpatialReference</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>坐标系对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>extent</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Extent</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>坐标系对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>tileInfo</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">TileInfo</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>坐标系对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>axisDirection</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>坐标系对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>TilingScheme对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getWebglVersion">
+        <a class="href-link" href="#getWebglVersion">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getWebglVersion<span class="signature">(gl)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取WebGL的版本</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>gl</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">WebGLRenderingContext</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>WebGLRenderingContext对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>0：WebGL不支持或非WebGL对象；1：WebGL 1.0；2：WebGL 2.0；</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Number</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="isGeographic">
+        <a class="href-link" href="#isGeographic">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                isGeographic<span class="signature">(projection)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>判断projection对象投影是否是地理经纬度坐标系</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>projection</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+    
+        <pre class="prettyprint"><code>isGeographic = Cesium.isGeographic(projection);</code></pre>
+    
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="isPromise">
+        <a class="href-link" href="#isPromise">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                isPromise<span class="signature">(promiseOrValue)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Determines if promiseOrValue is a promise or not.  Uses the feature
+test from http://wiki.commonjs.org/wiki/Promises/A to determine if
+promiseOrValue is a promise.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>promiseOrValue</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>anything</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>true if promiseOrValue is a <a href="Promise.html"><code>Promise</code></a></p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">boolean</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="isSample">
+        <a class="href-link" href="#isSample">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                isSample<span class="signature">(feature)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>判断是否要采样</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>feature</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Feature</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>要判断的要素对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>是否要采样</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="join">
+        <a class="href-link" href="#join">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                join<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Joins multiple promises into a single returned promise.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>a promise that will fulfill when <em>all</em> the input promises
+have fulfilled, or will reject when <em>any one</em> of the input promises rejects.</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type"><a href="Promise.html">Promise</a></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="map">
+        <a class="href-link" href="#map">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                map<span class="signature">(promise, mapFunc)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Traditional map function, similar to <code>Array.prototype.map()</code>, but allows
+input to contain <a href="Promise.html"><code>Promise</code></a>s and/or values, and mapFunc may return
+either a value or a <a href="Promise.html"><code>Promise</code></a></p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>promise</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array</span>
+|
+
+<span class="param-type"><a href="Promise.html">Promise</a></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>array of anything, may contain a mix
+of <a href="Promise.html"><code>Promise</code></a>s and values</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>mapFunc</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>mapping function mapFunc(value) which may return
+either a <a href="Promise.html"><code>Promise</code></a> or value</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>a <a href="Promise.html"><code>Promise</code></a> that will resolve to an array containing
+the mapped output values.</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type"><a href="Promise.html">Promise</a></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="parseLabelClass">
+        <a class="href-link" href="#parseLabelClass">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                parseLabelClass<span class="signature">(labelClass)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>labelClass</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="prepareFontStyle">
+        <a class="href-link" href="#prepareFontStyle">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                prepareFontStyle<span class="signature">(fontStyle)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>https://developer.mozilla.org/en-US/docs/Web/CSS/font-style</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fontStyle</code></td>
+  
+
+  <td class="type">
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>CSS font style.</p></div>
+    
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="prepareFontWeight">
+        <a class="href-link" href="#prepareFontWeight">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                prepareFontWeight<span class="signature">(fontWeight)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fontWeight</code></td>
+  
+
+  <td class="type">
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>CSS font weight.</p></div>
+    
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="processQueue">
+        <a class="href-link" href="#processQueue">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                processQueue<span class="signature">(queue, value)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Apply all functions in queue to value</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>queue</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>array of functions to execute</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>value</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>argument passed to each function</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="redefineAspectArrowMaterial">
+        <a class="href-link" href="#redefineAspectArrowMaterial">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                redefineAspectArrowMaterial<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>重新注册AspectArrowMaterial材质，主动调用才会注册，如果已经注册了，则不会重新注册</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>初始化参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>webGLRenderingContext</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">WebGLRenderingContext</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>webgl对象，根据其不版本来判断是否将GLSL 300语法转换为GLSL 100语法，如果不设置该值，则直接将GLSL 300语法转换为GLSL 100语法</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="redefineCircleWaveMaterial">
+        <a class="href-link" href="#redefineCircleWaveMaterial">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                redefineCircleWaveMaterial<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>重新注册CircleWaveMaterial材质，主动调用才会注册，如果已经注册了，则不会重新注册</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="redefineGetUrlComponent">
+        <a class="href-link" href="#redefineGetUrlComponent">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                redefineGetUrlComponent<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>重写Cesium.Resource的getUrlComponent方法</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="redefineImageryLayerPrototype">
+        <a class="href-link" href="#redefineImageryLayerPrototype">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                redefineImageryLayerPrototype<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>重写cesium对象ImageryLayer中的方法</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="redefineMakeRequestByWhen">
+        <a class="href-link" href="#redefineMakeRequestByWhen">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                redefineMakeRequestByWhen<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>如果Cesium.when方法存在，则使用Cesium.when来重定义_makeRequest方法</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="redefineMakeRequestWithoutWhen">
+        <a class="href-link" href="#redefineMakeRequestWithoutWhen">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                redefineMakeRequestWithoutWhen<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>如果Cesium.when方法不存在，则使用defer来重定义_makeRequest方法</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="redefinePolylineTrailLink">
+        <a class="href-link" href="#redefinePolylineTrailLink">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                redefinePolylineTrailLink<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>重新注册PolylineTrailLink材质，主动调用才会注册，如果已经注册了，则不会重新注册</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>初始化参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>webGLRenderingContext</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">WebGLRenderingContext</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>webgl对象，根据其不版本来判断是否将GLSL 300语法转换为GLSL 100语法，如果不设置该值，则直接将GLSL 300语法转换为GLSL 100语法</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="redefineRadarMaterial">
+        <a class="href-link" href="#redefineRadarMaterial">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                redefineRadarMaterial<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>重新注册RadarMaterial材质，主动调用才会注册，如果已经注册了，则不会重新注册</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="redefineResourceConstructor">
+        <a class="href-link" href="#redefineResourceConstructor">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                redefineResourceConstructor<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>重定义Resource的构造函数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="redefineResourcePrototype">
+        <a class="href-link" href="#redefineResourcePrototype">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                redefineResourcePrototype<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>重定义Resource原型链上的方法</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="redefineTextImageMaterial">
+        <a class="href-link" href="#redefineTextImageMaterial">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                redefineTextImageMaterial<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>重新注册TextImageMaterial材质，主动调用才会注册，如果已经注册了，则不会重新注册</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>初始化参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>webGLRenderingContext</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">WebGLRenderingContext</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>webgl对象，根据其不版本来判断是否将GLSL 300语法转换为GLSL 100语法，如果不设置该值，则直接将GLSL 300语法转换为GLSL 100语法</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="reduce">
+        <a class="href-link" href="#reduce">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                reduce<span class="signature">(promise, reduceFunc)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Traditional reduce function, similar to <code>Array.prototype.reduce()</code>, but
+input may contain promises and/or values, and reduceFunc
+may return either a value or a promise, <em>and</em> initialValue may
+be a promise for the starting value.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>promise</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array</span>
+|
+
+<span class="param-type"><a href="Promise.html">Promise</a></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>array or promise for an array of anything,
+may contain a mix of promises and values.</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>reduceFunc</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>reduce function reduce(currentValue, nextValue, index, total),
+where total is the total number of items being reduced, and will be the same
+in each call to reduceFunc.</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>that will resolve to the final reduced value</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type"><a href="Promise.html">Promise</a></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="reject">
+        <a class="href-link" href="#reject">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                reject<span class="signature">(promiseOrValue)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Returns a rejected promise for the supplied promiseOrValue.  The returned
+promise will be rejected with:</p>
+<ul>
+<li>promiseOrValue, if it is a value, or</li>
+<li>if promiseOrValue is a promise
+<ul>
+<li>promiseOrValue's value after it is fulfilled</li>
+<li>promiseOrValue's reason after it is rejected</li>
+</ul>
+</li>
+</ul>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>promiseOrValue</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>the rejected value of the returned <a href="Promise.html"><code>Promise</code></a></p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>rejected <a href="Promise.html"><code>Promise</code></a></p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type"><a href="Promise.html">Promise</a></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="resolve">
+        <a class="href-link" href="#resolve">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                resolve<span class="signature">(promiseOrValue)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Returns promiseOrValue if promiseOrValue is a <a href="Promise.html"><code>Promise</code></a>, a new Promise if
+promiseOrValue is a foreign promise, or a new, already-fulfilled <a href="Promise.html"><code>Promise</code></a>
+whose value is promiseOrValue if promiseOrValue is an immediate value.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>promiseOrValue</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Guaranteed to return a trusted Promise.  If promiseOrValue is a when.js <a href="Promise.html"><code>Promise</code></a>
+returns promiseOrValue, otherwise, returns a new, already-resolved, when.js <a href="Promise.html"><code>Promise</code></a>
+whose resolution value is:</p>
+<ul>
+<li>the resolution value of promiseOrValue if it's a foreign promise, or</li>
+<li>promiseOrValue if it's a value</li>
+</ul></div>
+    
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="samplePointsPromise">
+        <a class="href-link" href="#samplePointsPromise">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                samplePointsPromise<span class="signature">(graphic, samplePositions, callback)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>通过异步方式，获取Point更新高程后的点坐标，当地形深度检测关闭时，使用此方法</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>graphic</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="BaseGraphic.html">BaseGraphic</a></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>三维几何对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>samplePositions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartographic></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>要采样的点坐标数组</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>callback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>采样完成后的回调函数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>更新高程后的点坐标</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="sampleScene">
+        <a class="href-link" href="#sampleScene">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                sampleScene<span class="signature">(viewer, samplePositions, objectsToExclude, elevationInfo, callback)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>输入一组Cartographic坐标点，进行场景(地形和模型)高程采样，异步函数
+必须要传入一个外部设置地形
+不受深度检测的影响</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>viewer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="Cesium.Viewer.html">Cesium.Viewer</a></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>Cesium的场景视图对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>samplePositions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartographic></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>要采样的点坐标数组</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>objectsToExclude</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Primitive></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>要排除采样的primitive</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>elevationInfo</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">ElevationInfo</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>高程采样信息</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>callback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>采样后的回调函数，callback(Array&lt;Cesium.Cartographic&gt;)</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="sampleTerrain">
+        <a class="href-link" href="#sampleTerrain">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                sampleTerrain<span class="signature">(viewer, samplePositions, elevationInfo, callback)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>输入一组Cartographic坐标点，进行地形高程采样，异步函数，
+当使用默认地形时，仍可进行高程采样
+不受深度检测的影响</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>viewer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="Cesium.Viewer.html">Cesium.Viewer</a></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>Cesium的场景对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>samplePositions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartographic></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>要采样的点坐标数组</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>elevationInfo</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">ElevationInfo</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>高程采样信息</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>callback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>采样后的回调函数，callback(Array&lt;Cesium.Cartographic&gt;)</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="some">
+        <a class="href-link" href="#some">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                some<span class="signature">(promisesOrValues, howMany, onFulfilled<span class="signature-attributes">opt, nullable</span>, onRejected<span class="signature-attributes">opt, nullable</span>, onProgress<span class="signature-attributes">opt, nullable</span>)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Initiates a competitive race, returning a promise that will resolve when
+howMany of the supplied promisesOrValues have resolved, or will reject when
+it becomes impossible for howMany to resolve, for example, when
+(promisesOrValues.length - howMany) + 1 input promises reject.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>promisesOrValues</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>array of anything, may contain a mix
+of promises and values</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>howMany</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>number of promisesOrValues to resolve</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>onFulfilled</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>resolution handler</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>onRejected</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>rejection handler</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>onProgress</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>progress handler</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>promise that will resolve to an array of howMany values that
+resolved first, or will reject with an array of (promisesOrValues.length - howMany) + 1
+rejection reasons.</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type"><a href="Promise.html">Promise</a></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="toLabelClass">
+        <a class="href-link" href="#toLabelClass">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                toLabelClass<span class="signature">(defaultLabelClass, text, overWrite, properties)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>defaultLabelClass</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">LabelClass</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>text</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>overWrite</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">LabelClass</span>
+|
+
+<span class="param-type">null</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>覆盖属性</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>properties</code></td>
+  
+
+  <td class="type">
+  
+  </td>
+
+  
+
+  <td class="description last"><p>要素属性</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">*</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="updateLayerIndex">
+        <a class="href-link" href="#updateLayerIndex">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                updateLayerIndex<span class="signature">(layer, innerLayer, innerView)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>修改图层顺序</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>基础图层对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>innerLayer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>三维上的图层对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>innerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>cesium的view对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="UrlUtil">
+        <a class="href-link" href="#UrlUtil">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                UrlUtil<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>UrlUtil工具类封装</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="when">
+        <a class="href-link" href="#when">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                when<span class="signature">(promiseOrValue, onFulfilled<span class="signature-attributes">opt, nullable</span>, onRejected<span class="signature-attributes">opt, nullable</span>, onProgress<span class="signature-attributes">opt, nullable</span>)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Register an observer for a promise or immediate value.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>promiseOrValue</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>onFulfilled</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>callback to be called when promiseOrValue is
+successfully fulfilled.  If promiseOrValue is an immediate value, callback
+will be invoked immediately.</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>onRejected</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>callback to be called when promiseOrValue is
+rejected.</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>onProgress</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>callback to be called when progress updates
+are issued for promiseOrValue.</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>a new <a href="Promise.html"><code>Promise</code></a> that will complete with the return
+value of callback or errback or the completion value of promiseOrValue if
+callback and/or errback is not supplied.</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type"><a href="Promise.html">Promise</a></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="zoomToM3DLayer">
+        <a class="href-link" href="#zoomToM3DLayer">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                zoomToM3DLayer<span class="signature">(boundingSphere, options, innerView)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据M3D的外包盒进行跳转</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>boundingSphere</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>M3D的外包球</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>跳转参数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>innerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">View</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>Cesium的View对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>文档生成<a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="http://www.smaryun.com" target="_blank">司马云</a> <span>© 2023 云生态圈</span>
+                        <a href="http://webclient.smaryun.com:8086/#/index" target="_blank">MapGIS Client for JavaScript</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#page-title">构造函数</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#member">成员变量</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#function">方法</a>
+            </div>
+            <div>
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#event">事件</a>
+            </div>
+        </div>
+    </div>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

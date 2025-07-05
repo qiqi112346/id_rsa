@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>加载 GeoJson 数据(混合接口)</title>
+  <!--加载不同版本Cesium库-->
+  <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+  <!--plugin脚本库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+  <script>
+    'use strict'
+    //定义三维视图的主要类
+    let map, sceneView, viewer, options
+    const {
+      layer,
+      Color,
+      renderer,
+      util
+    } = zondy
+    const { GeoJSONLayer } = layer
+    const { RendererUtil } = util
+    const { SimpleLineSymbol, SimpleFillSymbol, PictureMarkerSymbol } = zondy.symbol
+    const { SimpleRenderer, UniqueValueRenderer } = renderer
+    const { SceneView } = zondy.cesium
+    const { GeoJSONLayerUtil } = zondy.cesium.util
+    //地图初始化函数
+    function init() {
+      //创建切换Cesium版本的按钮
+      createChangeTab()
+      //初始化三维球体
+      initViewer()
+      //蓝黑版深色地图
+      addBlueImage()
+      // 添加GeoJSON数据;
+      addGeoJSONLayer()
+      //视角跳转
+      flyTo()
+    }
+
+    //初始化三维球体
+    function initViewer() {
+      //初始化图层管理容器
+      map = new zondy.Map()
+      //初始化地图视图对象
+      sceneView = new SceneView({
+        //视图id
+        viewId: 'mapgis-3d-viewer',
+        //图层管理容器
+        map: map
+      })
+      //获取视图对象
+      viewer = sceneView.getInnerView()
+    }
+
+    //蓝黑版深色地图
+    function addBlueImage() {
+      let blueImage = new zondy.cesium.UrlTemplateImageryProvider({
+        url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
+        tilingScheme: new Cesium.WebMercatorTilingScheme(),
+        maximumLevel: 18
+      })
+      viewer.imageryLayers.addImageryProvider(blueImage)
+    }
+
+    //视角跳转
+    function flyTo() {
+      sceneView.flyTo({
+        center: [114.18944441797595, 30.5690284961602, 200000]
+      })
+    }
+
+    // 添加GeoJSON数据;
+    function addGeoJSONLayer() {
+      addPoint()
+      addLine()
+      addPolygon()
+    }
+
+    async function addPoint() {
+      // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SimpleRenderer.html
+      const renderer = new SimpleRenderer({
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/PictureMarkerSymbol.html
+        symbol: new PictureMarkerSymbol({
+          width: 20,
+          height: 20,
+          url: 'http://webclient.smaryun.com/static/libs/cdn/cesium/Assets/Textures/maki/rail.png'
+        })
+      })
+      // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/GeoJSONLayer.html
+      const geojsonLayer = new GeoJSONLayer({
+        url: 'http://webclient.smaryun.com:8200/Vector/json/metroStation.json',
+      })
+      // 请求获取要素集
+      const featureSet = await geojsonLayer.queryFeatures()
+      const features = featureSet.features
+      // 为要素集设置renderer
+      RendererUtil.updateRenderer(features, renderer)
+      const primitives = GeoJSONLayerUtil.toPrimitive(features, {
+        viewer
+      })
+      for (let i = 0; i < primitives.length; i++) {
+        viewer.scene.primitives.add(primitives[i])
+      }
+    }
+
+    // 道路线
+    async function addLine() {
+      // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/UniqueValueRenderer.html
+      const renderer = new UniqueValueRenderer({
+        field: 'ln',
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SimpleLineSymbol.html
+        defaultSymbol: new SimpleLineSymbol({
+          //线符号颜色
+          // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/Color.html
+          color: new zondy.Color(255, 255, 0, 1),
+          width: 20
+        }),
+        uniqueValueInfos: [
+          {
+            value: '1号线',
+            symbol: new SimpleLineSymbol({
+              color: '#3786C8',
+              width: 20
+            })
+          },
+          {
+            value: '2号线',
+            symbol: new SimpleLineSymbol({
+              color: '#EB7CAE',
+              width: 20
+            })
+          },
+          {
+            value: '3号线',
+            symbol: new SimpleLineSymbol({
+              color: '#DEB965',
+              width: 20
+            })
+          },
+          {
+            value: '4号线',
+            symbol: new SimpleLineSymbol({
+              color: '#8ECB1F',
+              width: 20
+            })
+          },
+          {
+            value: '5号线',
+            symbol: new SimpleLineSymbol({
+              color: '#DE5E53',
+              width: 20
+            })
+          },
+          {
+            value: '6号线',
+            symbol: new SimpleLineSymbol({
+              color: '#018634',
+              width: 20
+            })
+          },
+          {
+            value: '7号线',
+            symbol: new SimpleLineSymbol({
+              color: '#EF7801',
+              width: 20
+            })
+          },
+          {
+            value: '8号线',
+            symbol: new SimpleLineSymbol({
+              color: '#99ADAE',
+              width: 20
+            })
+          },
+          {
+            value: '11号线',
+            symbol: new SimpleLineSymbol({
+              color: '#F3D301',
+              width: 20
+            })
+          },
+          {
+            value: '16号线',
+            symbol: new SimpleLineSymbol({
+              color: '#D9577D',
+              width: 20
+            })
+          },
+          {
+            value: '21号线',
+            symbol: new SimpleLineSymbol({
+              color: '#B60081',
+              width: 20
+            })
+          }
+        ]
+      })
+      const geojsonLayer = new GeoJSONLayer({
+        url: 'http://webclient.smaryun.com:8200/Vector/json/metro.json',
+      })
+      // 请求获取要素集
+      const featureSet = await geojsonLayer.queryFeatures()
+      const features = featureSet.features
+      // 为要素集设置renderer
+      RendererUtil.updateRenderer(features, renderer)
+      const primitives = GeoJSONLayerUtil.toPrimitive(features, {
+        viewer
+      })
+      for (let i = 0; i < primitives.length; i++) {
+        viewer.scene.primitives.add(primitives[i])
+      }
+    }
+
+    async function addPolygon() {
+      const renderer = new SimpleRenderer({
+        symbol: new SimpleFillSymbol({
+          //线符号颜色
+          color: '#FFFF0000',
+          outline: new SimpleLineSymbol({
+            color: '#FFFF0080',
+            width: 1
+          })
+        })
+      })
+      const geojsonLayer = new GeoJSONLayer({
+        url: 'http://webclient.smaryun.com:8200/Vector/json/populationSizeGeoJson_2017.json',
+      })
+      // 请求获取要素集
+      const featureSet = await geojsonLayer.queryFeatures()
+      const features = featureSet.features
+      // 为要素集设置renderer
+      RendererUtil.updateRenderer(features, renderer)
+      const primitives = GeoJSONLayerUtil.toPrimitive(features, {
+        viewer
+      })
+      for (let i = 0; i < primitives.length; i++) {
+        viewer.scene.primitives.add(primitives[i])
+      }
+    }
+  </script>
+</head>
+
+<body onload="init()">
+  <div id="mapgis-3d-viewer"></div>
+</body>
+</html>

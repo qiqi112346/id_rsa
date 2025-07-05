@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>切换底图</title>
+    <!-- 引入地图引擎库 -->
+    <script
+      src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"
+    ></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!-- 引入通过toJson方式拿到场景化管理的数据 -->
+    <script src="http://webclient.smaryun.com/static/libs/mange-sceneview-config.js"></script>
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/analyse.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义视图的主要类
+      let map, mapView, view, igsTileLayer
+      const { Map, Basemap, Collection } =
+        zondy
+      const { IGSTileLayer, IGSMapImageLayer } = zondy.layer
+      let $ = layui.$
+
+      // 初始化地图
+      function init() {
+        // 初始化示例UI操作
+        initUI()
+        // 初始化地图视图
+        initView()
+        // 添加IGS地图图层
+        addIGSMapImageLayer()
+      }
+
+      // 初始地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+        // 添加底图
+        addBaseMap(
+          'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        )
+      }
+
+      // 添加底图
+      function addBaseMap(url) {
+        // 初始化图层管理容器
+        map.basemap = new Basemap({
+          // 设置图层到底图集合中
+          baseLayers: new Collection([
+            // 创建一个图层
+            new IGSTileLayer({
+              url: url
+            })
+          ])
+        })
+      }
+
+      // 添加地图图层
+      function addIGSMapImageLayer() {
+        //创建IGS地图图层
+        const igsMapImageLayer = new IGSMapImageLayer({
+          //服务地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/武汉市4547/MapServer'
+        })
+        map.add(igsMapImageLayer)
+      }
+
+      // 初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          const form = layui.form
+          // 切换底图
+          form.on('select(baseMap)', function (data) {
+            let url
+            switch (data.value) {
+              case '湖北省4326':
+              default:
+                url =
+                  'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+                break
+              case '湖北省3857':
+                url =
+                  'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_3857_normal_3-10/TileServer'
+                break
+              case '湖北省4547':
+                url =
+                  'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4547_custom/TileServer'
+                break
+            }
+            // 新创建一个底图
+            addBaseMap(url)
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <div class="layui-panel layui-panel-right base-map-panel">
+      <form class="layui-form" action="">
+        <div class="sample-main-panel">
+          <div class="layui-form-item">
+            <label class="layui-form-label">选择底图</label>
+            <div class="layui-input-block layui-input-block-select">
+              <select id="baseMap" name="baseMap" lay-filter="baseMap">
+                <option value="湖北省4326">湖北省4326</option>
+                <option value="湖北省3857">湖北省3857</option>
+                <option value="湖北省4547">湖北省4547</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

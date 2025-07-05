@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>瓦片图层 - 自定义坐标系</title>
+  <!-- 引入地图引擎库 -->
+  <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+  <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+  <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+  <script type="text/javascript">
+    //使用严格模式
+    'use strict'
+    // 定义二维视图的主要类
+
+    let map, view, layer, layerOpacity = 1
+    const {
+      IGSTileLayer,
+      WebTileLayer
+    } = zondy.layer
+    const { Map, SpatialReference } = zondy
+
+    // 初始化地图
+    function init() {
+      // 初始化地图视图
+      initView()
+      // 初始化示例UI
+      initUI()
+      // 添加瓦片图层
+      addLayer()
+    }
+
+    // 初始二维地图
+    function initView() {
+      // 初始化图层管理容器
+      map = new Map()
+      // 初始化地图视图对象
+      view = createView('mapgis-viewer', map)
+    }
+
+    // 添加瓦片图层
+    function addLayer() {
+      // 如果layer存在，先删除图层
+      if (layer) {
+        deleteLayer()
+      }
+      // 创建瓦片图层
+      layer = new IGSTileLayer({
+        // 服务基地址，支持没有WKID的，完全自定义坐标系的服务
+        url: "http://localhost:8089/igs/rest/services/深圳4547_0_8/TileServer",
+        // 图层透明度
+        opacity: layerOpacity
+      })
+      // 添加图层
+      map.add(layer)
+
+      // 创建瓦片图层
+      const layer2 = new WebTileLayer({
+        // 加载经纬度的影像地图
+        url: 'http://t1.tianditu.com/DataServer?T=cva_w&x={col}&y={row}&l={level}',
+        // 天地图必须加token，且token名为tk
+        tokenKey: 'tk',
+        // token请在天地图官网申请
+        tokenValue: getTDTToken(),
+        // 指定坐标系
+        spatialReference: new SpatialReference({ wkid: 3857 }),
+        // 图层透明度
+        opacity: layerOpacity
+      })
+      // 添加图层
+      map.add(layer2)
+
+      // 图层添加完毕后，跳转到图层范围内
+      layer.on('layerview-created', (result) => {
+        view.flyTo({
+          extent: result.layer.extent
+        })
+      })
+    }
+
+    // 删除图层
+    function deleteLayer() {
+      map.remove(layer)
+    }
+
+    // 显隐图层
+    function toggleLayer() {
+      layer.visible = !layer.visible
+    }
+
+    //初始化示例UI操作
+    function initUI() {
+      layui.use(function () {
+        layui.slider.render({
+          elem: "#moveStep",
+          value: 100,
+          min: 0,
+          max: 100,
+          step: 1,
+          theme: 'rgb(21, 134, 238)',
+          //自定义提示文本
+          setTips: function (value) {
+            layerOpacity = value / 100
+            return value + '%';
+          },
+          change: function (value) {
+            layer.opacity = layerOpacity
+          }
+        });
+      })
+    }
+  </script>
+</head>
+
+<body onload="init();">
+  <!--  视图容器div  -->
+  <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+  <!--  示例UI  -->
+      <div class="layui-panel layui-panel-right tile-layer-panel">
+    <form class="layui-form" action="">
+      <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 100px;">图层透明度</label>
+        <div class="layui-input-block sample-slider" style="width: 160px;">
+          <div id="moveStep"></div>
+        </div>
+      </div>
+      <div class="line"></div>
+      <div class="layui-form-item">
+        <button type="button" class="layui-btn" onclick="addLayer()">添加图层</button>
+        <button type="button" class="layui-btn" onclick="deleteLayer()" style="margin-left: 6px">删除图层</button>
+        <button type="button" class="layui-btn" onclick="toggleLayer()" style="margin-left: 6px">显隐图层</button>
+      </div>
+    </form>
+  </div>
+</body>
+
+</html>

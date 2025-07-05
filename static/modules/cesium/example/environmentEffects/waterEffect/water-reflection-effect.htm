@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>水面倒影特效</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/analyse.css"
+    />
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+      //绘制多边形的工具
+      let drawElement = null
+      //反射水面分析类
+      let waterReflection = null
+      //水面的高度
+      let height = 40
+
+      //反射水面分析
+      function addWaterReflection(positions) {
+        //实例化反射水面的对象
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/WaterReflection.html
+        waterReflection = new zondy.cesium.WaterReflection({
+          viewer: viewer, //显示三维地球场景的对象
+          positions: positions, //构成水面的若干个坐标点
+          distortionScale: 2.0, //水面反射的扭曲尺度
+          height: height, //水面高度
+          flowSpeed: 30, //水流速度
+          normalMapUrl:
+            'http://webclient.smaryun.com/static/libs/cdn/cesium/Assets/Textures/waterNormalsSmall.jpg'
+        })
+      }
+
+      //添加绘制工具，主要是为了方便拿到区的点集合
+      function addDrawElement() {
+        if (drawElement === null) {
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/DrawElement.html
+          drawElement = new zondy.cesium.DrawElement(viewer)
+        }
+        //先清除已有的分析类
+        removeWaterReflection()
+        drawElement.startDrawingPolygon({
+          callback: function (result) {
+            let positionsOfCartesian = result.positions
+            //坐标转换
+            let positions = []
+            for (let position of positionsOfCartesian) {
+              positions.push(Cesium.Cartographic.fromCartesian(position))
+            }
+            addWaterReflection(positions)
+            //取消绘制
+            drawElement.stopDrawing()
+          }
+        })
+      }
+
+      //默认初始绘制反射水面
+      function defaultAddWaterReflection() {
+        //创建反射水面的范围
+        let positions = [
+          Cesium.Cartographic.fromDegrees(114.3972, 30.471, 0.0),
+          Cesium.Cartographic.fromDegrees(114.4053, 30.471, 0.0),
+          Cesium.Cartographic.fromDegrees(114.4053, 30.4638, 0.0),
+          Cesium.Cartographic.fromDegrees(114.3972, 30.4638, 0.0)
+        ]
+        addWaterReflection(positions)
+      }
+
+      //清除水面
+      function removeWaterReflection() {
+        if (waterReflection) {
+          //销毁
+          waterReflection.destroy()
+          waterReflection = null
+        }
+        if (drawElement) {
+          drawElement.stopDrawing()
+        }
+      }
+
+      //加载中地大楼
+      function addZondyBuilding() {
+        let M3DLayer = new zondy.layer.M3DModelCacheLayer({
+          url: 'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D//1.0/ZondyFaceModels/ZondyFaceModels.mcj',
+          // 初始化参数
+          extensionOptions: {
+            // 开启自动跳转
+            autoReset: true
+          }
+        })
+        map.add(M3DLayer)
+      }
+
+      //添加天地图影像数据
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          //加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          //天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          //token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //创建三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //打开深度检测
+        viewer.scene.globe.depthTestAgainstTerrain = true
+        //使用正常深度缓冲时,多视锥(multi-frustum)的远近比。 该值用于为多视锥的每个视锥创建近和远值
+        viewer.scene.farToNearRatio = 1000
+        //是否开启逻辑缓冲区
+        viewer.scene.logarithmicDepthBuffer = true
+      }
+
+      //操作面板初始化
+      function initUI() {
+        layui.slider.render({
+          elem: '#heightSlide',
+          value: height,
+          min: 0,
+          max: 100,
+          input: true,
+          theme: 'rgb(102, 147, 251)',
+          change: function (value) {
+            height = value
+            if (waterReflection) {
+              waterReflection.height = height
+            }
+          }
+        })
+      }
+
+      //地图初始化函数
+      function init() {
+        //创建三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加天地图
+        addTDT()
+        //添加中地大楼模型
+        addZondyBuilding()
+        //默认初始绘制反射水面
+        defaultAddWaterReflection()
+        //初始化UI
+        initUI()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="sample-main-panel">
+          <div class="layui-form-item">
+            <label class="layui-form-label">水面高度</label>
+            <div id="heightSlide" class="demoSlider"></div>
+          </div>
+        </div>
+        <div class="sample-button-panel">
+          <button
+            type="button"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="addDrawElement()"
+          >
+            绘制水面
+          </button>
+          <button
+            type="button"
+            class="layui-btn layui-btn-sm layui-btn-danger"
+            onclick="removeWaterReflection()"
+          >
+            清除
+          </button>
+        </div>
+      </form>
+    </div>
+    <style>
+      .sample-main-panel {
+        height: auto;
+      }
+
+      .layui-slider {
+        top: 16px;
+        left: 74px;
+        width: 122px;
+      }
+
+      .layui-slider-input {
+        top: 2px;
+      }
+
+      .layui-input .layui-slider-input-txt .layui-input {
+        padding-left: 0px;
+      }
+
+      .layui-slider-input-btn {
+        z-index: 1;
+      }
+    </style>
+  </body>
+</html>

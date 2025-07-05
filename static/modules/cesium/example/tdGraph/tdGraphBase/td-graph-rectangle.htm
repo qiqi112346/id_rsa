@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>矩形</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--html2canvas库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/html2canvas/html2canvas.min.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/graphic.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, graphicsLayer, rectangle
+      //取得jquery对象
+      let $ = layui.$
+      //颜色管理器对象
+      let colorpicker = layui.colorpicker
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //初始化标绘图层
+        addGraphicLayer()
+        //图片矩形
+        addImageRectangle()
+        //html材质
+        addHtmlRectangle()
+        //图片旋转矩形
+        addImageRotateRectangle()
+        //纯色矩形
+        addColorRectangle()
+        //长方体
+        addRectangleVolume()
+        //移动纯色矩形
+        addColorRectangleMove()
+        //加载天地图底图
+        addTDT()
+        //视点跳转
+        flyTo()
+        //初始化示例UI
+        initUI()
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //显示鼠标位置
+        viewer.showPosition()
+      }
+
+      //初始化标绘图层
+      function addGraphicLayer() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/GraphicsLayer.html
+        graphicsLayer = new zondy.cesium.GraphicsLayer(viewer, {
+          clickGraphic: function (graphic) {
+            rectangle = graphic
+            //将各类文本框隐藏
+            $('#rectangle-image').parents('.layui-form-item').hide()
+            $('#rectangle-repeatX').parents('.layui-form-item').hide()
+            $('#rectangle-repeatY').parents('.layui-form-item').hide()
+            $('#rectangle-extrudedHeight').parents('.layui-form-item').hide()
+            $('#rectangle-color-input').parents('.layui-form-item').hide()
+            //给面板赋值
+            $('#rectangle-offsetHeight').val(rectangle.style.offsetHeight)
+            //材质类型
+            let material = rectangle.style.material
+            if (typeof material === 'undefined') {
+              colorpicker.render({
+                elem: '#rectangle-color',
+                color: rectangle.style.color.toCssHexString(),
+                done: function (color) {
+                  $('#rectangle-color-input').val(color)
+                  rectangle.style.color = Cesium.Color.fromCssColorString(color)
+                }
+              })
+              $('#rectangle-color-input').parents('.layui-form-item').show()
+              $('#rectangle-extrudedHeight').val(
+                rectangle.style.extrudedHeight
+                  ? rectangle.style.extrudedHeight
+                  : 0
+              )
+              $('#rectangle-extrudedHeight').parents('.layui-form-item').show()
+            } else {
+              $('#rectangle-image').val(rectangle.style.material.uniforms.image)
+              $('#rectangle-repeatX').val(
+                rectangle.style.material.uniforms.repeat.x
+              )
+              $('#rectangle-repeatY').val(
+                rectangle.style.material.uniforms.repeat.y
+              )
+              $('#rectangle-image').parents('.layui-form-item').show()
+              $('#rectangle-repeatX').parents('.layui-form-item').show()
+              $('#rectangle-repeatY').parents('.layui-form-item').show()
+            }
+            //这个时候展开编辑面板
+            $('#editPanel').show()
+          },
+          getGraphic: function () {
+            graphicsLayer.stopDrawing()
+          }
+        })
+      }
+
+      //图片矩形
+      function addImageRectangle() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let rectangleGraphic1 = new zondy.cesium.Graphic({
+          //类型
+          type: 'rectangle',
+          //几何数组
+          positions: [
+            new Cesium.Cartesian3(
+              -2244972.019176497,
+              5050935.769391966,
+              3171903.8722328846
+            ),
+            new Cesium.Cartesian3(
+              -2249491.2660083706,
+              5049673.447161487,
+              3170719.6822167994
+            )
+          ],
+          //样式
+          style: {
+            //图片材质
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Material.html
+            material: Cesium.Material.fromType(Cesium.Material.ImageType, {
+              //图片URL
+              image:
+                'http://webclient.smaryun.com:8200/NoneSpatialData/image/中地数码.png',
+              //x、y轴重复次数
+              repeat: new Cesium.Cartesian2(1.0, 1.0)
+            }),
+            //离地高度
+            offsetHeight: 100
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(rectangleGraphic1)
+      }
+
+      //html材质
+      function addHtmlRectangle() {
+        //先将html可见
+        document.getElementById('htmlGraph').style.display = 'block'
+        //再利用html2canvas转换成图片
+        html2canvas(document.getElementById('htmlGraph'), {
+          //canvas宽度
+          width: 200,
+          //canvas高度
+          height: 200,
+          //canvas分辨率，越大越清晰
+          scale: 2
+        }).then(function (canvas) {
+          //在这里可以拿到base64编码的图片
+          let dataUrl = canvas.toDataURL('image/png', 1.0)
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+          let rectangleGraphic1 = new zondy.cesium.Graphic({
+            //类型
+            type: 'rectangle',
+            //几何数组
+            positions: [
+              Cesium.Cartesian3.fromDegrees(114.0275, 30.0126, 0),
+              Cesium.Cartesian3.fromDegrees(114.048, 29.9926, 0)
+            ],
+            //样式
+            style: {
+              //图片材质
+              // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Material.html
+              material: Cesium.Material.fromType(Cesium.Material.ImageType, {
+                //图片URL
+                image: dataUrl,
+                //x、y轴重复次数
+                repeat: new Cesium.Cartesian2(1.0, 1.0)
+              }),
+              //离地高度
+              offsetHeight: 100
+            }
+          })
+          //将标绘点添加入标绘图层
+          graphicsLayer.addGraphic(rectangleGraphic1)
+        })
+      }
+
+      //图片旋转矩形
+      function addImageRotateRectangle() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let rectangleGraphic2 = new zondy.cesium.Graphic({
+          //类型
+          type: 'rectangle',
+          //几何数组
+          positions: [
+            Cesium.Cartesian3.fromDegrees(114.0575, 30.0126, 0),
+            Cesium.Cartesian3.fromDegrees(114.078, 29.9926, 0)
+          ],
+          //样式
+          style: {
+            //图片材质
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Material.html
+            material: Cesium.Material.fromType(Cesium.Material.ImageType, {
+              //图片URL
+              image:
+                'http://webclient.smaryun.com:8200/NoneSpatialData/image/earth.jpg',
+              //x、y轴重复次数
+              repeat: new Cesium.Cartesian2(1.0, 1.0)
+            }),
+            //离地高度
+            offsetHeight: 100,
+            //顺时针旋转角度
+            stRotation: 0
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(rectangleGraphic2)
+        //使用定时器达到旋转圆的效果
+        let rectangleGraphic2Interval = setInterval(function () {
+          rectangleGraphic2.style.stRotation += Cesium.Math.toRadians(1)
+        }, 30)
+      }
+
+      //纯色矩形
+      function addColorRectangle() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let rectangleGraphic3 = new zondy.cesium.Graphic({
+          //类型
+          type: 'rectangle',
+          //几何点坐标
+          positions: [
+            new Cesium.Cartesian3(
+              -2245321.034546689,
+              5051780.365828584,
+              3170322.015045328
+            ),
+            new Cesium.Cartesian3(
+              -2247768.11108596,
+              5051496.081576666,
+              3169049.26223311
+            )
+          ],
+          //样式
+          style: {
+            //颜色
+            color: Cesium.Color.AQUA.withAlpha(0.4),
+            //离地高度
+            offsetHeight: 100
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(rectangleGraphic3)
+      }
+
+      //长方体
+      function addRectangleVolume() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let rectangleGraphic4 = new zondy.cesium.Graphic({
+          //类型
+          type: 'rectangle',
+          //几何点数组
+          positions: [
+            new Cesium.Cartesian3(
+              -2247982.3897535317,
+              5050612.25834287,
+              3170297.358293347
+            ),
+            new Cesium.Cartesian3(
+              -2250579.7817292,
+              5050256.866779926,
+              3169028.966805721
+            )
+          ],
+          //样式
+          style: {
+            //颜色
+            color: Cesium.Color.BLUEVIOLET,
+            //离地高度
+            offsetHeight: 100,
+            //拉伸高度
+            extrudedHeight: 300
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(rectangleGraphic4)
+      }
+
+      //移动纯色矩形
+      function addColorRectangleMove() {
+        let positions = [113.9641, 29.963, 0, 113.9841, 29.943, 0]
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let rectangleGraphic8 = new zondy.cesium.Graphic({
+          //类型
+          type: 'rectangle',
+          //几何点坐标
+          positions: [
+            Cesium.Cartesian3.fromDegrees(
+              positions[0],
+              positions[1],
+              positions[2]
+            ),
+            Cesium.Cartesian3.fromDegrees(
+              positions[3],
+              positions[4],
+              positions[5]
+            )
+          ],
+          //样式
+          style: {
+            //颜色
+            color: Cesium.Color.AQUA.withAlpha(0.4),
+            //离地高度
+            offsetHeight: 100
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(rectangleGraphic8)
+        let positionIndex = 0
+        //定时器改变坐标
+        let rectangleGraphic8Interval = setInterval(() => {
+          // 构建移动坐标
+          positionIndex++
+          let positionXL = Number(positions[0] + positionIndex * 0.0001)
+          let positionYL = Number(positions[1] + positionIndex * 0.000005)
+          let positionXR = Number(positions[3] + positionIndex * 0.0001)
+          let positionYR = Number(positions[4] + positionIndex * 0.000005)
+          let positionNow = [
+            Cesium.Cartesian3.fromDegrees(positionXL, positionYL, positions[2]),
+            Cesium.Cartesian3.fromDegrees(positionXR, positionYR, positions[5])
+          ]
+          rectangleGraphic8.positions = positionNow
+        }, 50)
+      }
+
+      //加载天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //视点跳转
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [114, 29.83, 13000],
+          duration: 2,
+          orientation: {
+            heading: Cesium.Math.toRadians(0), //方位角
+            pitch: Cesium.Math.toRadians(-40), //俯仰角
+            roll: 0 //翻滚角
+          }
+        })
+      }
+
+      //初始化UI
+      function initUI() {
+        layui.use('colorpicker', function () {
+          //离地高度
+          $('#rectangle-offsetHeight').bind(
+            'input propertychange',
+            function () {
+              rectangle.style.offsetHeight = clampNumberValue(
+                $('#rectangle-offsetHeight').val()
+              )
+            }
+          )
+
+          $('#rectangle-image').bind('input propertychange', function () {
+            rectangle.style.material.uniforms.image =
+              $('#rectangle-image').val()
+          })
+
+          $('#rectangle-extrudedHeight').bind(
+            'input propertychange',
+            function () {
+              rectangle.style.extrudedHeight = clampNumberValue(
+                $('#rectangle-extrudedHeight').val(),
+                [0]
+              )
+            }
+          )
+          $('#rectangle-repeatX').bind('input propertychange', function () {
+            rectangle.style.material.uniforms.repeat.x = clampNumberValue(
+              $('#rectangle-repeatX').val(),
+              [0]
+            )
+          })
+          $('#rectangle-repeatY').bind('input propertychange', function () {
+            rectangle.style.material.uniforms.repeat.y = clampNumberValue(
+              $('#rectangle-repeatY').val(),
+              [0]
+            )
+          })
+        })
+      }
+
+      function startDrawing() {
+        $('#editPanel').hide()
+        graphicsLayer.startDrawing({
+          type: 'rectangle',
+          style: {
+            color: Cesium.Color.fromCssColorString(
+              $('#rectangle-color-input').val()
+            ),
+            offsetHeight: clampNumberValue($('#rectangle-offsetHeight').val())
+          }
+        })
+      }
+
+      //删除标绘
+      function deleteLabel() {
+        rectangle.remove()
+        $('#editPanel').hide()
+      }
+      // 获取合法的number数据输入
+      function clampNumberValue(inputValue, limits) {
+        let max, min
+        if (Array.isArray(limits) && limits.length > 0) {
+          if (limits.length === 1) {
+            min = limits[0]
+          } else {
+            max = limits[1]
+          }
+        }
+        let value = Number(inputValue)
+        if (Number.isNaN(value)) {
+          if (typeof min === 'number') {
+            return min
+          } else {
+            return 0
+          }
+        }
+        if (typeof min === 'number' && value <= min) {
+          return min
+        }
+        if (typeof max === 'number' && value >= max) {
+          return max
+        }
+        return value
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div
+      class="layui-panel layui-panel-right"
+      style="text-align: center; width: 140px; padding: 10px"
+    >
+      <button
+        onclick="startDrawing()"
+        style="margin: 0 auto !important"
+        type="button"
+        class="layui-btn layui-btn-normal graphic-button-margin"
+      >
+        添加矩形
+      </button>
+    </div>
+    <div
+      class="layui-panel layui-panel-right"
+      id="editPanel"
+      style="display: none; top: 70px"
+    >
+      <form class="layui-form" action="" lay-filter="example">
+        <div class="sample-main-panel">
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">填充颜色</label>
+            <div
+              class="layui-input-inline"
+              style="width: 145px; margin-left: 10px"
+            >
+              <input
+                disabled
+                type="text"
+                value="#00ffff"
+                placeholder="填充颜色"
+                class="layui-input"
+                id="rectangle-color-input"
+              />
+            </div>
+            <div class="layui-inline">
+              <div id="rectangle-color"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">离地高度</label>
+            <div class="layui-input-block" style="width: 183px">
+              <input
+                id="rectangle-offsetHeight"
+                value="40"
+                type="text"
+                name="title"
+                lay-verify="title"
+                autocomplete="off"
+                placeholder="40"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">拉伸高度</label>
+            <div class="layui-input-block">
+              <input
+                id="rectangle-extrudedHeight"
+                type="text"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block" style="width: 183px">
+              <input
+                id="rectangle-image"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">X方向重复</label>
+            <div class="layui-input-block">
+              <input
+                id="rectangle-repeatX"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">Y方向重复</label>
+            <div class="layui-input-block">
+              <input
+                id="rectangle-repeatY"
+                type="text"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="sample-button-panel">
+          <button
+            onclick="$('#editPanel').hide()"
+            style="float: right; width: auto; margin-right: 0 !important"
+            type="button"
+            class="layui-btn layui-btn-normal graphic-button-margin"
+          >
+            关闭面板
+          </button>
+          <span
+            onclick="deleteLabel()"
+            style="
+              cursor: pointer;
+              float: right;
+              line-height: 32px;
+              margin-right: 15px;
+            "
+            >删除标绘</span
+          >
+        </div>
+      </form>
+    </div>
+    <div id="htmlGraph">我是html元素</div>
+  </body>
+  <style>
+    #htmlGraph {
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(
+        -45deg,
+        #0acf00 25%,
+        #78c9db 0,
+        #78c9db 50%,
+        #0acf00 0,
+        #0acf00 75%,
+        #78c9db 0
+      );
+      background-size: 30px 30px;
+      display: none;
+      font-size: 28px;
+      font-weight: bold;
+      line-height: 200px;
+      color: red;
+      text-align: center;
+    }
+  </style>
+</html>

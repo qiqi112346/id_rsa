@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>WMS图层-原生开发</title>
+    <!--该库集成了leaflet与MapGIS IGServer for JavaScript脚本库-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/leaflet/leaflet.css"/>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/leaflet/leaflet.js"></script>
+    <!--plugin库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-leaflet-plugin.min.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <!--css-->
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      let map
+      let layer4326 = 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/WMSServer'
+      let layer3857 = 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省3857/WMSServer'
+      let layerCustom = 'http://webclient.smaryun.com:8089/igs/rest/services/Map/武汉市4547/WMSServer'
+      const { WMSLayer } = zondy.layer
+      const { initializeCRS, initializeOptions } = zondy.leaflet.util
+      const { WebMapServiceLayer } = zondy.leaflet.layer
+      // 初始化示例
+      function init() {
+        // 初始化UI功能
+        initUI()
+        // 添加图层
+        addLayer(layer4326)
+      }
+
+      // 构造Leaflet地图视图的初始化参数
+      function initMap() {
+        // 构造Leaflet地图视图的初始化参数
+        const mapViewOptions = {
+          // 地图视图参考系
+          crs: L.CRS.EPSG4326,
+          // 初始化中心点
+          center: [31.147781205532336,112.21905099757561],
+          // 初始化级数
+          zoom: 7
+        }
+        // 构造Leaflet地图视图对象
+        map = L.map('mapgis-viewer', mapViewOptions)
+      }
+
+      // 添加图层
+      function addLayer(url, center) {
+        center = center || [31.147781205532336,112.21905099757561]
+        // 构造一个IGS瓦片图层对象
+        const layer = new WMSLayer({
+          // 服务基地址
+          url: url
+        })
+        // 加载元数据
+        layer.load().then(function () {
+          // 构造Leaflet地图视图的初始化参数
+          const crs = initializeCRS(layer)
+          const mapViewOptions = {
+            // 地图视图参考系
+            crs: L.CRS.EPSG4326,
+            // 初始化中心点
+            center: center,
+            // 初始化级数
+            zoom: 2
+          }
+          // 构造Leaflet地图视图对象
+          map = L.map('mapgis-viewer', mapViewOptions)
+          // 构造Leaflet瓦片图层的初始化参数
+          const layerOptions = initializeOptions(layer)
+          delete layerOptions.bounds
+          delete layerOptions.clippingArea
+          delete layerOptions.tokenKey
+          delete layerOptions.tokenValue
+          delete layerOptions.opacity
+          delete layerOptions.visible
+          // delete layerOptions.format
+          console.log("layerOptions:", layerOptions)
+          // 添加Leaflet瓦片图层到地图视图中
+          new WebMapServiceLayer(layer.url,
+            // layerOptions
+            {
+            layers: 'Map_湖北省4326:t0,Map_湖北省4326:t1,Map_湖北省4326:t2,Map_湖北省4326:t3,Map_湖北省4326:t4,Map_湖北省4326:t5,Map_湖北省4326:t6,Map_湖北省4326:t7,Map_湖北省4326:t8,Map_湖北省4326:t9,Map_湖北省4326:t10,Map_湖北省4326:t11,Map_湖北省4326:t12,Map_湖北省4326:t13,Map_湖北省4326:t14,Map_湖北省4326:t15,Map_湖北省4326:t16,Map_湖北省4326:t17,Map_湖北省4326:t18,Map_湖北省4326:t19,Map_湖北省4326:t20,Map_湖北省4326:t21,Map_湖北省4326:t22,Map_湖北省4326:t23,Map_湖北省4326:t24,Map_湖北省4326:t25,Map_湖北省4326:t26,Map_湖北省4326:t27,Map_湖北省4326:t28,Map_湖北省4326:t29,Map_湖北省4326:t30,Map_湖北省4326:t31,Map_湖北省4326:t32,Map_湖北省4326:t33,Map_湖北省4326:t34,Map_湖北省4326:t35,Map_湖北省4326:t36,Map_湖北省4326:t37,Map_湖北省4326:t38,Map_湖北省4326:t39,Map_湖北省4326:t40,Map_湖北省4326:t41,Map_湖北省4326:t42,Map_湖北省4326:t43,Map_湖北省4326:t44,Map_湖北省4326:t45,Map_湖北省4326:t46,Map_湖北省4326:t47,Map_湖北省4326:t48,Map_湖北省4326:t49,Map_湖北省4326:t50,Map_湖北省4326:t51,Map_湖北省4326:t52,Map_湖北省4326:t53,Map_湖北省4326:t54,Map_湖北省4326:t55,Map_湖北省4326:t56,Map_湖北省4326:t57,Map_湖北省4326:t58,Map_湖北省4326:t59,Map_湖北省4326:t60,Map_湖北省4326:t61,Map_湖北省4326:t62,Map_湖北省4326:t63,Map_湖北省4326:t64,Map_湖北省4326:t65,Map_湖北省4326:t66,Map_湖北省4326:t67,Map_湖北省4326:t68,Map_湖北省4326:t69,Map_湖北省4326:t70,Map_湖北省4326:t71,Map_湖北省4326:t72,Map_湖北省4326:t73,Map_湖北省4326:t74',
+            format: 'image/png',
+              visible: true
+          }
+          ).addTo(map)
+        })
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          //切换加载类型
+          layui.form.on('select(chooseLayer)', function (data) {
+            // 切换图层时，销毁视图
+            if (map) {
+              // 销毁视图
+              map.remove()
+              // 添加对应图层
+              switch (data.value) {
+                case '4326':
+                default:
+                  addLayer(layer4326)
+                  break
+                case '3857':
+                  addLayer(layer3857)
+                  break
+                case 'custom':
+                  addLayer(layerCustom, [30.6,114.4])
+                  break
+              }
+            }
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <div
+      id="mapgis-viewer"
+      style="position: absolute; display: flex; width: 100%; height: 100%"
+    ></div>
+    <!--  示例UI  -->
+    <div class="layui-panel layui-panel-right" style="width: 300px">
+        <form class="layui-form" action="">
+            <div class="layui-form-item" style="margin-bottom: 10px">
+                <label class="layui-form-label">图层切换</label>
+                <div class="layui-input-block layui-input-block-select">
+                    <select
+                            id="chooseLayer"
+                            name="chooseLayer"
+                            lay-filter="chooseLayer"
+                    >
+                        <option value="4326">4326坐标系图层</option>
+                        <option value="3857">3857坐标系图层</option>
+                        <option value="custom">自定义坐标系图层</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+  </body>
+</html>

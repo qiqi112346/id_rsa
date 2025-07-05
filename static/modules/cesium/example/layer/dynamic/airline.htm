@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>飞机航线</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+      let startCoordinates = [114.216323870187253, 30.5797924288789602]
+
+      function addInternationalFlights() {
+        //获取航线的geojson数据
+        let url =
+          'http://webclient.smaryun.com:8200/Vector/json/internationalAirLine.json'
+        httpGetPromise(url).then((features) => {
+          let startArr = startCoordinates
+          let startPointInfo = {
+            name: '武汉',
+            coordinates: startArr
+          }
+          let entity = new Cesium.Entity({
+            description: 'start-point',
+            name: '武汉',
+            position: Cesium.Cartesian3.fromDegrees(startArr[0], startArr[1]),
+            point: new Cesium.PointGraphics({
+              pixelSize: 15,
+              color: new Cesium.Color(255 / 255, 249 / 255, 0, 1)
+            }),
+            label: new Cesium.LabelGraphics({
+              text: '武汉',
+              font: '13px Source Han Sans CN', //字体样式
+              fillColor: Cesium.Color.BLACK, //字体颜色
+              backgroundColor: Cesium.Color.AQUA, //背景颜色
+              showBackground: true, //是否显示背景颜色
+              style: Cesium.LabelStyle.FILL, //label样式
+              outlineWidth: 2,
+              verticalOrigin: Cesium.VerticalOrigin.CENTER, //垂直位置
+              horizontalOrigin: Cesium.HorizontalOrigin.LEFT, //水平位置
+              pixelOffset: new Cesium.Cartesian2(10, 0)
+            })
+          })
+          viewer.entities.add(entity)
+          //设置动画时间
+          let startTime = Cesium.JulianDate.now()
+          let stopTime = Cesium.JulianDate.addSeconds(
+            startTime,
+            30,
+            new Cesium.JulianDate()
+          )
+          viewer.clock.currentTime = startTime.clone()
+          viewer.clock.startTime = startTime.clone()
+          viewer.clock.stopTime = stopTime.clone()
+          viewer.clock.multiplier = 1
+          viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP
+
+          for (let feature of features.features) {
+            let endPointInfo = {
+              name: feature.properties.name,
+              coordinates: feature.geometry.coordinates
+            }
+            animationLine(startPointInfo, endPointInfo, startTime, stopTime)
+          }
+        })
+      }
+
+      function animationLine(
+        startPointInfo,
+        endPointInfo,
+        startTime,
+        stopTime
+      ) {
+        let startPt = Cesium.Cartesian3.fromDegrees(
+          startPointInfo.coordinates[0],
+          startPointInfo.coordinates[1],
+          0
+        )
+        let endPt = Cesium.Cartesian3.fromDegrees(
+          endPointInfo.coordinates[0],
+          endPointInfo.coordinates[1],
+          0
+        )
+        let destinationName = endPointInfo.name
+        let curLinePointsArr = generateCurve(startPt, endPt)
+        // 终点点位信息
+        let endPointEntity = new Cesium.Entity({
+          description: 'end-point',
+          name: destinationName,
+          position: endPt, //Cesium.Cartesian3.fromDegrees(feature.geometry.coordinates[0], feature.geometry.coordinates[1]),
+          point: new Cesium.PointGraphics({
+            color: new Cesium.Color(251 / 255, 7 / 255, 0, 0.7),
+            pixelSize: 10
+          }),
+          label: new Cesium.LabelGraphics({
+            text: destinationName,
+            font: '13px Source Han Sans CN', //字体样式
+            fillColor: Cesium.Color.RED, //字体颜色
+            showBackground: false, //是否显示背景颜色
+            style: Cesium.LabelStyle.FILL, //label样式
+            outlineWidth: 2,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER, //垂直位置
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT, //水平位置
+            pixelOffset: new Cesium.Cartesian2(10, 0)
+          })
+        })
+        viewer.entities.add(endPointEntity)
+        //添加飞机模型
+        //样本点
+        let property = new Cesium.SampledPositionProperty()
+        let start = startTime
+        let stop = stopTime
+        let speed = 30 / curLinePointsArr.length
+        for (let i = 0; i < curLinePointsArr.length; i++) {
+          let time = Cesium.JulianDate.addSeconds(
+            start,
+            i * speed,
+            new Cesium.JulianDate()
+          )
+          let position = curLinePointsArr[i]
+          // 添加位置，和时间对应
+          property.addSample(time, position)
+        }
+        viewer.entities.add(
+          new Cesium.Entity({
+            availability: new Cesium.TimeIntervalCollection([
+              new Cesium.TimeInterval({
+                start: start,
+                stop: stop
+              })
+            ]),
+            position: property,
+            orientation: new Cesium.VelocityOrientationProperty(property),
+            model: {
+              uri: 'http://webclient.smaryun.com:8200/3DData/Model/glb/feiji.glb',
+              minimumPixelSize: 48
+            },
+            path: {
+              resolution: 1,
+              material: Cesium.Color.AQUA,
+              width: 1
+            }
+          })
+        )
+        // 背景线
+        // let startName = startPointInfo.name;
+        // let lineEntity = new Cesium.Entity({
+        //     description: 'background-line',
+        //     name: startName + ' -> ' + destinationName,
+        //     polyline: {
+        //         width: 1,
+        //         positions: curLinePointsArr,
+        //         material: Cesium.Color.AQUA
+        //     }
+        // });
+        // viewer.entities.add(lineEntity);
+        // 尾迹线
+        // let instances = [];
+        // instances.push(new Cesium.GeometryInstance({
+        //     geometry: new Cesium.PolylineGeometry({
+        //         positions: curLinePointsArr,
+        //         width: 2
+        //     })
+        // }));
+        // let primitive = new Cesium.Primitive({
+        //     geometryInstances: instances,
+        //     appearance: new Cesium.PolylineMaterialAppearance({
+        //         material: Cesium.Material.fromType(Cesium.Material.PolylineTrailLinkType, {
+        //             image: 'http://webclient.smaryun.com:8200/NoneSpatialData/image/line.png',
+        //             color:  Cesium.Color.fromCssColorString("rgb(241,54,53)"),
+        //             repeat: new Cesium.Cartesian2(1.0, 1.0),
+        //             direction: 1
+        //         })
+        //     }),
+        //     show: true
+        // });
+        // viewer.scene.primitives.add(primitive);
+      }
+
+      // 生成曲线来表达航线
+      function generateCurve(startPoint, endPoint) {
+        let addPointCartesian = new Cesium.Cartesian3()
+        Cesium.Cartesian3.add(startPoint, endPoint, addPointCartesian)
+        let midPointCartesian = new Cesium.Cartesian3()
+        Cesium.Cartesian3.divideByScalar(
+          addPointCartesian,
+          2,
+          midPointCartesian
+        )
+        let midPointCartographic =
+          Cesium.Cartographic.fromCartesian(midPointCartesian)
+        midPointCartographic.height =
+          Cesium.Cartesian3.distance(startPoint, endPoint) / 5
+        let midPoint = new Cesium.Cartesian3()
+        Cesium.Ellipsoid.WGS84.cartographicToCartesian(
+          midPointCartographic,
+          midPoint
+        )
+        let spline = new Cesium.CatmullRomSpline({
+          times: [0.0, 0.5, 1.0],
+          points: [startPoint, midPoint, endPoint]
+        })
+        let curvePointsArr = []
+        for (let i = 0, len = 600; i < len; i++) {
+          curvePointsArr.push(spline.evaluate(i / len))
+        }
+        return curvePointsArr
+      }
+
+      function flyTo() {
+        let x = startCoordinates[0]
+        let y = startCoordinates[1]
+        let z = 7600000.0
+        let d = 1
+        sceneView.flyTo({
+          center: [x, y, z],
+          duration: d,
+          orientation: {
+            pitch: Cesium.Math.toRadians(-65)
+          },
+          complete: function () {
+            addInternationalFlights()
+          }
+        })
+      }
+
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map,
+          //Cesium场景视图的初始化参数
+          extensionOptions: {
+            shouldAnimate: true
+          }
+        })
+        viewer = sceneView.getInnerView()
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加天地图
+        addTDT()
+        //飞到对应的视角
+        flyTo()
+      }
+
+      // 发送请求获取数据
+      function httpGetPromise(url) {
+        return new Promise(function (resolve, reject) {
+          const handler = function () {
+            if (this.readyState !== 4) {
+              return
+            }
+            if (this.status === 200) {
+              resolve(this.response)
+            } else {
+              reject(new Error(this.statusText))
+            }
+          }
+          const client = new XMLHttpRequest()
+          client.open('GET', url)
+          client.onreadystatechange = handler
+          client.responseType = 'json'
+          client.setRequestHeader('Accept', 'application/json')
+          client.send()
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

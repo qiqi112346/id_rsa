@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>工程化管理工具</title>
+    <!-- 引入地图引擎库 -->
+    <script
+      include="leaflet"
+      src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"
+    ></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!-- 引入通过toJson方式拿到场景化管理的数据 -->
+    <script src="http://webclient.smaryun.com/static/libs/mange-sceneview-config.js"></script>
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/analyse.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义视图的主要类
+      let map, mapView, view
+      const { Map } = zondy
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+      }
+      // 初始地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        if (window.viewType === 'leaflet') {
+          view = scenarioManage(config2D)
+        } else if (window.viewType === 'cesium') {
+          view = scenarioManage(config3D)
+        } else if (window.viewType === 'mapboxgl') {
+          view = scenarioManage(config2D)
+        } else {
+          console.error('地图引擎包引入错误')
+        }
+        window.view = view
+      }
+      //toJson()方法
+      function viewToJson() {
+        var res = view.toJSON()
+        console.log('res: ', res)
+      }
+    </script>
+    <style>
+      .sample-button-panel {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: #e1e1e1;
+        background-color: rgb(44, 44, 44);
+        border: none;
+        padding: 10px;
+        width: auto;
+        z-index: 999;
+      }
+    </style>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <div class="sample-button-panel">
+      <button
+        id="toJson"
+        type="button"
+        class="layui-btn"
+        onclick="viewToJson()"
+      >
+        将json打印到控制台
+      </button>
+    </div>
+  </body>
+</html>

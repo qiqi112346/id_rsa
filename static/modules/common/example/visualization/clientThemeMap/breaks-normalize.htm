@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>分段专题图-归一化</title>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      // 定义三维视图的主要类
+      let map, view
+      // 区要素图层
+      let layerOfRegion
+      // 获取构造函数
+      const { renderer, Map, Color, layer } = zondy
+      const { ClassBreakRenderer, RandomRenderer } = renderer
+      const {
+        SimpleLineSymbol,
+        SimpleFillSymbol,
+        PolygonSymbol3D,
+        ExtrudeSymbol3DLayer,
+        ColorMaterial
+      } = zondy.symbol
+      const { IGSFeatureLayer} = layer
+
+      // 根据引擎类型获取不同符号，Cesium引擎获取三维符号，其他二维引擎，获取二维符号
+      function getSymbol(color, raiseHeight) {
+        if (window.viewType === 'cesium') {
+          // 三维符号
+          return new PolygonSymbol3D({
+            symbolLayers: [
+              // 创建一个三维拉伸区符号突出
+              new ExtrudeSymbol3DLayer({
+                // 覆盖物颜色
+                material: new ColorMaterial({
+                  color: color
+                }),
+                // 拉伸高度
+                size: raiseHeight
+              })
+            ]
+          })
+        } else {
+          // 二维符号
+          return new SimpleFillSymbol({
+            // 填充符号颜色
+            color: color,
+            // 外边线样式
+            outline: new SimpleLineSymbol({
+              // 线符号颜色
+              color: new Color(0, 0, 0, 1),
+              // 线宽
+              width: 1
+            })
+          })
+        }
+      }
+
+      // IGSFeature区要素
+      function addIGSFeatureLayerOfRegion() {
+        // 当是三维引擎时，根据计算结果设置不同抬高高度
+        const raiseHeight = 10000
+        // 添加区要素图层
+        layerOfRegion = new IGSFeatureLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer',
+          // 子图层ID
+          sublayerId: '0',
+          // 设置渲染器
+          renderer: new ClassBreakRenderer({
+            // 字段名
+            field: "GDP2016",
+            // 归一化的类型。目前支持'field'，'log'，'percent-of-total'三种类型。field可以参考normalizationField的说明。normalizationTotal可以参考normalizationTotal的说明。log归一会对数据值进行log10处理。
+            normalizationType: 'field',
+            // 归一化的字段，当normalizationType设置为'field'时生效，将数据值除以归一化的字段所表示的属性值作为分段的依据。例如，要素上有面积和人口两个字段，设置normalizationField为'面积'，field设置为'人口'，即可计算出人口密度数据。
+            normalizationField: 'GDP2015',
+            // 分段专题图字段样式
+            classBreakInfos: [
+              {
+                // 分段最大值
+                maxValue: 0.9,
+                // 分段最小值
+                minValue: 0.8,
+                // 匹配到该值后的样式
+                symbol: getSymbol(new Color(249, 210, 35, 1), raiseHeight)
+              },
+              {
+                // 分段最大值
+                maxValue: 1.0,
+                // 分段最小值
+                minValue: 0.9,
+                // 匹配到该值后的样式
+                symbol: getSymbol(new Color(248, 154, 22, 1), raiseHeight * 2)
+              },
+              {
+                // 分段最大值
+                maxValue: 1.1,
+                // 分段最小值
+                minValue: 1.0,
+                // 匹配到该值后的样式
+                symbol: getSymbol(new Color(248, 101, 10, 1), raiseHeight * 3)
+              },
+              {
+                // 分段最大值
+                maxValue: 1.2,
+                // 分段最小值
+                minValue: 1.1,
+                // 匹配到该值后的样式
+                symbol: getSymbol(new Color(248, 72, 4, 1), raiseHeight * 4)
+              },
+              {
+                // 分段最大值
+                maxValue: 10.0,
+                // 分段最小值
+                minValue: 1.2,
+                // 匹配到该值后的样式
+                symbol: getSymbol(new Color(255, 56, 1, 1), raiseHeight * 5)
+              }
+            ],
+          })
+        })
+        //加载图层
+        map.add(layerOfRegion)
+      }
+
+      //初始化视图
+      function initViewer() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //添加专题图
+        addIGSFeatureLayerOfRegion()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+  </body>
+</html>

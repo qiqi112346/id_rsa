@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>ArcGIS地图服务-混合接口</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      // 全局变量
+      let viewer, arcgisMapImageLayer, cesiumLayer, provider
+
+      // MapGIS函数类
+      const { ArcGISMapImageLayer } = zondy.layer
+      const { ArcGISMapServerImageryProvider } = zondy.cesium
+      const { initializeOptions } = zondy.cesium.util
+
+      // 定义IGS地图图片图层服务的基地址
+      const url =
+        'https://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer'
+
+      // 创建地图图片图层对象
+      // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/ArcGISMapImageLayer.html
+      arcgisMapImageLayer = new ArcGISMapImageLayer({
+        // 服务基地址
+        url: url
+      })
+
+      // 获取地图图片图层服务的元信息
+      function loadLayerInfo() {
+        arcgisMapImageLayer.load().then((layer) => {
+          addArcGISMapImageLayer(layer)
+        })
+      }
+
+      // 通过initializeOptions方法构造provider
+      async function addArcGISMapImageLayer(layer) {
+        // 获取provider的初始化参数
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/initializeOptions.html
+        const options = initializeOptions(layer, viewer)
+        // 构造provider对象
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/ArcGISMapServerImageryProvider.html
+        provider = await ArcGISMapServerImageryProvider.fromUrl(options.url, options)
+        // 添加图层到Cesium视图中
+        cesiumLayer = viewer.imageryLayers.addImageryProvider(provider)
+      }
+
+      // 飞到指定视角
+      function flyTo() {
+        // 从Common的图层上获取范围
+        const extent = arcgisMapImageLayer.extent
+        // 跳转到指定范围
+        viewer.camera.flyTo({
+          destination: Cesium.Rectangle.fromDegrees(
+            extent.xmin,
+            extent.ymin,
+            extent.xmax,
+            extent.ymax
+          ),
+          duration: 2
+        })
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化地图视图对象
+        viewer = new Cesium.Viewer('mapgis-3d-viewer')
+      }
+
+      // 初始化函数
+      function init() {
+        // 初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // 添加IGS地图图片图层
+        loadLayerInfo()
+        // 图层加载成功后的回调，视角定位到图层区域
+        viewer.imageryLayers.layerAdded.addEventListener((event) => {
+          flyTo()
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

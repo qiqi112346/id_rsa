@@ -1,0 +1,180 @@
+
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+                    <script src="scripts/prettify/prettify.js"></script>
+                    <script src="scripts/prettify/lang-css.js"></script>
+                    <title> MapGIS Client for JavaScript API </title>
+                <script type="text/javascript">
+
+                </script>
+                    <!--[if lt IE 9]>
+                    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+                    <![endif]-->
+                        <script src="scripts/jquery.min.js"></script>
+                    <script src="scripts/adminlte/app.min.js"></script>
+                    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/adminlte/AdminLTE.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/adminlte/skin-blue.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+                    <link type="text/css" rel="stylesheet" href="styles/common.css">
+                    <link type="text/css" rel="stylesheet" href="styles/header.css">
+                    <link type="text/css" rel="stylesheet" href="styles/examples.css">
+                    <link type="text/css" rel="stylesheet" href="styles/style.customize.css">
+                    <link type="text/css" rel="stylesheet" href="styles/font-awesome.css">
+                    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+                    <script src="scripts/bootstrap.min.js"></script>
+                </head>
+                <body class='sidebar-mini'>
+
+                <div id="wrap" class="clearfix">
+                    <header class="header-wrapper main-header mapgis-header">
+                        <nav class="navbar navbar-static-top lite">
+                            <div class="nav-header">
+                                <div class="navbar-header">
+                                    <div class="navbar-title">
+                                        <a class="navbar-brand">
+                                            <span class="mapgis-webclient-text"> MapGIS Client for JavaScript API </span>
+                                        </a>
+                                        <div id="suffix-title">for MapboxGL</div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="navbar-toggle collapsed"
+                                        data-toggle="collapse"
+                                        data-target="#navbar-collapse"
+                                        aria-expanded="false"
+                                    >
+                                        <i class="fa fa-bars"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </nav>
+                    </header>
+                    <div class="navigationDiv">
+                    </div>
+                    <div class="main content-wrapper examples-container">
+                        <h1 class="page-title" data-filename="light.md">light.md</h1>
+                            <section>
+                        <article class="readme">
+                        <h1 id="light" tabindex="-1">Light</h1>
+<p>The global light source.</p>
+<pre><code class="language-json">light: {&quot;anchor&quot;: &quot;viewport&quot;, &quot;color&quot;: &quot;white&quot;, &quot;intensity&quot;: 0.4}
+</code></pre>
+<h2 id="anchor" tabindex="-1">anchor</h2>
+<p><em>Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>. Defaults to <code>viewport</code>.</em></p>
+<p>Whether extruded geometries are lit relative to the map or viewport.</p>
+<ul>
+<li><code>map</code>: The position of the light source is aligned to the rotation of the map.</li>
+<li><code>viewport</code>: The position of the light source is aligned to the rotation of the viewport.</li>
+</ul>
+<pre><code class="language-json">anchor: &quot;map&quot;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="position" tabindex="-1">position</h2>
+<p><em>Optional <a href="types.html#array">array</a>. Defaults to <code>1.15,210,30</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Position of the light source relative to lit (extruded) geometries, in [r radial coordinate, a azimuthal angle, p polar angle] where r indicates the distance from the center of the base of an object to its light, a indicates the position of the light relative to 0° (0° when <code>light.anchor</code> is set to <code>viewport</code> corresponds to the top of the viewport, or 0° when <code>light.anchor</code> is set to <code>map</code> corresponds to due north, and degrees proceed clockwise), and p indicates the height of the light (from 0°, directly above, to 180°, directly below).</p>
+<pre><code class="language-json">position: [1.5, 90, 80]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="color" tabindex="-1">color</h2>
+<p><em>Optional <a href="types.html#color">color</a>. Defaults to <code>#ffffff</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Color tint for lighting extruded geometries.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="intensity" tabindex="-1">intensity</h2>
+<p><em>Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>0.5</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Intensity of lighting (on a scale from 0 to 1). Higher numbers will present as more extreme contrast.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+
+                        </article>
+                    </section>
+    
+                        <footer>
+                            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> on <span id="generated-date"></span>
+                        <script>
+                        // 获取当前日期并插入到页面中
+                        setInterval(function(){
+                            document.getElementById('generated-date').textContent = new Date().toLocaleString();
+                        }, 1000);
+
+                        </script>
+                        </footer>
+                    </div>
+                </div>
+
+                <script>prettyPrint();</script>
+                <script src="scripts/linenumber.js"></script>
+                <script src="scripts/main.js"></script>
+                </body>
+                </html>
+            

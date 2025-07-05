@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>3DTiles1.1</title>
+  <!--加载Cesium库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/cesium/Cesium.js"></script>
+  <!--plugin脚本库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+  <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+  <!--cesium样式-->
+  <link
+    rel="stylesheet"
+    href="http://webclient.smaryun.com/static/libs/cdn/cesium/Widgets/widgets.css"
+  />
+  <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+  <link
+    rel="stylesheet"
+    href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+  />
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+  <script>
+    'use strict'
+    //定义三维视图的主要类
+    let map, sceneView, viewer, tileset, layer
+    const { Map } = zondy
+    const { SceneView } = zondy.cesium
+    const { Cesium3DTilesCacheLayer } = zondy.layer
+    let modelUrls = [
+      "http://webclient.smaryun.com:8200/3DData/ModelCache/3DTileset/1.0/dayantaresult/tileset.json",
+      "http://webclient.smaryun.com:8200/3DData/ModelCache/3DTileset/1.1/dayanta/tileset.json",
+    ]
+    let selectedUrl = modelUrls[0]
+
+    //地图初始化函数
+    function init() {
+      //初始化球体
+      initViewer()
+      initUI()
+      //三维试图类构造完毕，添加一个模型
+      addLayer()
+    }
+
+    //地图初始化函数
+    function initViewer() {
+      //初始化图层管理容器
+      map = new Map()
+      //初始化地图视图对象
+      sceneView = new SceneView({
+        //视图id
+        viewId: 'mapgis-viewer',
+        //图层管理容器
+        map: map
+      })
+      viewer = sceneView.getInnerView()
+    }
+
+    // 添加M3D缓存图层
+    function addLayer() {
+      layer = new Cesium3DTilesCacheLayer({
+        // 服务基地址
+        url: 'http://webclient.smaryun.com:8200/3DData/ModelCache/3DTileset/1.0/dayantaresult/tileset.json',
+        // 初始化参数
+        extensionOptions: {
+          // 开启自动跳转
+          autoReset: true
+        }
+      })
+      map.add(layer)
+    }
+
+    // 删除图层
+    function deleteLayer() {
+      map.remove(layer)
+    }
+
+    // 初始化示例UI操作
+    function initUI() {
+      layui
+      .config({
+        //  配置 Layui 第三方扩展模块存放的基础目录
+        base: 'http://webclient.smaryun.com/static/libs/cdn/layui/modules/'
+      })
+      .extend({
+        // 扩展
+        decimalSlider: 'decimalSlider/index'
+      })
+      layui.use('decimalSlider', (decimalSlider) => {
+        layui.form.on('select(modelType)', function (data) {
+          // 模型类型
+          selectedUrl = modelUrls[Number(data.value)]
+          addLayer()
+        })
+        //msaa
+        decimalSlider.render({
+          elem: '#msaa',
+          decimalPlaces: 1,
+          value: 0,
+          min: 0,
+          max: 8,
+          step: 1,
+          input: true,
+          theme: 'rgb(102, 147, 251)',
+          change: function (value) {
+            viewer.scene.msaaSamples = Number(value)
+          }
+        })
+      })
+    }
+  </script>
+</head>
+
+<body onload="init()">
+  <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+  <!--  示例UI  -->
+  <div class="layui-panel layui-panel-right" style="width: 320px;z-index: 99999">
+    <form class="layui-form" action="">
+      <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 100px">模型类型</label>
+        <div class="layui-input-block layui-input-block-select">
+          <select id="modelType" name="modelType" lay-filter="modelType">
+            <option value="0">Cesium3DTiles 1.0</option>
+            <option value="1" selected>Cesium3DTiles 1.1</option>
+          </select>
+        </div>
+      </div>
+      <div class="layui-form-item layui-form-item-brightness">
+        <label class="layui-form-label">多重采样抗锯齿</label>
+        <div class="layui-input-block decimal-slider">
+          <div id="msaa"></div>
+        </div>
+      </div>
+    </form>
+  </div>
+</body>
+
+</html>

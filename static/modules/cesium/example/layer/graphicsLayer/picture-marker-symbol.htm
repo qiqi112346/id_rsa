@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>图片Marker符号</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要变量
+      let map,
+        sceneView,
+        graphicsLayer,
+        wmtsLayer,
+        opacity = 0.8,
+        featurePictureMarkerPoint,
+        featurePictureMarkerMultiPoint
+      // 获取构造函数
+      const { Map, layer,  Feature, Color } =
+        zondy
+      const { SceneView } = zondy.cesium
+      const { WMTSLayer, GraphicsLayer } = layer
+      const { GeometryType } = zondy.enum
+      const { PictureMarkerSymbol } = zondy.symbol
+      const Geometry = zondy.geometry.Geometry
+      // 初始化地图
+      function init() {
+        // 初始化视图
+        initView()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // 添加WMTS图层底图
+        addWMTSLayer()
+        // 添加基础标绘图层
+        addGraphicsLayer()
+        // 设置UI透明度
+        document.getElementById('opacity').value = opacity
+      }
+
+      // 初始化视图
+      function initView() {
+        map = new Map()
+        sceneView = new SceneView({
+          // 视图id
+          viewId: 'mapgis-3d-viewer',
+          // 图层管理容器
+          map: map
+        })
+      }
+
+      // 添加WMTS图层
+      function addWMTSLayer() {
+        wmtsLayer = new WMTSLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/WMTSServer'
+        })
+        map.add(wmtsLayer)
+
+        // 图层加载完毕
+        wmtsLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          sceneView.flyTo({
+            center: [112.24717478060658, 31.15289200067722, 1000000],
+            zoom: 6
+          })
+        })
+      }
+
+      // 添加一个图片Marker符号的点
+      function PictureMarkerPoint() {
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/Geometry.html
+        const point = Geometry.fromJSON({
+          type: GeometryType.point,
+          coordinates: [114, 30, 600]
+        })
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/Feature.html
+        featurePictureMarkerPoint = new Feature({
+          id: 'test',
+          geometry: point,
+          // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/PictureMarkerSymbol.html
+          symbol: new PictureMarkerSymbol({
+            url: 'http://webclient.smaryun.com:8200/NoneSpatialData/image/icon.png',
+            // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/Color.html
+            color: new Color(255, 0, 0),
+            width: 60,
+            height: 60
+          })
+        })
+
+        graphicsLayer.add(featurePictureMarkerPoint)
+      }
+
+      // 点移动
+      function PictureMarkerPointMove() {
+        featurePictureMarkerPoint.geometry.coordinates = [113, 30, 600]
+      }
+
+      // 删除点
+      function PictureMarkerPointRemove() {
+        graphicsLayer.remove(featurePictureMarkerPoint)
+      }
+
+      // 添加一个图片Marker符号的多点
+      function PictureMarkerMultiPoint() {
+        const point = Geometry.fromJSON({
+          type: GeometryType.multiPoint,
+          coordinates: [
+            [114, 30, 600],
+            [112, 30, 600]
+          ]
+        })
+        featurePictureMarkerMultiPoint = new Feature({
+          id: 'test',
+          geometry: point,
+          symbol: new PictureMarkerSymbol({
+            url: 'http://webclient.smaryun.com:8200/NoneSpatialData/image/icon.png',
+            color: new Color(255, 0, 0),
+            width: 60,
+            height: 60
+          })
+        })
+
+        graphicsLayer.add(featurePictureMarkerMultiPoint)
+      }
+
+      // 移动多点
+      function PictureMarkerMultiPointMove() {
+        featurePictureMarkerMultiPoint.geometry.coordinates = [
+          [114, 31, 600],
+          [112, 31, 600]
+        ]
+      }
+
+      // 删除多点
+      function PictureMarkerMultiPointRemove() {
+        graphicsLayer.remove(featurePictureMarkerMultiPoint)
+      }
+
+      // 添加图层
+      function addGraphicsLayer() {
+        // 创建Graphics图层对象
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/GraphicsLayer.html
+        graphicsLayer = new GraphicsLayer({
+          graphics: [],
+          opacity: 1.0
+        })
+        // 添加图层对象到地图文档中
+        map.add(graphicsLayer)
+      }
+
+      // 改变图层透明度
+      function changeOpacity() {
+        if (graphicsLayer) {
+          graphicsLayer.opacity = document.getElementById('opacity').value
+        }
+      }
+      // 控制图层是否可见
+      function changeVisible() {
+        if (graphicsLayer) {
+          graphicsLayer.visible = !graphicsLayer.visible
+        }
+      }
+      // 从地图容器中移除图层
+      function removeLayer() {
+        if (graphicsLayer.loadStatus === 'loaded') {
+          map.remove(graphicsLayer)
+          graphicsLayer = null
+        }
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <div
+      id="mapgis-3d-viewer"
+      style="position: absolute; display: flex; width: 100%; height: 100%"
+    ></div>
+    <div style="position: absolute; top: 20px; right: 10px; z-index: 10000">
+      <span>透明度:</span>
+      <input
+        id="opacity"
+        onmousemove="changeOpacity()"
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        value="1"
+      />
+    </div>
+    <button
+      style="position: absolute; top: 20px; right: 210px; z-index: 10000"
+      onclick="changeVisible()"
+    >
+      显示或隐藏几何图层
+    </button>
+    <button
+      style="position: absolute; top: 20px; right: 355px; z-index: 10000"
+      onclick="removeLayer()"
+    >
+      删除图层
+    </button>
+    <button
+      style="position: absolute; top: 20px; right: 433px; z-index: 10000"
+      onclick="addGraphicsLayer()"
+    >
+      添加图层
+    </button>
+    <button
+      onclick="PictureMarkerPoint()"
+      style="position: absolute; z-index: 100000; top: 60px; right: 20px"
+    >
+      创建点
+    </button>
+    <button
+      onclick="PictureMarkerPointMove()"
+      style="position: absolute; z-index: 100000; top: 60px; right: 80px"
+    >
+      移动点
+    </button>
+    <button
+      onclick="PictureMarkerPointRemove()"
+      style="position: absolute; z-index: 100000; top: 60px; right: 140px"
+    >
+      删除点
+    </button>
+    <button
+      onclick="PictureMarkerMultiPoint()"
+      style="position: absolute; z-index: 100000; top: 60px; right: 200px"
+    >
+      创建多点
+    </button>
+    <button
+      onclick="PictureMarkerMultiPointMove()"
+      style="position: absolute; z-index: 100000; top: 60px; right: 280px"
+    >
+      移动多点
+    </button>
+    <button
+      onclick="PictureMarkerMultiPointRemove()"
+      style="position: absolute; z-index: 100000; top: 60px; right: 360px"
+    >
+      删除多点
+    </button>
+  </body>
+</html>

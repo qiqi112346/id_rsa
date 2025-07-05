@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>1000万GPS</title>
+    <!--引入Echarts-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/echarts/echarts.min-4.0.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/echarts/echartsgl.min.js"></script>
+    <!--引入Mapboxgl库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.css"/>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-mapboxgl-plugin.min.js"></script>
+    <!--引入jquery-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/jquery/jquery-3.7.1.min.js"></script>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      let view
+      const { SpatialReference } = zondy
+      const { WebTileLayer, EchartsLayer} = zondy.layer
+      const { initializeOptions } = zondy.mapboxgl.util
+
+      // 初始地图视图
+      function initViewer() {
+        view = new mapboxgl.Map({
+          // 容器ID
+          container: 'mapgis-viewer',
+          // 地图视图坐标系ID
+          crs: 'EPSG:3857',
+          // 初始化中心点
+          center: [106.563777, 29.578285],
+          // 初始化级数
+          zoom: 1
+        })
+      }
+
+      // 添加Echarts图层
+      function addEcharts() {
+        var CHUNK_COUNT = 230
+        var dataCount = 0;
+        function fetchData(idx, echartsLayer) {
+          if (idx >= CHUNK_COUNT) {
+            return;
+          }
+          var dataURL = `http://webclient.smaryun.com:8200/Vector/bin/gps/gps_${idx}.bin`;
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', dataURL, true);
+          xhr.responseType = 'arraybuffer';
+
+          xhr.onload = function (e) {
+            var rawData = new Int32Array(this.response);
+            var data = new Float32Array(rawData.length);
+            var addedDataCount = rawData.length / 2;
+            for (var i = 0; i < rawData.length; i += 2) {
+              data[i] = rawData[i + 1] / 1e7;
+              data[i + 1] = rawData[i] / 1e7;
+            }
+
+            echartsLayer.chart.appendData({
+              seriesIndex: 0,
+              data: data
+            });
+
+            fetchData(idx + 1, echartsLayer);
+          }
+
+          xhr.send();
+        }
+
+        var options = {
+          title: {
+            text: '10000000 GPS Points',
+            left: 'center',
+            textStyle: {
+              color: '#fff'
+            }
+          },
+          mapboxgl: {
+            roam: true
+          },
+          series: [{
+            name: '弱',
+            type: 'scatterGL',
+            progressive: 20000,
+            coordinateSystem: 'mapboxgl',
+            symbolSize: 1,
+            zoomScale: 0.002,
+            blendMode: 'lighter',
+            large: true,
+            itemStyle: {
+              color: 'rgb(20, 15, 2)'
+            },
+            postEffect: {
+              enable: true
+            },
+            silent: true,
+            dimensions: ['lng', 'lat'],
+            data: new Float32Array()
+          }]
+        }
+
+        // 添加Echarts图层
+        const echartsLayer = new zondy.layer.EchartsLayer({
+          echartsOptions: options
+        });
+        const innerEchartsLayer = new zondy.mapboxgl.layer.EchartsLayer(view, echartsLayer.echartsOptions)
+        innerEchartsLayer.addTo(view)
+        fetchData(0, innerEchartsLayer)
+      }
+
+      // 添加瓦片图层
+      function addLayer() {
+        const layer = new WebTileLayer({
+          // 加载经纬度的影像地图
+          url: "http://t1.tianditu.com/DataServer?T=img_w&x={col}&y={row}&l={level}",
+          // 天地图必须加token，且token名为tk
+          tokenKey: "tk",
+          // token请在天地图官网申请
+          tokenValue: "63c5c4f101d68229494bb45d3bf60277",
+          // 指定坐标系
+          spatialReference: new SpatialReference({ wkid: 3857 })
+        })
+        // 加载图层元数据
+        layer.load().then(() => {
+          // 构建mapboxgl引擎需要的样式
+          const style = initializeOptions(layer)
+          // 添加到mapboxgl地图对象中
+          addStyleToMapboxglMap(style)
+        })
+      }
+
+      // 添加到mapboxgl地图对象中
+      function addStyleToMapboxglMap(style) {
+        const { sources, layers } = style
+        const sourcesArr = Object.entries(sources)
+        for (let i = 0; i < sourcesArr.length; i++) {
+          const sourceArr = sourcesArr[i]
+          view.addSource(sourceArr[0], sourceArr[1])
+        }
+        for (let j = 0; j < layers.length; j++) {
+          view.addLayer(layers[j])
+        }
+        return true
+      }
+
+      // 地图初始化函数
+      function init() {
+        // 初始地图视图
+        initViewer()
+        // 添加地图图片图层
+        addLayer()
+        // 添加Echarts图层
+        addEcharts()
+      }
+    </script>
+</head>
+
+<body onload="init()">
+<div id="mapgis-viewer"></div>
+</body>
+</html>

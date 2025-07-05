@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>等高线（面）</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+   <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/analyse.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+      //绘制多边形的工具
+      let drawElement = null
+      //阴影分析
+      let contourAnalysis = null
+      //等值线分析的区间颜色
+      let colorArray = [
+        new Cesium.Color(255 / 255, 0, 0),
+        new Cesium.Color(255 / 255, 51 / 255, 0),
+        new Cesium.Color(255 / 255, 102 / 255, 0),
+        new Cesium.Color(255 / 255, 153 / 255, 0),
+        new Cesium.Color(255 / 255, 204 / 255, 0),
+        new Cesium.Color(255 / 255, 255 / 255, 0),
+        new Cesium.Color(204 / 255, 255 / 255, 51 / 255),
+        new Cesium.Color(153 / 255, 255 / 255, 102 / 255),
+        new Cesium.Color(102 / 255, 255 / 255, 153 / 255),
+        new Cesium.Color(51 / 255, 252 / 255, 204 / 255),
+        new Cesium.Color(0 / 255, 255 / 255, 255 / 255),
+        new Cesium.Color(0 / 255, 204 / 255, 255 / 255),
+        new Cesium.Color(0 / 255, 153 / 255, 255 / 255),
+        new Cesium.Color(0 / 255, 102 / 255, 255 / 255),
+        new Cesium.Color(0 / 255, 51 / 255, 255 / 255),
+        new Cesium.Color(255 / 255, 0 / 255, 0 / 255)
+      ]
+      //等值面透明度
+      let bandTransparency = 0.8
+      //等值面宽度
+      let bandThickness = 50
+      //等值线宽度
+      let contourWidth = 1
+      //是否展示等值面
+      let selectedShading = 'elevationBand'
+      //是否展示等值线
+      let enableContour = true
+      //是否渐变
+      let gradient = true
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加天地图
+        addTDT()
+        //添加图层
+        addTerrainCacheLayer()
+        //增加操作条slide，方便演示参数变化
+        addSlideBar()
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //打开深度检测
+        viewer.scene.globe.depthTestAgainstTerrain = true
+      }
+
+      //绘制一个区面，主要是为了方便得到一个polygon的点集
+      //从而利用shadowAnalysis的calcPointsArrayInShadowTime接口，得到阴影分析结果
+      function addDrawElement() {
+        if (drawElement === null) {
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/DrawElement.html
+          drawElement = new zondy.cesium.DrawElement(viewer)
+        }
+        drawElement.startDrawingPolygon({
+          callback: function (result) {
+            //构造一个等值面分析
+            if (contourAnalysis === null) {
+              // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/TerrainAnalyse.html
+              contourAnalysis = new zondy.cesium.TerrainAnalyse(viewer)
+            }
+            //地形分析的接口，调用分析区块，区块就是通过drawElement接口绘制出来的面的点集
+            contourAnalysis.changeAnalyseArea(result.positions)
+            //地形分析的参数，是否开启等值面展示
+            contourAnalysis.selectedShading = selectedShading
+            //地形分析的参数，是否开启等值线展示
+            contourAnalysis.enableContour = enableContour
+            //取消掉绘制
+            drawElement.stopDrawing()
+            //更新等值面区域呈现
+            updateMaterial()
+          }
+        })
+      }
+
+      //根据分析出来的结果，绘制出最终的结果呈现
+      function updateMaterial() {
+        //更新等值面参数
+        let range3D = viewer.terrainProvider.range3D // 地形范围
+        let minHeight = range3D.zMin
+        let maxHeight = range3D.zMax
+        let contourSpacing = 50 //等值线间距
+        let minContourSpacing = (maxHeight - minHeight) / colorArray.length
+
+        let bandPositions = []
+        if (contourSpacing < minContourSpacing) {
+          contourSpacing = Math.floor(minContourSpacing)
+          console.log(
+            '当前最低等值线间距为' +
+              minContourSpacing.toFixed(2) +
+              ',低于该值等值面不发生变化'
+          )
+        }
+        let length = Math.floor((maxHeight - minHeight) / (contourSpacing + 1))
+
+        //根据地形计算等值面高度
+        for (let index = 0; index < length; index++) {
+          let lerpHeight = minHeight + index * contourSpacing
+          bandPositions.push(lerpHeight)
+        }
+        bandPositions.push(maxHeight)
+        //更新等值面分析的结果呈现
+        contourAnalysis.updateElevationBandMaterial(
+          bandPositions,
+          gradient,
+          bandThickness,
+          bandTransparency,
+          0.0,
+          colorArray
+        )
+      }
+
+      //清除等直面分析
+      function removeContourAnalysis() {
+        if (contourAnalysis) {
+          contourAnalysis.destroy()
+          contourAnalysis = null
+        }
+      }
+
+      //添加天地图影像数据
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //添加地形
+      function addTerrainCacheLayer() {
+        let igsSceneLayer = new zondy.layer.IGSSceneLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Scene/TwTerrain/SceneServer'
+        })
+        map.add(igsSceneLayer)
+        // 图层加载完毕
+        igsSceneLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          // 视点跳转
+          flyToTerrain()
+        })
+      }
+
+      //定位到地形
+      function flyToTerrain() {
+        sceneView.flyTo({
+          center: [121.0076, 23.3814, 9000.0],
+          orientation: {
+            pitch: Cesium.Math.toRadians(-35.0)
+          }
+        })
+      }
+
+      //对等值面透明度、等值面宽度、等值线宽度的拖动条事件
+      function addSlideBar() {
+        //等值面透明度（接口需要的参数是0.0-1.0，这里用扩大100倍的方式来做，拖动会方便一些）
+        layui.slider.render({
+          elem: '#bandTransparencySlide',
+          value: bandTransparency * 100,
+          min: 0,
+          max: 100,
+          input: true,
+          theme: 'rgb(102, 147, 251)',
+          change: function (value) {
+            bandTransparency = value / 100
+            updateMaterial()
+          }
+        })
+        //等值面宽度
+        layui.slider.render({
+          elem: '#bandThicknessSlide',
+          value: bandThickness,
+          input: true,
+          max: 1000,
+          theme: 'rgb(102, 147, 251)',
+          change: function (value) {
+            bandThickness = value
+            updateMaterial()
+          }
+        })
+        //等值线的线宽
+        layui.slider.render({
+          elem: '#contourWidthSlide',
+          value: contourWidth,
+          input: true,
+          theme: 'rgb(102, 147, 251)',
+          change: function (value) {
+            if (contourAnalysis) {
+              contourAnalysis.contourWidth = value
+            }
+          }
+        })
+      }
+
+      //是否展示等值面的checkbox勾选框点击事件
+      function changeBandCheck() {
+        if (document.getElementById('bandCheckbox').checked) {
+          selectedShading = 'elevationBand'
+        } else {
+          selectedShading = 'none'
+        }
+        if (contourAnalysis) {
+          contourAnalysis.selectedShading = selectedShading
+        }
+      }
+
+      //是否展示等值线的checkbox勾选框点击事件
+      function changeContourCheck() {
+        enableContour = document.getElementById('contourCheckbox').checked
+        if (contourAnalysis) {
+          contourAnalysis.enableContour = enableContour
+        }
+      }
+
+      //是否展示网格
+      function enableGrid() {
+        //是否显示网格
+        viewer.scene.globe._surface.tileProvider._debug.wireframe =
+          !viewer.scene.globe._surface.tileProvider._debug.wireframe
+        //不显示裙边
+        viewer.scene.globe.showSkirts = false
+      }
+
+      //是否显示底图
+      function showImageLayer() {
+        if (viewer.scene.skyAtmosphere.show) {
+          //底图显示透明度
+          viewer.scene.globe.translucency.enabled = true
+          //是否显示大气层
+          viewer.scene.skyAtmosphere.show = false
+          //是否开启光照
+          viewer.scene.globe.enableLighting = true
+          //修改球体表面颜色
+          viewer.scene.globe.baseColor = new Cesium.Color(0.5, 0.5, 0.5, 1.0)
+          //隐藏所有影响图层
+          for (let i = 0; i < viewer.imageryLayers._layers.length; i++) {
+            viewer.imageryLayers._layers[i].alpha = 0
+          }
+        } else {
+          viewer.scene.globe.translucency.enabled = false
+          viewer.scene.skyAtmosphere.show = true
+          viewer.scene.globe.enableLighting = true
+          for (let i = 0; i < viewer.imageryLayers._layers.length; i++) {
+            viewer.imageryLayers._layers[i].alpha = 1
+          }
+        }
+      }
+
+      //是否渐变的checkbox勾选框点击事件
+      function changeGradientCheck() {
+        gradient = document.getElementById('gradientCheckbox').checked
+        if (contourAnalysis) {
+          updateMaterial()
+        }
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right">
+      <div class="sample-main-panel" style="height: 254px">
+        <div class="sample-check-line">
+          <span>是否渐变</span>
+          <input
+            class="sample-check-input"
+            type="checkbox"
+            id="gradientCheckbox"
+            checked
+            onclick="changeGradientCheck()"
+          />
+        </div>
+        <div class="sample-check-line">
+          <span>开启等值面</span>
+          <input
+            class="sample-check-input"
+            type="checkbox"
+            id="bandCheckbox"
+            checked
+            onclick="changeBandCheck()"
+          />
+        </div>
+        <div class="sample-check-line">
+          <span>开启等值线</span>
+          <input
+            class="sample-check-input"
+            type="checkbox"
+            id="contourCheckbox"
+            checked
+            onclick="changeContourCheck()"
+          />
+        </div>
+        <div class="sample-check-line">
+          <span>开启网格</span>
+          <input
+            class="sample-check-input"
+            type="checkbox"
+            id="enableGrid"
+            onclick="enableGrid()"
+          />
+        </div>
+        <div class="sample-check-line">
+          <span>显示底图</span>
+          <input
+            class="sample-check-input"
+            type="checkbox"
+            id="showSkirts"
+            checked
+            onclick="showImageLayer()"
+          />
+        </div>
+        <div class="sample-check-line sample-check-line-slider">
+          <span>等值面透明度</span>
+          <div id="bandTransparencySlide" class="demoSlider"></div>
+        </div>
+        <div class="sample-check-line sample-check-line-slider">
+          <span>等值面宽度</span>
+          <div id="bandThicknessSlide" class="demoSlider"></div>
+        </div>
+        <div class="sample-check-line sample-check-line-slider">
+          <span>等值线宽度</span>
+          <div id="contourWidthSlide" class="demoSlider"></div>
+        </div>
+      </div>
+      <div class="sample-button-panel">
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="addDrawElement()"
+        >
+          绘制分析区
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-danger"
+          onclick="removeContourAnalysis()"
+        >
+          清除
+        </button>
+      </div>
+    </div>
+    <style>
+      .layui-slider {
+        top: 16px;
+        width: 113px;
+        left: 93px;
+      }
+
+      .layui-slider {
+        top: -23px;
+        width: 113px;
+        left: 93px;
+      }
+
+      .layui-slider-wrap {
+        top: -19px;
+      }
+
+      .layui-slider-input {
+        top: -36px;
+      }
+    </style>
+  </body>
+</html>

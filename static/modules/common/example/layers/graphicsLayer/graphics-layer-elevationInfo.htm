@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>图形图层 - 高程模式设置</title>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+            rel="stylesheet"
+            href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+            rel="stylesheet"
+            href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map,
+        view,
+        layer,
+        layerOpacity = 1,
+        graphicsLayer,
+        elevationInfo
+      const { IGSTileLayer, GraphicsLayer, TerrainCacheLayer, WMTSLayer } = zondy.layer
+      const { Map, Feature, Color, ElevationInfo } = zondy
+      const { ElevationMode } = zondy.enum
+      const { Point, LineString, Polygon, GeometryEngine } = zondy.geometry
+      const {
+        SimpleMarkerSymbol,
+        SimpleLineSymbol,
+        SimpleFillSymbol,
+        PictureMarkerSymbol,
+        PictureFillSymbol,
+        TextSymbol
+      } = zondy.symbol
+      elevationInfo = new ElevationInfo({
+        mode: ElevationMode.OnTheScene
+      })
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加地形缓存图层
+        addTerrainLayer()
+        // 加载天地图
+        addTDT()
+        // 添加标绘图层
+        addGraphicsLayer()
+        // 添加点要素
+        addPointFeatures()
+        // 添加线要素
+        addLineFeatures()
+        // 添加区要素
+        addAreaFeatures()
+        // 初始化UI操作
+        initUI()
+      }
+
+      // 设置整体高程模式
+      function selectSampleMode(selectedModel) {
+        switch (selectedModel) {
+          case 'AbsoluteHeight':
+          default:
+            elevationInfo = new ElevationInfo({
+              mode: ElevationMode.AbsoluteHeight
+            })
+            break
+          case 'OnTheGround':
+            elevationInfo = new ElevationInfo({
+              mode: ElevationMode.OnTheGround
+            })
+            break
+          case 'RelativeToGround':
+            elevationInfo = new ElevationInfo({
+              mode: ElevationMode.RelativeToGround,
+              offset: 1000
+            })
+            break
+          case 'OnTheScene':
+            elevationInfo = new ElevationInfo({
+              mode: ElevationMode.OnTheScene
+            })
+            break
+          case 'RelativeToScene':
+            elevationInfo = new ElevationInfo({
+              mode: ElevationMode.RelativeToScene,
+              offset: 1000
+            })
+            break
+        }
+      }
+
+      // 添加点要素
+      function addPointFeatures() {
+        // SimpleMarkerSymbol
+        const feature1 = new Feature({
+          geometry: new Point({
+            coordinates: [110.36023950332236, 31.305594886911922, 2600]
+          }),
+          symbol: new SimpleMarkerSymbol({
+            color: 'rgba(244,0,0,0.5)',
+            outline: new SimpleLineSymbol({
+              color: '#000000'
+            })
+          }),
+          // 设置高程模式
+          elevationInfo: elevationInfo
+        })
+        // PictureMarkerSymbol
+        const feature2 = new Feature({
+          geometry: new Point({
+            coordinates: [110.46023950332236, 31.305594886911922, 2600]
+          }),
+          symbol: new PictureMarkerSymbol({
+            // 图片源数据，支持Image、HTMLCanvasElement、SVGElement、Svg字符串、基础图像地址、相对路径等
+            url: 'static/assets/logo/mapgis_logo_blue.png',
+            // 图标宽度
+            width: 40,
+            // 图标高度
+            height: 40
+          }),
+          // 设置高程模式
+          elevationInfo: elevationInfo
+        })
+
+        // TextSymbol
+        const feature3 = new Feature({
+          geometry: new Point({
+            coordinates: [110.26023950332236, 31.305594886911922, 2600]
+          }),
+          symbol: new TextSymbol({
+            text: '文字',
+            color: '#ffffff',
+            font: {
+              family: 'simHei',
+              size: 30,
+              decoration:'underline'
+            },
+            haloSize: 5,
+            haloColor: '#cccccc'
+          }),
+          // 设置高程模式
+          elevationInfo: elevationInfo
+        })
+        graphicsLayer.addMany([feature1, feature2, feature3])
+      }
+
+      // 添加线要素
+      function addLineFeatures() {
+        // SimpleLineSymbol
+        const feature1 = new Feature({
+          symbol: new SimpleLineSymbol({
+            width: 6,
+            color:'#3a85c6'
+          }),
+          geometry: {
+            type: 'LineString',
+            coordinates: [
+              [110.06023950332236, 31.505594886911922, 2600],
+              [110.66023950332236, 31.505594886911922, 2600]
+            ]
+          },
+          // 设置高程模式
+          elevationInfo: elevationInfo
+        })
+        graphicsLayer.addMany([feature1])
+      }
+
+
+      // 添加区要素
+      function addAreaFeatures() {
+        // SimpleFillSymbol
+        const feature1 = new Feature({
+          symbol: new SimpleFillSymbol({
+            color: new Color(255, 0, 0, 0.3),
+            outline: new SimpleLineSymbol({
+              color: '#3a85c6',
+              width: 3
+            })
+          }),
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [110.06023950332236, 31.205594886911922, 2600],
+                [110.66023950332236, 31.205594886911922, 2600],
+                [110.66023950332236, 31.005594886911922, 2600],
+                [110.06023950332236, 31.005594886911922, 2600],
+                [110.06023950332236, 31.205594886911922, 2600]
+              ]
+            ]
+          },
+          // 设置高程模式
+          elevationInfo: elevationInfo
+        });
+        graphicsLayer.addMany([feature1])
+      }
+
+      // 添加标绘图层
+      function addGraphicsLayer() {
+        // 创建Graphics图层对象
+        graphicsLayer = new GraphicsLayer({
+          // 要素集合
+          graphics: []
+        })
+        // 添加图层对象到地图文档中
+        map.add(graphicsLayer)
+      }
+
+      // 添加地形缓存图层
+      function addTerrainLayer() {
+        layer = new TerrainCacheLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8200/3DData/TerrainCache/HubeiTerrain/'
+        });
+        map.add(layer);
+        // 图层加载完毕
+        layer.on('layerview-created', function (result) {
+          console.log("加载完毕:", result.layer);
+          // 视点跳转
+          view.flyTo({
+            center: [110.31, 31.28, 100000]
+          });
+        });
+      }
+
+      // 加载天地图
+      function addTDT() {
+        let TDTLayer = new WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        });
+        map.add(TDTLayer);
+      }
+
+      // 初始地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+        // 获取地图引擎类型
+        const engineType = localStorage.getItem('engine-type', 'cesium')
+        // 针对三维进行特殊处理
+        if (engineType === 'cesium'){
+          // 获取三维场景视图对象
+          const viewer = view.getInnerView()
+          // 开启深度检测，默认是关闭的
+          viewer.scene.globe.depthTestAgainstTerrain = true;
+          // 判断是否支持图像渲染像素化处理
+          if(Cesium.FeatureDetection.supportsImageRenderingPixelated()){
+            // 使得该值和浏览器保持一致，文字或者图形的渲染结果会更加平滑
+            viewer.resolutionScale = window.devicePixelRatio
+          }
+          // 开启抗锯齿，文字或者图形的渲染结果会更加平滑
+          viewer.scene.fxaa = true
+          viewer.scene.postProcessStages.fxaa.enabled = true
+        }
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          const form = layui.form;
+
+          //切换加载类型
+          form.on("select(elevationMode)", function (data) {
+            selectSampleMode(data.value)
+            graphicsLayer.removeAll()
+            addPointFeatures()
+            addLineFeatures()
+            addAreaFeatures()
+          });
+
+          // 是否开启地形深度检测
+          form.on("switch(depthTest)", function (data) {
+            // 获取三维场景视图对象
+            const viewer = view.getInnerView()
+            viewer.scene.globe.depthTestAgainstTerrain = data.elem.checked;
+          });
+        });
+      }
+    </script>
+</head>
+
+<body onload="init();">
+<!--  视图容器div  -->
+<div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+<!--  UI面板  -->
+<div class="layui-panel layui-panel-right graphics-layer-elevation-panel">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">高程模式</label>
+            <div class="layui-input-block layui-input-block-select">
+                <select id="elevationMode" name="elevationMode" lay-filter="elevationMode">
+                    <option value="OnTheScene">贴场景</option>
+                    <option value="RelativeToScene">相对于场景</option>
+                    <option value="OnTheGround">贴地形</option>
+                    <option value="RelativeToGround">相对于地形</option>
+                    <option value="AbsoluteHeight">绝对高度</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 100px">地形深度检测</label>
+            <div class="layui-input-block">
+                <input type="checkbox" lay-filter="depthTest" lay-skin="switch" lay-text="开启|关闭" checked/>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>加载高德地图图层</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, options, url
+
+      //加载高德地图
+      function addGaodeMap() {
+        url =
+          'http://{s}.is.autonavi.com/appmaptile?&size=1&scale=1&x={x}&y={y}&z={z}&style=7'
+        options = {
+          url: url, //请求高德地图瓦片的url模板,{x}、{y}、{z}分别表示瓦片的x坐标、y坐标和层级
+          credit: new Cesium.Credit('高德地图服务'), //数据源信息，会展示在画布上
+          subdomains: ['webst01', 'webst02', 'webst03', 'webst04'], //子域用于替换url模板中的{s}占位符
+          //瓦片的划分平铺方案,可选：经纬度 Cesium.GeographicTilingScheme；Web墨卡托 Cesium.WebMercatorTilingScheme
+          tilingScheme: new Cesium.WebMercatorTilingScheme(),
+          maximumLevel: 16, //图像支持的最大级别
+          minimumLevel: 0, //图像支持的最小级别
+          tileWidth: 256, //瓦片宽度
+          tileHeight: 256, //瓦片高度
+          hasAlphaChannel: true // 是否支持图像显示透明度
+        }
+        // 将高德地图添加到场景显示
+        viewer.imageryLayers.addImageryProvider(
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/UrlTemplateImageryProvider.html
+          new zondy.cesium.UrlTemplateImageryProvider(options)
+        )
+      }
+
+      //飞到指定视角
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [116.5258, 41.8054, 20000000]
+        })
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          var layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form
+
+          //切换地图类型：瓦片'vec', 道路'road', 影像'img'
+          form.on('select(tileType)', function (data) {
+            url =
+              'http://{s}.is.autonavi.com/appmaptile?&size=1&scale=1&x={x}&y={y}&z={z}'
+            switch (data.value) {
+              case 'img':
+                url =
+                  'https://{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}'
+                break
+              case 'road':
+                url += '&scl=2&style=8&ltype=11'
+                break
+              default:
+                url += '&style=7'
+                break
+            }
+            // 销毁已有的地图
+            viewer.imageryLayers.removeAll()
+            // 设置新的地图url模板
+            options.url = url
+            // 加载高德地图
+            viewer.imageryLayers.addImageryProvider(
+              new zondy.cesium.UrlTemplateImageryProvider(options)
+            )
+          })
+        })
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // 初始化Cesium版本切换按钮
+        createChangeTab()
+        //飞到指定视角
+        flyTo()
+        // 加载高德地图
+        addGaodeMap()
+        //初始化UI操作
+        initUI()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

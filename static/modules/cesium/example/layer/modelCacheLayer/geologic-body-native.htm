@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>三维图层--原生接口</title>
+  <!--加载不同版本Cesium库-->
+  <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+  <!--plugin脚本库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+  <script>
+    'use strict'
+    //定义三维视图的主要类
+    let viewer
+
+    // 添加M3d缓存图层
+    function addM3DModelCacheLayer() {
+      const options = {
+        url: 'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D/1.0/钻孔分层点_Sur_000_Ent/钻孔分层点_Sur_000_Ent.mcj',
+        _scene: viewer.scene
+      }
+      // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/MapGISM3DSet.html
+      zondy.cesium.MapGISM3DSet.fromUrl(options.url, options).then(m3dset => {
+        const boundingSphere = m3dset.boundingSphere
+        const orientation = new Cesium.HeadingPitchRange(0.0, -0.5, boundingSphere.radius * 2.5)
+        viewer.camera.flyToBoundingSphere(boundingSphere, {
+          duration: 0,
+          offset: orientation
+        });
+        viewer.scene.primitives.add(m3dset)
+      });
+    }
+
+    //构造三维视图类（视图容器div的id，三维视图设置参数）
+    function initViewer() {
+      viewer = new Cesium.Viewer('mapgis-3d-viewer')
+      //设置球体初始透明度
+      viewer.scene.globe.show = false
+      // 针对cesium10.7.4.10版本隐藏大气环境光
+      if (viewer.scene.skyAtmosphere) {
+        viewer.scene.skyAtmosphere.show = false;
+      }
+      if (viewer.scene.sun.show) {
+        viewer.scene.sun.show = false;
+      }
+      if (viewer.scene.moon.show) {
+        viewer.scene.moon.show = false;
+      }
+      if (viewer.scene.globe.showGroundAtmosphere) {
+        viewer.scene.globe.showGroundAtmosphere = false;
+      }
+    }
+
+    //地图初始化函数
+    function init() {
+      //创建切换Cesium版本的按钮
+      createChangeTab()
+      //初始化球体
+      initViewer()
+      //添加M3dServer缓存图层
+      addM3DModelCacheLayer()
+    }
+  </script>
+</head>
+
+<body onload="init()">
+  <div id="mapgis-3d-viewer"></div>
+</body>
+</html>

@@ -1,0 +1,3416 @@
+
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+                    <script src="scripts/prettify/prettify.js"></script>
+                    <script src="scripts/prettify/lang-css.js"></script>
+                    <title> MapGIS Client for JavaScript API </title>
+                <script type="text/javascript">
+
+                </script>
+                    <!--[if lt IE 9]>
+                    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+                    <![endif]-->
+                        <script src="scripts/jquery.min.js"></script>
+                    <script src="scripts/adminlte/app.min.js"></script>
+                    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/adminlte/AdminLTE.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/adminlte/skin-blue.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+                    <link type="text/css" rel="stylesheet" href="styles/common.css">
+                    <link type="text/css" rel="stylesheet" href="styles/header.css">
+                    <link type="text/css" rel="stylesheet" href="styles/examples.css">
+                    <link type="text/css" rel="stylesheet" href="styles/style.customize.css">
+                    <link type="text/css" rel="stylesheet" href="styles/font-awesome.css">
+                    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+                    <script src="scripts/bootstrap.min.js"></script>
+                </head>
+                <body class='sidebar-mini'>
+
+                <div id="wrap" class="clearfix">
+                    <header class="header-wrapper main-header mapgis-header">
+                        <nav class="navbar navbar-static-top lite">
+                            <div class="nav-header">
+                                <div class="navbar-header">
+                                    <div class="navbar-title">
+                                        <a class="navbar-brand">
+                                            <span class="mapgis-webclient-text"> MapGIS Client for JavaScript API </span>
+                                        </a>
+                                        <div id="suffix-title">for MapboxGL</div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="navbar-toggle collapsed"
+                                        data-toggle="collapse"
+                                        data-target="#navbar-collapse"
+                                        aria-expanded="false"
+                                    >
+                                        <i class="fa fa-bars"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </nav>
+                    </header>
+                    <div class="navigationDiv">
+                    </div>
+                    <div class="main content-wrapper examples-container">
+                        <h1 class="page-title" data-filename="layers.md">layers.md</h1>
+                            <section>
+                        <article class="readme">
+                        <h1 id="layers" tabindex="-1">Layers</h1>
+<p>Layers will be drawn in the order of this array.</p>
+<pre><code class="language-json">layers: [
+    {
+        &quot;id&quot;: &quot;water&quot;,
+        &quot;source&quot;: &quot;mapbox-streets&quot;,
+        &quot;source-layer&quot;: &quot;water&quot;,
+        &quot;type&quot;: &quot;fill&quot;,
+        &quot;paint&quot;: {&quot;fill-color&quot;: &quot;#1890ff&quot;}
+    }
+]
+</code></pre>
+<h2 id="layer-properties" tabindex="-1">Layer Properties</h2>
+<h3 id="id" tabindex="-1">id</h3>
+<p><em>Required <a href="types.html#string">string</a>.</em></p>
+<p>Unique layer name.</p>
+<h3 id="type" tabindex="-1">type</h3>
+<p><em>Required <a href="types.html#enum">enum</a>. Possible values: <code>fill</code>, <code>line</code>, <code>symbol</code>, <code>circle</code>, <code>heatmap</code>, <code>fill-extrusion</code>, <code>raster</code>, <code>hillshade</code>, <code>background</code>.</em></p>
+<p>Rendering type of this layer.</p>
+<ul>
+<li><code>fill</code>: A filled polygon with an optional stroked border.</li>
+<li><code>line</code>: A stroked line.</li>
+<li><code>symbol</code>: An icon or a text label.</li>
+<li><code>circle</code>: A filled circle.</li>
+<li><code>heatmap</code>: A heatmap.</li>
+<li><code>fill-extrusion</code>: An extruded (3D) polygon.</li>
+<li><code>raster</code>: Raster map textures such as satellite imagery.</li>
+<li><code>hillshade</code>: Client-side hillshading visualization based on DEM data. Currently, the implementation only supports Mapbox Terrain RGB and Mapzen Terrarium tiles.</li>
+<li><code>background</code>: The background color or pattern of the map.</li>
+</ul>
+<h3 id="metadata" tabindex="-1">metadata</h3>
+<p><em>Optional.</em></p>
+<p>Arbitrary properties useful to track with the layer, but do not influence rendering. Properties should be prefixed to avoid collisions, like 'mapbox:'.</p>
+<h3 id="source" tabindex="-1">source</h3>
+<p><em>Optional <a href="types.html#string">string</a>.</em></p>
+<p>Name of a source description to be used for this layer. Required for all layer types except <code>background</code>.</p>
+<h3 id="source-layer" tabindex="-1">source-layer</h3>
+<p><em>Optional <a href="types.html#string">string</a>.</em></p>
+<p>Layer to use from a vector tile source. Required for vector tile sources; prohibited for all other source types, including GeoJSON sources.</p>
+<h3 id="minzoom" tabindex="-1">minzoom</h3>
+<p><em>Optional <a href="types.html#number">number</a> in range [0, 24].</em></p>
+<p>The minimum zoom level for the layer. At zoom levels less than the minzoom, the layer will be hidden.</p>
+<h3 id="maxzoom" tabindex="-1">maxzoom</h3>
+<p><em>Optional <a href="types.html#number">number</a> in range [0, 24].</em></p>
+<p>The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.</p>
+<h3 id="filter" tabindex="-1">filter</h3>
+<p><em>Optional <a href="expressions.html">filter</a>.</em></p>
+<p>A expression specifying conditions on source features. Only features that match the filter are displayed. Zoom expressions in filters are only evaluated at integer zoom levels. The <code>feature-state</code> expression is not supported in filter expressions.</p>
+<h3 id="layout" tabindex="-1">layout</h3>
+<p><em>Optional <a href="layers.html#layout">layout</a>.</em></p>
+<p>Layout properties for the layer.</p>
+<h3 id="paint" tabindex="-1">paint</h3>
+<p><em>Optional <a href="layers.html#paint">paint</a>.</em></p>
+<p>Default paint properties for this layer.</p>
+<h2 id="background" tabindex="-1">Background</h2>
+<h3 id="visibility" tabindex="-1">visibility</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>visible</code>, <code>none</code>. Defaults to <code>visible</code>.</em></p>
+<p>Whether this layer is displayed.</p>
+<ul>
+<li><code>visible</code>: The layer is shown.</li>
+<li><code>none</code>: The layer is not shown.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="background-color" tabindex="-1">background-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>#000000</code>. Disabled by <code>background-pattern</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The color with which the background will be drawn.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="background-pattern" tabindex="-1">background-pattern</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#resolvedimage">resolvedImage</a>. Transitionable.</em></p>
+<p>Name of image in sprite to use for drawing an image background. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="background-opacity" tabindex="-1">background-opacity</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>1</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The opacity at which the background will be drawn.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fill" tabindex="-1">Fill</h2>
+<h3 id="fill-sort-key" tabindex="-1">fill-sort-key</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a>.</em></p>
+<p>Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>1.2.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>1.2.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="visibility-1" tabindex="-1">visibility</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>visible</code>, <code>none</code>. Defaults to <code>visible</code>.</em></p>
+<p>Whether this layer is displayed.</p>
+<ul>
+<li><code>visible</code>: The layer is shown.</li>
+<li><code>none</code>: The layer is not shown.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-antialias" tabindex="-1">fill-antialias</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>true</code>.</em></p>
+<p>Whether or not the fill should be antialiased.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-opacity" tabindex="-1">fill-opacity</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>1</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The opacity of the entire fill layer. In contrast to the <code>fill-color</code>, this value will also affect the 1px stroke around the fill, if the stroke is used.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.21.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-color" tabindex="-1">fill-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>#1890ff</code>. Disabled by <code>fill-pattern</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The color of the filled part of this layer. This color can be specified as <code>rgba</code> with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.19.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-outline-color" tabindex="-1">fill-outline-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>#ffffff</code>. Disabled by <code>fill-pattern</code>. Requires <code>fill-antialias</code> to be <code>true</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The outline color of the fill. Matches the value of <code>fill-color</code> if unspecified.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.19.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-translate" tabindex="-1">fill-translate</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#array">array</a>. Units in pixels. Defaults to <code>0,0</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-translate-anchor" tabindex="-1">fill-translate-anchor</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>. Defaults to <code>map</code>. Requires <code>fill-translate</code>.</em></p>
+<p>Controls the frame of reference for <code>fill-translate</code>.</p>
+<ul>
+<li><code>map</code>: The fill is translated relative to the map.</li>
+<li><code>viewport</code>: The fill is translated relative to the viewport.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-pattern" tabindex="-1">fill-pattern</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#resolvedimage">resolvedImage</a>. Transitionable.</em></p>
+<p>Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.49.0</td>
+<td>6.5.0</td>
+<td>4.4.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="circle" tabindex="-1">Circle</h2>
+<h3 id="circle-sort-key" tabindex="-1">circle-sort-key</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a>.</em></p>
+<p>Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>1.2.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>1.2.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="visibility-2" tabindex="-1">visibility</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>visible</code>, <code>none</code>. Defaults to <code>visible</code>.</em></p>
+<p>Whether this layer is displayed.</p>
+<ul>
+<li><code>visible</code>: The layer is shown.</li>
+<li><code>none</code>: The layer is not shown.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="circle-radius" tabindex="-1">circle-radius</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in pixels. Defaults to <code>5</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Circle radius.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.18.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="circle-color" tabindex="-1">circle-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>#000000</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The fill color of the circle.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.18.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="circle-blur" tabindex="-1">circle-blur</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a>. Defaults to <code>0</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.20.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="circle-opacity" tabindex="-1">circle-opacity</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>1</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The opacity at which the circle will be drawn.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.20.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="circle-translate" tabindex="-1">circle-translate</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#array">array</a>. Units in pixels. Defaults to <code>0,0</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="circle-translate-anchor" tabindex="-1">circle-translate-anchor</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>. Defaults to <code>map</code>. Requires <code>circle-translate</code>.</em></p>
+<p>Controls the frame of reference for <code>circle-translate</code>.</p>
+<ul>
+<li><code>map</code>: The circle is translated relative to the map.</li>
+<li><code>viewport</code>: The circle is translated relative to the viewport.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="circle-pitch-scale" tabindex="-1">circle-pitch-scale</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>. Defaults to <code>map</code>.</em></p>
+<p>Controls the scaling behavior of the circle when the map is pitched.</p>
+<ul>
+<li><code>map</code>: Circles are scaled according to their apparent distance to the camera.</li>
+<li><code>viewport</code>: Circles are not scaled.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.21.0</td>
+<td>4.2.0</td>
+<td>3.4.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="circle-pitch-alignment" tabindex="-1">circle-pitch-alignment</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>. Defaults to <code>viewport</code>.</em></p>
+<p>Orientation of circle when map is pitched.</p>
+<ul>
+<li><code>map</code>: The circle is aligned to the plane of the map.</li>
+<li><code>viewport</code>: The circle is aligned to the plane of the viewport.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.39.0</td>
+<td>5.2.0</td>
+<td>3.7.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="circle-stroke-width" tabindex="-1">circle-stroke-width</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in pixels. Defaults to <code>0</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The width of the circle's stroke. Strokes are placed outside of the <code>circle-radius</code>.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.29.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.29.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="circle-stroke-color" tabindex="-1">circle-stroke-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>#000000</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The stroke color of the circle.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.29.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.29.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="circle-stroke-opacity" tabindex="-1">circle-stroke-opacity</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>1</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The opacity of the circle's stroke.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.29.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.29.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="heatmap" tabindex="-1">Heatmap</h2>
+<h3 id="visibility-3" tabindex="-1">visibility</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>visible</code>, <code>none</code>. Defaults to <code>visible</code>.</em></p>
+<p>Whether this layer is displayed.</p>
+<ul>
+<li><code>visible</code>: The layer is shown.</li>
+<li><code>none</code>: The layer is not shown.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heatmap-radius" tabindex="-1">heatmap-radius</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [1, ∞). Units in pixels. Defaults to <code>30</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Radius of influence of one heatmap point in pixels. Increasing the value makes the heatmap smoother, but less detailed.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.43.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heatmap-weight" tabindex="-1">heatmap-weight</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Defaults to <code>1</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>A measure of how much an individual point contributes to the heatmap. A value of 10 would be equivalent to having 10 points of weight 1 in the same spot. Especially useful when combined with clustering.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heatmap-intensity" tabindex="-1">heatmap-intensity</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Defaults to <code>1</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Similar to <code>heatmap-weight</code> but controls the intensity of the heatmap globally. Primarily used for adjusting the heatmap based on zoom level.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heatmap-color" tabindex="-1">heatmap-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>interpolate,linear,heatmap-density,0,rgba(0, 0, 255, 0),0.1,royalblue,0.3,cyan,0.5,lime,0.7,yellow,1,red</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Defines the color of each pixel based on its density value in a heatmap.  Should be an expression that uses <code>[&quot;heatmap-density&quot;]</code> as input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heatmap-opacity" tabindex="-1">heatmap-opacity</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>1</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The global opacity at which the heatmap layer will be drawn.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fill-extrusion" tabindex="-1">Fill-extrusion</h2>
+<h3 id="visibility-4" tabindex="-1">visibility</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>visible</code>, <code>none</code>. Defaults to <code>visible</code>.</em></p>
+<p>Whether this layer is displayed.</p>
+<ul>
+<li><code>visible</code>: The layer is shown.</li>
+<li><code>none</code>: The layer is not shown.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-extrusion-opacity" tabindex="-1">fill-extrusion-opacity</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>1</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The opacity of the entire fill extrusion layer. This is rendered on a per-layer, not per-feature, basis, and data-driven styling is not available.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-extrusion-color" tabindex="-1">fill-extrusion-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>#000000</code>. Disabled by <code>fill-extrusion-pattern</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The base color of the extruded fill. The extrusion's surfaces will be shaded differently based on this color in combination with the root <code>light</code> settings. If this color is specified as <code>rgba</code> with an alpha component, the alpha component will be ignored; use <code>fill-extrusion-opacity</code> to set layer opacity.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-extrusion-translate" tabindex="-1">fill-extrusion-translate</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#array">array</a>. Units in pixels. Defaults to <code>0,0</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The geometry's offset. Values are [x, y] where negatives indicate left and up (on the flat plane), respectively.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-extrusion-translate-anchor" tabindex="-1">fill-extrusion-translate-anchor</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>. Defaults to <code>map</code>. Requires <code>fill-extrusion-translate</code>.</em></p>
+<p>Controls the frame of reference for <code>fill-extrusion-translate</code>.</p>
+<ul>
+<li><code>map</code>: The fill extrusion is translated relative to the map.</li>
+<li><code>viewport</code>: The fill extrusion is translated relative to the viewport.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-extrusion-pattern" tabindex="-1">fill-extrusion-pattern</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#resolvedimage">resolvedImage</a>. Transitionable.</em></p>
+<p>Name of image in sprite to use for drawing images on extruded fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.49.0</td>
+<td>6.5.0</td>
+<td>4.4.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-extrusion-height" tabindex="-1">fill-extrusion-height</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in meters. Defaults to <code>0</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The height with which to extrude this layer.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-extrusion-base" tabindex="-1">fill-extrusion-base</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in meters. Defaults to <code>0</code>. Requires <code>fill-extrusion-height</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The height with which to extrude the base of this layer. Must be less than or equal to <code>fill-extrusion-height</code>.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.27.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fill-extrusion-vertical-gradient" tabindex="-1">fill-extrusion-vertical-gradient</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>true</code>.</em></p>
+<p>Whether to apply a vertical gradient to the sides of a fill-extrusion layer. If true, sides will be shaded slightly darker farther down.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.50.0</td>
+<td>Not supported yet</td>
+<td>4.7.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="line" tabindex="-1">Line</h2>
+<h3 id="line-cap" tabindex="-1">line-cap</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>butt</code>, <code>round</code>, <code>square</code>. Defaults to <code>butt</code>.</em></p>
+<p>The display of line endings.</p>
+<ul>
+<li><code>butt</code>: A cap with a squared-off end which is drawn to the exact endpoint of the line.</li>
+<li><code>round</code>: A cap with a rounded end which is drawn beyond the endpoint of the line at a radius of one-half of the line's width and centered on the endpoint of the line.</li>
+<li><code>square</code>: A cap with a squared-off end which is drawn beyond the endpoint of the line at a distance of one-half of the line's width.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-join" tabindex="-1">line-join</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>bevel</code>, <code>round</code>, <code>miter</code>. Defaults to <code>miter</code>.</em></p>
+<p>The display of lines when joining.</p>
+<ul>
+<li><code>bevel</code>: A join with a squared-off end which is drawn beyond the endpoint of the line at a distance of one-half of the line's width.</li>
+<li><code>round</code>: A join with a rounded end which is drawn beyond the endpoint of the line at a radius of one-half of the line's width and centered on the endpoint of the line.</li>
+<li><code>miter</code>: A join with a sharp, angled corner which is drawn with the outer sides beyond the endpoint of the path until they meet.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.40.0</td>
+<td>5.2.0</td>
+<td>3.7.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-miter-limit" tabindex="-1">line-miter-limit</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a>. Defaults to <code>2</code>. Requires <code>line-join</code> to be <code>miter</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Used to automatically convert miter joins to bevel joins for sharp angles.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-round-limit" tabindex="-1">line-round-limit</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a>. Defaults to <code>1.05</code>. Requires <code>line-join</code> to be <code>round</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Used to automatically convert round joins to miter joins for shallow angles.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-sort-key" tabindex="-1">line-sort-key</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a>.</em></p>
+<p>Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>1.2.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>1.2.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="visibility-5" tabindex="-1">visibility</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>visible</code>, <code>none</code>. Defaults to <code>visible</code>.</em></p>
+<p>Whether this layer is displayed.</p>
+<ul>
+<li><code>visible</code>: The layer is shown.</li>
+<li><code>none</code>: The layer is not shown.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-opacity" tabindex="-1">line-opacity</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>1</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The opacity at which the line will be drawn.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.29.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-color" tabindex="-1">line-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>#4F4F4F</code>. Disabled by <code>line-pattern</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The color with which the line will be drawn.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.23.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-translate" tabindex="-1">line-translate</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#array">array</a>. Units in pixels. Defaults to <code>0,0</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-translate-anchor" tabindex="-1">line-translate-anchor</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>. Defaults to <code>map</code>. Requires <code>line-translate</code>.</em></p>
+<p>Controls the frame of reference for <code>line-translate</code>.</p>
+<ul>
+<li><code>map</code>: The line is translated relative to the map.</li>
+<li><code>viewport</code>: The line is translated relative to the viewport.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-width" tabindex="-1">line-width</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in pixels. Defaults to <code>1</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Stroke thickness.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.39.0</td>
+<td>5.2.0</td>
+<td>3.7.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-gap-width" tabindex="-1">line-gap-width</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in pixels. Defaults to <code>0</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.29.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-offset" tabindex="-1">line-offset</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a>. Units in pixels. Defaults to <code>0</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.12.1</td>
+<td>3.0.0</td>
+<td>3.1.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.29.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-blur" tabindex="-1">line-blur</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in pixels. Defaults to <code>0</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Blur applied to the line, in pixels.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.29.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-dasharray" tabindex="-1">line-dasharray</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#array">array</a> in range [0, ∞). Units in line widths. Disabled by <code>line-pattern</code>. Transitionable.</em></p>
+<p>Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width. Note that GeoJSON sources with <code>lineMetrics: true</code> specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-pattern" tabindex="-1">line-pattern</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#resolvedimage">resolvedImage</a>. Transitionable.</em></p>
+<p>Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.49.0</td>
+<td>6.5.0</td>
+<td>4.4.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-gradient" tabindex="-1">line-gradient</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Disabled by <code>line-dasharray</code>. Disabled by <code>line-pattern</code>. Requires source to be <code>geojson</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Defines a gradient with which to color a line feature. Can only be used with GeoJSON sources that specify <code>&quot;lineMetrics&quot;: true</code>.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.45.0</td>
+<td>6.5.0</td>
+<td>4.4.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h2 id="symbol" tabindex="-1">Symbol</h2>
+<h3 id="symbol-placement" tabindex="-1">symbol-placement</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>point</code>, <code>line</code>, <code>line-center</code>. Defaults to <code>point</code>.</em></p>
+<p>Label placement relative to its geometry.</p>
+<ul>
+<li><code>point</code>: The label is placed at the point where the geometry is located.</li>
+<li><code>line</code>: The label is placed along the line of the geometry. Can only be used on <code>LineString</code> and <code>Polygon</code> geometries.</li>
+<li><code>line-center</code>: The label is placed at the center of the line of the geometry. Can only be used on <code>LineString</code> and <code>Polygon</code> geometries. Note that a single feature in a vector tile may contain multiple line geometries.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td><code>line-center</code> value</td>
+<td>0.47.0</td>
+<td>6.4.0</td>
+<td>4.3.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="symbol-spacing" tabindex="-1">symbol-spacing</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a> in range [1, ∞). Units in pixels. Defaults to <code>250</code>. Requires <code>symbol-placement</code> to be <code>line</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Distance between two symbol anchors.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="symbol-avoid-edges" tabindex="-1">symbol-avoid-edges</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>false</code>.</em></p>
+<p>If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer. When using a client that supports global collision detection, like Mapbox GL JS version 0.42.0 or greater, enabling this property is not needed to prevent clipped labels at tile boundaries.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="symbol-sort-key" tabindex="-1">symbol-sort-key</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a>.</em></p>
+<p>Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first.  When <code>icon-allow-overlap</code> or <code>text-allow-overlap</code> is <code>false</code>, features with a lower sort key will have priority during placement. When <code>icon-allow-overlap</code> or <code>text-allow-overlap</code> is set to <code>true</code>, features with a higher sort key will overlap over features with a lower sort key.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.53.0</td>
+<td>7.4.0</td>
+<td>4.11.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.53.0</td>
+<td>7.4.0</td>
+<td>4.11.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="symbol-z-order" tabindex="-1">symbol-z-order</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>auto</code>, <code>viewport-y</code>, <code>source</code>. Defaults to <code>auto</code>.</em></p>
+<p>Controls the order in which overlapping symbols in the same layer are rendered</p>
+<ul>
+<li><code>auto</code>: If <code>symbol-sort-key</code> is set, sort based on that. Otherwise sort symbols by their y-position relative to the viewport.</li>
+<li><code>viewport-y</code>: Symbols will be sorted by their y-position relative to the viewport.</li>
+<li><code>source</code>: Symbols will be rendered in the same order as the source data with no sorting applied.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.49.0</td>
+<td>6.6.0</td>
+<td>4.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-allow-overlap" tabindex="-1">icon-allow-overlap</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>false</code>. Requires <code>icon-image</code>.</em></p>
+<p>If true, the icon will be visible even if it collides with other previously drawn symbols.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-ignore-placement" tabindex="-1">icon-ignore-placement</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>false</code>. Requires <code>icon-image</code>.</em></p>
+<p>If true, other symbols can be visible even if they collide with the icon.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-optional" tabindex="-1">icon-optional</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>false</code>. Requires <code>icon-image</code>. Requires <code>text-field</code>.</em></p>
+<p>If true, text will display without their corresponding icons when the icon collides with other symbols and the text does not.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-rotation-alignment" tabindex="-1">icon-rotation-alignment</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>, <code>auto</code>. Defaults to <code>auto</code>. Requires <code>icon-image</code>.</em></p>
+<p>In combination with <code>symbol-placement</code>, determines the rotation behavior of icons.</p>
+<ul>
+<li><code>map</code>: When <code>symbol-placement</code> is set to <code>point</code>, aligns icons east-west. When <code>symbol-placement</code> is set to <code>line</code> or <code>line-center</code>, aligns icon x-axes with the line.</li>
+<li><code>viewport</code>: Produces icons whose x-axes are aligned with the x-axis of the viewport, regardless of the value of <code>symbol-placement</code>.</li>
+<li><code>auto</code>: When <code>symbol-placement</code> is set to <code>point</code>, this is equivalent to <code>viewport</code>. When <code>symbol-placement</code> is set to <code>line</code> or <code>line-center</code>, this is equivalent to <code>map</code>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td><code>auto</code> value</td>
+<td>0.25.0</td>
+<td>4.2.0</td>
+<td>3.4.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-size" tabindex="-1">icon-size</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in factor of the original icon size. Defaults to <code>1</code>. Requires <code>icon-image</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by <code>icon-size</code>. 1 is the original size; 3 triples the size of the image.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.35.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-text-fit" tabindex="-1">icon-text-fit</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>none</code>, <code>width</code>, <code>height</code>, <code>both</code>. Defaults to <code>none</code>. Requires <code>icon-image</code>. Requires <code>text-field</code>.</em></p>
+<p>Scales the icon to fit around the associated text.</p>
+<ul>
+<li><code>none</code>: The icon is displayed at its intrinsic aspect ratio.</li>
+<li><code>width</code>: The icon is scaled in the x-dimension to fit the width of the text.</li>
+<li><code>height</code>: The icon is scaled in the y-dimension to fit the height of the text.</li>
+<li><code>both</code>: The icon is scaled in both x- and y-dimensions.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.21.0</td>
+<td>4.2.0</td>
+<td>3.4.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-text-fit-padding" tabindex="-1">icon-text-fit-padding</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#array">array</a>. Units in pixels. Defaults to <code>0,0,0,0</code>. Requires <code>icon-image</code>. Requires <code>text-field</code>. Requires <code>icon-text-fit</code> to be one of <code>both</code>, <code>width</code>, <code>height</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Size of the additional area added to dimensions determined by <code>icon-text-fit</code>, in clockwise order: top, right, bottom, left.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.21.0</td>
+<td>4.2.0</td>
+<td>3.4.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-image" tabindex="-1">icon-image</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#resolvedimage">resolvedImage</a>.</em></p>
+<p>Name of image in sprite to use for drawing an image background.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.35.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-rotate" tabindex="-1">icon-rotate</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a>. Units in degrees. Defaults to <code>0</code>. Requires <code>icon-image</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Rotates the icon clockwise.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.21.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-padding" tabindex="-1">icon-padding</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in pixels. Defaults to <code>2</code>. Requires <code>icon-image</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Size of the additional area around the icon bounding box used for detecting symbol collisions.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-keep-upright" tabindex="-1">icon-keep-upright</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>false</code>. Requires <code>icon-image</code>. Requires <code>icon-rotation-alignment</code> to be <code>map</code>. Requires <code>symbol-placement</code> to be one of <code>line</code>, <code>line-center</code>.</em></p>
+<p>If true, the icon may be flipped to prevent it from being rendered upside-down.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-offset" tabindex="-1">icon-offset</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#array">array</a>. Defaults to <code>0,0</code>. Requires <code>icon-image</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of <code>icon-size</code> to obtain the final offset in pixels. When combined with <code>icon-rotate</code> the offset will be as if the rotated direction was up.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.29.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-anchor" tabindex="-1">icon-anchor</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>center</code>, <code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code>, <code>top-left</code>, <code>top-right</code>, <code>bottom-left</code>, <code>bottom-right</code>. Defaults to <code>center</code>. Requires <code>icon-image</code>.</em></p>
+<p>Part of the icon placed closest to the anchor.</p>
+<ul>
+<li><code>center</code>: The center of the icon is placed closest to the anchor.</li>
+<li><code>left</code>: The left side of the icon is placed closest to the anchor.</li>
+<li><code>right</code>: The right side of the icon is placed closest to the anchor.</li>
+<li><code>top</code>: The top of the icon is placed closest to the anchor.</li>
+<li><code>bottom</code>: The bottom of the icon is placed closest to the anchor.</li>
+<li><code>top-left</code>: The top left corner of the icon is placed closest to the anchor.</li>
+<li><code>top-right</code>: The top right corner of the icon is placed closest to the anchor.</li>
+<li><code>bottom-left</code>: The bottom left corner of the icon is placed closest to the anchor.</li>
+<li><code>bottom-right</code>: The bottom right corner of the icon is placed closest to the anchor.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.40.0</td>
+<td>5.2.0</td>
+<td>3.7.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.40.0</td>
+<td>5.2.0</td>
+<td>3.7.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-pitch-alignment" tabindex="-1">icon-pitch-alignment</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>, <code>auto</code>. Defaults to <code>auto</code>. Requires <code>icon-image</code>.</em></p>
+<p>Orientation of icon when map is pitched.</p>
+<ul>
+<li><code>map</code>: The icon is aligned to the plane of the map.</li>
+<li><code>viewport</code>: The icon is aligned to the plane of the viewport.</li>
+<li><code>auto</code>: Automatically matches the value of <code>icon-rotation-alignment</code>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.39.0</td>
+<td>5.2.0</td>
+<td>3.7.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-pitch-alignment" tabindex="-1">text-pitch-alignment</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>, <code>auto</code>. Defaults to <code>auto</code>. Requires <code>text-field</code>.</em></p>
+<p>Orientation of text when map is pitched.</p>
+<ul>
+<li><code>map</code>: The text is aligned to the plane of the map.</li>
+<li><code>viewport</code>: The text is aligned to the plane of the viewport.</li>
+<li><code>auto</code>: Automatically matches the value of <code>text-rotation-alignment</code>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.21.0</td>
+<td>4.2.0</td>
+<td>3.4.0</td>
+</tr>
+<tr>
+<td><code>auto</code> value</td>
+<td>0.25.0</td>
+<td>4.2.0</td>
+<td>3.4.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-rotation-alignment" tabindex="-1">text-rotation-alignment</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>, <code>auto</code>. Defaults to <code>auto</code>. Requires <code>text-field</code>.</em></p>
+<p>In combination with <code>symbol-placement</code>, determines the rotation behavior of the individual glyphs forming the text.</p>
+<ul>
+<li><code>map</code>: When <code>symbol-placement</code> is set to <code>point</code>, aligns text east-west. When <code>symbol-placement</code> is set to <code>line</code> or <code>line-center</code>, aligns text x-axes with the line.</li>
+<li><code>viewport</code>: Produces glyphs whose x-axes are aligned with the x-axis of the viewport, regardless of the value of <code>symbol-placement</code>.</li>
+<li><code>auto</code>: When <code>symbol-placement</code> is set to <code>point</code>, this is equivalent to <code>viewport</code>. When <code>symbol-placement</code> is set to <code>line</code> or <code>line-center</code>, this is equivalent to <code>map</code>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td><code>auto</code> value</td>
+<td>0.25.0</td>
+<td>4.2.0</td>
+<td>3.4.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-field" tabindex="-1">text-field</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#formatted">formatted</a>. Defaults to ``.</em></p>
+<p>Value to use for a text label. If a plain <code>string</code> is provided, it will be treated as a <code>formatted</code> with default/inherited formatting options.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.33.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-font" tabindex="-1">text-font</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#array">array</a>. Defaults to <code>宋体,宋体</code>. Requires <code>text-field</code>.</em></p>
+<p>Font stack to use for displaying text.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.43.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-size" tabindex="-1">text-size</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in pixels. Defaults to <code>16</code>. Requires <code>text-field</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Font size.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.35.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-max-width" tabindex="-1">text-max-width</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in ems. Defaults to <code>10</code>. Requires <code>text-field</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>The maximum line width for text wrapping.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.40.0</td>
+<td>5.2.0</td>
+<td>3.7.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-line-height" tabindex="-1">text-line-height</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a>. Units in ems. Defaults to <code>1.2</code>. Requires <code>text-field</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Text leading value for multi-line text.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-letter-spacing" tabindex="-1">text-letter-spacing</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a>. Units in ems. Defaults to <code>0</code>. Requires <code>text-field</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Text tracking amount.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.40.0</td>
+<td>5.2.0</td>
+<td>3.7.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-justify" tabindex="-1">text-justify</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>auto</code>, <code>left</code>, <code>center</code>, <code>right</code>. Defaults to <code>center</code>. Requires <code>text-field</code>.</em></p>
+<p>Text justification options.</p>
+<ul>
+<li><code>auto</code>: The text is aligned towards the anchor position.</li>
+<li><code>left</code>: The text is aligned to the left.</li>
+<li><code>center</code>: The text is centered.</li>
+<li><code>right</code>: The text is aligned to the right.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.39.0</td>
+<td>5.2.0</td>
+<td>3.7.0</td>
+</tr>
+<tr>
+<td>auto</td>
+<td>0.54.0</td>
+<td>7.4.0</td>
+<td>4.10.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-radial-offset" tabindex="-1">text-radial-offset</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a>. Units in ems. Defaults to <code>0</code>. Requires <code>text-field</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Radial offset of text, in the direction of the symbol's anchor. Useful in combination with <code>text-variable-anchor</code>, which defaults to using the two-dimensional <code>text-offset</code> if present.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.54.0</td>
+<td>7.4.0</td>
+<td>4.10.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.54.0</td>
+<td>7.4.0</td>
+<td>4.10.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-variable-anchor" tabindex="-1">text-variable-anchor</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#array">array</a>. Requires <code>text-field</code>. Requires <code>symbol-placement</code> to be <code>point</code>.</em></p>
+<p>To increase the chance of placing high-priority labels on the map, you can provide an array of <code>text-anchor</code> locations: the renderer will attempt to place the label at each location, in order, before moving onto the next label. Use <code>text-justify: auto</code> to choose justification based on anchor position. To apply an offset, use the <code>text-radial-offset</code> or the two-dimensional <code>text-offset</code>.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.54.0</td>
+<td>7.4.0</td>
+<td>4.10.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-anchor" tabindex="-1">text-anchor</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>center</code>, <code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code>, <code>top-left</code>, <code>top-right</code>, <code>bottom-left</code>, <code>bottom-right</code>. Defaults to <code>center</code>. Requires <code>text-field</code>. Disabled by <code>text-variable-anchor</code>.</em></p>
+<p>Part of the text placed closest to the anchor.</p>
+<ul>
+<li><code>center</code>: The center of the text is placed closest to the anchor.</li>
+<li><code>left</code>: The left side of the text is placed closest to the anchor.</li>
+<li><code>right</code>: The right side of the text is placed closest to the anchor.</li>
+<li><code>top</code>: The top of the text is placed closest to the anchor.</li>
+<li><code>bottom</code>: The bottom of the text is placed closest to the anchor.</li>
+<li><code>top-left</code>: The top left corner of the text is placed closest to the anchor.</li>
+<li><code>top-right</code>: The top right corner of the text is placed closest to the anchor.</li>
+<li><code>bottom-left</code>: The bottom left corner of the text is placed closest to the anchor.</li>
+<li><code>bottom-right</code>: The bottom right corner of the text is placed closest to the anchor.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.39.0</td>
+<td>5.2.0</td>
+<td>3.7.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-max-angle" tabindex="-1">text-max-angle</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a>. Units in degrees. Defaults to <code>45</code>. Requires <code>text-field</code>. Requires <code>symbol-placement</code> to be one of <code>line</code>, <code>line-center</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Maximum angle change between adjacent characters.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-writing-mode" tabindex="-1">text-writing-mode</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#array">array</a>. Requires <code>text-field</code>. Requires <code>symbol-placement</code> to be <code>point</code>.</em></p>
+<p>The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. The order of elements in an array define priority order for the placement of an orientation variant.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>1.3.0</td>
+<td>8.3.0</td>
+<td>5.3.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-rotate" tabindex="-1">text-rotate</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a>. Units in degrees. Defaults to <code>0</code>. Requires <code>text-field</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Rotates the text clockwise.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.35.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-padding" tabindex="-1">text-padding</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in pixels. Defaults to <code>2</code>. Requires <code>text-field</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Size of the additional area around the text bounding box used for detecting symbol collisions.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-keep-upright" tabindex="-1">text-keep-upright</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>true</code>. Requires <code>text-field</code>. Requires <code>text-rotation-alignment</code> to be <code>map</code>. Requires <code>symbol-placement</code> to be one of <code>line</code>, <code>line-center</code>.</em></p>
+<p>If true, the text may be flipped vertically to prevent it from being rendered upside-down.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-transform" tabindex="-1">text-transform</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>none</code>, <code>uppercase</code>, <code>lowercase</code>. Defaults to <code>none</code>. Requires <code>text-field</code>.</em></p>
+<p>Specifies how to capitalize text, similar to the CSS <code>text-transform</code> property.</p>
+<ul>
+<li><code>none</code>: The text is not altered.</li>
+<li><code>uppercase</code>: Forces all letters to be displayed in uppercase.</li>
+<li><code>lowercase</code>: Forces all letters to be displayed in lowercase.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.33.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-offset" tabindex="-1">text-offset</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#array">array</a>. Units in ems. Defaults to <code>0,0</code>. Requires <code>text-field</code>. Disabled by <code>text-radial-offset</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.35.0</td>
+<td>5.1.0</td>
+<td>3.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-allow-overlap" tabindex="-1">text-allow-overlap</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>false</code>. Requires <code>text-field</code>.</em></p>
+<p>If true, the text will be visible even if it collides with other previously drawn symbols.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-ignore-placement" tabindex="-1">text-ignore-placement</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>false</code>. Requires <code>text-field</code>.</em></p>
+<p>If true, other symbols can be visible even if they collide with the text.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-optional" tabindex="-1">text-optional</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>false</code>. Requires <code>text-field</code>. Requires <code>icon-image</code>.</em></p>
+<p>If true, icons will display without their corresponding text when the text collides with other symbols and the icon does not.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="visibility-6" tabindex="-1">visibility</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>visible</code>, <code>none</code>. Defaults to <code>visible</code>.</em></p>
+<p>Whether this layer is displayed.</p>
+<ul>
+<li><code>visible</code>: The layer is shown.</li>
+<li><code>none</code>: The layer is not shown.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-opacity" tabindex="-1">icon-opacity</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>1</code>. Requires <code>icon-image</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The opacity at which the icon will be drawn.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.33.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-color" tabindex="-1">icon-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>#000000</code>. Requires <code>icon-image</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The color of the icon. This can only be used with sdf icons.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.33.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-halo-color" tabindex="-1">icon-halo-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>rgba(0, 0, 0, 0)</code>. Requires <code>icon-image</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The color of the icon's halo. Icon halos can only be used with SDF icons.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.33.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-halo-width" tabindex="-1">icon-halo-width</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in pixels. Defaults to <code>0</code>. Requires <code>icon-image</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Distance of halo to the icon outline.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.33.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-halo-blur" tabindex="-1">icon-halo-blur</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in pixels. Defaults to <code>0</code>. Requires <code>icon-image</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Fade out the halo towards the outside.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.33.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-translate" tabindex="-1">icon-translate</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#array">array</a>. Units in pixels. Defaults to <code>0,0</code>. Requires <code>icon-image</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icon-translate-anchor" tabindex="-1">icon-translate-anchor</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>. Defaults to <code>map</code>. Requires <code>icon-image</code>. Requires <code>icon-translate</code>.</em></p>
+<p>Controls the frame of reference for <code>icon-translate</code>.</p>
+<ul>
+<li><code>map</code>: Icons are translated relative to the map.</li>
+<li><code>viewport</code>: Icons are translated relative to the viewport.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-opacity" tabindex="-1">text-opacity</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>1</code>. Requires <code>text-field</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The opacity at which the text will be drawn.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.33.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-color" tabindex="-1">text-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>#000000</code>. Requires <code>text-field</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The color with which the text will be drawn.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.33.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-halo-color" tabindex="-1">text-halo-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>rgba(0, 0, 0, 0)</code>. Requires <code>text-field</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The color of the text's halo, which helps it stand out from backgrounds.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.33.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-halo-width" tabindex="-1">text-halo-width</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in pixels. Defaults to <code>0</code>. Requires <code>text-field</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.33.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-halo-blur" tabindex="-1">text-halo-blur</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in pixels. Defaults to <code>0</code>. Requires <code>text-field</code>. Supports <a href="expressions.html#feature-state">feature-state</a> and <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The halo's fadeout distance towards the outside.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>data-driven styling</td>
+<td>0.33.0</td>
+<td>5.0.0</td>
+<td>3.5.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-translate" tabindex="-1">text-translate</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#array">array</a>. Units in pixels. Defaults to <code>0,0</code>. Requires <code>text-field</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="text-translate-anchor" tabindex="-1">text-translate-anchor</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>. Defaults to <code>map</code>. Requires <code>text-field</code>. Requires <code>text-translate</code>.</em></p>
+<p>Controls the frame of reference for <code>text-translate</code>.</p>
+<ul>
+<li><code>map</code>: The text is translated relative to the map.</li>
+<li><code>viewport</code>: The text is translated relative to the viewport.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="raster" tabindex="-1">Raster</h2>
+<h3 id="visibility-7" tabindex="-1">visibility</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>visible</code>, <code>none</code>. Defaults to <code>visible</code>.</em></p>
+<p>Whether this layer is displayed.</p>
+<ul>
+<li><code>visible</code>: The layer is shown.</li>
+<li><code>none</code>: The layer is not shown.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="raster-opacity" tabindex="-1">raster-opacity</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>1</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The opacity at which the image will be drawn.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="raster-hue-rotate" tabindex="-1">raster-hue-rotate</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a>. Units in degrees. Defaults to <code>0</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Rotates hues around the color wheel.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="raster-brightness-min" tabindex="-1">raster-brightness-min</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>0</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Increase or reduce the brightness of the image. The value is the minimum brightness.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="raster-brightness-max" tabindex="-1">raster-brightness-max</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>1</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Increase or reduce the brightness of the image. The value is the maximum brightness.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="raster-saturation" tabindex="-1">raster-saturation</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [-1, 1]. Defaults to <code>0</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Increase or reduce the saturation of the image.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="raster-contrast" tabindex="-1">raster-contrast</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [-1, 1]. Defaults to <code>0</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Increase or reduce the contrast of the image.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="raster-resampling" tabindex="-1">raster-resampling</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>linear</code>, <code>nearest</code>. Defaults to <code>linear</code>.</em></p>
+<p>The resampling/interpolation method to use for overscaling, also known as texture magnification filter</p>
+<ul>
+<li><code>linear</code>: (Bi)linear filtering interpolates pixel values using the weighted average of the four closest original source pixels creating a smooth but blurry look when overscaled</li>
+<li><code>nearest</code>: Nearest neighbor filtering interpolates pixel values using the nearest original source pixel creating a sharp but pixelated look when overscaled</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.47.0</td>
+<td>6.3.0</td>
+<td>4.2.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="raster-fade-duration" tabindex="-1">raster-fade-duration</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, ∞). Units in milliseconds. Defaults to <code>300</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>Fade duration when a new tile is added.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hillshade" tabindex="-1">Hillshade</h2>
+<h3 id="visibility-8" tabindex="-1">visibility</h3>
+<p><em><a href="#layout">Layout</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>visible</code>, <code>none</code>. Defaults to <code>visible</code>.</em></p>
+<p>Whether this layer is displayed.</p>
+<ul>
+<li><code>visible</code>: The layer is shown.</li>
+<li><code>none</code>: The layer is not shown.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.43.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hillshade-illumination-direction" tabindex="-1">hillshade-illumination-direction</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 359]. Defaults to <code>335</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions.</em></p>
+<p>The direction of the light source used to generate the hillshading with 0 as the top of the viewport if <code>hillshade-illumination-anchor</code> is set to <code>viewport</code> and due north if <code>hillshade-illumination-anchor</code> is set to <code>map</code>.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.43.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hillshade-illumination-anchor" tabindex="-1">hillshade-illumination-anchor</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#enum">enum</a>. Possible values: <code>map</code>, <code>viewport</code>. Defaults to <code>viewport</code>.</em></p>
+<p>Direction of light source when map is rotated.</p>
+<ul>
+<li><code>map</code>: The hillshade illumination is relative to the north direction.</li>
+<li><code>viewport</code>: The hillshade illumination is relative to the top of the viewport.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.43.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hillshade-exaggeration" tabindex="-1">hillshade-exaggeration</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#number">number</a> in range [0, 1]. Defaults to <code>0.5</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>Intensity of the hillshade</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.43.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hillshade-shadow-color" tabindex="-1">hillshade-shadow-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>#000000</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The shading color of areas that face away from the light source.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.43.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hillshade-highlight-color" tabindex="-1">hillshade-highlight-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>#FFFFFF</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The shading color of areas that faces towards the light source.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.43.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hillshade-accent-color" tabindex="-1">hillshade-accent-color</h3>
+<p><em><a href="#paint">Paint</a> property. Optional <a href="types.html#color">color</a>. Defaults to <code>#000000</code>. Supports <a href="expressions.html#interpolate">interpolate</a> expressions. Transitionable.</em></p>
+<p>The shading color used to accentuate rugged terrain like sharp cliffs and gorges.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.43.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+
+                        </article>
+                    </section>
+    
+                        <footer>
+                            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> on <span id="generated-date"></span>
+                        <script>
+                        // 获取当前日期并插入到页面中
+                        setInterval(function(){
+                            document.getElementById('generated-date').textContent = new Date().toLocaleString();
+                        }, 1000);
+
+                        </script>
+                        </footer>
+                    </div>
+                </div>
+
+                <script>prettyPrint();</script>
+                <script src="scripts/linenumber.js"></script>
+                <script src="scripts/main.js"></script>
+                </body>
+                </html>
+            

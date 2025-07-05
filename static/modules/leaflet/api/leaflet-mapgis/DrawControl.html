@@ -1,0 +1,802 @@
+<header id="page-title" class="page-title">
+    
+        <span class="page-title-main">类名</span>
+        <span class="page-title-sub">DrawControl</span>
+    
+</header>
+
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="DrawControl">
+        <a class="href-link" href="#DrawControl">#</a>
+        
+        <span class="code-name" id="DrawControl" style="font-size:30px">
+            
+                new DrawControl<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>绘制工具</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>构造参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>complete</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             <a link="complete.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="complete" global.html#complete>complete</a>
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>绘制完成后的回调函数</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7>初始化绘制工具</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// ES5引入方式
+const { Map, MapView } = Zondy
+const { DrawControl } = Zondy.Widget
+// ES6引入方式
+import { Map, MapView, DrawControl } from "@mapgis/webclient-leaflet-plugin"
+// 初始化图层管理容器
+const map = new Map();
+// 初始化地图视图对象
+const mapView = new MapView({
+  // 视图id
+  viewId: "viewer-id",
+  // 图层管理容器
+  map: map
+});
+// 初始化绘制控件
+const drawControl = new DrawControl({
+  view: mapView,
+  visible: true,
+  complete: function (type, feature) {
+    console.log("绘制类型:", type, ",绘制完成:", feature);
+    featureLayer.add(feature);
+  }
+})
+// 开始绘制
+drawControl.start('lineString', {})</code></pre>
+    
+
+        <p class="code-caption"><h7>通过控件进行绘制</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// ES5引入方式
+const { Map, MapView } = Zondy
+const { DrawControl } = Zondy.Widget
+// ES6引入方式
+import { Map, MapView, DrawControl } from "@mapgis/webclient-leaflet-plugin"
+// 初始化图层管理容器
+const map = new Map();
+// 初始化地图视图对象
+const mapView = new MapView({
+  // 视图id
+  viewId: "viewer-id",
+  // 图层管理容器
+  map: map
+});
+// 初始化绘制控件
+const drawControl = new DrawControl({
+  view: mapView,
+  visible: true,
+  complete: function (type, feature) {
+    console.log("绘制类型:", type, ",绘制完成:", feature);
+    featureLayer.add(feature);
+  }
+})
+// 添加控件
+mapView.ui.add(drawControl)</code></pre>
+    
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">继承关系</h3>
+
+        
+
+
+    <ul>
+        <li><a link="Widget.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="Widget" Widget.html>Widget</a></li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='function'>方法</h3>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法概述</h4>
+            <div class="members">
+            <div class="table-container">
+                <table class="params table">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>返回值类型</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#destory">destory</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>销毁控件</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#destroy">destroy</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>销毁控件</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#end">end</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>结束绘制</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#start">start</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>开始绘制</p></code></td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法详情</h4>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="destory">
+        <a class="href-link" href="#destory">#</a>
+        
+        <span class="code-name" id="destory" style="font-size:30px">
+            
+                destory<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>销毁控件</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="destroy">
+        <a class="href-link" href="#destroy">#</a>
+        
+        <span class="code-name" id="destroy" style="font-size:30px">
+            
+                destroy<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>销毁控件</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a goto="destroy" link="Widget.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="Widget#destroy" Widget.html#destroy>Widget#destroy</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="end">
+        <a class="href-link" href="#end">#</a>
+        
+        <span class="code-name" id="end" style="font-size:30px">
+            
+                end<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>结束绘制</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="start">
+        <a class="href-link" href="#start">#</a>
+        
+        <span class="code-name" id="start" style="font-size:30px">
+            
+                start<span class="signature">(type, drawOptions)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>开始绘制</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>type</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             String
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>绘制类型，lineString，polygon，rectangle，marker，circle</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>drawOptions</code></td>
+  
+
+  <td class="type">
+  
+  </td>
+
+  
+
+  <td class="description last"><p>绘制参数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>

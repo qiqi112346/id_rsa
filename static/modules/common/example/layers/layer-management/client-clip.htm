@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>图层裁剪（客户端）</title>
+  <!-- 引入地图引擎库 -->
+  <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+  <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+  <!-- 天地图token -->
+  <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+  <script type="text/javascript">
+    //使用严格模式
+    'use strict'
+    // 定义视图的主要类
+    let map, view, layer, clippingArea
+    const { Map, MapView, SceneView, Basemap, Collection, Color, Feature } =
+      zondy
+    const {
+      IGSTileLayer,
+      IGSMapImageLayer,
+      IGSVectorTileLayer,
+      IGSFeatureLayer,
+      GeoJSONLayer,
+      WMTSLayer,
+      WMSLayer,
+      WFSLayer,
+      GraphicsLayer,
+      GroupLayer
+    } = zondy.layer
+    const { SimpleRenderer, RandomRenderer } = zondy.renderer
+    const { Polygon, MultiPolygon, Extent, Circle } = zondy.geometry
+    const { SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol } =
+      zondy.symbol
+
+    // 初始化地图
+    function init() {
+      // 初始化地图视图
+      initView()
+      // 添加底图
+      const wmtsLayer = new WMTSLayer({
+        // 加载经纬度的影像地图
+        url: "http://t6.tianditu.gov.cn/img_w/wmts",
+        // 天地图必须加token，且token名为tk
+        tokenKey: "tk",
+        // token请在天地图官网申请
+        tokenValue: getTDTToken(),
+        extent: new Extent({
+          xmin: -180,
+          xmax: 180,
+          ymin: -85,
+          ymax: 85
+        })
+      })
+      map.add(wmtsLayer)
+      // 添加动态图层
+      addIGSMapImageLayer()
+      // 初始化ui
+      initUI()
+    }
+
+    // 初始地图
+    function initView() {
+      // 初始化图层管理容器
+      map = new Map()
+      // 初始化地图视图对象
+      view = createView('mapgis-viewer', map)
+    }
+
+    // 添加地图服务图层
+    function addIGSMapImageLayer() {
+      // 创建地图服务图层
+      layer = new IGSMapImageLayer({
+        //服务地址
+        url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省3857/MapServer',
+        // 设置出图模式
+        renderMode: 'image',
+        // 设置子图层
+        sublayers: [
+          {
+            id: '0'
+          },
+          {
+            id: '2',
+            sublayers: [
+              {
+                id: '2-23'
+              },
+              {
+                id: '2-24'
+              },
+              {
+                id: '2-25'
+              }
+            ]
+          }
+        ],
+        // 图层名称
+        title: '湖北省地图服务图层'
+      })
+
+      layer.on('layerview-created', function (result) {
+        //视点跳转
+        view.flyTo({
+          extent: result.layer.extent
+        })
+      })
+      map.add(layer)
+    }
+
+    // 添加瓦片图层
+    function addIGSTileLayer() {
+      // 创建地图图片图层
+      layer = new IGSTileLayer({
+        // 服务基地址
+        url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_3857_normal_3-10/TileServer',
+        // 图层名称
+        title: '湖北省瓦片图层',
+        // 显示或隐藏
+        visible: true
+      })
+      layer.on('layerview-created', function (result) {
+        console.log('result: ', result);
+        //视点跳转
+        view.flyTo({
+          extent: result.layer.extent
+        })
+      })
+      map.add(layer)
+    }
+
+    // 添加WMS图层
+    function addWMSLayer() {
+      // 创建WMS图层
+      layer = new WMSLayer({
+        // 服务基地址
+        url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省3857/WMSServer',
+        // 图层名称
+        title: '湖北省WMS图层',
+        // 显示或隐藏
+        visible: true
+      })
+      layer.on('layerview-created', function (result) {
+        console.log('result: ', result);
+        //视点跳转
+        view.flyTo({
+          extent: result.layer.extent
+        })
+      })
+      map.add(layer)
+    }
+
+    // 添加WMTS图层
+    function addWMTSLayer() {
+      // 创建WMTS图层
+      layer = new WMTSLayer({
+        // 服务基地址
+        url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_3857_normal_3-10/WMTSServer',
+        // 图层名称
+        title: '湖北省WMTS图层',
+        // 显示或隐藏
+        visible: true
+      })
+      layer.on('layerview-created', function (result) {
+        //视点跳转
+        view.flyTo({
+          extent: result.layer.extent
+        })
+      })
+      map.add(layer)
+    }
+
+    // 添加矢量瓦片图层
+    function addIGSVectorTileLayer() {
+      // 创建矢量瓦片图层
+      layer = new IGSVectorTileLayer({
+        url: 'http://webclient.smaryun.com:8089/igs/rest/services/VectorTile/湖北省3857矢量瓦片/VectorTileServer',
+        // 图层名称
+        title: '湖北省矢量瓦片图层',
+        // 显示或隐藏
+        visible: true
+      })
+      layer.on('layerview-created', function (result) {
+        layer.setStyleLayerVisibility('背景', false)
+      })
+      map.add(layer)
+    }
+
+    // 初始化示例UI操作
+    function initUI() {
+      layui.use(function () {
+        const form = layui.form
+        // 切换底图
+        form.on('select(changeLayer)', function (data) {
+          map.remove(layer)
+          switch (data.value) {
+            case '地图服务图层':
+              addIGSMapImageLayer()
+              break
+            case '瓦片图层':
+              addIGSTileLayer()
+              break
+            case 'wms图层':
+              addWMSLayer()
+              break
+            case 'wmts图层':
+              addWMTSLayer()
+              break
+            case '矢量瓦片图层':
+              addIGSVectorTileLayer()
+              break
+          }
+          layer.clippingArea = clippingArea
+        })
+
+        // 客户端空间裁剪
+        form.on('select(clipArea)', function (data) {
+          // 清空客户端裁剪
+          clippingArea = undefined
+          if (data.value === 'polygon') {
+            // 设置裁剪多边形
+            clippingArea = getPolygonClip()
+          } else if (data.value === 'multiPolygon') {
+            clippingArea = getMultiPolygonClip()
+          } else if (data.value === 'extent') {
+            clippingArea = getExtentClip()
+          } else if (data.value === 'circle') {
+            clippingArea = getCircleClip()
+          } else {
+            clippingArea = null
+          }
+          // 设置裁剪区
+          if (layer) {
+            layer.clippingArea = clippingArea
+          }
+        })
+      })
+    }
+
+    // 设置裁剪多边形
+    function getPolygonClip() {
+      return new Polygon({
+        coordinates: [
+          [
+            [111.36341, 29.032578],
+            [113, 30],
+            [114.13094, 29.032578],
+            [114.13094, 31.273224],
+            [111.36341, 31.273224],
+            [111.36341, 29.032578]
+          ]
+        ]
+      })
+    }
+
+    // 设置裁剪多边形
+    function getMultiPolygonClip() {
+      return new MultiPolygon({
+        coordinates: [
+          [
+            [
+              [113.5, 30.5],
+              [114, 30.5],
+              [114, 31],
+              [113.5, 31],
+              [113.5, 30.5]
+            ]
+          ],
+          [
+            [
+              [111.5, 30.5],
+              [112, 30.5],
+              [112, 31],
+              [111.5, 31],
+              [111.5, 30.5]
+            ]
+          ]
+        ]
+      })
+    }
+
+    // 设置裁剪多边形
+    function getExtentClip() {
+      return new Extent({
+        xmin: 110,
+        xmax: 114,
+        ymin: 29.5,
+        ymax: 31
+      })
+    }
+
+    // 设置裁剪多边形
+    function getCircleClip() {
+      return new Circle({
+        // 设置圆的中心点
+        center: [113.2, 30.5],
+        // 设置圆的半径，单位米
+        radius: 100000,
+        // 设置圆转多边形时分割点的数量
+        numberOfPoints: 200
+      })
+    }
+
+  </script>
+</head>
+
+<body onload="init();">
+
+  <!-- 视图容器div  -->
+  <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%">
+    <!-- 图层切换 -->
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label">切换图层</label>
+          <div class="layui-input-block layui-input-block-select">
+            <select id="changeLayer" name="changeLayer" lay-filter="changeLayer">
+              <option value="地图服务图层">地图服务图层</option>
+              <option value="瓦片图层">瓦片图层</option>
+              <option value="wms图层">wms图层</option>
+              <option value="wmts图层">wmts图层</option>
+              <option value="矢量瓦片图层">矢量瓦片图层</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">切换裁剪几何</label>
+          <div class="layui-input-block layui-input-block-select">
+            <select id="clipArea" name="clipArea" lay-filter="clipArea">
+              <option value="none">无</option>
+              <option value="polygon">多边形(单区)</option>
+              <option value="multiPolygon">多边形(多区)</option>
+              <option value="extent">矩形</option>
+              <option value="circle">圆形</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+
+<style>
+</style>
+
+</html>

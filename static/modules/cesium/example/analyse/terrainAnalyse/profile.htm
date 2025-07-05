@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>剖面分析</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--引入echarts-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/echarts/echarts.min.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+   <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/analyse.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+      //剖切分析实例
+      let terrainProfile = null
+      //echart实例
+      let echart = null
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加天地图
+        addTDT()
+        //添加地址体
+        addTerrain()
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //打开深度检测
+        viewer.scene.globe.depthTestAgainstTerrain = true
+      }
+
+      //添加剖切分析
+      //剖切分析有三种展现方式:
+      //场景展示(一条贴合切面的线),
+      //echart展示(依赖echart，出现折线图)，
+      //联动展示（echart图标hover会对应在场景中联动展示）
+      function addTerrainProfile() {
+        //每次新使用之前移除之前的内容
+        removeTerrainProfile()
+        echart = echarts.init(document.getElementById('echart'))
+        let option = getEChartOption()
+        echart.setOption(option)
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/TerrainProfile.html
+        terrainProfile = new zondy.cesium.TerrainProfile(viewer, {
+          showPolygon: true, //是否显示垂直面
+          polygonColor: Cesium.Color.YELLOW.withAlpha(1), //垂直面颜色
+          polygonHeight: 1000, //垂直面高度
+          polyLineColor: Cesium.Color.BLUE, //联动展示时：垂直线颜色
+          pointColor: Cesium.Color.YELLOW, //联动展示时：贴地点颜色
+          polylineGroundColor: Cesium.Color.RED, //贴地线颜色
+          samplePrecision: 2, //采集精度
+          profileType: 1, //分析类型：0地形模式；1地形和模型兼容模式
+          sampleLever: -1, //采样级别.0代表采最精细级别,-1代表当前视窗内的级别,1-20为自定义采样级别
+          resultShowType: 2, //结果展示形式.0代表仅场景中展示结果(直接在地形上绘制结果),1表示仅echart图表中展示结果,2表示场景和图表都展示结果
+          echart: echart //当resultShowType为1和2时，必须传
+        })
+        terrainProfile.profile(profileStartCallback, profileSuccessCallback)
+      }
+
+      //剖切分析开始的回调
+      function profileStartCallback() {}
+
+      //剖切分析结束的回调
+      function profileSuccessCallback() {
+        let echartPanel = document.getElementById('echartPanel')
+        echartPanel.style.display = 'block'
+      }
+
+      //echart对应的option
+      function getEChartOption() {
+        return {
+          tooltip: {
+            trigger: 'axis'
+          },
+          grid: {
+            top: '12%',
+            left: '10%',
+            right: '5%',
+            bottom: '6%'
+          },
+          calculable: true,
+          xAxis: {
+            type: 'value',
+            max: 'dataMax',
+            scale: true,
+            axisLine: {
+              lineStyle: {
+                color: '#fff'
+              }
+            },
+            axisLabel: {
+              show: false
+            },
+            axisTick: {
+              show: false
+            }
+          },
+          yAxis: {
+            type: 'value',
+            scale: true,
+            axisLine: {
+              lineStyle: {
+                color: '#fff'
+              }
+            }
+          },
+          series: [
+            {
+              type: 'line',
+              markPoint: {
+                data: [
+                  { type: 'max', name: '最高点' },
+                  { type: 'min', name: '最低点' }
+                ],
+                symbolSize: 40
+              }
+            }
+          ]
+        }
+      }
+
+      //移除剖切分析
+      function removeTerrainProfile() {
+        if (terrainProfile) {
+          terrainProfile.destroy()
+          terrainProfile = null
+        }
+        if (echart) {
+          echart.dispose()
+          echart = null
+        }
+        //隐藏echart面板
+        document.getElementById('echartPanel').style.display = 'none'
+      }
+
+      //添加天地图影像数据
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+      //添加地形数据
+      function addTerrain() {
+        let terrainCacheLayer = new zondy.layer.TerrainCacheLayer({
+          url: 'http://webclient.smaryun.com:8200/3DData/TerrainCache/HubeiTerrain/'
+        })
+        map.add(terrainCacheLayer)
+        // 图层加载完毕
+        terrainCacheLayer.on(
+          zondy.enum.LayerEventType.layerViewCreated,
+          function (result) {
+            // 视点跳转
+            flyToTerrain()
+          }
+        )
+      }
+      //定位到地形
+      function flyToTerrain() {
+        sceneView.flyTo({
+          center: [110.31, 31.48, 3000],
+          orientation: {
+            pitch: Cesium.Math.toRadians(-35.0) //俯仰角
+          }
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" style="width: 160px">
+      <div class="sample-button-panel">
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="addTerrainProfile()"
+        >
+          剖切分析
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-danger"
+          onclick="removeTerrainProfile()"
+        >
+          清除
+        </button>
+      </div>
+    </div>
+    <div id="echartPanel" class="layui-panel echart-panel">
+      <div class="echart-div" id="echart"></div>
+    </div>
+    <style>
+      .echart-panel {
+        position: absolute;
+        right: 10px;
+        top: 85px;
+        display: none;
+      }
+
+      .echart-div {
+        width: 400px;
+        height: 300px;
+      }
+
+      .sample-button-panel {
+        width: 129px;
+      }
+    </style>
+  </body>
+</html>

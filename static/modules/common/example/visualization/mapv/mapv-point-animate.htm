@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>点数据播放</title>
+    <!--引入mapv-->
+    <script
+      type="text/javascript"
+      src="http://webclient.smaryun.com/static/libs/cdn/mapv/mapv.min.js"
+    ></script>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <script type="text/javascript">
+      'use strict'
+      // 定义二维视图的主要类
+      let view, map, wmtsLayer
+      const {
+        WMTSLayer, MapVLayer
+      } = zondy.layer
+      const { Map, SpatialReference } = zondy
+      const { Point } = zondy.geometry
+
+      // 初始化示例
+      function init() {
+        //初始化图层管理容器
+        initView()
+        // 加载天地图
+        addWMTSLayer()
+        // 添加MapV图层
+        initMapVData()
+      }
+
+      // 添加MapV图层
+      function initMapVData() {
+        httpGetPromise(
+          'http://webclient.smaryun.com:8200/Vector/json/pointAnimate/china-point.json'
+        ).then((rs) => {
+          let data = []
+          for (var i = 0; i < rs[0].length; i++) {
+            let geoCoord = rs[0][i].geoCoord
+            data.push({
+              geometry: {
+                type: 'Point',
+                coordinates: geoCoord
+              },
+              time: Math.random() * 10
+            })
+          }
+          // 构建对应的dataset
+          let dataSet = new mapv.DataSet(data)
+
+          // 设置对应的参数
+          let options = {
+            fillStyle: 'rgba(255, 250, 50, 0.6)',
+            //shadowColor: 'rgba(255, 250, 50, 0.5)',
+            //shadowBlur: 3,
+            updateCallback: function (time) {
+              time = time.toFixed(2)
+              // $('#time').html('时间' + time)
+            },
+            size: 3,
+            draw: 'simple',
+            animation: {
+              type: 'time',
+              stepsRange: {
+                start: 0,
+                end: 10
+              },
+              trails: 1,
+              duration: 6
+            }
+          }
+
+          let layer = new MapVLayer({
+            data: dataSet,
+            mapVOptions: options
+          })
+
+          map.add(layer)
+        })
+      }
+
+      // 添加WMTS图层
+      function addWMTSLayer() {
+        wmtsLayer = new WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(wmtsLayer)
+
+        // 图层加载完毕
+        wmtsLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          view.flyTo({
+            center: new Point({
+              coordinates: [12520996.73, 3637179.55, 4000000],
+              spatialReference: new SpatialReference({
+                wkid: 3857
+              })
+            }),
+            zoom: 5
+          })
+        })
+      }
+
+      // 初始化地图视图对象
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 发送请求获取数据
+      function httpGetPromise(url) {
+        return new Promise(function (resolve, reject) {
+          const handler = function () {
+            if (this.readyState !== 4) {
+              return
+            }
+            if (this.status === 200) {
+              resolve(this.response)
+            } else {
+              reject(new Error(this.statusText))
+            }
+          }
+          const client = new XMLHttpRequest()
+          client.open('GET', url)
+          client.onreadystatechange = handler
+          client.responseType = 'json'
+          client.setRequestHeader('Accept', 'application/json')
+          client.send()
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+  </body>
+</html>

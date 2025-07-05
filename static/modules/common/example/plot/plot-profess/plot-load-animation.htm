@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>态势图管理</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha384-SOnAn/m2fVJCwnbEYgD4xzrPtvsXdElhOVvR8ND1YjB5nhGNwwf7nBQlhfAwHAZC"
+      crossorigin="anonymous"
+    />
+    <!--引入行业标绘脚本库-->
+    <script
+      include="panel,2D"
+      src="./static/libs/include-plot-local.js"
+    ></script>
+    <script>
+      'use strict'
+
+      //地图初始化函数
+      function init() {
+        /**
+         * ***********************地图框架部分***************************
+         */
+
+        const view = window.initView('content')
+
+        /**
+         * ***********************行业标绘库部分***************************
+         */
+
+        const zondy = window.zondy
+        const Plot = zondy.plot
+        const {
+          PlotLayer2D,
+          PlotLayer2DGroup,
+          SymbolManager,
+          TimeLine,
+          DrawTool,
+          PlotRegister,
+          PlotUtilBase,
+          FabricLayer
+        } = Plot
+
+        const symbolUrl = `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/symbolLib.json`
+        const symbolOptions = {
+          fontURL: `http://webclient.smaryun.com:8200/Plot/plot-sample/fonts/`,
+          baseUrl: `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/`
+        }
+
+        let layer1,
+          layer2,
+          plotLayer2DGroup,
+          timeline,
+          drawTool,
+          plotEditor,
+          currentPlot
+        // 获取overlay图层
+        const canvas = new FabricLayer(view, PlotLayer2DGroup)
+        // 创建符号管理器
+        const manager = new SymbolManager(symbolUrl, symbolOptions)
+        // 请求获取符号库
+        manager.getSymbols().then(() => {
+          // 创建二维图层组
+          plotLayer2DGroup = canvas.getFabricCanvas()
+          // 创建二维图层
+          layer1 = new PlotLayer2D()
+          // 添加图层
+          plotLayer2DGroup.addLayer(layer1)
+          // 加载标绘图层
+          $.getJSON(
+            `http://webclient.smaryun.com:8200/Plot/plot-sample/layers/bbbbb.json`,
+            (res) => {
+              layer1.fromJSON(res)
+            }
+          )
+          // 创建时间轴
+          $.getJSON(
+            `http://webclient.smaryun.com:8200/Plot/plot-sample/scripts/abc.json`,
+            (t) => {
+              timeline = new TimeLine(plotLayer2DGroup, {})
+              timeline.fromJSON(t)
+            }
+          )
+          layer1.pickPlot = (plot) => {
+            currentPlot = plot
+          }
+        })
+
+        /**
+         * ***********************ui部分***************************
+         */
+        const panel = new window.webclientPlot.PlotPanel('plot-show-table', {
+          titleText: '态势图管理',
+          panelWidth: 250
+        })
+        const contentBody = panel.getBody()
+        contentBody.style.display = 'flex'
+        contentBody.style.flexDirection = 'column'
+
+        const list3 = document.createElement('div')
+        const input3 = document.createElement('input')
+        const span3 = document.createElement('span')
+        list3.setAttribute('class', 'listdom')
+        input3.setAttribute('class', 'input')
+        input3.setAttribute('type', 'file')
+        input3.onchange = (e) => {
+          const file = e.target.files[0]
+          var reader = new FileReader()
+          reader.readAsText(file, 'utf8')
+          reader.onload = function () {
+            timeline.clear()
+            timeline.fromJSON(JSON.parse(this.result))
+          }
+        }
+        span3.innerText = '上传态势图数据'
+        span3.setAttribute('class', 'span')
+        span3.style.position = 'absolute'
+        list3.appendChild(span3)
+        list3.appendChild(input3)
+        contentBody.appendChild(list3)
+
+        const list2 = document.createElement('div')
+        const btn2 = document.createElement('button')
+        list2.setAttribute('class', 'listdom')
+        btn2.setAttribute('class', 'btn')
+        btn2.innerText = `下载态势图数据`
+        btn2.onclick = () => {
+          const a = document.createElement('a')
+          const datastr =
+            'data:text/json;charset=utf-8,' +
+            encodeURIComponent(JSON.stringify(timeline.toJSON()))
+          a.href = datastr
+          a.setAttribute('download', 'animation.json')
+          a.style.display = 'none'
+          a.click()
+        }
+        list2.appendChild(btn2)
+        contentBody.appendChild(list2)
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-viewer">
+      <div id="content" style="position: relative">
+        <div id="plot-show-table"></div>
+      </div>
+    </div>
+  </body>
+  <style>
+    #mapgis-viewer {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      position: relative;
+    }
+    #content {
+      height: 100%;
+      flex: 6.5;
+      position: relative;
+    }
+    #plot-show-table {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      z-index: 999;
+    }
+    #plot-show-table .listdom {
+      font-family: Arial;
+      margin-bottom: 5px;
+      width: 100%;
+      border-color: #1970fc;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #plot-show-table .listdom .btn,
+    .span {
+      display: block;
+      padding: 5px 12px;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.53846154;
+      text-align: center;
+      white-space: nowrap;
+      cursor: pointer;
+      color: #fff;
+      background-color: #3a85c6;
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #plot-show-table .listdom .input {
+      opacity: 0;
+      display: block;
+      padding: 5px 12px;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.53846154;
+      text-align: center;
+      white-space: nowrap;
+      cursor: pointer;
+      color: #fff;
+      background-color: #3a85c6;
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #plot-show-table .listdom .list-item {
+      flex: 1;
+      height: 100%;
+      padding: 5px 12px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background-color: #3a85c6;
+      cursor: pointer;
+      color: #fff;
+      box-sizing: border-box;
+      margin: 1px;
+      text-align: center;
+    }
+  </style>
+</html>

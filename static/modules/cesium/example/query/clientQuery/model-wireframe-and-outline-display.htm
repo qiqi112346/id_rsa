@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>模型线框和轮廓显示</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/visual.css"/>
+    <script>
+      'use strict'
+      // 定义三维视图的主要类
+      let map, sceneView, viewer, currentLayer
+      // 取得jquery对象
+      let $ = layui.$
+      // 图层
+      let layers = []
+      // 处理输入事件类
+      let handler
+      let stages
+      // 线框
+      let wireframeStage
+      // 线框宽
+      let wireframeWidth = 1
+      // 线框颜色
+      let wireframeColor = Cesium.Color.fromCssColorString('#069afc')
+      // 轮廓线
+      let outlineStage
+      // 轮廓线宽
+      let outlineWidth = 2
+      // 轮廓线颜色
+      let outlineColor = Cesium.Color.fromCssColorString('#ffee00')
+      // 是否多选模式
+      let isMultipleChoice = false
+      // pick事件
+      let isM3d20
+      let renderer_range
+
+      // 添加线框
+      function addWireframeStage() {
+        wireframeStage && stages.remove(wireframeStage)
+        wireframeStage = stages.add(
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/PostProcessStageLibrary.html
+          Cesium.PostProcessStageLibrary.createOutlineForPrimitivesStage(
+            wireframeWidth,
+            wireframeColor
+          )
+        )
+        // 后处理中，默认后添加的显示层级越高，为了保证轮廓线永远在线框上层显示，所以每次重新添加线框后，如果有轮廓线则重新添加一次
+        outlineStage && addOutlineStage()
+      }
+
+      // 添加轮廓线
+      function addOutlineStage() {
+        let selected = []
+        // 保留之前的selected，删除后再重新添加
+        if (outlineStage) {
+          selected = outlineStage.selected
+          stages.remove(outlineStage)
+        }
+        // 创建、添加轮廓线
+        outlineStage = stages.add(
+          Cesium.PostProcessStageLibrary.createOutlineStage(
+            outlineWidth,
+            outlineColor
+          )
+        )
+        // 显示的轮廓线oid数组
+        outlineStage.selected = selected
+      }
+
+      // 初始化鼠标事件
+      function initMouseEven() {
+        // 先移除鼠标事件
+        destroyHandler()
+        // 初始化事件类
+        initHandler()
+        // 通过鼠标事件获取oid值，然后放入selected中，实现轮廓线的显示
+        if (isMultipleChoice) {
+          // 多选模式，监听鼠标左键点击事件
+          addLeftUp()
+        } else {
+          // 单选模式，监听鼠标移动事件
+          addMouseMove()
+        }
+      }
+
+      // 鼠标移动事件
+      function addMouseMove() {
+        handler.setInputAction(function (movement) {
+          // 获取oid
+          const pickobj = viewer.scene.pick.call(
+            viewer.scene,
+            movement.endPosition
+          )
+          if (Cesium.defined(pickobj)) {
+            if (isM3d20) {
+              outlineStage.selected = [pickobj.getProperty('OID')]
+            } else {
+              outlineStage.selected = [pickobj]
+            }
+          } else {
+            outlineStage.selected = []
+          }
+        }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
+      }
+
+      // 鼠标左键点击事件
+      function addLeftUp() {
+        handler.setInputAction(function (movement) {
+          // 获取oid
+          const pickobj = viewer.scene.pick.call(
+            viewer.scene,
+            movement.position
+          )
+          if (Cesium.defined(pickobj)) {
+            if (isM3d20) {
+              outlineStage.selected.push(pickobj.getProperty('OID'))
+            } else {
+              outlineStage.selected.push(pickobj)
+            }
+          }
+        }, Cesium.ScreenSpaceEventType.LEFT_UP)
+      }
+
+      // 初始化处理输入事件类
+      function initHandler() {
+        handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
+      }
+
+      // 销毁handle
+      function destroyHandler() {
+        handler = handler && handler.destroy()
+      }
+
+      //添加M3D专题图
+      function addModel20() {
+        const sublayers = '0123456789'.split('').map((id) => {
+          return {
+            id: id,
+            extensionOptions: {
+              renderMode: Cesium.OutlineRenderMode.ALL
+            }
+          }
+        })
+        // 跳转到中心位置
+        sublayers[4].extensionOptions.autoReset = true
+        // 创建场景图层
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/IGSSceneLayer.html
+        currentLayer = new zondy.layer.IGSSceneLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Scene/分层分户/SceneServer',
+          // 设置场景初始化参数
+          scenes: [
+            {
+              // 设置子图层初始化参数
+              sublayers: sublayers
+            }
+          ]
+        })
+        map.add(currentLayer)
+        currentLayer.on('layerview-created', function (result) {
+          layers = layers.concat(result.layerView.innerLayer)
+        })
+        isM3d20 = true
+      }
+      function addModel21() {
+        renderer_range = {
+          renderer: {
+            //专题图字段
+            field: 'tid',
+            //专题图类型-分段
+            type: 'class-breaks',
+            //专题图着色参数
+            classBreakInfos: [
+              {
+                // 最大值
+                maxValue: 400,
+                // 最小值
+                minValue: 300,
+                symbol: {
+                  type: 'mesh-3d',
+                  symbolLayers: [
+                    {
+                      type: 'fill',
+                      material: {
+                        // 透明度设为0，实现隐藏
+                        color: new Cesium.Color(0, 0, 0, 0)
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+        const url =
+          'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D/2.1/小别墅_属性内置_M3D21/小别墅_属性内置_M3D21.mcj'
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/M3DModelCacheLayer.html
+        currentLayer = new zondy.layer.M3DModelCacheLayer({
+          url: url,
+          // 初始化参数
+          extensionOptions: {
+            autoReset: true,
+            renderer: renderer_range,
+            renderMode: Cesium.OutlineRenderMode.ALL
+          }
+        })
+        map.add(currentLayer)
+        currentLayer.on('layerview-created', function (result) {
+          layers.push(result.layerView.innerLayer)
+        })
+        isM3d20 = false
+      }
+
+      //初始化UI
+      function initUI() {
+        layui.use(function () {
+          //监听选择框
+          layui.form.on('select(type)', function (data) {
+            if (currentLayer) {
+              map.remove(currentLayer)
+              currentLayer = null
+            }
+            if (data.value === '0') {
+              addModel20()
+            } else {
+              addModel21()
+            }
+          })
+          // 显示模式
+          layui.form.on('select(renderMode)', function (data) {
+            let renderMode
+            switch (data.value) {
+              case '0':
+                // 只显示模型模式
+                renderMode = Cesium.OutlineRenderMode.FILL
+                $('.item-wireframe-width').hide()
+                $('.item-wireframe-color').hide()
+                $('.item-model-show').hide()
+                break
+              case '1':
+                // 只显示线框模式
+                renderMode = Cesium.OutlineRenderMode.SILHOUETTE
+                $('.item-wireframe-width').show()
+                $('.item-wireframe-color').show()
+                $('.item-model-show').hide()
+                break
+              case '2':
+              default:
+                // 模型加线框模式
+                renderMode = Cesium.OutlineRenderMode.ALL
+                $('.item-wireframe-width').show()
+                $('.item-wireframe-color').show()
+                $('.item-model-show').show()
+                break
+            }
+            for (let layer of layers) {
+              // 设置显示模式
+              layer.renderMode = renderMode
+            }
+          })
+
+          // 线框宽度
+          layui.slider.render({
+            elem: '#wireframe-width',
+            value: wireframeWidth,
+            min: 1,
+            max: 10,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              wireframeWidth = Number(value)
+              // 改变宽度需要重新添加线框
+              addWireframeStage()
+            }
+          })
+
+          // 线框颜色
+          layui.colorpicker.render({
+            elem: '#wireframe-color',
+            color: '#069afc',
+            done: function (value) {
+              $('#wireframe-color-input').val(value)
+              wireframeColor = Cesium.Color.fromCssColorString(value)
+              if (wireframeStage) {
+                // 可直接改变轮廓颜色
+                wireframeStage.uniforms.color = wireframeColor
+              }
+            }
+          })
+
+          // 轮廓宽度
+          layui.slider.render({
+            elem: '#outline-width',
+            value: outlineWidth,
+            min: 1,
+            max: 10,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              outlineWidth = Number(value)
+              // 改变宽度需要重新添加轮廓线
+              addOutlineStage()
+            }
+          })
+
+          // 轮廓颜色
+          layui.colorpicker.render({
+            elem: '#outline-color',
+            color: '#ffee00',
+            done: function (value) {
+              $('#outline-color-input').val(value)
+              outlineColor = Cesium.Color.fromCssColorString(value)
+              if (outlineStage) {
+                // 可直接改变轮廓颜色
+                outlineStage.uniforms.color = outlineColor
+              }
+            }
+          })
+
+          // 轮廓是否多选
+          layui.form.on('switch(multiple-choice)', function (data) {
+            isMultipleChoice = data.elem.checked
+            // 清空选中的轮廓
+            outlineStage.selected = []
+            // 添加轮廓
+            addOutlineStage()
+            // 初始化鼠标事件
+            initMouseEven()
+          })
+        })
+      }
+
+      function openTips() {
+        layui.layer.tips(
+          '多选：鼠标左键点击选择显示多个轮廓线<br>非多选：鼠标移动时选择显示一个轮廓线',
+          '.layui-icon-question',
+          { tips: 3, time: 0 }
+        )
+      }
+
+      function closeTips() {
+        layui.layer.closeAll('tips')
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        viewer.scene.globe.show = false
+        // 针对cesium10.7.4.10版本隐藏大气环境光
+        if (viewer.scene.skyAtmosphere) {
+          viewer.scene.skyAtmosphere.show = false;
+        }
+        if (viewer.scene.sun.show) {
+          viewer.scene.sun.show = false;
+        }
+        if (viewer.scene.moon.show) {
+          viewer.scene.moon.show = false;
+        }
+        if (viewer.scene.globe.showGroundAtmosphere) {
+          viewer.scene.globe.showGroundAtmosphere = false;
+        }
+        stages = viewer.scene.postProcessStages
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加BIM模型
+        addModel20()
+        //添加线框
+        addWireframeStage()
+        //添加轮廓线
+        addOutlineStage()
+        //初始化鼠标事件
+        initMouseEven()
+        //初始化UI
+        initUI()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" id="layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label">模型</label>
+          <div class="layui-input-block">
+            <select name="type" lay-verify="required" lay-filter="type">
+              <option value="0" selected>分层分户(M3D2.0)</option>
+              <option value="1">小别墅(M3D2.1)</option>
+            </select>
+          </div>
+        </div>
+      </form>
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label">显示模式</label>
+          <div class="layui-input-block">
+            <select lay-filter="renderMode" id="renderMode">
+              <option value="2" selected>同时显示模型和线框</option>
+              <option value="0">只显示模型</option>
+              <option value="1">只显示线框</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-form-item item-wireframe-width">
+          <label class="layui-form-label">线框宽度</label>
+          <div class="layui-input-block sample-slider">
+            <div id="wireframe-width"></div>
+          </div>
+        </div>
+        <div class="layui-form-item item-wireframe-color">
+          <label class="layui-form-label">线框颜色</label>
+          <div class="layui-input-inline">
+            <input
+              disabled
+              type="text"
+              value="#069afc"
+              placeholder="线框颜色"
+              class="layui-input"
+              id="wireframe-color-input"
+            />
+          </div>
+          <div class="layui-inline">
+            <div id="wireframe-color"></div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">轮廓宽度</label>
+          <div class="layui-input-block sample-slider">
+            <div id="outline-width"></div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">轮廓颜色</label>
+          <div class="layui-input-inline">
+            <input
+              disabled
+              type="text"
+              value="#ffee00"
+              placeholder="轮廓颜色"
+              class="layui-input"
+              id="outline-color-input"
+            />
+          </div>
+          <div class="layui-inline">
+            <div id="outline-color"></div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">
+            <span class="switch-title">轮廓多选</span>
+            <i
+              class="layui-icon layui-icon-question"
+              onmouseenter="openTips()"
+              onmouseleave="closeTips()"
+            ></i>
+          </label>
+          <div class="layui-input-block">
+            <input
+              type="checkbox"
+              lay-filter="multiple-choice"
+              lay-skin="switch"
+              lay-text="开启|关闭"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+    <style type="text/css">
+      .layui-panel-right {
+        width: 336px;
+      }
+
+      .layui-form-label {
+        width: 86px;
+      }
+
+      .layui-form-select {
+        width: 200px;
+      }
+
+      .layui-form-onswitch,
+      .layui-form-switch {
+        margin-top: 5px;
+      }
+
+      .switch-title {
+        float: left;
+      }
+
+      .layui-icon-question {
+        margin-left: 5px;
+      }
+
+      .layui-colorpicker-main .layui-colorpicker-main-input .layui-btn-primary {
+        background-color: #fff;
+      }
+
+      .layui-colorpicker-main
+        .layui-colorpicker-main-input
+        .layui-btn-primary:hover {
+        color: #46a6ff;
+      }
+
+      /*slider滑块样式调整*/
+      .layui-slider-input {
+        top: 0px;
+      }
+
+      .layui-form-item .layui-input-inline {
+        width: 155px;
+      }
+    </style>
+  </body>
+</html>

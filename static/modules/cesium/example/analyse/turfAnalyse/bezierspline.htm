@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>曲线光滑</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--turf.js库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/turf/turf.min.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+   <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/analyse.css"/>
+    <script>
+      'use strict'
+      let map, sceneView, viewer
+      //曲线
+      let line
+      //贝兹曲线geoJson
+      let geoJson
+      //原始数据
+      let originData = [
+        [-76.091308, 18.427501],
+        [-76.695556, 18.729501],
+        [-76.552734, 19.40443],
+        [-74.61914, 19.134789],
+        [-73.652343, 20.07657],
+        [-73.157958, 20.210656]
+      ]
+
+      //初始化
+      function init() {
+        // 地图初始化
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //加载天地图
+        addTDT()
+        //飞到指定视角
+        flyTo()
+        //加载原始的点数据
+        loadOriginData()
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //加载天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //设置相机位置
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [114.289398, 30.59418345, 5000000.0]
+        })
+      }
+
+      //加载基础数据效果
+      function loadOriginData() {
+        //坐标数组换成GeoJson
+        line = turf.lineString(originData)
+        //添加线显示
+        let originDataSource = viewer.dataSources.add(
+          Cesium.GeoJsonDataSource.load(line, {
+            //线颜色
+            stroke: Cesium.Color.SKYBLUE.withAlpha(0.7),
+            //填充色
+            fill: Cesium.Color.SKYBLUE.withAlpha(0.7),
+            //线宽
+            strokeWidth: 5
+          })
+        )
+        //飞行
+        viewer.flyTo(originDataSource)
+      }
+
+      //贝兹曲线分析
+      function bezierspline() {
+        //贝兹曲线函数
+        geoJson = turf.bezierSpline(line)
+        let dataSource = viewer.dataSources.add(
+          Cesium.GeoJsonDataSource.load(geoJson, {
+            //线颜色
+            stroke: Cesium.Color.RED,
+            //填充色
+            fill: Cesium.Color.RED,
+            //线宽
+            strokeWidth: 5
+          })
+        )
+        //视角飞行
+        viewer.flyTo(dataSource)
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" style="width: 126px">
+      <form class="layui-form" action="">
+        <div class="sample-button-panel">
+          <button
+            type="button"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="bezierspline()"
+          >
+            光滑曲线分析
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>helloworld</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='lib/mapbox-gl-dev.js'></script>
+    <link href='lib/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="./lib/zui/zui.css">
+    <script src="./lib/zui/zui.js" crossorigin="anonymous"></script>
+    
+    <script src='../dist/rasterTileLayer-src.js'></script>
+    <!-- <script src='../dist/rasterTileLayer.js'></script> -->
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 30px;
+            bottom: 0px;
+            width: 100%;
+        }
+        #cowbell{
+            width:100px;
+            height:20px;
+            top:30px;
+            z-index:999;
+            position:'absolute';
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id='map'></div>
+    <button type="button" class="btn primary" onclick="bdsl()">百度地图</button>
+    <button type="button" class="btn primary" onclick="bdyx()">百度影像</button>
+    <button type="button" class="btn primary" onclick="gdsl()">高德地图</button>
+    <button type="button" class="btn primary" onclick="gdyx()">高德影像</button>
+    <button type="button" class="btn primary" onclick="tdtsl()" >天地图</button>
+    <button type="button" class="btn primary" onclick="tdtyx()">天地图影像</button>
+    <button type="button" class="btn primary" onclick="tdtsl4326()" >天地图4326</button>
+    <button type="button" class="btn primary" onclick="tdtyx4326()">天地图影像4326</button>
+    <button type="button" class="btn primary" onclick="osm()">OSM地图</button>
+    <button type="button" class="btn primary" onclick="geoqGray()">GEOQ浅色地图</button>
+    <button type="button" class="btn primary" onclick="geoqPurplishBlue()">GEOQ深色地图</button>
+    <input type="range" id="cowbell" onchange="setOpacity()" name="cowbell" min="0" max="100" value="50" step="5" />
+
+</body>
+
+<script>
+    var map = new mapboxgl.Map({
+        container: 'map', 
+        crs:'EPSG:4326',
+        style:  {
+            "version": 8,
+            layers:[],
+            sources:{}
+        },
+        center: [116.39104,39.90502], 
+        zoom: 15,
+        hash: true
+    });
+
+    map.on('load',()=>{
+        bdsl()
+    })
+
+    //天地图普通地图
+    function tdtsl(){
+        addRasterTileLayer([
+            ['tdtsl', 'TianDiTu.Normal.Map'],
+            ['tdtslzj', 'TianDiTu.Normal.Annotion']
+        ],'63c5c4f101d68229494bb45d3bf60277')
+    }
+
+    function tdtsl4326(){
+        addRasterTileLayer([
+            ['tdtsl4326', 'TianDiTu.Normal4326.Map'],
+            ['tdtslzj4326', 'TianDiTu.Normal4326.Annotion']
+        ],'63c5c4f101d68229494bb45d3bf60277')
+    }
+    //天地图影像
+    function tdtyx(){
+        addRasterTileLayer([
+            ['tdtyx', 'TianDiTu.Satellite.Map'],
+            ['tdtyxzj', 'TianDiTu.Satellite.Annotion']
+        ],'63c5c4f101d68229494bb45d3bf60277')
+    }
+
+    function tdtyx4326(){
+        addRasterTileLayer([
+            ['tdtyx4326', 'TianDiTu.Satellite4326.Map'],
+            ['tdtyxzj4326', 'TianDiTu.Satellite4326.Annotion']
+        ],'63c5c4f101d68229494bb45d3bf60277')
+    }
+    //天地图地形
+    function tdtdx(){
+        addRasterTileLayer([
+            ['tdtdx', 'TianDiTu.Terrain.Map'],
+            ['tdtdxzj', 'TianDiTu.Terrain.Annotion']
+        ],'63c5c4f101d68229494bb45d3bf60277')
+    }
+
+    //高德矢量
+    function gdsl(){
+        addRasterTileLayer([
+            ['gdsl', 'GaoDe.Normal.Map']
+        ])
+    }
+    //高德矢量,无注记版
+    function gdslwzj(){
+        addRasterTileLayer([
+            ['gdslwzj', 'GaoDe.Normal_NoTag.Map']
+        ])
+    }
+    //高德影像
+    function gdyx(){
+        addRasterTileLayer([
+            ['gdyx','GaoDe.Satellite.Map'],
+            ['gdyxzj', 'GaoDe.Satellite.Annotion']
+        ])
+    }
+    
+    //百度矢量
+    function bdsl(){
+        addRasterTileLayer([
+            ['bdsl','Baidu.Normal.Map']
+        ])
+    }
+    //百度影像
+    function bdyx(){
+        addRasterTileLayer([
+            ['bdyx','Baidu.Satellite.Map'],
+            ['bdyxzj', 'Baidu.Satellite.Annotion']
+        ])
+    }
+
+    //OSM地图
+    function osm(){
+        addRasterTileLayer([
+            ['osm', 'OSM.Normal.Map']
+        ])
+    }
+
+    //GeoQ普通地图
+    function geoq(){
+        addRasterTileLayer([
+            ['geoq', 'Geoq.Normal.Map']
+        ])
+    }
+    //GeoQ深蓝色地图
+    function geoqPurplishBlue(){
+        addRasterTileLayer([
+            ['geoqPurplishBlue', 'Geoq.Normal.PurplishBlue']
+        ])
+    }
+    //GeoQ浅色地图
+    function geoqGray(){
+        addRasterTileLayer([
+            ['geoqGray', 'Geoq.Normal.Gray']
+        ])
+    }
+    //GeoQ暖色调地图
+    function geoqWarm(){
+        addRasterTileLayer([
+            ['geoqWarm', 'Geoq.Normal.Warm']
+        ])
+    }
+    //GeoQ冷色调地图
+    function geoqCold(){
+        addRasterTileLayer([
+            ['geoqCold', 'Geoq.Normal.Cold']
+        ])
+    }
+
+    
+    var loadLayer=[]
+    function addRasterTileLayer(layerList, key){
+        layerList.forEach(function(layer){
+            //调用接口，添加图层
+            var param = key?{key:key}:null
+            map.addLayer(rasterTileLayer(layer[0], layer[1], param));
+            console.log('layer: ', layer);
+            console.log('param: ', param);
+        })
+    }
+
+
+    //参照点，wgs84坐标下的天安门广场国旗位置
+    var marker = new mapboxgl.Marker()
+        .setLngLat([116.391305, 39.905530])
+        .addTo(map);
+
+    var cowbell = document.getElementById('cowbell');
+    function setOpacity() {
+        const layers = ['tdtsl4326','tdtslzj4326','tdtyx4326','tdtyxzj4326']
+        layers.forEach((layerId)=>{
+          if(map.style.hasLayer(layerId))  {
+            map.setPaintProperty(layerId,'raster-opacity', parseFloat(cowbell.value)/100)
+          }
+        })
+    }
+
+    // 监听范围
+    map.on('click',(e)=>{
+        console.log('e: ', e.lngLat);
+    })
+
+</script>
+ 
+</html>

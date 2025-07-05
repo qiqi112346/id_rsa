@@ -1,0 +1,24 @@
+{
+  "name": "@mapgis/mapbox-gl-draw-radius",
+"version" : "17.4.0",
+  "description": "",
+  "main": "dist/radius-mode.min.js",
+  "module": "src/radius-mode.js",
+  "scripts": {
+    "build": "rollup --config rollup.config.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mapgis/mapbox-gl-draw": "^17.4.0",
+    "@turf/length": "^6.3.0",
+    "lodash": "^4.17.21",
+    "numeral": "^2.0.6"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^18.0.0",
+    "rollup": "^2.46.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^7.0.2"
+  }
+}

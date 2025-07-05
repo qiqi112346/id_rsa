@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>草图编辑</title>
+    <!-- 引入地图引擎库 -->
+    <script include="leaflet" src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!-- 获取天地图token -->
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <!--自定义椭圆绘制工具-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/sketch-draw-tool/SketchEllipseDrawTool.js" type="module"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/analyse.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+      let map, view, wmtsLayer
+
+      //取得jquery对象
+      let $ = layui.$
+
+      let selectedSketch,
+        sketchEditor,
+        graphicsLayer,
+        geometryType,
+        snapOption,
+        snapAndReferGeometries = [],
+        sketchStyle
+
+      // ES5引入方式
+      const { Polygon, Point } = zondy.geometry
+      const { GeometryServer } = zondy.service
+      const {
+        FetchMethod,
+        SketchDataType,
+        SketchEditorToolEventType,
+        SketchEditorState,
+        SketchEditorEventType,
+        ViewEventType
+      } = zondy.enum
+      const { WMTSLayer, GraphicsLayer, IGSFeatureLayer } = zondy.layer
+      const {
+        Map,
+        Color,
+        Feature,
+        SpatialReference
+      } = zondy
+      const {
+        SketchStyle,
+        SketchEditorLeaflet,
+        SketchEditorCesium,
+        SketchEditorMapboxgl,
+      } = zondy.tool.sketch
+      const { SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol } =
+        zondy.symbol
+
+      const { SimpleRenderer } = zondy.renderer
+      // 初始化地图
+      function init() {
+        // 初始化球体
+        initViewer()
+        // 加载天地图
+        addTDTLayer()
+        // 初始化草图编辑对象
+        initSketchEditor()
+        // 设置抗锯齿，使得三维显示更加平滑
+        setFXAA()
+        // 初始化示例UI操作
+        initUI()
+      }
+
+      // 初始二维地图
+      function initViewer() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-2d-viewer', map)
+      }
+
+      // 初始化草图编辑对象
+      function initSketchEditor() {
+        // 获取引擎类型
+        const type = localStorage.getItem('engine-type')
+        snapOption = {
+          isSnapVertexCoincident: true,
+          isSnapVertexInLine: true,
+          isSnapParallel: true,
+          isSnapPerpendicular: true,
+          snapSketchGeometry: true
+        }
+        // 初始化图形图层对象
+        graphicsLayer = new GraphicsLayer()
+        map.add(graphicsLayer)
+        // 根据不同类型，初始化草图编辑对象
+        switch (type) {
+          case 'leaflet':
+          default:
+            sketchEditor = new zondy.leaflet.tool.sketch.SketchEditor({
+              view: view,
+              layer: graphicsLayer,
+              snapOption: snapOption
+            })
+            break
+          case 'cesium':
+            sketchEditor = new zondy.cesium.tool.sketch.SketchEditor({
+              view: view,
+              layer: graphicsLayer,
+              snapOption: snapOption
+            })
+            break
+          case 'mapboxgl':
+            sketchEditor = new zondy.mapboxgl.tool.sketch.SketchEditor({
+              view: view,
+              layer: graphicsLayer,
+              snapOption: snapOption
+            })
+            break
+        }
+        // 初始化草图编辑器事件
+        initSketchEvent()
+      }
+
+      // 初始化草图编辑器事件
+      function initSketchEvent() {
+        // 注册草图编辑器 创建时事件
+        sketchEditor.on(SketchEditorEventType.create, (event) => {
+          if (
+            event.toolEventInfo &&
+            event.toolEventInfo.type ===
+              SketchEditorToolEventType.geometryUnsimple
+          ) {
+            layui.layer.msg('不符合拓扑规则', { time: 500 })
+          }
+          if (event.state === SketchEditorState.complete) {
+            console.log('鼠标绘制完毕')
+          }
+        })
+        // 注册草图编辑器 更新时事件
+        sketchEditor.on(SketchEditorEventType.update, (event) => {
+          if (event.state === SketchEditorState.start) {
+            console.log('图形被选中，图形对象为：', event.feature.geometry)
+          }
+          if (event.state === SketchEditorState.active) {
+            $('#undo').removeClass('layui-btn-disabled').attr('disabled', false)
+          }
+          if (event.state === SketchEditorState.complete) {
+            $('#undo').addClass('layui-btn-disabled').attr('disabled', true)
+            $('#redo').addClass('layui-btn-disabled').attr('disabled', true)
+          }
+        })
+        // 注册草图编辑器 撤销事件
+        sketchEditor.on(SketchEditorEventType.undo, (event) => {
+          console.log('undo', event)
+        })
+        // 注册草图编辑器 回退事件
+        sketchEditor.on(SketchEditorEventType.redo, (event) => {
+          console.log('redo', event)
+        })
+      }
+
+      // 初始化加载天地图
+      function addTDTLayer() {
+        wmtsLayer = new WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/vec_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(wmtsLayer)
+        // 图层加载完毕
+        wmtsLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          view.flyTo({
+            center: [114.4016, 30.4667, 1000],
+            zoom: 17
+          })
+        })
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        $('#undo').addClass('layui-btn-disabled').attr('disabled', true)
+        $('#redo').addClass('layui-btn-disabled').attr('disabled', true)
+        layui.use(function () {
+          var layer = layui.layer,
+            tips
+          const form = layui.form
+          form.on('select(drawOperation)', function (data) {
+            geometryType = data.value
+          })
+          form.on('select(dataSource)', function (data) {
+            switch (data.value) {
+              case 'addZondy':
+              default:
+                addZondy()
+                break
+              case 'addBuilding':
+                addBuilding()
+                break
+            }
+          })
+          // 是否开启捕获，默认开启捕获
+          form.on('switch(snap)', function (data) {
+            snapOption = {
+              isSnapVertexCoincident: data.elem.checked,
+              isSnapVertexInLine: data.elem.checked,
+              isSnapParallel: data.elem.checked,
+              isSnapPerpendicular: data.elem.checked,
+              snapSketchGeometry: data.elem.checked
+            }
+            sketchEditor.setSnapOption(snapOption)
+          })
+          // 是否进行拓扑检查，默认开启拓扑检查
+          form.on('switch(isSimple)', function (data) {
+            sketchEditor.isSimple = data.elem.checked
+          })
+          $('#stop').on({
+            mouseenter: function () {
+              var that = this
+              tips = layer.tips(
+                "<span style='font-size:14px'>结束本次绘制并移除当前绘制内容</span>",
+                that,
+                {
+                  tips: [3, '#2C2C2C'],
+                  time: 0,
+                  area: 'auto',
+                  maxWidth: 200
+                }
+              )
+            },
+            mouseleave: function () {
+              layer.close(tips)
+            },
+            click: function () {
+              stop()
+            }
+          })
+          $('#remove').on({
+            mouseenter: function () {
+              var that = this
+              tips = layer.tips(
+                "<span style='font-size:14px'>移除选中的草图</span>",
+                that,
+                {
+                  tips: [3, '#2C2C2C'],
+                  time: 0,
+                  area: 'auto',
+                  maxWidth: 200
+                }
+              )
+            },
+            mouseleave: function () {
+              layer.close(tips)
+            }
+          })
+          $('#undo').on({
+            mouseenter: function () {
+              var that = this
+              tips = layer.tips(
+                "<span style='font-size:14px'>撤销当前编辑操作</span>",
+                that,
+                {
+                  tips: [3, '#2C2C2C'],
+                  time: 0,
+                  area: 'auto',
+                  maxWidth: 200
+                }
+              )
+            },
+            mouseleave: function () {
+              layer.close(tips)
+            },
+            click: function () {
+              undo()
+            }
+          }),
+            $('#redo').on({
+              mouseenter: function () {
+                var that = this
+                tips = layer.tips(
+                  "<span style='font-size:14px'>恢复被撤销的内容，撤销操作后使用</span>",
+                  that,
+                  {
+                    tips: [3, '#2C2C2C'],
+                    time: 0,
+                    area: 'auto',
+                    maxWidth: 200
+                  }
+                )
+              },
+              mouseleave: function () {
+                layer.close(tips)
+              },
+              click: function () {
+                redo()
+              }
+            })
+          $('#setSketchStyle').on({
+            mouseenter: function () {
+              var that = this
+              tips = layer.tips(
+                "<span style='font-size:14px'>点击后，再绘制草图，样式更新</span>",
+                that,
+                {
+                  tips: [3, '#2C2C2C'],
+                  time: 0,
+                  area: 'auto',
+                  maxWidth: 200
+                }
+              )
+            },
+            mouseleave: function () {
+              layer.close(tips)
+            },
+            click: function () {
+              setSketchStyle()
+            }
+          })
+          $('#instructions').on({
+            mouseenter: function () {
+              var that = this
+              tips = layer.tips(
+                "<p style='font-size:14px'><span style='font-weight:bold'>鼠标绘制：</span>点击要绘制图形按钮，不同图形绘制操作如下：</p><p style='font-size:14px;text-indent:2em'>绘制线、区、手绘线、手绘区、三角形：左键点击开始绘制，继续点击左键绘制下一顶点；双击左键完成绘制。</p><p style='font-size:14px;text-indent:2em'>绘制圆形、椭圆：按下左键绘制圆心，不要松开左键，拖拽鼠标添加半径，松开左键圆形绘制完成；</p><p style='font-size:14px;text-indent:2em'>绘制矩形：按下左键绘制矩形左上角顶点，不要松开左键，拖拽鼠标添加矩形，松开左键矩形绘制完成。</p><p style='font-size:14px'><span style='font-weight:bold'>图形整体编辑：</span>左键点击选中图形，可进行图形整体编辑操作，如移动、缩放；</p><p style='font-size:14px;text-indent:2em'>移动草图：图形整体编辑状态下，左键长按拖动草图；</p><p style='font-size:14px;text-indent:2em'>缩放草图：图形整体编辑状态下，拉伸图形选择框顶点实现草图缩放。</p><p style='font-size:14px'><span style='font-weight:bold'>顶点编辑：</span>图形整体编辑状态下，再次左键点击草图，进入顶点编辑状态；</p><p style='font-size:14px;text-indent:2em'>移动图形顶点：顶点编辑状态下，左键拖动图形顶点，改变图形顶点位置；</p><p style='font-size:14px;text-indent:2em'>增加图形顶点：顶点编辑状态下，左键拖动图形中点，增加图形顶点。</p>",
+                that,
+                {
+                  tips: [3, '#2C2C2C'],
+                  time: 0,
+                  area: 'auto',
+                  maxWidth: 550
+                }
+              )
+            },
+            mouseleave: function () {
+              layer.close(tips)
+            }
+          })
+        })
+        $('#isSimple').on({
+          mouseenter: function () {
+            var that = this
+            tips = layer.tips(
+              "<span style='font-size:14px'>拓扑检查仅适用于线、区几何</span>",
+              that,
+              {
+                tips: [3, '#2C2C2C'],
+                time: 0,
+                area: 'auto',
+                maxWidth: 230
+              }
+            )
+          },
+          mouseleave: function () {
+            layer.close(tips)
+          },
+          click: function () {
+            stop()
+          }
+        })
+      }
+
+      // 绘制点
+      function draw() {
+        switch (geometryType) {
+          case 'point':
+          default:
+            addPoint()
+            break
+          case 'polyline':
+            addPolyline()
+            break
+          case 'polygon':
+            addPolygon()
+            break
+          case 'circle':
+            addCircle()
+            break
+          case 'rectangle':
+            addRectangle()
+            break
+          case 'freehandPolygon':
+            addFreehandPolygon()
+            break
+          case 'freehandPolyline':
+            addFreehandPolyline()
+            break
+          case 'triangle':
+            addTriangle()
+            break
+          case 'ellipse':
+            addEllipse()
+            break
+        }
+      }
+
+      // 绘制点
+      function addPoint() {
+        sketchEditor.start(SketchDataType.POINT)
+      }
+
+      // 绘制线
+      function addPolyline() {
+        sketchEditor.start(SketchDataType.POLYLINE)
+      }
+
+      // 绘制区
+      function addPolygon() {
+        console.log('addPolygon: ')
+        sketchEditor.start(SketchDataType.POLYGON)
+      }
+
+      // 绘制圆
+      function addCircle() {
+        sketchEditor.start(SketchDataType.CIRCLE)
+      }
+
+      // 绘制矩形
+      function addRectangle() {
+        sketchEditor.start(SketchDataType.RECTANGLE)
+      }
+
+      // 绘制手绘区
+      function addFreehandPolygon() {
+        sketchEditor.start(SketchDataType.FREEHANDPOLYGON)
+      }
+
+      // 绘制手绘线
+      function addFreehandPolyline() {
+        sketchEditor.start(SketchDataType.FREEHANDPOLYLINE)
+      }
+
+      // 绘制三角形
+      function addTriangle() {
+        sketchEditor.start(SketchDataType.POLYGON, { vertexNumber: 3 })
+      }
+
+      // 绘制椭圆
+      function addEllipse() {
+        sketchEditor.startCustomDrawTool(SketchEllipseDrawTool, 'ellipse')
+      }
+
+      // 撤销
+      function undo() {
+        sketchEditor.undo()
+        // 更新撤销回退按钮状态
+        if (sketchEditor.canRedo()) {
+          $('#redo').removeClass('layui-btn-disabled').attr('disabled', false)
+        } else {
+          $('#redo').addClass('layui-btn-disabled').attr('disabled', true)
+        }
+        if (sketchEditor.canUndo()) {
+          $('#undo').removeClass('layui-btn-disabled').attr('disabled', false)
+        } else {
+          $('#undo').addClass('layui-btn-disabled').attr('disabled', true)
+        }
+      }
+
+      // 恢复，恢复撤销的内容
+      function redo() {
+        sketchEditor.redo()
+        // 更新撤销回退按钮状态
+        if (sketchEditor.canRedo()) {
+          $('#redo').removeClass('layui-btn-disabled').attr('disabled', false)
+        } else {
+          $('#redo').addClass('layui-btn-disabled').attr('disabled', true)
+        }
+        if (sketchEditor.canUndo()) {
+          $('#undo').removeClass('layui-btn-disabled').attr('disabled', false)
+        } else {
+          $('#undo').addClass('layui-btn-disabled').attr('disabled', true)
+        }
+      }
+
+      // 停止绘制
+      function stop() {
+        sketchEditor.stop()
+      }
+
+      // 移除选中草图
+      function removeSelectedSketch() {
+        if (sketchEditor) {
+          sketchEditor.remove()
+        }
+      }
+
+      // 设置草图初始绘制时样式
+      function setSketchStyle() {
+        sketchStyle = new SketchStyle({
+          // 草图点样式
+          vertexStyle: new SimpleMarkerSymbol({
+            color: new Color(102, 142, 141, 1),
+            size: 10,
+            outline: new SimpleLineSymbol({
+              color: new Color(255, 255, 255, 1),
+              width: 3
+            })
+          }),
+          // 草图线样式
+          lineStyle: new SimpleLineSymbol({
+            color: new Color(102, 142, 141, 1),
+            width: 3
+          }),
+          // 草图区样式
+          fillStyle: new SimpleFillSymbol({
+            color: new Color(170, 237, 235, 0.5),
+            outline: new SimpleLineSymbol({
+              color: new Color(102, 142, 141, 1),
+              width: 2
+            })
+          }),
+          // 草图选中时，选中框样式
+          selectBoxStyle: new SimpleFillSymbol({
+            color: new Color(255, 127, 0, 0.03),
+            outline: new SimpleLineSymbol({
+              color: new Color(252, 91, 59, 1),
+              width: 1
+            })
+          }),
+          // 草图选中时，选中框顶点样式
+          selectBoxVertexStyle: new SimpleMarkerSymbol({
+            color: new Color(255, 255, 255, 1),
+            size: 9,
+            outline: new SimpleLineSymbol({
+              color: new Color(251, 91, 59, 1),
+              width: 3
+            })
+          }),
+          // 草图选中时，被编辑顶点样式
+          selectVertexStyle: new SimpleMarkerSymbol({
+            color: new Color(251, 91, 59, 1),
+            size: 9,
+            outline: new SimpleLineSymbol({
+              color: new Color(251, 255, 255, 1),
+              width: 3
+            })
+          }),
+          // 草图选中时，被编辑中点样式
+          selectMidVertexStyle: new SimpleMarkerSymbol({
+            color: new Color(255, 255, 255, 1),
+            size: 7,
+            outline: new SimpleLineSymbol({
+              color: new Color(251, 91, 59, 1),
+              width: 1
+            })
+          })
+        })
+        sketchEditor.setSketchStyle(sketchStyle)
+      }
+
+      function addZondy() {
+        const zondyPolygon = new Polygon({
+          spatialReference: new SpatialReference({ wkid: 4490 }),
+          coordinates: [
+            [
+              [114.4008647724749, 30.467287302017183],
+              [114.4008647724749, 30.467072725295992],
+              [114.40137410841778, 30.467078089714025],
+              [114.40137410841778, 30.46695813981706],
+              [114.4008647724749, 30.466943979263277],
+              [114.4008647724749, 30.466825962066626],
+              [114.40131547072451, 30.466838492375732],
+              [114.40131547072451, 30.466660944211487],
+              [114.4008647724749, 30.46664893627164],
+              [114.4008647724749, 30.466525554656958],
+              [114.40124556523986, 30.46652956523505],
+              [114.40124556523986, 30.466367938935196],
+              [114.40086477279662, 30.466357352058875],
+              [114.4008647724749, 30.466209053993197],
+              [114.40118112449692, 30.46621238586976],
+              [114.40118112449692, 30.46613622664445],
+              [114.40137410841778, 30.46608567237851],
+              [114.40158820291394, 30.46708034459588],
+              [114.40206046494464, 30.467085318544783],
+              [114.40206046494464, 30.467330447932387],
+              [114.4008647724749, 30.467287302017183]
+            ]
+          ]
+        })
+        console.log('zondyPolygon: ', zondyPolygon)
+        sketchEditor.start(zondyPolygon)
+      }
+
+      function addBuilding() {
+        const polygon2 = new Polygon({
+          spatialReference: new SpatialReference({ wkid: 4490 }),
+          coordinates: [
+            [
+              [114.40135821529617, 30.468290448188753],
+              [114.40136357672714, 30.467727184295626],
+              [114.40161556398311, 30.467721819877593],
+              [114.40161556398311, 30.46765744686124],
+              [114.40174423832656, 30.46765744686124],
+              [114.40173887689559, 30.46760916709897],
+              [114.40245194721564, 30.467614531517],
+              [114.40243050149172, 30.467496514320345],
+              [114.40231791144123, 30.46763598918912],
+              [114.40234471859611, 30.46829581260678],
+              [114.40135821529617, 30.468290448188753]
+            ]
+          ]
+        })
+        sketchEditor.start(polygon2)
+      }
+
+      function addSnapGeometry() {
+        const geometry =
+          sketchEditor._drawTool.sketchStage.entityGraphic.geometry
+        snapAndReferGeometries.push(geometry)
+        if (sketchEditor) {
+          sketchEditor.snapAndReferGeometries = snapAndReferGeometries
+        }
+      }
+
+      // 设置抗锯齿，使得三维显示更加平滑
+      function setFXAA() {
+        // 设置抗锯齿
+        // 获取引擎类型
+        const type = localStorage.getItem('engine-type')
+        // 仅在三维场景下需要开启抗锯齿
+        if (type === 'cesium') {
+          // 获取真实的场景视图对象
+          const innerView = view.getInnerView()
+          // 开启抗锯齿
+          innerView.scene.fxaa = true
+          innerView.scene.postProcessStages.fxaa.enabled = true
+          // 开启图像渲染像素化处理，使得绘制结果更平滑
+          innerView.resolutionScale = window.devicePixelRatio
+        }
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <div id="mapgis-2d-viewer" style="width: 100%; height: 100%"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="layui-form-item" style="width: 400px">
+          <label class="layui-form-label" style="width: 60px">绘制图形: </label>
+          <div class="layui-input-inline layui-input-inline-select">
+            <select
+              id="drawOperation"
+              name="drawOperation"
+              lay-filter="drawOperation"
+            >
+              <option value="point">点</option>
+              <option value="polyline">线</option>
+              <option value="polygon">区</option>
+              <option value="circle">圆</option>
+              <option value="ellipse">椭圆</option>
+              <option value="rectangle">矩形</option>
+              <option value="freehandPolygon">手绘区</option>
+              <option value="freehandPolyline">手绘线</option>
+              <option value="triangle">三角形</option>
+            </select>
+          </div>
+          <button
+            type="button"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="draw()"
+          >
+            绘制
+          </button>
+          <button
+            type="button"
+            id="stop"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+          >
+            停止绘制
+          </button>
+        </div>
+        <div class="layui-form-item" style="width: 300px">
+          <label class="layui-form-label" style="width: 60px">图形数据: </label>
+          <div class="layui-input-inline layui-input-inline-select">
+            <select id="dataSource" name="dataSource" lay-filter="dataSource">
+              <option value="">-请选择-</option>
+              <option value="addZondy">添加中地大楼</option>
+              <option value="addBuilding">添加建筑区域</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <button
+            type="button"
+            id="undo"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+          >
+            撤销
+          </button>
+          <button
+            type="button"
+            id="redo"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+          >
+            恢复
+          </button>
+          <button
+            type="button"
+            id="setSketchStyle"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+          >
+            设置草图样式
+          </button>
+        </div>
+        <div class="layui-form-item" style="width: 400px">
+          <label class="layui-form-label" style="width: 90px">捕获设置：</label>
+          <div class="layui-input-block">
+            <input
+              type="checkbox"
+              lay-filter="snap"
+              lay-skin="switch"
+              lay-text="开启|关闭"
+              checked
+            />
+          </div>
+
+          <button
+            type="button"
+            id="addSnapGeometry"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="addSnapGeometry()"
+          >
+            添加选中图形作为捕获对象
+          </button>
+        </div>
+        <div class="layui-form-item" style="width: 400px">
+          <label class="layui-form-label" style="width: 90px"
+            >线区拓扑检查</label
+          >
+          <div class="layui-input-block" id="isSimple">
+            <input
+              type="checkbox"
+              lay-filter="isSimple"
+              lay-skin="switch"
+              lay-text="开启|关闭"
+            />
+          </div>
+        </div>
+        <div class="layui-form-item" style="width: 400px">
+          <button
+            type="button"
+            id="remove"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="removeSelectedSketch()"
+          >
+            移除选中草图
+          </button>
+
+          <button
+            type="button"
+            id="instructions"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            style="right: 0; position: absolute"
+          >
+            操作说明
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <style>
+      .layui-panel {
+        width: auto;
+        z-index: 999;
+      }
+      .layui-btn-normal {
+        margin-right: 1px !important;
+        font-size: 15px;
+        padding: 0px 7px;
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Client for JavaScript MapView</title>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+                <h1> MapGIS Client for JavaScript API</h1>
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/common/api/common-mapgis/index.html"
+                        >
+                            Common
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/cesium/api/cesium-mapgis/index.html"
+                        >
+                            Cesium-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/mapboxgl/api/mapboxgl-mapgis/index.html"
+                        >
+                            MapboxGL-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/leaflet/api/leaflet-mapgis/index.html"
+                        >
+                            Leaflet-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/openlayers/api/openLayers-mapgis/index.html"
+                        >
+                            OpenLayers-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/video/api/video-mapgis/index.html"
+                        >
+                            Video-Plugin
+                        </a>
+                    
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            <div>
+                <span class="mapgis-api-document-span"><a href="index.html">API文档</a></span>
+            </div>
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="搜索文档..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <div class="category"><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">视图模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapView"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapView.html">MapView</a><span style="display: none;"><p>二维场景视图(mapboxgl引擎)，对地图引擎进行管理，如果要对地图图层进行管理请参考<code>Map</code>，<br/>
+参考示例：
+<a href='#MapView'>[初始化二维场景视图]</a>
+<br>[ES5引入方式]：<br/>
+zondy.mapboxgl.MapView() <br/>
+[ES6引入方式]：<br/>
+import { MapView } from '@mapgis/webclient-mapboxgl-plugin' <br/></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Popup"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Popup.html">Popup</a><span style="display: none;"><p>二维场景信息弹窗(mapboxgl引擎)
+参考示例：
+<a href='#MapView'>[初始化二维场景视图]</a>
+[ES6引入方式]：<br/>
+import { Popup } from '@mapgis/webclient-mapboxgl-plugin' <br/>
+自定义样式说明：<br/>
+zondy-popup__content 弹窗容器样式<br/>
+zondy-popup__tip 弹窗对话框箭头样式<br/>
+zondy-popup__header 弹窗头部样式<br/>
+zondy-popup__content 弹窗主体样式<br/>
+zondy-popup__footer 弹窗底部样式<br/></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Screenshot"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Screenshot.html">Screenshot</a><span style="display: none;"><p>打印工具</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">草图编辑模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SketchEditorMapboxgl"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SketchEditorMapboxgl.html">SketchEditorMapboxgl</a><span style="display: none;"><p>二维Mapboxgl引擎草图编辑类<br/>
+<br>[ES5引入方式]：<br/>
+const { SketchEditor } = zondy.mapboxgl.tool.sketch <br/>
+[ES6引入方式]：<br/>
+import { SketchEditor } from &quot;@mapgis/webclient-leaflet-plugin&quot; <br/></p></span></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header id="page-title" class="page-title">
+                    <span class="page-title-main">类名</span>
+                    <span class="page-title-sub">MapView</span>
+                </header>
+                
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="MapView">
+        <a class="href-link" href="#MapView">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                new MapView<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>二维场景视图(mapboxgl引擎)，对地图引擎进行管理，如果要对地图图层进行管理请参考<code>Map</code>，<br/>
+参考示例：
+<a href='#MapView'>[初始化二维场景视图]</a>
+<br>[ES5引入方式]：<br/>
+zondy.mapboxgl.MapView() <br/>
+[ES6引入方式]：<br/>
+import { MapView } from '@mapgis/webclient-mapboxgl-plugin' <br/></p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+            <th style="min-width: 100px;">默认值</th>
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>构造参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>map</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Map</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>图层管理容器对象</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>viewId</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>二维场景视图的容器(html的div标签)ID</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>zoom</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0
+      
+      </td>
+  
+
+  <td class="description last"><p>初始化二维场景视图时显示级数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>center</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Point</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>地图视图中心点</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>extent</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Extent</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>地图视图可视范围</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>scale</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>地图视图比例尺（比例尺的分母）</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>maxScale</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>地图视图的最大比例尺（比例尺的分母，该值越小，比例尺越大）。视图的当前比列尺不会大于地图视图的最大比例尺。默认值为undefined，undefined表示用户未设置，视图的最大比例尺不受限制。maxScale的值应该始终小于minScale的值。</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>minScale</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>地图视图的最小比例尺（比例尺的分母，该值越大，比例尺越小）。视图的当前比列尺不会小于地图视图的最小比例尺。默认值为undefined，undefined表示用户未设置，地图视图会根据全图范围，计算视图的最小比例尺。如果用户设置了该值，则地图将直接采用用户设置的值。minScale的值应该始终大于maxScale的值。</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>popup</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>地图弹框</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <div class="method-parameter columns">
+        <div class="column is-2"><label>绑定事件:</label></div>
+        <div class="column is-10">
+            <ul>
+                <li>BaseView#event:地图视图加载完毕事件</li>
+            
+                <li>BaseView#event:鼠标点击事件</li>
+            
+                <li>BaseView#event:鼠标双击事件</li>
+            
+                <li>BaseView#event:鼠标按下事件</li>
+            
+                <li>BaseView#event:鼠标抬起事件</li>
+            
+                <li>BaseView#event:鼠标右键点击事件</li>
+            
+                <li>BaseView#event:鼠标移动事件</li>
+            
+                <li>BaseView#event:鼠标移出视图事件</li>
+            
+                <li>BaseView#event:鼠标移入视图事件</li>
+            
+                <li>BaseView#event:zoom变化事件</li>
+            
+                <li>BaseView#event:地图移动事件</li>
+            
+                <li>BaseView#event:地图大小变化事件</li>
+            
+                <li>BaseView#event:键盘输入事件</li>
+            
+                <li>BaseView#event:键盘按下事件</li>
+            
+                <li>BaseView#event:键盘抬起事件</li>
+            
+                <li>BaseView#event:地图视图改变事件</li>
+            </ul>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p class="summary"><h5>支持如下方法：</h5>
+<a href='#flyTo'>[1、视点跳转]</a><br/>
+<a href='#getCenter'>[2、获取当前视图的中心点]</a><br/>
+<a href='#getZoom'>[3、获取当前缩放级数]</a><br/>
+<a href='#getExtent'>[4、获取当前视图的地理范围]</a><br/>
+<a href='#getSize'>[5、获取当前视图容器的宽高]</a><br/>
+<a href='#toJSON'>[6、导出场景视图的配置文件]</a><br/>
+<a href='#clone'>[7、克隆并返回一个新的场景视图对象]</a><br/>
+<a href='#fromJSON'>[8、通过json构造并返回一个新的场景视图对象]</a><br/>
+<a href='#takeScreenshot'>[9、屏幕快照]</a><br/>
+<code>10、注册事件</code><br/>
+<code>11、移除事件</code><br/>
+<a href='#toMap'>[12、屏幕像素坐标点转地理坐标点]</a><br/>
+<a href='#toScreen'>[13、地理坐标点转屏幕像素坐标点]</a><br/>
+<a href='#hitTest'>[14、穿透检测]</a><br/>
+<a href='#getLayer'>[15、根据实际图层对象查询并返回基础图层]</a><br/>
+<a href='#getScale'>[16、获取当前比例尺]</a><br/></p>
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7 id='MapView'>初始化一个二维场景视图</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// ES5引入方式
+const { Map } = zondy
+const { MapView } = zondy.mapboxgl
+// ES6引入方式
+import { Map, MapView } from "@mapgis/webclient-mapboxgl-plugin"
+// 初始化图层管理容器
+const map = new Map();
+// 初始化地图视图对象
+const mapView = new MapView({
+  // 二维场景视图的容器(html的div标签)ID
+  viewId: "二维场景视图的容器的id",
+  // 图层管理容器
+  map: map
+});</code></pre>
+    
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">继承关系</h3>
+
+        
+
+
+    <ul>
+        <li>Evented</li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='member'>成员变量</h3>
+            <div class="members">
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">SpatialReference</span>
+
+
+    </span>
+
+<h4 class="name" id="_spatialReference">
+    <a class="href-link" href="#_spatialReference">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        _spatialReference
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>视图空间参考系</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Point</span>
+
+
+    </span>
+
+<h4 class="name" id="center">
+    <a class="href-link" href="#center">#</a>
+    
+    <span class="code-name">
+        center
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>地图视图中心点</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="engineType">
+    <a class="href-link" href="#engineType">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        engineType
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>引擎类型，为'mapboxgl'</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Extent</span>
+
+
+    </span>
+
+<h4 class="name" id="extent">
+    <a class="href-link" href="#extent">#</a>
+    
+    <span class="code-name">
+        extent
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>地图视图可视范围</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Extent</span>
+
+
+    </span>
+
+<h4 class="name" id="fullExtent">
+    <a class="href-link" href="#fullExtent">#</a>
+    
+    <span class="code-name">
+        fullExtent
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>地图视图最大显示范围。用户不设置时，将地图范围作为地图视图的最大显示范围，用户设置时采用用户设置的。地图视图初始化时，会根据此范围计算地图视图的最小比例尺，当瓦片数据的最大比例尺小于此比例尺时，无法显示。在相同视图大小下，fullExtent越大，地图视图的最小比例尺越小。</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="height">
+    <a class="href-link" href="#height">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        height
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>地图视图高度</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="maxScale">
+    <a class="href-link" href="#maxScale">#</a>
+    
+    <span class="code-name">
+        maxScale
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>地图视图最大比例尺</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="minScale">
+    <a class="href-link" href="#minScale">#</a>
+    
+    <span class="code-name">
+        minScale
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>地图视图最小比例尺</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type"><a href="Popup.html">Popup</a></span>
+
+
+    </span>
+
+<h4 class="name" id="popup">
+    <a class="href-link" href="#popup">#</a>
+    
+    <span class="code-name">
+        popup
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>地图弹框popup</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="scale">
+    <a class="href-link" href="#scale">#</a>
+    
+    <span class="code-name">
+        scale
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>地图视图比例尺</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="spatialReferenceLocked">
+    <a class="href-link" href="#spatialReferenceLocked">#</a>
+    
+    <span class="code-name">
+        spatialReferenceLocked
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>是否锁定视图空间参考系</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="stationary">
+    <a class="href-link" href="#stationary">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        stationary
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>试图是否静止</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="width">
+    <a class="href-link" href="#width">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        width
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>地图视图宽度</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="zoom">
+    <a class="href-link" href="#zoom">#</a>
+    
+    <span class="code-name">
+        zoom
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>地图层级</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>文档生成<a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="http://www.smaryun.com" target="_blank">司马云</a> <span>© 2023 云生态圈</span>
+                        <a href="http://webclient.smaryun.com:8086/#/index" target="_blank">MapGIS Client for JavaScript</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#page-title">构造函数</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#member">成员变量</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#function">方法</a>
+            </div>
+            <div>
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#event">事件</a>
+            </div>
+        </div>
+    </div>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

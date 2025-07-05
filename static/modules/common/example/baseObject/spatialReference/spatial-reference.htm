@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>设置几何空间参考系</title>
+  <!-- 引入地图引擎库 -->
+  <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+  <script type="text/javascript">
+    //使用严格模式
+    'use strict'
+    // 定义二维视图的主要类
+
+    let map, view, graphicsLayer
+    const {
+      IGSTileLayer,
+      GraphicsLayer
+    } = zondy.layer
+    const { Map, Feature, Color, SpatialReference } = zondy
+    const { Point } = zondy.geometry
+    const { SimpleMarkerSymbol, SimpleLineSymbol } = zondy.symbol
+
+    // 初始化地图
+    function init() {
+      // 初始化地图视图
+      initView()
+      // 添加瓦片图层
+      addIGSTileLayer()
+      // 添加几何图层
+      addGraphicsLayer()
+      // 添加几何要素
+      addFeature()
+    }
+
+    // 初始二维地图
+    function initView() {
+      // 初始化图层管理容器
+      map = new Map()
+      // 初始化地图视图对象
+      view = createView('mapgis-viewer', map)
+      // 获取地图引擎类型
+      const engineType = localStorage.getItem('engine-type', 'cesium')
+      // 针对三维进行特殊处理
+      if (engineType === 'cesium'){
+        // 获取三维场景视图对象
+        const viewer = view.getInnerView()
+        // 判断是否支持图像渲染像素化处理
+        if(Cesium.FeatureDetection.supportsImageRenderingPixelated()){
+          // 使得该值和浏览器保持一致，文字或者图形的渲染结果会更加平滑
+          viewer.resolutionScale = window.devicePixelRatio
+        }
+        // 开启抗锯齿，文字或者图形的渲染结果会更加平滑
+        viewer.scene.fxaa = true
+        viewer.scene.postProcessStages.fxaa.enabled = true
+      }
+    }
+
+    // 添加瓦片图层
+    function addIGSTileLayer() {
+      const igsTileLayer = new IGSTileLayer({
+        url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_3857_normal_3-10/TileServer'
+      })
+      map.add(igsTileLayer)
+      igsTileLayer.on('layerview-created', (result) => {
+        view.flyTo({
+          extent: result.layer.extent
+        })
+      })
+    }
+
+    // 添加几何图层
+    function addGraphicsLayer() {
+      // 创建Graphics图层对象
+      graphicsLayer = new GraphicsLayer({
+        graphics: []
+      })
+      // 添加图层对象到地图文档中
+      map.add(graphicsLayer)
+    }
+
+    // 添加几何要素
+    function addFeature() {
+      // 创建几何要素
+      const feature = new Feature({
+        // 创建几何对象
+        geometry: new Point({
+          coordinates: [12492167, 3679467],
+          // 设置坐标系
+          spatialReference: new SpatialReference({
+            wkid: 3857
+          })
+        }),
+        // 设置几何样式
+        symbol: new SimpleMarkerSymbol({
+          // 设置填充颜色
+          color: new Color(0, 0, 255, 1),
+          // 设置半径，单位像素
+          size: 30,
+          // 设置外边线样式
+          outline: new SimpleLineSymbol({
+            // 设置外边线颜色
+            color: new Color(255, 0, 0, 1),
+            // 设置外边线宽度，单位像素
+            width: 2
+          })
+        })
+      })
+      // 添加要素
+      graphicsLayer.add(feature)
+      console.log("feature", feature.toJSON())
+    }
+  </script>
+</head>
+
+<body onload="init();">
+  <!--  视图容器div  -->
+  <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+</body>
+
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>自定义-网格专题</title>
+    <!--引入echarts-->
+    <script type="text/javascript" src="http://webclient.smaryun.com/static/libs/cdn/echarts/echarts.min-4.0.js"></script>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view, geometryServer, featureServer, graphicsLayer
+      const {
+        WMTSLayer
+      } = zondy.layer
+      const { Map, SpatialReference } = zondy
+      const { Projection, Point } = zondy.geometry
+
+      let COLORS = [
+        "#070093",
+        "#1c3fbf",
+        "#1482e5",
+        "#70b4eb",
+        "#b4e0f3",
+        "#ffffff",
+      ];
+      let lngExtent = [39.5, 40.6];
+      let latExtent = [115.9, 116.8];
+      let cellCount = [50, 50];
+      let cellSizeCoord = [
+        (lngExtent[1] - lngExtent[0]) / cellCount[0],
+        (latExtent[1] - latExtent[0]) / cellCount[1],
+      ];
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加WMTS图层
+        addWMTSLayer()
+        // echarts
+        initEcharts()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      /**
+       * 根据数据的属性参数针对不同的属性附不同的值
+       **/
+      function renderItemFunc(params, api) {
+        let lngIndex = api.value(0);
+        let latIndex = api.value(1);
+        let pointLeftTop = getCoord(params, api, lngIndex, latIndex);
+        let pointRightBottom = getCoord(
+          params,
+          api,
+          lngIndex + 1,
+          latIndex + 1
+        );
+
+        return {
+          type: "rect",
+          shape: {
+            x: pointLeftTop[0],
+            y: pointLeftTop[1],
+            width: pointRightBottom[0] - pointLeftTop[0],
+            height: pointRightBottom[1] - pointLeftTop[1],
+          },
+          style: api.style({
+            stroke: "rgba(0,0,0,0.1)",
+          }),
+          styleEmphasis: api.styleEmphasis(),
+        };
+      }
+
+      /**
+       * 获取数据的坐标位置
+       **/
+      function getCoord(params, api, lngIndex, latIndex) {
+        let coords = params.context.coords || (params.context.coords = []);
+        let key = lngIndex + "-" + latIndex;
+        // bmap returns point in integer, which makes cell width unstable.
+        // So we have to use right bottom point.
+        return (
+          coords[key] ||
+          (coords[key] = api.coord([
+            +(latExtent[0] + lngIndex * cellSizeCoord[0]).toFixed(6),
+            +(lngExtent[0] + latIndex * cellSizeCoord[1]).toFixed(6),
+          ]))
+        );
+      }
+
+      //echarts
+      function initEcharts() {
+        // options参数请参考百度echarts-options
+        // https://echarts.apache.org/zh/option.html#title
+        httpGetPromise('http://webclient.smaryun.com:8200/Vector/json/grid/gridData.json').then(gridData => {
+          let option = {
+            tooltip: {},
+            visualMap: {
+              type: "piecewise",
+              inverse: true,
+              top: 10,
+              right: 10,
+              pieces: [
+                {
+                  value: 0,
+                  color: COLORS[0],
+                },
+                {
+                  value: 1,
+                  color: COLORS[1],
+                },
+                {
+                  value: 2,
+                  color: COLORS[2],
+                },
+                {
+                  value: 3,
+                  color: COLORS[3],
+                },
+                {
+                  value: 4,
+                  color: COLORS[4],
+                },
+                {
+                  value: 5,
+                  color: COLORS[5],
+                },
+              ],
+              borderColor: "#ccc",
+              borderWidth: 1,
+              backgroundColor: "#eee",
+              dimension: 2,
+              inRange: {
+                color: COLORS,
+                opacity: 0.8,
+              },
+            },
+            cesium: {
+              roam: false,
+            },
+            leaflet: {
+              roam: false,
+            },
+            mapboxgl: {
+              roam: false
+            },
+            animation: false,
+            postRender: true,
+            geo: {
+              geoIndex: 0,
+            },
+            series: [
+              {
+                type: "custom",
+                coordinateSystem: localStorage.getItem('engine-type'),
+                data: gridData,
+                renderItem: renderItemFunc,
+                animation: false,
+                itemStyle: {
+                  emphasis: {
+                    color: "yellow",
+                  },
+                },
+                encode: {
+                  tooltip: 2,
+                },
+              },
+            ],
+          };
+          // 声明cesium的echarts图层并将其显示到三维球上
+          layer = new zondy.layer.EchartsLayer({
+            echartsOptions: option
+          });
+          map.add(layer);
+        });
+      }
+
+      // 发送请求获取数据
+      function httpGetPromise(url) {
+        return new Promise(function (resolve, reject) {
+          const handler = function () {
+            if (this.readyState !== 4) {
+              return;
+            }
+            if (this.status === 200) {
+              resolve(this.response);
+            } else {
+              reject(new Error(this.statusText));
+            }
+          };
+          const client = new XMLHttpRequest();
+          client.open('GET', url);
+          client.onreadystatechange = handler;
+          client.responseType = 'json';
+          client.setRequestHeader('Accept', 'application/json');
+          client.send();
+        });
+      }
+
+      // 添加WMTS图层
+      function addWMTSLayer() {
+        const wmtsLayer = new WMTSLayer({
+          // 加载经纬度的影像地图
+          url: "http://t6.tianditu.gov.cn/img_c/wmts",
+          // 天地图必须加token，且token名为tk
+          tokenKey: "tk",
+          // token请在天地图官网申请
+          tokenValue: getTDTToken(),
+        })
+
+        map.add(wmtsLayer)
+        // 图层加载完毕
+        wmtsLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          view.flyTo({
+            center: new Point({
+              coordinates: [116.4, 40, 1000000.0],
+              spatialReference: new SpatialReference({
+                wkid: 4326
+              })
+            }),
+            zoom: 5
+          })
+        })
+      }
+    </script>
+</head>
+
+<body onload="init();">
+<!--  视图容器div  -->
+<div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+</body>
+</html>

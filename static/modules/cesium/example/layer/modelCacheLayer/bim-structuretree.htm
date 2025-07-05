@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>BIM构件树（M3D-文件服务）</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/visual.css"
+    />
+    <script>
+      'use strict'
+      // 定义三维视图的主要类
+      let map, sceneView, viewer, tileset
+      // 获得jQuery对象
+      let $ = layui.$
+      // 控制模型透明度的相关变量
+      let alphaSlider
+      let alphaSliderValue = 1
+      // 控制可见要素范围的相关变量
+      let rangeSlider
+      let rangeSliderValue
+      let maxRange
+      let minRange
+      // 构件树根节点JSON原始数据
+      let structuretreeRootRawData
+      // 树组件展示的构件树处理数据
+      let structuretreeRootData
+      // 树组件是否展示搜索后结果
+      let isSearch = false
+      // 模型的资源基地址
+      let modelBaseUrl = 'http://webclient.smaryun.com:8200/3DData/ModelCache'
+      // 模型的URL与默认值
+      let modelUrl = `${modelBaseUrl}/M3D/2.1/小别墅_属性外置_M3D21/小别墅_属性外置_M3D21.mcj`
+      // 属性查询开关
+      let enablePickAttributesPopup = false
+
+      // 地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // 添加M3D缓存图层
+        addM3DModelCacheLayer()
+        // 开启点选
+        enablePickAttributes()
+        // 获取structureTree数据（一级目录）
+        getStructuretreeRootData()
+        // 初始化面板UI
+        initUI()
+      }
+
+      // 构造三维视图类（视图容器div的id，三维视图设置参数）
+      function initViewer() {
+        // 初始化图层管理容器
+        map = new zondy.Map()
+        // 初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          // 视图id
+          viewId: 'mapgis-3d-viewer',
+          // 图层管理容器
+          map: map
+        })
+        viewer = sceneView.getInnerView()
+        viewer.scene.skyAtmosphere.show = false
+        viewer.scene.sun.show = false
+        viewer.scene.moon.show = false
+        viewer.scene.globe.showGroundAtmosphere = false
+        viewer.scene.globe.show = false
+      }
+
+      // 添加图层
+      function addM3DModelCacheLayer() {
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/M3DModelCacheLayer.html
+        let M3DLayer = new zondy.layer.M3DModelCacheLayer({
+          // 服务基地址
+          url: modelUrl,
+          // 初始化参数
+          extensionOptions: {
+            // 开启自动跳转
+            autoReset: true
+          }
+        })
+        map.add(M3DLayer)
+
+        M3DLayer.on('layerview-created', function (result) {
+          tileset = sceneView.getInnerLayer(result.layer)
+        })
+      }
+
+      // 获取M3D 2.1属性字段值，当属性外置时，feature.getProperty(propertyId)返回的是Promise对象
+      // 一个要素可能包含多个属性字段，因此使用Promise.all方法统一处理这些Promise对象
+      function getProperties(feature, propertyIds) {
+        let attributes = {}
+        const promises = []
+        for (let i = 0; i < propertyIds.length; ++i) {
+          const propertyId = propertyIds[i]
+          promises.push(feature.getProperty(propertyId))
+        }
+
+        Promise.all(promises)
+          .then((results) => {
+            for (let i = 0; i < results.length; i++) {
+              attributes[propertyIds[i]] = results[i]
+            }
+            pickAttributesPopup(attributes)
+          })
+          .catch((error) => {})
+      }
+
+      // 设置要素点击高亮的样式
+      function setColor(tileset, id) {
+        tileset.style = new Cesium.Cesium3DTileStyle({
+          defines: {
+            id: `${id}`
+          },
+          color: {
+            conditions: [['${tid} === ${id}', "color('red')"]]
+          }
+        })
+      }
+
+      // 若开启了属性查询则弹窗显示属性信息
+      function pickAttributesPopup(attributes) {
+        if (enablePickAttributesPopup) {
+          layui.use('layer', () => {
+            const layer = layui.layer
+
+            layer.open({
+              title: '属性信息',
+              type: 1,
+              shade: 0.1,
+              shadeClose: true,
+              skin: 'class-layer-demo-custom',
+              content: createHTMLTableFromAttributes(attributes)
+            })
+          })
+        }
+      }
+
+      // 开启要素拾取，注册拾取事件
+      function enablePickAttributes() {
+        viewer.screenSpaceEventHandler.setInputAction((movement) => {
+          // 获取点击要素对象
+          const feature = viewer.scene.pick(movement.position)
+          if (feature) {
+            // 获取属性信息
+            let attributes = {}
+
+            // 接口兼容处理
+            //   1. webclient-cesium 10.7.2.10 -> feature.getPropertyNames()
+            //   2. webclient-cesium 10.7.4.10 -> feature.getPropertyIds()
+            const propertyNames = feature.getPropertyIds
+              ? feature.getPropertyIds()
+              : feature.getPropertyNames()
+
+            // M3D 2.1属性外置时，propertyNames为Promise对象，需要执行异步逻辑获取属性字段值的数组
+            // M3D 2.1属性内置是，propertyNames为属性字段值的数组
+            if (propertyNames instanceof Promise) {
+              propertyNames.then((property) => {
+                getProperties(feature, property)
+              })
+            } else {
+              for (let i = 0; i < propertyNames.length; ++i) {
+                const propertyName = propertyNames[i]
+                const property = feature.getProperty(propertyName)
+                attributes[propertyName] = property
+              }
+              pickAttributesPopup(attributes)
+            }
+
+            // 重置可见要素范围滑块UI的值
+            resetRangeSlider()
+
+            // 通过tid设置要素高亮显示，混合红色
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Cesium3DTileStyle.html
+            const tid = feature.getProperty('tid')
+            if (tid instanceof Promise) {
+              tid.then((id) => {
+                setColor(tileset, id)
+                flyToFeature(id)
+              })
+            } else {
+              setColor(tileset, tid)
+              flyToFeature(tid)
+            }
+          }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
+      }
+
+      // 获取structuretree数据（一级目录，根节点）
+      function getStructuretreeRootData() {
+        const url = modelUrl.replace(/\/([^\/]+)$/, '/structuretree.json')
+        fetchStructuretreeJSON(url).then((data) => {
+          // 从根节点的构件树信息中获取tid的最大值和最小值用于初始化可见要素范围的UI
+          minRange = data.property.minTid
+          maxRange = data.property.maxTid
+          initRangeSliderUI()
+          structuretreeRootRawData = data.children.items
+          structuretreeRootData = createStructuretreeData(
+            JSON.parse(JSON.stringify(structuretreeRootRawData))
+          )
+          // 创建目录树UI
+          createTreeUI()
+        })
+      }
+
+      // 根据属性对象生成HTML表格，用于layui弹窗展示属性信息
+      function createHTMLTableFromAttributes(attributes) {
+        let table = '<table class="layui-table">'
+        table += '<tr><th>属性</th><th>值</th></tr>'
+        for (let key in attributes) {
+          if (attributes.hasOwnProperty(key)) {
+            table += `<tr><td>${key}</td><td>${attributes[key]}</td></tr>`
+          }
+        }
+        table += '</table>'
+        return table
+      }
+
+      // 根据tid的范围设置要素的可见性，可见的要素颜色不变，不可见的要素混合浅绿色透明度0.1
+      function setFeaturesVisibilityByRange(minTid, maxTid) {
+        tileset.style = new Cesium.Cesium3DTileStyle({
+          defines: {
+            minTid: `${minTid}`,
+            maxTid: `${maxTid}`
+          },
+          color: {
+            // 如果是多个分段就添加多个不等式判断
+            conditions: [
+              [
+                '(${tid} >= ${minTid}) && (${tid} <= ${maxTid})',
+                "color('#ffffff', 1)"
+              ],
+              ['true', "color('#99FA9A', 0.1)"]
+            ]
+          }
+        })
+      }
+
+      // 根据tid获取构件树信息
+      async function getStructuretreeInfoByTid(nodes, tid) {
+        // 处理非叶子结点
+        const nodeInfo = nodes.find((item) => {
+          const maxTid = item.property.maxTid
+          const minTid = item.property.minTid
+          return tid >= minTid && tid <= maxTid
+        })
+
+        // 处理叶子结点
+        if (!nodeInfo) {
+          return new Promise((resolve) => {
+            for (let i = 0; i < nodes.length; i++) {
+              if (nodes[i].property.tid === tid) {
+                resolve(nodes[i])
+              }
+            }
+          })
+        }
+
+        // 若当前结点为非叶子结点，则请求后续的子节点
+        if (nodeInfo.hasOwnProperty('childrenUri')) {
+          let childrenUri = nodeInfo.childrenUri
+          if (!childrenUri.startsWith('structuretree/')) {
+            childrenUri = `structuretree/${childrenUri}`
+          }
+          const data = await fetchStructuretreeJSON(
+            modelUrl.replace(/\/([^\/]+)$/, `/${childrenUri}`)
+          )
+          let items = []
+          items = await combineItems(childrenUri, items)
+          return getStructuretreeInfoByTid(items, tid)
+        } else if (nodeInfo.hasOwnProperty('children')) {
+          return getStructuretreeInfoByTid(nodeInfo.children.items, tid)
+        }
+      }
+
+      // 处理分页存储的构件树JSON文件
+      async function combineItems(childrenUri, items) {
+        const data = await fetchStructuretreeJSON(
+          modelUrl.replace(/\/([^\/]+)$/, `/${childrenUri}`)
+        )
+        items.push(...data.items)
+        if (data.nextItemsUri) {
+          let nextItemsUri = data.nextItemsUri
+          if (!nextItemsUri.startsWith('structuretree/')) {
+            nextItemsUri = `structuretree/${nextItemsUri}`
+          }
+          await combineItems(nextItemsUri, items)
+        }
+        return items
+      }
+
+      // 将相机视角定位到指定包围体范围
+      function flyToBox(box) {
+        // 包围盒矩形的长宽高
+        const width = Math.abs(box[0] - box[3])
+        const height = Math.abs(box[1] - box[4])
+        const depth = Math.abs(box[2] - box[5])
+        // 计算对角线长度
+        const diagonalLength = Math.sqrt(
+          width * width + height * height + depth * depth
+        )
+        // 计算包围球半径
+        const boundingSphereRadius = diagonalLength / 2
+        // 计算中心点坐标
+        const centerPosition = new Cesium.Cartesian3(
+          (box[0] + box[3]) / 2,
+          (box[1] + box[4]) / 2,
+          (box[2] + box[5]) / 2
+        )
+        // 将相机飞到指定的包围球位置
+        viewer.camera.flyToBoundingSphere(
+          new Cesium.BoundingSphere(
+            centerPosition, // 包围球的中心点坐标
+            boundingSphereRadius // 包围球的半径
+          ),
+          {
+            duration: 1 // 相机视角飞行时间
+          }
+        )
+      }
+
+      // 根据tid将相机视角定位到对应区域
+      function flyToFeature(tid) {
+        // 从构件树信息中获取包围体范围
+        getStructuretreeInfoByTid(structuretreeRootRawData, tid).then(
+          (data) => {
+            const box = data.property.box
+            flyToBox(box)
+          }
+        )
+      }
+
+      // 通过URL获取数据
+      function fetchStructuretreeJSON(url) {
+        return fetch(url)
+          .then((response) => response.json())
+          .catch(() => console.log('请求数据失败！'))
+      }
+
+      // 处理构件树数据，应用于目录树组件
+      function createStructuretreeData(data) {
+        const treeData = data.map((item, index) => {
+          if (item.hasOwnProperty('children')) {
+            item.children = createStructuretreeData(item.children.items)
+          }
+          return item
+        })
+
+        return treeData
+      }
+
+      // 搜索获取新的展示列表
+      function searchFirstTreeData(data, keywords) {
+        const result = []
+        data.forEach((item) => {
+          if (item.name.indexOf(keywords) !== -1) {
+            const { children, ...res } = item
+            result.push(res)
+          }
+          if (item.hasOwnProperty('children')) {
+            const resultChildren = searchFirstTreeData(item.children, keywords)
+            result.push(...resultChildren)
+          }
+        })
+        return result
+      }
+
+      // 搜索防抖
+      function debounce(func, interval) {
+        let timer = null
+        return (...args) => {
+          timer && clearTimeout(timer)
+          timer = setTimeout(() => {
+            func.apply(this, args)
+          }, interval)
+        }
+      }
+
+      // 搜索
+      function search(keywords) {
+        isSearch = true
+        const dealData = createStructuretreeData(
+          JSON.parse(JSON.stringify(structuretreeRootRawData))
+        )
+        if (keywords === '') {
+          isSearch = false
+          structuretreeRootData = dealData
+        } else {
+          // 搜索获取新的展示列表
+          structuretreeRootData = searchFirstTreeData(dealData, keywords)
+        }
+        // 重新创建目录树
+        createTreeUI()
+      }
+
+      // 搜索框的值改变时触发事件
+      let inputSearch = debounce(search, 200)
+
+      // 显示目录树面板
+      function showTreeArea() {
+        $('.layui-panel-left').removeClass('hidden-tree')
+      }
+
+      // 关闭目录树面板
+      function closeTreeArea() {
+        $('.layui-panel-left').addClass('hidden-tree')
+      }
+
+      // 刷新目录树
+      function refreshTree() {
+        // 清空input值
+        $('.search-input').val('')
+        search('')
+      }
+
+      // 重置透明度滑块UI的值
+      function resetAlphaSlider() {
+        if (alphaSliderValue !== 1) {
+          alphaSlider.setValue(alphaSlider.config.max)
+        }
+      }
+
+      // 重置可见要素范围滑块UI的值
+      function resetRangeSlider() {
+        if (
+          rangeSliderValue &&
+          (rangeSliderValue[0] !== minRange || rangeSliderValue[1] !== maxRange)
+        ) {
+          rangeSlider.setValue(rangeSlider.config.min, 0)
+          rangeSlider.setValue(rangeSlider.config.max, 1)
+        }
+      }
+
+      // 清除样式
+      function clearStyle() {
+        // 清除样式
+        tileset.style = new Cesium.Cesium3DTileStyle({
+          show: 'true',
+          color: "color('#ffffff')"
+        })
+        // 重置透明度滑块UI的值
+        resetAlphaSlider()
+        // 重置可见要素范围滑块UI的值
+        resetRangeSlider()
+      }
+
+      // 创建目录树UI
+      function createTreeUI() {
+        layui.tree.render({
+          elem: '#layui-tree',
+          showLine: false, // 是否开启连接线
+          data: structuretreeRootData,
+          customName: {
+            title: 'name',
+            children: 'children'
+          },
+          click: (data) => {
+            if (
+              data.data.hasOwnProperty('childrenUri') ||
+              data.data.property.tid !== undefined ||
+              isSearch
+            ) {
+              let minTid = data.data.property.minTid
+              let maxTid = data.data.property.maxTid
+
+              if (!minTid && !maxTid) {
+                minTid = data.data.property.tid
+                maxTid = data.data.property.tid
+              }
+
+              rangeSlider.setValue(minTid, 0)
+              rangeSlider.setValue(maxTid, 1)
+
+              // 要素tid范围默认选择最小边界值
+              flyToFeature(minTid)
+            }
+          }
+        })
+      }
+
+      // 初始化可见要素范围滑块UI
+      function initRangeSliderUI() {
+        rangeSlider = layui.slider.render({
+          elem: '#range',
+          range: true,
+          value: [minRange, maxRange],
+          min: minRange,
+          max: maxRange,
+          theme: 'rgb(102, 147, 251)',
+          change: (value) => {
+            rangeSliderValue = value
+            // 如果透明度不是初始值，则重置
+            resetAlphaSlider()
+            // 通过tid最小值、最大值，控制要素可见范围
+            setFeaturesVisibilityByRange(value[0], value[1])
+          }
+        })
+      }
+
+      // 初始化面板UI
+      function initUI() {
+        // 使用支持小数的slider
+        layui
+          .config({
+            // 配置 Layui 第三方扩展模块存放的基础目录
+            base: 'http://webclient.smaryun.com/static/libs/cdn/layui/modules/'
+          })
+          .extend({
+            // 扩展
+            decimalSlider: 'decimalSlider/index'
+          })
+
+        layui.use('decimalSlider', (decimalSlider) => {
+          // 透明度
+          alphaSlider = decimalSlider.render({
+            elem: '#alpha',
+            decimalPlaces: 1, // 小数点1位
+            value: alphaSliderValue,
+            min: 0,
+            max: 1,
+            step: 0.1,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: (value) => {
+              alphaSliderValue = value
+              // 如果可见要素不是初始范围，则重置
+              resetRangeSlider()
+              tileset.style = new Cesium.Cesium3DTileStyle({
+                color: "color('#ffffff'," + parseFloat(value) + ')'
+              })
+            }
+          })
+        })
+
+        // 搜索框的清除事件
+        layui.form.on('input-affix(clear)', (data) => {
+          search('')
+        })
+
+        // 选择模型下拉框事件
+        layui.form.on('select(model)', (data) => {
+          const select = data.value
+          if (select === '0') {
+            modelUrl = `${modelBaseUrl}/M3D/2.1/小别墅_属性外置_M3D21/小别墅_属性外置_M3D21.mcj`
+          } else if (select === '1') {
+            modelUrl = `${modelBaseUrl}/M3D/2.1/小别墅_属性内置_M3D21/小别墅_属性内置_M3D21.mcj`
+          }
+          viewer.scene.primitives.remove(tileset)
+          addM3DModelCacheLayer()
+          getStructuretreeRootData()
+        })
+
+        // 查询属性开关
+        layui.form.on('switch(attribute)', (data) => {
+          enablePickAttributesPopup = data.elem.checked
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="sample-main-panel">
+          <div class="layui-form-item">
+            <label class="layui-form-label">模型</label>
+            <div class="layui-input-block">
+              <select lay-verify="required" lay-filter="model">
+                <option value="0">小别墅（M3D 2.1 属性外置）</option>
+                <option value="1">小别墅（M3D 2.1 属性内置）</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">属性查询</label>
+            <div class="layui-input-block">
+              <input
+                type="checkbox"
+                name="switch"
+                lay-skin="switch"
+                lay-text="开启|关闭"
+                lay-filter="attribute"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">模型透明度</label>
+            <div class="layui-input-block decimal-slider">
+              <div id="alpha"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">可见要素范围</label>
+            <div class="layui-input-block">
+              <div id="range"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sample-button-panel">
+          <button
+            type="button"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="clearStyle()"
+          >
+            重置
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="layui-panel-left">
+      <i
+        class="layui-icon layui-icon-spread-left tree-home-icon"
+        onclick="showTreeArea()"
+        title="展开"
+      ></i>
+      <div class="tree-area">
+        <div class="tree-nodeInfo-title">
+          <span>场景信息</span>
+          <i
+            class="layui-icon layui-icon-close"
+            title="关闭"
+            onclick="closeTreeArea()"
+          ></i>
+          <i
+            class="layui-icon layui-icon-refresh"
+            title="刷新"
+            onclick="refreshTree()"
+          ></i>
+        </div>
+        <div id="search-area">
+          <div class="layui-form">
+            <div class="layui-row">
+              <div class="layui-input-wrap">
+                <div class="layui-input-prefix">
+                  <i class="layui-icon layui-icon-search"></i>
+                </div>
+                <input
+                  type="text"
+                  placeholder="搜索"
+                  class="layui-input search-input"
+                  lay-affix="clear"
+                  lay-filter="clear"
+                  oninput="inputSearch(this.value)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="layui-tree"></div>
+      </div>
+    </div>
+    <style type="text/css">
+      .layui-form-item {
+        display: flex;
+        align-items: center;
+        margin: 0px;
+      }
+
+      .layui-panel-left {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+      }
+
+      .sample-main-panel {
+        font-size: 12px;
+        height: auto;
+        border: none;
+        margin: 0px;
+      }
+
+      .layui-panel-right {
+        padding: 10px;
+        width: 280px;
+      }
+
+      .layui-form-label {
+        width: 100px;
+      }
+
+      .layui-input-block,
+      .layui-form-select {
+        width: 150px;
+      }
+
+      .tree-home-icon {
+        position: absolute;
+        top: 0px;
+        color: #ccc;
+        display: none;
+      }
+
+      .tree-home-icon:hover {
+        cursor: pointer;
+        color: #fff;
+      }
+
+      .layui-panel-left.hidden-tree .tree-home-icon {
+        display: inline-block;
+      }
+
+      .layui-panel-left.hidden-tree .tree-area {
+        display: none;
+      }
+
+      .tree-area {
+        width: 220px;
+        color: #ccc;
+        font-size: 12px;
+        background: rgba(43, 45, 47, 0.9);
+        border: none;
+        padding: 5px 0px;
+      }
+
+      .tree-nodeInfo-title {
+        line-height: 26px;
+        border-bottom: 1px solid #1f2022c7;
+        padding: 0 10px;
+      }
+
+      .tree-nodeInfo-title .layui-icon-refresh {
+        float: right;
+        font-size: 14px;
+        margin-right: 10px;
+      }
+
+      .tree-nodeInfo-title .layui-icon-close {
+        float: right;
+      }
+
+      .tree-nodeInfo-title .layui-icon-refresh:hover,
+      .tree-nodeInfo-title .layui-icon-close:hover {
+        cursor: pointer;
+        color: #fff;
+      }
+
+      #search-area {
+        padding: 5px 10px 0;
+      }
+
+      .layui-input-wrap {
+        line-height: 30px;
+      }
+
+      .layui-input-affix {
+        line-height: 30px;
+      }
+
+      .layui-input-affix .layui-icon-clear {
+        color: #757575;
+      }
+
+      .layui-input-affix .layui-icon-clear:hover {
+        color: #d2d2d2;
+      }
+
+      .layui-input {
+        height: 30px;
+      }
+
+      #layui-tree {
+        width: 100%;
+        max-height: 400px;
+        overflow-y: auto;
+        margin-top: 5px;
+      }
+
+      .layui-tree-main {
+        width: 100%;
+      }
+
+      .layui-tree-txt {
+        color: #ccc;
+        word-break: break-all;
+        white-space: normal;
+        width: calc(100% - 30px);
+      }
+
+      .layui-tree-entry {
+        height: auto;
+      }
+
+      .layui-tree-entry:hover {
+        background: rgba(28, 31, 32, 0.9);
+      }
+
+      /*高宽分别对应横竖滚动条的尺寸，滑块*/
+      ::-webkit-scrollbar {
+        width: 5px;
+      }
+
+      /*定义滚动条轨道内阴影+圆角*/
+      ::-webkit-scrollbar-track {
+        border-radius: 5px;
+        background-color: rgba(0, 0, 0, 0);
+      }
+
+      /*定义滑块内阴影+圆角*/
+      ::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+
+      .class-layer-demo-custom .layui-layer-title {
+        font-size: 12px;
+        background-color: #282828;
+        color: #ccc;
+        height: 32px;
+        line-height: 32px;
+        border-bottom: 1px solid #1f2022c7;
+        padding-left: 6px;
+      }
+
+      .class-layer-demo-custom .layui-layer-btn {
+        padding: 5px 10px 10px;
+      }
+
+      .class-layer-demo-custom .layui-layer-setwin {
+        right: 10px;
+        top: 8px;
+      }
+
+      .class-layer-demo-custom .layui-layer-setwin span {
+        color: #ccc;
+      }
+
+      .class-layer-demo-custom .layui-layer-btn a {
+        background: #fff;
+        border-color: #e9e7e7;
+        color: #333;
+      }
+      .class-layer-demo-custom .layui-layer-btn .layui-layer-btn0 {
+        border-color: #fa584d;
+        background-color: #fa584d;
+        color: #fff;
+      }
+
+      .layui-table {
+        width: 98%;
+        margin: 2px;
+        background: rgba(43, 45, 47, 0.9);
+        color: #ccc;
+      }
+
+      .layui-layer {
+        background: rgba(43, 45, 47, 0.9);
+        width: auto;
+      }
+
+      .layui-layer-page .layui-layer-content {
+        overflow-y: auto;
+        padding: 2px;
+        max-height: 400px;
+      }
+
+      .layui-table td,
+      .layui-table th {
+        font-size: 12px;
+        padding: 2px;
+        border-color: rgba(40, 40, 40, 0.9);
+      }
+
+      .layui-btn {
+        background-color: #6593f9;
+      }
+    </style>
+  </body>
+</html>

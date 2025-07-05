@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 获取构造函数
+      const {
+        Map,
+        layer,
+        Feature,
+        geometry,
+        Color,
+        SpatialReference
+      } = zondy
+      const { IGSTileLayer, GraphicsLayer } = layer
+      const { Circle, LineString, Polygon, Extent, Point } = geometry
+      const { SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol } = zondy.symbol
+      const { SceneView } = zondy.cesium
+
+      // 定义二维视图的主要变量
+      let map,
+        view,
+        graphicsLayer,
+        opacity = 0.8
+
+      // 初始化地图
+      function init() {
+        map = new Map()
+        view = new SceneView({
+          // 视图id
+          viewId: 'mapgis-3d-viewer',
+          map: map
+        })
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // 添加WMTS图层
+        addTileLayer()
+        // 添加几何图层
+        addGraphicsLayer()
+        document.getElementById('opacity').value = opacity
+      }
+
+      //加载IGS二维瓦片地图服务
+      function addTileLayer() {
+        const igsTileLayer = new IGSTileLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        })
+        map.add(igsTileLayer)
+        //图层添加完毕事件
+        igsTileLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          //飞到指定视角
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      // 添加点几何要素
+      function addPointFeature() {
+        // 创建点几何要素
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/Feature.html
+        const feature = new Feature({
+          // 创建点几何对象
+          // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/Point.html
+          geometry: new Point({
+            coordinates: [12492167, 3679467, 1000],
+            // 设置坐标系
+            // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SpatialReference.html
+            spatialReference: new SpatialReference({
+              wkid: 3857
+            })
+          }),
+          // 设置几何样式
+          // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SimpleMarkerSymbol.html
+          symbol: new SimpleMarkerSymbol({
+            // 设置填充颜色
+            // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/Color.html
+            color: new Color(0, 0, 255, 1),
+            // 设置半径，单位像素
+            size: 30,
+            // 设置外边线样式
+            // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SimpleLineSymbol.html
+            outline: new SimpleLineSymbol({
+              // 设置外边线颜色
+              color: new Color(255, 0, 0, 1),
+              // 设置外边线宽度，单位像素
+              width: 2
+            })
+          })
+        })
+        // 添加要素
+        graphicsLayer.add(feature)
+      }
+
+      // 添加线几何要素
+      function addLineFeature() {
+        // 创建线几何要素
+        const feature = new Feature({
+          // 创建线几何对象
+          geometry: new LineString({
+            coordinates: [
+              [12060915.153756281, 3379467.4548212504, 1000],
+              [12923420.074952757, 3930603.5605075615, 1000]
+            ],
+            // 设置参考系
+            spatialReference: new SpatialReference({
+              wkid: 3857
+            })
+          }),
+          // 设置线的符号
+          symbol: new SimpleLineSymbol({
+            // 设置线颜色
+            color: new Color(0, 0, 255, 1),
+            // 设置线宽，单位像素
+            size: 2
+          })
+        })
+        // 添加要素
+        graphicsLayer.add(feature)
+      }
+
+      // 添加多边形几何要素
+      function addPolygonFeature() {
+        // 创建区几何要素
+        const feature = new Feature({
+          // 创建区几何
+          geometry: new Polygon({
+            coordinates: [
+              [
+                [12060915.153756281, 3379467.4548212504, 1000],
+                [12923420.074952757, 3379467.4548212504, 1000],
+                [12923420.074952757, 3930603.5605075615, 1000],
+                [12060915.153756281, 3930603.5605075615, 1000],
+                [12060915.153756281, 3379467.4548212504, 1000]
+              ]
+            ],
+            // 设置参考系
+            spatialReference: new SpatialReference({
+              wkid: 3857
+            })
+          }),
+          // 设置符号样式
+          symbol: new SimpleFillSymbol({
+            // 设置填充颜色
+            color: new Color(0, 255, 0, 0.5),
+            // 设置外边线样式
+            outline: new zondy.symbol.SimpleLineSymbol({
+              // 设置外边线颜色
+              color: new zondy.Color(255, 0, 0, 1),
+              // 设置外边线宽度，单位像素
+              width: 2
+            })
+          })
+        })
+        graphicsLayer.add(feature)
+      }
+
+      // 添加矩形几何要素
+      function addExtentFeature() {
+        // 创建几何要素
+        const feature = new Feature({
+          // 创建几何对象
+          geometry: new Extent({
+            xmin: 12060915.153756281,
+            xmax: 12923420.074952757,
+            ymin: 3379467.4548212504,
+            ymax: 3930603.5605075615,
+            zmin: 1000,
+            zmax: 1000,
+            // 设置参考系
+            spatialReference: new SpatialReference({
+              wkid: 3857
+            })
+          }),
+          // 设置符号样式
+          symbol: new SimpleFillSymbol({
+            // 设置填充颜色
+            color: new Color(211, 255, 0, 0.5),
+            // 设置外边线样式
+            outline: new SimpleLineSymbol({
+              // 外边线颜色
+              color: new Color(255, 0, 255, 1),
+              // 外边线宽度，单位像素
+              width: 2
+            })
+          })
+        })
+        graphicsLayer.add(feature)
+      }
+
+      // 添加圆几何要素
+      function addCircleFeature() {
+        // 创建圆几何要素
+        const feature = new Feature({
+          // 创建圆几何对象
+          geometry: new Circle({
+            // 设置圆的中心点
+            center: [12492167, 3679467, 1000],
+            // 设置圆的半径，单位米
+            radius: 100000,
+            // 设置圆转多边形时分割点的数量
+            numberOfPoints: 200,
+            // 设置坐标系
+            spatialReference: new SpatialReference({
+              wkid: 3857
+            })
+          }),
+          // 设置几何样式
+          symbol: new SimpleFillSymbol({
+            // 设置填充颜色
+            color: new Color(0, 0, 255, 1),
+            // 设置外边线样式
+            outline: new SimpleLineSymbol({
+              // 设置外边线颜色
+              color: new Color(255, 0, 0, 1),
+              // 设置外边线宽度，单位像素
+              width: 2
+            })
+          })
+        })
+        // 添加要素
+        graphicsLayer.add(feature)
+      }
+
+      // 添加图层
+      function addGraphicsLayer() {
+        // 创建Graphics图层对象
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/GraphicsLayer.html
+        graphicsLayer = new GraphicsLayer({
+          graphics: [],
+          opacity: 1.0
+        })
+        // 添加图层对象到地图文档中
+        map.add(graphicsLayer)
+        // 绑定图层事件
+        bindEvent()
+      }
+
+      // 绑定图层事件
+      function bindEvent() {
+        graphicsLayer.on('layerview-created', (result) => {
+          console.log('加载完毕', result.layer)
+          view.flyTo({
+            extent: result.layer.extent
+          })
+          // 修改图层透明度
+          graphicsLayer.opacity = opacity
+        })
+
+        graphicsLayer.on('layerview-update', (result) => {
+          console.log('更新完毕', result.layer)
+        })
+
+        graphicsLayer.on('layerview-remove', function (result) {
+          console.log('销毁完毕:', result.layer)
+        })
+      }
+
+      // 改变图层透明度
+      function changeOpacity() {
+        if (graphicsLayer) {
+          graphicsLayer.opacity = document.getElementById('opacity').value
+        }
+      }
+
+      // 控制图层是否可见
+      function changeVisible() {
+        if (graphicsLayer) {
+          graphicsLayer.visible = !graphicsLayer.visible
+        }
+      }
+
+      // 从地图容器中移除图层
+      function removeLayer() {
+        if (graphicsLayer.loadStatus === 'loaded') {
+          map.remove(graphicsLayer)
+          graphicsLayer = null
+        }
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <div
+      id="mapgis-3d-viewer"
+      style="position: absolute; display: flex; width: 100%; height: 100%"
+    ></div>
+    <div style="position: absolute; top: 20px; right: 10px; z-index: 10000">
+      <span>透明度:</span>
+      <input
+        id="opacity"
+        onmousemove="changeOpacity()"
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        value="1"
+      />
+    </div>
+    <button
+      style="position: absolute; top: 60px; right: 10px; z-index: 10000"
+      onclick="changeVisible()"
+    >
+      显示或隐藏几何图层
+    </button>
+    <button
+      style="position: absolute; top: 60px; right: 155px; z-index: 10000"
+      onclick="removeLayer()"
+    >
+      删除图层
+    </button>
+    <button
+      style="position: absolute; top: 60px; right: 233px; z-index: 10000"
+      onclick="addGraphicsLayer()"
+    >
+      添加图层
+    </button>
+    <button
+      style="position: absolute; top: 90px; right: 10px; z-index: 10000"
+      onclick="addPointFeature()"
+    >
+      添加点几何
+    </button>
+    <button
+      style="position: absolute; top: 90px; right: 106px; z-index: 10000"
+      onclick="addLineFeature()"
+    >
+      添加线几何
+    </button>
+    <button
+      style="position: absolute; top: 90px; right: 200px; z-index: 10000"
+      onclick="addPolygonFeature()"
+    >
+      添加区几何
+    </button>
+    <button
+      style="position: absolute; top: 90px; right: 296px; z-index: 10000"
+      onclick="addExtentFeature()"
+    >
+      添加矩形几何
+    </button>
+    <button
+      style="position: absolute; top: 90px; right: 406px; z-index: 10000"
+      onclick="addCircleFeature()"
+    >
+      添加圆形几何
+    </button>
+  </body>
+</html>

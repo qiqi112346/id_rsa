@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>要素查询 - 几何查询</title>
+    <!-- 引入地图引擎库 -->
+    <script
+      src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"
+    ></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view, layer, server, graphicsLayer, queryGraphicsLayer
+      const {
+        IGSTileLayer,
+        GraphicsLayer
+      } = zondy.layer
+      const { Map, Color, Feature } = zondy
+      const { FeatureServer } = zondy.service
+      const { SimpleLineSymbol, SimpleMarkerSymbol, SimpleFillSymbol } = zondy.symbol
+      const { Point, LineString, Polygon, Circle, Extent } = zondy.geometry
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加瓦片图层
+        addTileLayer()
+        // 添加几何图层
+        addGraphicsLayer()
+        //初始化示例UI操作
+        initUI();
+        // 初始化服务对象
+        initServer()
+        // 查询要素
+        query('point')
+      }
+
+      // 初始化服务对象
+      function initServer() {
+        server = new FeatureServer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer'
+        })
+      }
+
+      // 开始查询
+      function query(type) {
+        // 构造查询条件
+        const queryOptions = {
+          // 指定查询图层
+          layerId: document.getElementById('layer-id').value
+        }
+        // 删除已绘制的查询条件几何
+        queryGraphicsLayer.removeAll()
+        switch (type) {
+          case 'point':
+          default:
+            queryOptions.geometry = getPointGeometry()
+            queryGraphicsLayer.add(getPointFeature())
+            break
+          case 'line':
+            queryOptions.geometry = getLineGeometry()
+            queryGraphicsLayer.add(getLineFeature())
+            break
+          case 'polygon':
+            queryOptions.geometry = getPolygonGeometry()
+            queryGraphicsLayer.add(getPolygonFeature())
+            break
+          case 'circle':
+            queryOptions.geometry = getCircleGeometry()
+            queryGraphicsLayer.add(getCircleFeature())
+            break
+          case 'extent':
+            queryOptions.geometry = getExtentGeometry()
+            queryGraphicsLayer.add(getExtentFeature())
+            break
+        }
+        // 开始查询
+        server.queryFeatures(queryOptions).then(function (result) {
+          console.log("查询成功：", result)
+          // 清空绘制的要素
+          graphicsLayer.removeAll()
+          // 设置填充颜色为红色，请开发人员自行设置，这里仅作展示
+          const features = result.data.featureSet.features
+          for (let i = 0; i < features.length; i++) {
+            features[i].symbol.color = new Color(233, 0, 0, 0.4)
+          }
+          // 绘制要素
+          graphicsLayer.addMany(result.data.featureSet)
+        })
+      }
+
+      // 添加瓦片图层
+      function addTileLayer() {
+        // 创建瓦片图层
+        layer = new IGSTileLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        })
+        // 添加图层
+        map.add(layer)
+        // 图层添加完毕后，跳转到图层范围内
+        layer.on('layerview-created', (result) => {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      // 添加几何图层
+      function addGraphicsLayer() {
+        // 创建Graphics图层对象
+        graphicsLayer = new GraphicsLayer({
+          graphics: []
+        })
+        // 添加图层对象到地图文档中
+        map.add(graphicsLayer)
+        // 创建查询条件几何图层
+        queryGraphicsLayer = new GraphicsLayer({
+          graphics: []
+        })
+        // 添加图层对象到地图文档中
+        map.add(queryGraphicsLayer)
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          const form = layui.form;
+
+          //切换地图类型
+          form.on('select(geometry)', function (data) {
+            query(data.value)
+          });
+        });
+      }
+
+      // 获取点几何
+      function getPointGeometry() {
+        return new Point({
+          coordinates: [113.67271, 30.45214]
+        })
+      }
+
+      // 获取线几何
+      function getLineGeometry() {
+        return new LineString({
+          coordinates: [
+            [113.67271, 30.45214],
+            [113.87271, 30.25214]
+          ]
+        })
+      }
+
+      // 获取区几何
+      function getPolygonGeometry() {
+        return new Polygon({
+          coordinates: [
+            [
+              [112.41456, 30.5529],
+              [114.1025, 30.5529],
+              [114.1025, 29.3418],
+              [112.41456, 29.3418],
+              [112.41456, 30.5529]
+            ]
+          ]
+        })
+      }
+
+      // 获取圆几何
+      function getCircleGeometry() {
+        return new Circle({
+          center: [113.22, 30.1289],
+          radius: 2
+        })
+      }
+
+      // 获取矩形几何
+      function getExtentGeometry() {
+        return new Extent({
+          xmin: 110,
+          xmax: 114,
+          ymin: 29.5,
+          ymax: 31
+        })
+      }
+
+      // 获取点要素
+      function getPointFeature() {
+        return new Feature({
+          geometry: getPointGeometry(),
+          // 设置几何样式
+          symbol: new SimpleMarkerSymbol({
+            // 设置填充颜色
+            color: new Color(0, 0, 255, 1),
+            // 设置半径，单位像素
+            size: 10,
+            // 设置外边线样式
+            outline: new SimpleLineSymbol({
+              // 设置外边线颜色
+              color: new Color(255, 0, 0, 1),
+              // 设置外边线宽度，单位像素
+              width: 2
+            })
+          })
+        })
+      }
+
+      // 获取线要素
+      function getLineFeature() {
+        return new Feature({
+          geometry: getLineGeometry(),
+          // 设置线的符号
+          symbol: new SimpleLineSymbol({
+            // 设置线颜色
+            color: new Color(0, 0, 255, 1),
+            // 设置线宽，单位像素
+            width: 4
+          })
+        })
+      }
+
+      // 获取区要素
+      function getPolygonFeature() {
+        return new Feature({
+          geometry: getPolygonGeometry(),
+          // 设置符号样式
+          symbol: new SimpleFillSymbol({
+            // 设置填充颜色
+            color: new Color(0, 255, 0, 0.5),
+            // 设置外边线样式
+            outline: new SimpleLineSymbol({
+              // 设置外边线颜色
+              color: new Color(255, 0, 0, 1),
+              // 设置外边线宽度，单位像素
+              width: 2
+            })
+          })
+        })
+      }
+
+      // 获取圆要素
+      function getCircleFeature() {
+        return new Feature({
+          geometry: getCircleGeometry(),
+          // 设置符号样式
+          symbol: new SimpleFillSymbol({
+            // 设置填充颜色
+            color: new Color(0, 255, 0, 0.5),
+            // 设置外边线样式
+            outline: new SimpleLineSymbol({
+              // 设置外边线颜色
+              color: new Color(255, 0, 0, 1),
+              // 设置外边线宽度，单位像素
+              width: 2
+            })
+          })
+        })
+      }
+
+      // 获取矩形要素
+      function getExtentFeature() {
+        return new Feature({
+          geometry: getExtentGeometry(),
+          // 设置符号样式
+          symbol: new SimpleFillSymbol({
+            // 设置填充颜色
+            color: new Color(0, 255, 0, 0.5),
+            // 设置外边线样式
+            outline: new SimpleLineSymbol({
+              // 设置外边线颜色
+              color: new Color(255, 0, 0, 1),
+              // 设置外边线宽度，单位像素
+              width: 2
+            })
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <!--  示例UI  -->
+    <div class="layui-panel layui-panel-right" style="width: 335px">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图层ID：</label>
+                    <div class="layui-input-block" style="margin-bottom: 6px;width: 160px">
+                        <input id="layer-id" value="0" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item sample-main-panel" style="border-bottom: none;">
+                    <label class="layui-form-label" style="width: 100px">几何查询条件</label>
+                    <div class="layui-input-block layui-input-block-select" >
+                        <select id="geometry" name="geometry" lay-filter="geometry">
+                            <option value="point">点几何</option>
+                            <option value="line">线几何</option>
+                            <option value="polygon">区几何</option>
+                            <option value="circle">圆几何</option>
+                            <option value="extent">矩形几何</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="float: right;padding-top: 10px">
+                    <button type="button" class="layui-btn" onclick="query()">开始查询</button>
+                </div>
+            </div>
+        </form>
+    </div>
+  </body>
+</html>

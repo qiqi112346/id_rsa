@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>加载自定义裁图方式地图</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--引入proj4.js库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/proj4/proj4.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+
+      //加载自定义裁图方式底图服务
+      function addCustomeWebTileLayer() {
+        var tileInfo = {
+          dpi: 0,
+          format: 'PNG',
+          size: [256, 256], // 瓦片宽高的像素大小
+          origin: {
+            coordinates: [471388.6716802692, 3471062.732487645], // 裁图原点
+            type: 'Point' // 裁图原点类型
+          },
+          lods: [
+            { level: 0, resolution: 13758.333333333334, scale: 52000000 },
+            { level: 1, resolution: 6879.166666666667, scale: 26000000 },
+            { level: 2, resolution: 3439.5833333333335, scale: 13000000 },
+            { level: 3, resolution: 1719.7916666666667, scale: 6500000 },
+            { level: 4, resolution: 859.8958333333334, scale: 3250000 },
+            { level: 5, resolution: 429.9479166666667, scale: 1625000 },
+            { level: 6, resolution: 214.97395833333334, scale: 812500 },
+            { level: 7, resolution: 107.48697916666667, scale: 406250 },
+            { level: 8, resolution: 53.743489583333336, scale: 203125 },
+            { level: 9, resolution: 26.871744791666668, scale: 101562.5 }
+          ]
+        }
+
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/CustomTilingScheme.html
+        var tilingScheme = new zondy.cesium.CustomTilingScheme({
+          wkt: '+proj=tmerc +lat_0=0 +lon_0=114 +k=1 +x_0=500000 +y_0=0 +ellps=GRS80 +units=m +no_defs',
+          proj4: proj4,
+          tileInfo: tileInfo,
+          rectangleSouthwest: new Cesium.Cartesian2(
+            471388.6716802692,
+            3316805.3361792937
+          ),
+          rectangleNortheast: new Cesium.Cartesian2(
+            603520.9945763454,
+            3471062.732487645
+          )
+        })
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/UrlTemplateImageryProvider.html
+        var imageryProvider = new zondy.cesium.UrlTemplateImageryProvider({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/武汉市_4547_custom_1-10/TileServer/tileImage/{z}/{y}/{x}?f=image',
+          tilingScheme: tilingScheme
+        })
+        // 加载imageryProvider
+        viewer.imageryLayers.addImageryProvider(imageryProvider)
+      }
+
+      //飞到指定视角
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [114.37803061676298, 30.621293160654673, 116228]
+        })
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // 初始化Cesium版本切换按钮
+        createChangeTab()
+        //加载百度地图
+        addCustomeWebTileLayer()
+        //飞到指定视角
+        flyTo()
+      }
+    </script>
+</head>
+
+<body onload="init()">
+<div id="mapgis-3d-viewer"></div>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>室内漫游工具</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, options, animation
+      //取得jquery对象
+      let $ = layui.$
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //加载天地图
+        addTDT()
+        // 添加学校模型
+        addM3DModelCacheLayer()
+        //初始化漫游工具
+        initAnimationTool()
+        // 开启动画漫游
+        animation.start()
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //加载天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/vec_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //添加学校模型
+      function addM3DModelCacheLayer() {
+        let url =
+          'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D//1.0/school-all-new/school-all-new.mcj'
+        let M3DLayer = new zondy.layer.M3DModelCacheLayer({
+          url: url,
+        })
+        map.add(M3DLayer)
+      }
+
+      //初始化漫游工具
+      function initAnimationTool() {
+        // 行走路线坐标数组
+        let pathPositions = [
+          Cesium.Cartesian3.fromDegrees(
+            113.00192562044174,
+            32.99960598672579,
+            0
+          ),
+          Cesium.Cartesian3.fromDegrees(
+            113.00015925673449,
+            32.999584274771145,
+            0
+          ),
+          Cesium.Cartesian3.fromDegrees(
+            113.0001741383657,
+            33.00062888557946,
+            0
+          ),
+          Cesium.Cartesian3.fromDegrees(113.0009287267513, 33.0006179710116, 0)
+        ]
+
+        // 定义动画漫游对象
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/AnimationTool.html
+        animation = new zondy.cesium.AnimationTool(viewer, {
+          // 漫游的方向角
+          heading: Cesium.Math.PI / 2,
+          // 漫游的俯仰角
+          pitch: -Cesium.Math.PI / 12,
+          range: 5,
+          // 设置漫游的视角类型。0：正常，不移动相机；1：跟随；2：锁定第一视角；3：上帝视角
+          animationType: 1,
+          // 是否循环漫游动画
+          isLoop: true,
+          // 是否显示漫游路径
+          showPath: false,
+          // 漫游路径(世界坐标点数组)
+          positions: pathPositions,
+          // 漫游速度(m/s)
+          speed: 5,
+          // 倍速
+          speedupFactor: 1,
+          // 附加高程
+          exHeight: 0,
+          // 是否显示用时和距离提示信息
+          showInfo: false,
+          // 漫游的模型对象的url，为空表示不显示
+          modelUrl: 'http://webclient.smaryun.com:8200/3DData/Model/glb/Cesium_Man.glb',
+          model: {
+            //放大比例
+            scale: 1
+          },
+          // 完成漫游后的回调函数
+          complete: function () {
+            console.log('done')
+          },
+          // 路径插值算法。可选：拉格朗日算法Cesium.LagrangePolynomialApproximation、线性插值 Cesium.LinearApproximation、埃尔米特插值插值Cesium.HermitePolynomialApproximation
+          interpolationAlgorithm: Cesium.LinearApproximation,
+          //是否获取当前点坐标，为true时，回调函数callBack会返回当前所在点坐标
+          isGetPositionNow: false,
+          //是否需要将较大转弯点处理为圆弧
+          isProcessCorner: false,
+          //设置判断为转弯点的角度的最大值，不超过150的转角会被执行插值，处理为圆弧
+          maxAngle: 150.0,
+          //转弯处往圆弧曲线上插值点的步长，点个数=1/curveStep
+          curveStep: 0.01,
+          // 是否挂载动态扫描特效
+          isAddScanEffect: false,
+          // 是否获取路径点的真实高程
+          isGetRealHeight: false,
+          // 是否执行回调函数
+          onPositionTag: true,
+          // 回调函数
+          callback: function (data) {},
+          // 用于判断当前点是否在路径点所在位置附近的精度
+          disFactor: 10
+        })
+      }
+
+      function pause() {
+        // 切换动画漫游的暂停状态
+        animation.pause = !animation.pause
+        if ($('#pause').html() === '暂停') {
+          $('#pause').html('继续')
+        } else {
+          $('#pause').html('暂停')
+        }
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" style="width: 103px">
+      <div class="sample-button-panel">
+        <button id="pause" type="button" class="layui-btn" onclick="pause()">
+          暂停
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

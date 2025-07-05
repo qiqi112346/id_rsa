@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>三维标绘图层使用</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha384-SOnAn/m2fVJCwnbEYgD4xzrPtvsXdElhOVvR8ND1YjB5nhGNwwf7nBQlhfAwHAZC" crossorigin="anonymous"/>
+    <!--引入行业标绘脚本库-->
+    <!-- jquery -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/jquery/jquery-3.7.1.min.js"></script>
+    <!-- cesium -->
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!-- plot -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-plot.min.js"></script>
+    <!-- panel -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotPanel/index.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotPanel/index.css"/>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/plot/plot3d-layer-use.css"/>
+    <script>
+      'use strict'
+
+      //定义三维视图的主要类
+      let map,
+        sceneView,
+        viewer,
+        plotLayer,
+        plotLayer3DGroup,
+        plotEditor,
+        currentPlot
+      // 获取Zondy类
+      const zondy = window.zondy
+      // 获取标绘类
+      const plot= zondy.plot
+      const {
+        // 三维图层
+        PlotLayer3D,
+        // 三维图层组
+        PlotLayer3DGroup,
+        // 符号管理器
+        SymbolManager
+      } = plot
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加天地图
+        addTDT()
+        //视图跳转
+        flyTo()
+        //初始化标绘符号管理器
+        initPlotManager(function () {
+          //确保符号获取完毕后，初始化标绘图层
+          initPlotLayer()
+          //初始化UI
+          initUI()
+        })
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //显示鼠标位置
+        viewer.showPosition()
+        //抗锯齿处理
+        viewer.scene.fxaa = true
+        viewer.scene.postProcessStages.fxaa.enabled = true
+      }
+
+      //加载天地图底图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //视角跳转
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [117.18944441797595, 34.2390284961602, 80000]
+        })
+      }
+
+      /**
+       * 初始化标绘符号管理器
+       * @param callback 回调函数
+       * */
+      function initPlotManager(callback) {
+        // 符号库路径
+        const symbolUrl = `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/symbolLib.json`
+        const symbolOptions = {
+          // 符号库字体路径
+          fontURL: `http://webclient.smaryun.com:8200/Plot/plot-sample/fonts/`,
+          // 静态资源路径
+          baseUrl: `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/`
+        }
+
+        // 创建符号管理器
+        const manager = new SymbolManager(symbolUrl, symbolOptions)
+        // 请求获取符号库
+        manager.getSymbols().then(() => {
+          //获取符号库后执行回调
+          callback()
+        })
+      }
+
+      /**
+       * 初始化标绘图层
+       * */
+      function initPlotLayer() {
+        // 创建图层组
+        plotLayer3DGroup = new PlotLayer3DGroup(viewer)
+        // 创建三维图层
+        plotLayer = new PlotLayer3D(Cesium, viewer, {})
+        // 添加图层
+        plotLayer3DGroup.addLayer(plotLayer)
+        // 选取对象
+        plotLayer.editable = true
+        plotLayer.pickPlot = (plot) => {
+          currentPlot = plot
+        }
+      }
+
+      //初始化UI
+      function initUI() {
+        const panel = new window.webclientPlot.PlotPanel('plot-show-table', {
+          titleText: '图层使用',
+          panelWidth: 320
+        })
+        const contentBody = panel.getBody()
+        contentBody.style.display = 'flex'
+        contentBody.style.flexDirection = 'column'
+
+        const list2 = document.createElement('div')
+        const btn2 = document.createElement('button')
+        list2.setAttribute('class', 'listdom')
+        btn2.setAttribute('class', 'btn')
+        btn2.innerText = `通过对象加载数据`
+        btn2.onclick = () => {
+          //先清除图层里面的标绘
+          plotLayer.removeAll()
+          plotLayer.addGeoJSONObject({
+            type: 'Feature',
+            featureId: '44f7b761-2c93-40e7-917d-cc61a58a4175',
+            properties: {
+              show: true,
+              symbolId: '56',
+              nodeStyles: {
+                path12770: {
+                  strokeStyle: 'rgba(255,0,0,1)'
+                }
+              }
+            },
+            geometry: {
+              type: 'MultiPoint',
+              coordinates: [[117.18944441797595, 34.2390284961602]]
+            }
+          })
+        }
+        list2.appendChild(btn2)
+        contentBody.appendChild(list2)
+
+        const list1 = document.createElement('div')
+        const btn1 = document.createElement('button')
+        list1.setAttribute('class', 'listdom')
+        btn1.setAttribute('class', 'btn')
+        btn1.innerText = `通过json文件加载数据`
+        btn1.onclick = () => {
+          plotLayer.removeAll()
+          // 读取保存的标绘物数据
+          $.getJSON(
+            `http://webclient.smaryun.com:8200/Plot/plot-sample/layers/bbbbb.json`,
+            (res) => {
+              plotLayer.fromJSON(res)
+            }
+          )
+        }
+        list1.appendChild(btn1)
+        contentBody.appendChild(list1)
+
+        const list_title = document.createElement('div')
+        list_title.setAttribute('class', 'listdom')
+        list_title.style = `font-size: 14px;
+                color: rgb(255, 255, 255);
+                margin-top: 5px;`
+
+        list_title.innerText = `——————————————————`
+        contentBody.appendChild(list_title)
+
+        const list4 = document.createElement('div')
+        list4.setAttribute('class', 'listdom')
+        const div4_1 = document.createElement('div')
+        const div4_2 = document.createElement('div')
+        div4_1.setAttribute('class', 'list-item list-item-left')
+        div4_1.innerText = `删除标绘`
+        div4_1.addEventListener('click', () => {
+          if (currentPlot) {
+            plotLayer.removePlot(currentPlot)
+            currentPlot = null
+          } else {
+            layer.msg('请点选标绘再进行删除')
+          }
+        })
+        list4.appendChild(div4_1)
+        div4_2.setAttribute('class', 'list-item list-item-right')
+        div4_2.innerText = `修改标绘`
+        div4_2.addEventListener('click', () => {
+          if (currentPlot) {
+            const style = currentPlot.getStyle()
+            const nodeStyles = style.nodeStyles
+            const keys = Object.keys(nodeStyles)
+
+            keys.forEach((key) => {
+              if (typeof nodeStyles[key].strokeStyle !== 'undefined') {
+                nodeStyles[key].strokeStyle = `rgba(${parseInt(
+                  Math.random() * 255
+                )},${parseInt(Math.random() * 255)},${parseInt(
+                  Math.random() * 255
+                )},1)`
+              }
+              if (typeof nodeStyles[key].fillStyle !== 'undefined') {
+                nodeStyles[key].fillStyle = `rgba(${parseInt(
+                  Math.random() * 255
+                )},${parseInt(Math.random() * 255)},${parseInt(
+                  Math.random() * 255
+                )},1)`
+              }
+            })
+            currentPlot.setStyleJSON(style)
+          } else {
+            layer.msg('请点选标绘再进行修改')
+          }
+        })
+        list4.appendChild(div4_2)
+        contentBody.appendChild(list4)
+
+        const list5 = document.createElement('div')
+        const div5_1 = document.createElement('div')
+        const div5_2 = document.createElement('div')
+        list5.setAttribute('class', 'listdom')
+        div5_1.setAttribute('class', 'list-item list-item-left')
+        div5_1.innerText = `查询标绘`
+        div5_1.addEventListener('click', () => {
+          if (currentPlot) {
+            let id = currentPlot.id
+            let queryResult = plotLayer.getPlotByID(id)
+            console.log(queryResult)
+            layer.msg(`标绘ID:${queryResult.id}`)
+          } else {
+            layer.msg('请点选标绘再进行查询')
+          }
+        })
+        div5_2.setAttribute('class', 'list-item list-item-right')
+        div5_2.innerText = `导出标绘`
+        div5_2.addEventListener('click', () => {
+          // 读取保存的标绘物数据
+          const a = document.createElement('a')
+          const datastr =
+            'data:text/json;charset=utf-8,' +
+            encodeURIComponent(JSON.stringify(plotLayer.toJSON()))
+          a.href = datastr
+          a.setAttribute('download', '测试数据.json')
+          a.style.display = 'none'
+          a.click()
+        })
+        list5.appendChild(div5_1)
+        list5.appendChild(div5_2)
+        contentBody.appendChild(list5)
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer">
+      <div id="content" style="position: relative">
+        <div id="plot-show-table"></div>
+      </div>
+    </div>
+  </body>
+</html>

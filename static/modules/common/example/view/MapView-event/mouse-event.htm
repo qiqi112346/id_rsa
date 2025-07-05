@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>鼠标事件</title>
+    <!-- 引入地图引擎库 -->
+    <script
+      include="leaflet,mapboxgl"
+      src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"
+    ></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/analyse.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view, eventHandler, eventType
+      const { IGSTileLayer, IGSFeatureLayer } = zondy.layer
+      const { ViewEventType } = zondy.enum
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加瓦片图层
+        addIGSTileLayer()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new zondy.Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 添加瓦片图层
+      function addIGSTileLayer() {
+        const igsTileLayer = new IGSTileLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        })
+        map.add(igsTileLayer)
+        igsTileLayer.on('layerview-created', (result) => {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      // 注册鼠标点击事件
+      function clickEvent() {
+        if (eventHandler) {
+          offEvent(eventType, eventHandler)
+        }
+        let clickHandler = function (event) {
+          console.log('注册鼠标点击事件:', event)
+          console.log('鼠标在地图上的经纬度位置:', event.mapPoint)
+          console.log('鼠标像素X坐标、Y坐标:', event.x, event.y)
+          layer.msg(
+            `<h4>鼠标点击事件</h4>经纬度坐标：${event.mapPoint}<br>像素X坐标：${event.x}<br>像素Y坐标：${event.y}`,
+            { time: 5000 }
+          )
+          eventType = event.type
+        }
+        eventHandler = clickHandler
+        view.on('click', clickHandler)
+      }
+
+      // 注册鼠标双击事件
+      function doubleClickEvent() {
+        if (eventHandler) {
+          offEvent(eventType, eventHandler)
+        }
+        let dbClickHandler = function (event) {
+          console.log('注册鼠标双击事件:', event)
+          layer.msg(
+            `<h4>鼠标双击事件</h4>经纬度坐标：${event.mapPoint}<br>像素X坐标：${event.x}<br>像素Y坐标：${event.y}`,
+            { time: 5000 }
+          )
+          eventType = event.type
+        }
+        eventHandler = dbClickHandler
+        view.on('double-click', dbClickHandler)
+      }
+
+      // 注册鼠标立即点击事件
+      function immediateClickEvent() {
+        if (eventHandler) {
+          offEvent(eventType, eventHandler)
+        }
+        let immediateClickHandler = function (event) {
+          console.log('注册鼠标立即点击事件:', event)
+          console.log('鼠标在地图上的经纬度位置:', event.mapPoint)
+          console.log('鼠标像素X坐标、Y坐标:', event.x, event.y)
+          layer.msg(
+            `<h4>鼠标立即点击事件</h4>经纬度坐标：${event.mapPoint}<br>像素X坐标：${event.x}<br>像素Y坐标：${event.y}`,
+            { time: 5000 }
+          )
+          eventType = event.type
+        }
+        eventHandler = immediateClickHandler
+        view.on('immediate-click', immediateClickHandler)
+      }
+
+      // 注册鼠标按下事件
+      function pointerDownEvent() {
+        if (eventHandler) {
+          offEvent(eventType, eventHandler)
+        }
+        let pointerDownHandler = function (event) {
+          console.log('注册鼠标按下事件:', event)
+          layer.msg(
+            `<h4>鼠标按下事件</h4>经纬度坐标：${event.mapPoint}<br>像素X坐标：${event.x}<br>像素Y坐标：${event.y}`,
+            { time: 5000 }
+          )
+          eventType = event.type
+        }
+        eventHandler = pointerDownHandler
+        view.on(ViewEventType.pointerDown, pointerDownHandler)
+      }
+
+      // 注册鼠标抬起事件
+      function pointerUpEvent() {
+        if (eventHandler) {
+          offEvent(eventType, eventHandler)
+        }
+        let pointerUpHandler = function (event) {
+          console.log('注册鼠标抬起事件:', event)
+          layer.msg(
+            `<h4>鼠标抬起事件</h4>经纬度坐标：${event.mapPoint}<br>像素X坐标：${event.x}<br>像素Y坐标：${event.y}`,
+            { time: 5000 }
+          )
+          eventType = event.type
+        }
+        eventHandler = pointerUpHandler
+        view.on(ViewEventType.pointerUp, pointerUpHandler)
+      }
+
+      // 注册鼠标移动事件
+      function pointerMoveEvent() {
+        if (eventHandler) {
+          offEvent(eventType, eventHandler)
+        }
+        let pointerMoveHandler = function (event) {
+          console.log('注册鼠标移动事件:', event)
+          layer.msg(
+            `<h4>鼠标移动事件</h4>经纬度坐标：${event.mapPoint}<br>像素X坐标：${event.x}<br>像素Y坐标：${event.y}`,
+            { time: 5000 }
+          )
+          eventType = event.type
+        }
+        eventHandler = pointerMoveHandler
+        view.on(ViewEventType.pointerMove, pointerMoveHandler)
+      }
+
+      // 注册鼠标拖拽事件
+      function mousedragEvent() {
+        if (eventHandler) {
+          offEvent(eventType, eventHandler)
+        }
+        let mouseDragHandler = function (event) {
+          console.log('注册鼠标拖拽事件:', event)
+          layer.msg(
+            `<h4>鼠标拖拽事件</h4>鼠标拖拽起点像素X坐标：${event.origin.x}<br>鼠标拖拽起点像素Y坐标：${event.origin.y}<br>`,
+            { time: 5000 }
+          )
+          eventType = event.type
+        }
+        eventHandler = mouseDragHandler
+        view.on('drag', mouseDragHandler)
+      }
+
+      // 注销事件
+      function offEvent(eventType, eventHandler) {
+        view.off(eventType, eventHandler)
+        eventType = undefined
+        eventHandler = undefined
+      }
+    </script>
+
+    <style>
+      .layui-panel-right {
+        position: absolute;
+        top: 10px;
+        right: 35px;
+        color: #e1e1e1;
+        background-color: rgb(44, 44, 44);
+        border: none;
+        padding: 10px;
+        width: 567px;
+        z-index: 999;
+      }
+      .layui-btn-normal {
+        margin: 5px !important;
+      }
+    </style>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <div class="layui-panel layui-panel-right">
+      <button
+        type="button"
+        class="layui-btn layui-btn-sm layui-btn-normal"
+        onclick="clickEvent()"
+      >
+        注册鼠标点击事件
+      </button>
+      <button
+        type="button"
+        class="layui-btn layui-btn-sm layui-btn-normal"
+        onclick="doubleClickEvent()"
+      >
+        注册鼠标双击事件
+      </button>
+      <button
+        type="button"
+        class="layui-btn layui-btn-sm layui-btn-normal"
+        onclick="immediateClickEvent()"
+      >
+        注册鼠标立即点击事件
+      </button>
+      <button
+        type="button"
+        class="layui-btn layui-btn-sm layui-btn-normal"
+        onclick="pointerDownEvent()"
+      >
+        注册鼠标按下事件
+      </button>
+      <button
+        type="button"
+        class="layui-btn layui-btn-sm layui-btn-normal"
+        onclick="pointerUpEvent()"
+      >
+        注册鼠标抬起事件
+      </button>
+      <button
+        type="button"
+        class="layui-btn layui-btn-sm layui-btn-normal"
+        onclick="pointerMoveEvent()"
+      >
+        注册鼠标移动事件
+      </button>
+      <button
+        type="button"
+        class="layui-btn layui-btn-sm layui-btn-normal"
+        onclick="mousedragEvent()"
+      >
+        注册鼠标拖拽事件
+      </button>
+    </div>
+  </body>
+</html>

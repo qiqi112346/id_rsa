@@ -1,0 +1,1331 @@
+<header id="page-title" class="page-title">
+    
+        <span class="page-title-main">类名</span>
+        <span class="page-title-sub">ClusterInfo</span>
+    
+</header>
+
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="ClusterInfo">
+        <a class="href-link" href="#ClusterInfo">#</a>
+        
+        <span class="code-name" id="ClusterInfo" style="font-size:30px">
+            
+                new ClusterInfo<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>聚合点数量区间内的符号信息</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>构造参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>symbol</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             <a link="Symbol.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="Symbol" Symbol.html>Symbol</a>
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>默认的聚合点符号，目前仅支持SimpleMarkerSymbol|PcitureMarkerSymbol部分样式</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>labelSymbol</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             <a link="TextSymbol.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="TextSymbol" TextSymbol.html>TextSymbol</a>
+    
+</span>
+|
+
+<span class="param-type">
+    
+             null
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>聚合信息样式，一般描述聚合点的数量</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>minValue</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>最小聚合点</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>maxValue</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>最大聚合点</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='member'>成员变量</h3>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">成员变量概述</h4>
+            <div class="table-container">
+                <table class="params table">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#labelExpressionInfo">labelExpressionInfo</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+<span class="param-type">
+    
+             Object
+    
+</span>
+|
+
+<span class="param-type">
+    
+             null
+    
+</span>
+
+
+
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>默认的文字表达式，以$cluster_count表示聚类点数量，例如 { expression: &quot;$cluster_count + '个'&quot;}</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#labelSymbol">labelSymbol</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+<span class="param-type">
+    
+             <a link="TextSymbol.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="TextSymbol" TextSymbol.html>TextSymbol</a>
+    
+</span>
+|
+
+<span class="param-type">
+    
+             null
+    
+</span>
+
+
+
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>聚合信息样式，一般描述聚合点的数量</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#maxValue">maxValue</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>最大聚合点</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#minValue">minValue</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>最小聚合点</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#symbol">symbol</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+<span class="param-type">
+    
+             <a link="Symbol.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="Symbol" Symbol.html>Symbol</a>
+    
+</span>
+
+
+
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>默认的聚合点符号，目前仅支持SimpleMarkerSymbol|PcitureMarkerSymbol部分样式</p></code></td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">成员变量详情</h4>
+            <div class="members">
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+|
+
+<span class="param-type">
+    
+             null
+    
+</span>
+
+
+
+    </span>
+
+<h4 class="name" id="labelExpressionInfo">
+    <a class="href-link" href="#labelExpressionInfo">#</a>
+    
+    <span class="code-name">
+        labelExpressionInfo
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>默认的文字表达式，以$cluster_count表示聚类点数量，例如 { expression: &quot;$cluster_count + '个'&quot;}</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">
+    
+             <a link="TextSymbol.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="TextSymbol" TextSymbol.html>TextSymbol</a>
+    
+</span>
+|
+
+<span class="param-type">
+    
+             null
+    
+</span>
+
+
+
+    </span>
+
+<h4 class="name" id="labelSymbol">
+    <a class="href-link" href="#labelSymbol">#</a>
+    
+    <span class="code-name">
+        labelSymbol
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>聚合信息样式，一般描述聚合点的数量</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+    </span>
+
+<h4 class="name" id="maxValue">
+    <a class="href-link" href="#maxValue">#</a>
+    
+    <span class="code-name">
+        maxValue
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>最大聚合点</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+    </span>
+
+<h4 class="name" id="minValue">
+    <a class="href-link" href="#minValue">#</a>
+    
+    <span class="code-name">
+        minValue
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>最小聚合点</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">
+    
+             <a link="Symbol.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="Symbol" Symbol.html>Symbol</a>
+    
+</span>
+
+
+
+    </span>
+
+<h4 class="name" id="symbol">
+    <a class="href-link" href="#symbol">#</a>
+    
+    <span class="code-name">
+        symbol
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>默认的聚合点符号，目前仅支持SimpleMarkerSymbol|PcitureMarkerSymbol部分样式</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='function'>方法</h3>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法概述</h4>
+            <div class="members">
+            <div class="table-container">
+                <table class="params table">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>返回值类型</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#fromJSON">fromJSON</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             <a link="ClusterInfo.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="ClusterInfo" ClusterInfo.html>ClusterInfo</a>
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>通过json构造ClusterInfo对象</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#clone">clone</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             <a link="ClusterInfo.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="ClusterInfo" ClusterInfo.html>ClusterInfo</a>
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>克隆ClusterInfo对象</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#toJSON">toJSON</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>导出json对象</p></code></td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法详情</h4>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".fromJSON">
+        <a class="href-link" href="#.fromJSON">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" id="fromJSON" style="font-size:30px">
+            
+                fromJSON<span class="signature">(json)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>通过json构造ClusterInfo对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>json</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>json对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>ClusterInfo实例</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             <a link="ClusterInfo.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="ClusterInfo" ClusterInfo.html>ClusterInfo</a>
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="clone">
+        <a class="href-link" href="#clone">#</a>
+        
+        <span class="code-name" id="clone" style="font-size:30px">
+            
+                clone<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>克隆ClusterInfo对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>克隆后的ClusterInfo实例</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             <a link="ClusterInfo.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="ClusterInfo" ClusterInfo.html>ClusterInfo</a>
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="toJSON">
+        <a class="href-link" href="#toJSON">#</a>
+        
+        <span class="code-name" id="toJSON" style="font-size:30px">
+            
+                toJSON<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>导出json对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>json对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>

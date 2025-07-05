@@ -1,0 +1,1571 @@
+<header id="page-title" class="page-title">
+    
+        <span class="page-title-main">类名</span>
+        <span class="page-title-sub">SketchEditorCesium</span>
+    
+</header>
+
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="SketchEditorCesium">
+        <a class="href-link" href="#SketchEditorCesium">#</a>
+        
+        <span class="code-name" id="SketchEditorCesium" style="font-size:30px">
+            
+                new SketchEditorCesium<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>Cesium引擎草图编辑类<br/>
+<br>[ES5引入方式]：<br/>
+const { SketchEditor } = zondy.tool.sketch  <br/>
+[ES6引入方式]：<br/>
+import { SketchEditor } from &quot;@mapgis/webclient-leaflet-plugin&quot; <br/></p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+            <th style="min-width: 100px;">默认值</th>
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>构造参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>view</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             MapView
+    
+</span>
+|
+
+<span class="param-type">
+    
+             SceneView
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>地图视图对象</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>layer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             GraphicsLayer
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>草图图层管对象</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>sketchStyle</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             SketchStyle
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>草图符号</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>snapOption</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>草图捕获配置项</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>arcType</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             ArcType
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          ArcType.rhumb
+      
+      </td>
+  
+
+  <td class="description last"><p>草图图形弧线类型<br>
+可选类型为：<br>
+1、ArcType.none:不考虑弧度<br>
+2、ArcType.geodesic:大地线（或称为大圆线）<br>
+3、ArcType.rhumb:等角航线<br>
+目前绘制线、区、矩形时，该属性生效<br>
+请注意当绘制几何的高程模式设置为OnTheGround(贴地)和OnTheScene(贴场景)时，arcType支持设置为ArcType.geodesic和ArcType.rhumb，
+当设置为ArcType.none时，内部会将该属性设置为ArcType.geodesic
+*</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <div class="method-parameter columns">
+        <div class="column is-2"><label>绑定事件</label></div>
+        <div class="column is-10">
+            <ul>
+                <li><a href="#草图绘制完成事件">草图绘制完成事件</a></li>
+            
+                <li><a href="#草图被选中事件">草图被选中事件</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">继承关系</h3>
+
+        
+
+
+    <ul>
+        <li>SketchEditor3D</li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='function'>方法</h3>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法概述</h4>
+            <div class="members">
+            <div class="table-container">
+                <table class="params table">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>返回值类型</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#addVertex">addVertex</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             Geometry
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>向当前线或区草图中插入新的顶点</code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#drawPolylineToPolygon">drawPolylineToPolygon</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>线拓扑造区</code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#removeVertex">removeVertex</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             Geometry
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>移除草图图形的某个顶点</code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#split">split</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+         Array.&lt;Polygon>
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>分割草图对象或区几何对象</code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#updateVertex">updateVertex</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             Geometry
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>更新当前选中或区草图图形的某个顶点</code></td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法详情</h4>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="addVertex">
+        <a class="href-link" href="#addVertex">#</a>
+        
+        <span class="code-name" id="addVertex" style="font-size:30px">
+            
+                addVertex<span class="signature">(point, index)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>向当前线或区草图中插入新的顶点<a id='addVertex'></a></p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>point</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Point
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>新增/插入顶点</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>index</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>新增/新增点的序号</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>改变后的图形几何</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             Geometry
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="drawPolylineToPolygon">
+        <a class="href-link" href="#drawPolylineToPolygon">#</a>
+        
+        <span class="code-name" id="drawPolylineToPolygon" style="font-size:30px">
+            
+                drawPolylineToPolygon<span class="signature">(snapAndReferGeometries)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>线拓扑造区<a id='drawPolylineToPolygon'></a></p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>snapAndReferGeometries</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+         Array.&lt;Polygon>
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>捕获参考几何对象数组</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7>三维草图线拓扑造区</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// [ES5引入方式]：
+const { Polygon, LineString } = zondy.geometry
+const { SceneView} = zondy.cesium
+const { SketchEditor } = zondy.cesium.tool.sketch
+[ES6引入方式]：
+import { SceneView, SketchEditor } from "@mapgis/webclient-cesium-plugin" &lt;br/>
+import { Polygon, LineString } from "@mapgis/webclient-common" &lt;br/>
+var map = new Map()
+var sceneView = new SceneView({
+  viewId: "mapgis-3d-viewer",
+  map: map,
+})
+var testGeometries = [
+ new Polygon({
+   coordinates: [
+     [
+       [114.0, 29.0],
+       [117.0, 29.0],
+       [117.0, 35.0],
+       [114.0, 35.0],
+       [114.0, 29.0]
+     ]
+   ]
+ }),
+ new Polygon({
+   coordinates: [
+     [
+       [113.0, 29.0],
+       [116.0, 29.0],
+       [116.0, 35.0],
+       [113.0, 35.0],
+       [113.0, 29.0]
+     ]
+   ]
+ })
+]
+testFeatures = [
+new Feature({
+    id: '11114',
+    geometry: this.testGeometries[0],
+    symbol: new SimpleFillSymbol({
+      color: new Color(0, 255, 255, 0.5),
+      outline: new SimpleLineSymbol({
+        color: new Color(0, 255, 255, 0.8),
+        width: 2
+      })
+    })
+  }),
+  new Feature({
+    id: '11115',
+    geometry: this.testGeometries[1],
+    symbol: new SimpleFillSymbol({
+      color: new Color(0, 255, 255, 0.5),
+      outline: new SimpleLineSymbol({
+        color: new Color(0, 255, 255, 0.8),
+        width: 2
+      })
+    })
+  }),
+]
+var testLayer = new GraphicsLayer({
+   graphics: this.testFeatures
+})
+map.add(testLayer)
+var sketchEditor = new SketchEditor({
+  view: sceneView,
+  layer: new GraphicsLayer()
+})
+sketchEditor.drawPolylineToPolygon(testGeometries)</code></pre>
+    
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="removeVertex">
+        <a class="href-link" href="#removeVertex">#</a>
+        
+        <span class="code-name" id="removeVertex" style="font-size:30px">
+            
+                removeVertex<span class="signature">(index)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>移除草图图形的某个顶点<a id='removeVertex'></a></p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>index</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>需更新的顶点的序号</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>改变后的图形几何</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             Geometry
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="split">
+        <a class="href-link" href="#split">#</a>
+        
+        <span class="code-name" id="split" style="font-size:30px">
+            
+                split<span class="signature">(target, splitPolyline)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>分割草图对象或区几何对象<a id='split'></a></p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>target</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Polygon
+    
+</span>
+|
+
+<span class="param-type">
+    
+             <a link="SketchEditorCesium.html" onclick="getTypeHTML(event)" href="SketchEditorCesium.html">SketchEditorCesium</a>
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>被分割的几何/草图对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>splitPolyline</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Polyline
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>线几何对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>分割后的几何对象</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+         Array.&lt;Polygon>
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7>三维草图几何分割</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// [ES5引入方式]：
+const { Polygon, LineString } = zondy.geometry
+const { SceneView} = zondy.cesium
+const { SketchEditor } = zondy.cesium.tool.sketch
+[ES6引入方式]：
+import { SceneView, SketchEditor } from "@mapgis/webclient-cesium-plugin" &lt;br/>
+import { Polygon, LineString } from "@mapgis/webclient-common" &lt;br/>
+var map = new Map()
+var sceneView = new SceneView({
+  viewId: "mapgis-3d-viewer",
+  map: map,
+})
+var SketchEditor = new SketchEditor({
+  view: sceneView,
+  layer: new GraphicsLayer()
+})
+const polygon = new Polygon({
+  coordinates: [
+  [
+      [108, 29],
+      [116, 29],
+      [116, 33],
+      [108, 33],
+      [108, 29]
+    ]
+  ]
+})
+const polyline = new LineString({
+  coordinates: [
+    [100, 30],
+    [120, 30]
+  ]
+})
+const newSketchEditors = SketchEditor.split(polygon,polyline)</code></pre>
+    
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="updateVertex">
+        <a class="href-link" href="#updateVertex">#</a>
+        
+        <span class="code-name" id="updateVertex" style="font-size:30px">
+            
+                updateVertex<span class="signature">(point, index)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>更新当前选中或区草图图形的某个顶点<a id='updateVertex'></a></p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>point</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Point
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>新的顶点</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>index</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>需更新的顶点的序号</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>改变后的图形几何</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             Geometry
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>

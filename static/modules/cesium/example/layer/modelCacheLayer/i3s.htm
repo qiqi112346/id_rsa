@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>I3S</title>
+  <!--加载Cesium库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/cesium/Cesium.js"></script>
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/cesium/Widgets/widgets.css" />
+  <!--plugin脚本库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+  <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/tool.css" />
+  <script>
+    'use strict'
+    //定义三维视图的主要类
+    let map, sceneView, viewer
+
+    //地图初始化函数
+    function init() {
+      //初始化球体
+      initViewer()
+      //三维试图类构造完毕，添加一个模型
+      addModel()
+    }
+
+    //地图初始化函数
+    function initViewer() {
+      Cesium.Ion.defaultAccessToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5NmZlZDIxNS02YzE5LTQ2YTMtOWNlOS05OTJiMjUxMWFhMTkiLCJpZCI6MjYwNDcxLCJpYXQiOjE3MzM0NTM0NzZ9.1MciU073CwzcWPnGNXg2YuiXmzP2NGI5FwMIvlrvImo"
+      viewer = new Cesium.Viewer('mapgis-3d-viewer', {
+        terrain: Cesium.Terrain.fromWorldTerrain(),
+        animation: false,
+        timeline: false,
+      })
+    }
+
+    //加载模型
+    async function addModel() {
+      // Indexed 3D Scene (I3S)服务地址
+      const tours = {
+        "San Francisco": "https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/SanFrancisco_3DObjects_1_7/SceneServer/layers/0",
+      }
+      // 初始化ArcGISTiledElevationTerrainProvider
+      const geoidService = await Cesium.ArcGISTiledElevationTerrainProvider.fromUrl(
+        "https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/EGM2008/ImageServer",
+      )
+      // 创建i3s可选参数
+      const i3sOptions = {
+        // 引用geoid服务的TerrainProvider
+        geoidTiledTerrainProvider: geoidService,
+      }
+      // 创建i3s provider
+      const i3sProvider = await Cesium.I3SDataProvider.fromUrl(
+        tours["San Francisco"],
+        i3sOptions,
+      )
+      viewer.scene.primitives.add(i3sProvider)
+      const center = Cesium.Rectangle.center(i3sProvider.extent)
+      center.height = 5000.0
+      viewer.camera.setView({
+        destination: Cesium.Ellipsoid.WGS84.cartographicToCartesian(center),
+      })
+    }
+  </script>
+</head>
+
+<body onload="init()">
+  <div id="mapgis-3d-viewer"></div>
+</body>
+
+</html>

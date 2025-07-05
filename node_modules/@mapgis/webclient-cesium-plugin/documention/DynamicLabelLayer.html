@@ -1,0 +1,1841 @@
+<header id="page-title" class="page-title">
+    
+        <span class="page-title-main">类名</span>
+        <span class="page-title-sub">DynamicLabelLayer</span>
+    
+</header>
+
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="DynamicLabelLayer">
+        <a class="href-link" href="#DynamicLabelLayer">#</a>
+        
+        <span class="code-name" id="DynamicLabelLayer" style="font-size:30px">
+            
+                new DynamicLabelLayer<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+            <th style="min-width: 100px;">默认值</th>
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>构造参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>opacity</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          1
+      
+      </td>
+  
+
+  <td class="description last"><p>图层透明度</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>visible</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Boolean
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          true
+      
+      </td>
+  
+
+  <td class="description last"><p>图层显隐</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>labelingInfo</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+         Array.&lt;LabelClass>
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          [new LabelClass()]
+      
+      </td>
+  
+
+  <td class="description last"><p>注记样式</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>swipeEnabled</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Boolean
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          false
+      
+      </td>
+  
+
+  <td class="description last"><p>开启卷帘对比分析</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>swipeInverse</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0
+      
+      </td>
+  
+
+  <td class="description last"><p>单独控制该图层是否进行反转。小于0不反转，大于0时反转，等于0失效。该属性的控制优先级高于<code>Scene#swipeController</code>中的inverse属性.若要取消该属性对本图层的独立控制需要将该属性置为0。</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='member'>成员变量</h3>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">成员变量概述</h4>
+            <div class="table-container">
+                <table class="params table">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#show">show</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+<span class="param-type">
+    
+             Boolean
+    
+</span>
+
+
+
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>显隐设置</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#swipeEnabled">swipeEnabled</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+<span class="param-type">
+    
+             Boolean
+    
+</span>
+
+
+
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>开启卷帘对比分析</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#swipeInverse">swipeInverse</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>单独控制该图层是否进行反转，小于0不反转，大于0时反转，等于0失效。该属性的控制优先级高于<code>Scene#swipeController</code>中的inverse属性.若要取消该属性对本图层的独立控制需要将该属性置为0.</p></code></td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">成员变量详情</h4>
+            <div class="members">
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">
+    
+             Boolean
+    
+</span>
+
+
+
+    </span>
+
+<h4 class="name" id="show">
+    <a class="href-link" href="#show">#</a>
+    
+    <span class="code-name">
+        show
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>显隐设置</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>false</li>
+        </ul></dd>
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">
+    
+             Boolean
+    
+</span>
+
+
+
+    </span>
+
+<h4 class="name" id="swipeEnabled">
+    <a class="href-link" href="#swipeEnabled">#</a>
+    
+    <span class="code-name">
+        swipeEnabled
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>开启卷帘对比分析</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>false</li>
+        </ul></dd>
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+    </span>
+
+<h4 class="name" id="swipeInverse">
+    <a class="href-link" href="#swipeInverse">#</a>
+    
+    <span class="code-name">
+        swipeInverse
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>单独控制该图层是否进行反转，小于0不反转，大于0时反转，等于0失效。该属性的控制优先级高于<code>Scene#swipeController</code>中的inverse属性.若要取消该属性对本图层的独立控制需要将该属性置为0.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>0</li>
+        </ul></dd>
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='function'>方法</h3>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法概述</h4>
+            <div class="members">
+            <div class="table-container">
+                <table class="params table">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>返回值类型</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#add">add</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#addLabels">addLabels</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#createLabels">createLabels</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#destroyed">destroyed</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#remove">remove</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#removeLabels">removeLabels</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code></code></td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法详情</h4>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="add">
+        <a class="href-link" href="#add">#</a>
+        
+        <span class="code-name" id="add" style="font-size:30px">
+            
+                add<span class="signature">(features, labelClass)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>features</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>labelClass</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             LabelClass
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>注记样式</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="addLabels">
+        <a class="href-link" href="#addLabels">#</a>
+        
+        <span class="code-name" id="addLabels" style="font-size:30px">
+            
+                addLabels<span class="signature">(labels)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>labels</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="createLabels">
+        <a class="href-link" href="#createLabels">#</a>
+        
+        <span class="code-name" id="createLabels" style="font-size:30px">
+            
+                createLabels<span class="signature">(features, labelClass)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>features</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>labelClass</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="destroyed">
+        <a class="href-link" href="#destroyed">#</a>
+        
+        <span class="code-name" id="destroyed" style="font-size:30px">
+            
+                destroyed<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="remove">
+        <a class="href-link" href="#remove">#</a>
+        
+        <span class="code-name" id="remove" style="font-size:30px">
+            
+                remove<span class="signature">(features)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>features</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="removeLabels">
+        <a class="href-link" href="#removeLabels">#</a>
+        
+        <span class="code-name" id="removeLabels" style="font-size:30px">
+            
+                removeLabels<span class="signature">(labels)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>labels</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             *
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>

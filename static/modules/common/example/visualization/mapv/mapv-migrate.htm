@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>迁移图</title>
+    <!--引入mapv-->
+    <script type="text/javascript" src="http://webclient.smaryun.com/static/libs/cdn/mapv/mapv.min.js"></script>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view, geometryServer, featureServer, graphicsLayer
+      const {
+        WMTSLayer, MapVLayer
+      } = zondy.layer
+      const { Map, SpatialReference } = zondy
+      const { Point } = zondy.geometry
+
+      //mapv参数相关数据
+      let data = [];
+      let timeData = [];
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加WMTS图层
+        addWMTSLayer()
+        // 初始化MapV数据
+        initMapVData()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      function initMapVData() {
+        // 构造数据
+        httpGetPromise('http://webclient.smaryun.com:8200/Vector/csv/migrate/qianxi-time.csv').then((rs) => {
+          let items = rs.split("|");
+          for (let i = 0; i < items.length; i++) {
+            let itemArr = items[i].split(/\n/);
+            for (let k = 0; k < itemArr.length; k++) {
+              if (!!itemArr[k]) {
+                let item = itemArr[k].split(/\t/);
+                if (item[0] === "起点城市" || item[0] === "迁出城市") {
+                  var cityBegin = item[1];
+                }
+                if (
+                  item[0] !== "起点城市" ||
+                  (item[0] !== "迁出城市" && item.length > 1)
+                ) {
+                  let cityCenter1 = mapv.utilCityCenter.getCenterByCityName(
+                    item[0].replace(/市|省/, "")
+                  );
+                  let cityCenter2 = mapv.utilCityCenter.getCenterByCityName(
+                    cityBegin.replace(/市|省/, "").trim()
+                  );
+                  if (cityCenter1) {
+                    if (Math.random() > 0.7) {
+                      curive(cityCenter2, cityCenter1, 50);
+                    }
+                    data.push({
+                      geometry: {
+                        type: "LineString",
+                        coordinates: [
+                          [cityCenter1.lng, cityCenter1.lat],
+                          [cityCenter2.lng, cityCenter2.lat],
+                        ],
+                      },
+                      count: 100 * Math.random(),
+                    });
+                  }
+                }
+              }
+            }
+          }
+          // 构建对应的dataset
+          let dataSet1 = new mapv.DataSet(data);
+          // 设置对应的参数
+          // https://github.com/huiyan-fe/mapv/blob/master/API.md
+          let options1 = {
+            context: "2d", //cesium必须设置画布为2d
+            cesium: {
+              postRender: true,
+              postRenderFrame: 0,
+            },
+            strokeStyle: "rgba(55, 50, 250, 0.3)",
+            globalCompositeOperation: "lighter",
+            shadowColor: "rgba(55, 50, 250, 0.5)",
+            methods: {
+              click: function (item) {
+              },
+            },
+            gradient: {
+              0: "rgba(55, 50, 250, 0)",
+              1: "rgba(55, 50, 250, 1)",
+            },
+            lineWidth: 0.2,
+            draw: "intensity", // 绘制强度图
+          };
+
+          // 声明cesium的mapv图层并将其显示到三维球上
+          let lineLayer = new MapVLayer({
+            data: dataSet1,
+            mapVOptions: options1
+          });
+
+          map.add(lineLayer);
+          // 构建对应的dataset
+          let dataSet2 = new mapv.DataSet(timeData);
+          let options2 = {
+            context: "2d", //cesium必须设置画布为2d
+            fillStyle: "rgba(255, 250, 250, 0.9)",
+            size: 0.5,
+            animation: {
+              type: "time",
+              stepsRange: {
+                start: 0,
+                end: 50,
+              },
+              trails: 1,
+              duration: 5,
+            },
+            draw: "simple", // 绘制简单图
+          };
+          // 声明cesium的mapv图层并将其显示到三维球上
+          let mapLayer = new MapVLayer({
+            data: dataSet2,
+            mapVOptions: options2
+          });
+
+          map.add(mapLayer);
+        });
+      }
+
+      function curive(fromPoint, endPoint, n) {
+        var delLng = (endPoint.lng - fromPoint.lng) / n;
+        var delLat = (endPoint.lat - fromPoint.lat) / n;
+
+        for (var i = 0; i < n; i++) {
+          var pointNLng = fromPoint.lng + delLng * i;
+          var pointNLat = fromPoint.lat + delLat * i;
+          timeData.push({
+            geometry: {
+              type: "Point",
+              coordinates: [pointNLng, pointNLat],
+            },
+            count: 1,
+            time: i,
+          });
+        }
+      }
+
+      // 发送请求获取数据
+      function httpGetPromise(url) {
+        return new Promise(function (resolve, reject) {
+          const handler = function () {
+            if (this.readyState !== 4) {
+              return;
+            }
+            if (this.status === 200) {
+              resolve(this.response);
+            } else {
+              reject(new Error(this.statusText));
+            }
+          };
+          const client = new XMLHttpRequest();
+          client.open('GET', url);
+          client.onreadystatechange = handler;
+          client.responseType = 'text/csv';
+          client.setRequestHeader('Accept', 'application/json');
+          client.send();
+        });
+      }
+
+      // 添加WMTS图层
+      function addWMTSLayer() {
+        const wmtsLayer = new WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(wmtsLayer)
+        // 图层加载完毕
+        wmtsLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          view.flyTo({
+            center: new Point({
+              coordinates: [12520996.73, 3637179.55, 4000000],
+              spatialReference: new SpatialReference({
+                wkid: 3857
+              })
+            }),
+            zoom: 5
+          })
+        })
+      }
+    </script>
+</head>
+
+<body onload="init();">
+<!--  视图容器div  -->
+<div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>矢量瓦片(MapGIS)-3857</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView
+
+      // 添加IGS瓦片图层
+      function addIGSVectorTileLayer() {
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/IGSVectorTileLayer.html
+        const igsVectorTileLayer = new zondy.layer.IGSVectorTileLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/VectorTile/湖北省3857矢量瓦片/VectorTileServer',
+          // 渲染模式。on-screen表示使用三维接口实时渲染注记；off-screen表示通过先将注记渲染到图片上，再通过三维接口渲染到屏幕。
+          labelsRenderMode: 'on-screen'
+        })
+        map.add(igsVectorTileLayer)
+        // 注册图层添加完毕事件
+        igsVectorTileLayer.on('layerview-created', function (result) {
+          //飞到指定视角
+          flyTo()
+        })
+      }
+
+      //飞到指定视角
+      function flyTo() {
+        sceneView.flyTo({
+          center: [112.21, 31.1, 650000]
+        })
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+      }
+
+      //地图初始化函数
+      function init() {
+        // 初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加IGS瓦片图层
+        addIGSVectorTileLayer()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

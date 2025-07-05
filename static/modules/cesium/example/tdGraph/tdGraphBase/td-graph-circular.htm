@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>圆锥</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--html2canvas库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/html2canvas/html2canvas.min.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/graphic.css"
+    />
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, graphicsLayer, cylinder
+      //取得jquery对象
+      let $ = layui.$
+      //颜色管理器对象
+      let colorpicker = layui.colorpicker
+
+      let colors = [
+        '#78B3DE',
+        '#9B75ED',
+        '#8287F7',
+        '#82F7FE',
+        '#E7F269',
+        '#ED72C3'
+      ]
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //初始化标绘图层
+        addGraphicLayer()
+        //纯色圆锥
+        addColorCylinder1()
+        //四棱锥
+        addColorCylinder2()
+        //html材质
+        addColorCylinderHtml()
+        //纯色圆柱
+        addColorCylinder3()
+        //闪烁圆锥
+        addTrailCylinder()
+        //圆波圆锥
+        addWaveCylinder()
+        //圆波圆锥
+        addWaveCylinder2()
+        //加载天地图底图
+        addTDT()
+        //视点跳转
+        flyTo()
+        //初始化示例UI
+        initUI()
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //初始化标绘图层
+      function addGraphicLayer() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/GraphicsLayer.html
+        graphicsLayer = new zondy.cesium.GraphicsLayer(viewer, {
+          clickGraphic: function (graphic) {
+            if (!graphic) return
+            cylinder = graphic
+            //更新样式面板
+            let color = cylinder.style.color
+            let topRadius = cylinder.style.topRadius
+            let bottomRadius = cylinder.style.bottomRadius
+            let offsetHeight = cylinder.style.offsetHeight
+            let extrudedHeight = cylinder.style.extrudedHeight
+            // 材质参数
+            let materialColor = cylinder.style.color
+            let image = ''
+            let duration = 1000
+            let direction = 1
+            let count = 10
+            let gradient = 0.3
+
+            //隐藏非公共参数
+            $('#cylinder-color').parents('.layui-form-item').hide()
+            $('#cylinder-materialColor').parents('.layui-form-item').hide()
+            $('#cylinder-image').parents('.layui-form-item').hide()
+            $('#cylinder-duration').parents('.layui-form-item').hide()
+            $('#cylinder-direction').parents('.layui-form-item').hide()
+            $('#cylinder-count').parents('.layui-form-item').hide()
+            $('#cylinder-gradient').parents('.layui-form-item').hide()
+            $('#cylinder-duration')
+              .parents('.layui-form-item')
+              .find('label.layui-form-label')
+              .text('流动速度')
+            $('#cylinder-direction')
+              .parents('.layui-form-item')
+              .find('label.layui-form-label')
+              .text('流动方向')
+
+            // 不同材质，参数不一样
+            if (typeof cylinder.style.material !== 'undefined') {
+              if (typeof cylinder.style.material.uniforms !== 'undefined') {
+                switch (cylinder.style.material.type) {
+                  case Cesium.Material.ImageType:
+                    if (
+                      typeof cylinder.style.material.uniforms.image !==
+                      'undefined'
+                    ) {
+                      image = cylinder.style.material.uniforms.image
+                      $('#cylinder-image').parents('.layui-form-item').show()
+                    }
+                    break
+                  case Cesium.Material.PolylineTrailLinkType:
+                    $('#cylinder-duration')
+                      .parents('.layui-form-item')
+                      .find('label.layui-form-label')
+                      .text('闪烁速度')
+                    $('#cylinder-direction')
+                      .parents('.layui-form-item')
+                      .find('label.layui-form-label')
+                      .text('闪烁方向')
+                    if (
+                      typeof cylinder.style.material.uniforms.color !==
+                      'undefined'
+                    ) {
+                      materialColor = cylinder.style.material.uniforms.color
+                      $('#cylinder-materialColor')
+                        .parents('.layui-form-item')
+                        .show()
+                    }
+                    if (
+                      typeof cylinder.style.material.uniforms.image !==
+                      'undefined'
+                    ) {
+                      image = cylinder.style.material.uniforms.image
+                      $('#cylinder-image').parents('.layui-form-item').show()
+                    }
+                    if (
+                      typeof cylinder.style.material.uniforms.duration !==
+                      'undefined'
+                    ) {
+                      duration = cylinder.style.material.uniforms.duration
+                      $('#cylinder-duration').parents('.layui-form-item').show()
+                    }
+                    if (
+                      typeof cylinder.style.material.uniforms.direction !==
+                      'undefined'
+                    ) {
+                      direction = cylinder.style.material.uniforms.direction
+                      $('#cylinder-direction')
+                        .parents('.layui-form-item')
+                        .show()
+                    }
+                    break
+                  case Cesium.Material.CircleWaveMaterialType:
+                    if (
+                      typeof cylinder.style.material.uniforms.color !==
+                      'undefined'
+                    ) {
+                      materialColor = cylinder.style.material.uniforms.color
+                      $('#cylinder-materialColor')
+                        .parents('.layui-form-item')
+                        .show()
+                    }
+                    if (
+                      typeof cylinder.style.material.uniforms.duration !==
+                      'undefined'
+                    ) {
+                      duration = cylinder.style.material.uniforms.duration
+                      $('#cylinder-duration').parents('.layui-form-item').show()
+                    }
+                    if (
+                      typeof cylinder.style.material.uniforms.count !==
+                      'undefined'
+                    ) {
+                      count = cylinder.style.material.uniforms.count
+                      $('#cylinder-count').parents('.layui-form-item').show()
+                    }
+                    if (
+                      typeof cylinder.style.material.uniforms.gradient !==
+                      'undefined'
+                    ) {
+                      gradient = cylinder.style.material.uniforms.gradient
+                      $('#cylinder-gradient').parents('.layui-form-item').show()
+                    }
+                    break
+                  default:
+                    break
+                }
+              }
+            } else {
+              $('#cylinder-color').parents('.layui-form-item').show()
+            }
+
+            let formParam = {
+              color: color.toCssHexString(),
+              topRadius: topRadius,
+              bottomRadius: bottomRadius,
+              offsetHeight: offsetHeight,
+              extrudedHeight: extrudedHeight,
+              materialColor: materialColor.toCssHexString(),
+              image: image,
+              duration: duration,
+              direction: direction,
+              count: count,
+              gradient: gradient
+            }
+            layui.form.val('example', formParam)
+
+            colorpicker.render({
+              elem: '#cylinder-color',
+              color: color.toCssHexString(),
+              done: function (color) {
+                $('#cylinder-color-input').val(color)
+                cylinder.style.color = Cesium.Color.fromCssColorString(color)
+              }
+            })
+            colorpicker.render({
+              elem: '#cylinder-materialColor',
+              color: materialColor.toCssHexString(),
+              done: function (color) {
+                $('#cylinder-materialColor-input').val(color)
+                if (
+                  typeof cylinder.style.material !== 'undefined' &&
+                  typeof cylinder.style.material.uniforms !== 'undefined'
+                ) {
+                  cylinder.style.material.uniforms.color =
+                    Cesium.Color.fromCssColorString(color)
+                }
+              }
+            })
+            //这个时候展开编辑面板
+            $('#editPanel').show()
+          },
+          getGraphic: function () {
+            //绘制完停止绘制
+            stopDrawing()
+          }
+        })
+      }
+
+      //纯色圆锥
+      function addColorCylinder1() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let cylinderGraphic1 = new zondy.cesium.Graphic({
+          //类型
+          type: 'cylinder',
+          // 圆锥几何点
+          positions: [Cesium.Cartesian3.fromDegrees(113.9933, 29.9994, 0)],
+          // 样式
+          style: {
+            // 颜色
+            color: Cesium.Color.fromCssColorString(colors[0]).withAlpha(0.7),
+            // 离地高度
+            offsetHeight: 200,
+            // 顶部半径
+            topRadius: 1,
+            // 底部半径
+            bottomRadius: 200,
+            // 拉伸高度
+            extrudedHeight: 400
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(cylinderGraphic1)
+      }
+
+      //四棱锥
+      function addColorCylinder2() {
+        viewer.entities.add({
+          name: 'Red cone',
+          position: Cesium.Cartesian3.fromDegrees(114.0033, 29.9994, 0),
+          cylinder: {
+            length: 1000.0,
+            topRadius: 0.0,
+            bottomRadius: 400.0,
+            material: Cesium.Color.fromCssColorString(colors[1]).withAlpha(0.7),
+            slices: 4
+          }
+        })
+      }
+
+      //html材质圆锥
+      function addColorCylinderHtml() {
+        //先将html可见
+        document.getElementById('htmlGraph').style.display = 'block'
+        //再利用html2canvas转换成图片
+        html2canvas(document.getElementById('htmlGraph'), {
+          //canvas宽度
+          width: 100,
+          //canvas高度
+          height: 100,
+          //canvas分辨率，越大越清晰
+          scale: 2
+        }).then(function (canvas) {
+          document.getElementById('htmlGraph').style.display = 'none'
+          //在这里可以拿到base64编码的图片
+          let dataUrl = canvas.toDataURL('image/png', 1.0)
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+          let cylinderGraphic1 = new zondy.cesium.Graphic({
+            //类型
+            type: 'cylinder',
+            // 圆锥几何点
+            positions: [Cesium.Cartesian3.fromDegrees(114.0133, 29.9994, 0)],
+            // 样式
+            style: {
+              // 离地高度
+              offsetHeight: 200,
+              // 顶部半径
+              topRadius: 1,
+              // 底部半径
+              bottomRadius: 200,
+              // 拉伸高度
+              extrudedHeight: 400,
+              // 材质
+              // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Material.html
+              material: Cesium.Material.fromType(Cesium.Material.ImageType, {
+                // 材质底图
+                image: dataUrl,
+                // x、y轴重复次数
+                repeat: new Cesium.Cartesian2(5.0, 5.0)
+              })
+            }
+          })
+          //将标绘点添加入标绘图层
+          graphicsLayer.addGraphic(cylinderGraphic1)
+        })
+      }
+
+      //圆柱
+      function addColorCylinder3() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let cylinderGraphic3 = new zondy.cesium.Graphic({
+          //类型
+          type: 'cylinder',
+          // 圆锥几何点
+          positions: [Cesium.Cartesian3.fromDegrees(114.0233, 29.9994, 0)],
+          // 样式
+          style: {
+            // 颜色
+            color: Cesium.Color.fromCssColorString(colors[2]).withAlpha(0.7),
+            // 离地高度
+            offsetHeight: 200,
+            // 顶部半径
+            topRadius: 200,
+            // 底部半径
+            bottomRadius: 200,
+            // 拉伸高度
+            extrudedHeight: 400
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(cylinderGraphic3)
+      }
+
+      //闪烁圆锥
+      function addTrailCylinder() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let cylinderGraphic4 = new zondy.cesium.Graphic({
+          // 类型
+          type: 'cylinder',
+          // 位置
+          positions: [Cesium.Cartesian3.fromDegrees(113.9933, 29.9894, 0)],
+          // 样式
+          style: {
+            // 离地高度
+            offsetHeight: 100,
+            // 顶部半径
+            topRadius: 1,
+            // 底部半径
+            bottomRadius: 200,
+            // 拉伸高度
+            extrudedHeight: 400,
+            // 闪烁材质
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Material.html
+            material: Cesium.Material.fromType(
+              Cesium.Material.PolylineTrailLinkType,
+              {
+                // 材质底图
+                image:
+                  'http://webclient.smaryun.com:8200/NoneSpatialData/image/lineClr.png',
+                // 闪烁速度
+                duration: 1000,
+                // 闪烁方向
+                direction: 1,
+                // 材质颜色
+                color: Cesium.Color.fromCssColorString(colors[3]).withAlpha(
+                  0.7
+                ),
+                // x、y轴重复次数
+                repeat: new Cesium.Cartesian2(0.0, 1.0)
+              }
+            )
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(cylinderGraphic4)
+      }
+
+      //圆波圆锥
+      function addWaveCylinder() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let cylinderGraphic5 = new zondy.cesium.Graphic({
+          //类型
+          type: 'cylinder',
+          // 位置点
+          positions: [Cesium.Cartesian3.fromDegrees(114.0033, 29.9894, 0)],
+          // 样式
+          style: {
+            // 离地高度
+            offsetHeight: 100,
+            // 顶部半径
+            topRadius: 1,
+            // 底部半径
+            bottomRadius: 300,
+            // 拉伸高度
+            extrudedHeight: 700,
+            // 材质
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Material.html
+            material: Cesium.Material.fromType(
+              Cesium.Material.CircleWaveMaterialType,
+              {
+                // 颜色
+                color: Cesium.Color.fromCssColorString(colors[4]).withAlpha(
+                  0.7
+                ),
+                // 速度
+                duration: 4000,
+                // 圆波数量
+                count: 1,
+                // 渐变度
+                gradient: 0.3
+              }
+            )
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(cylinderGraphic5)
+      }
+
+      //圆波圆锥2
+      function addWaveCylinder2() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let cylinderGraphic6 = new zondy.cesium.Graphic({
+          //类型
+          type: 'cylinder',
+          // 位置点
+          positions: [Cesium.Cartesian3.fromDegrees(114.0133, 29.9894, 0)],
+          // 样式
+          style: {
+            // 离地高度
+            offsetHeight: 100,
+            // 顶部半径
+            topRadius: 1,
+            // 底部半径
+            bottomRadius: 200,
+            // 拉伸高度
+            extrudedHeight: 1000,
+            // 材质
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Material.html
+            material: Cesium.Material.fromType(
+              Cesium.Material.CircleWaveMaterialType,
+              {
+                // 颜色
+                color: Cesium.Color.fromCssColorString(colors[5]).withAlpha(
+                  0.7
+                ),
+                // 速度
+                duration: 2000,
+                // 圆波数量
+                count: 10,
+                // 渐变度
+                gradient: 0.3
+              }
+            )
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(cylinderGraphic6)
+      }
+
+      //加载天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //视点跳转
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [114.005, 29.945, 4400],
+          duration: 2,
+          orientation: {
+            heading: Cesium.Math.toRadians(0), //方位角
+            pitch: Cesium.Math.toRadians(-40), //俯仰角
+            roll: 0 //翻滚角
+          }
+        })
+      }
+
+      //初始化示例UI
+      function initUI() {
+        layui.use('colorpicker', function () {
+          //半径
+          $('#cylinder-topRadius').bind('input propertychange', function () {
+            cylinder.style.topRadius = clampNumberValue(
+              $('#cylinder-topRadius').val(),
+              [0]
+            )
+          })
+
+          //底部半径
+          $('#cylinder-bottomRadius').bind('input propertychange', function () {
+            cylinder.style.bottomRadius = clampNumberValue(
+              $('#cylinder-bottomRadius').val(),
+              [0]
+            )
+          })
+
+          //拉伸高度
+          $('#cylinder-extrudedHeight').bind(
+            'input propertychange',
+            function () {
+              cylinder.style.extrudedHeight = clampNumberValue(
+                $('#cylinder-extrudedHeight').val()
+              )
+            }
+          )
+
+          //离地高度
+          $('#cylinder-offsetHeight').bind('input propertychange', function () {
+            cylinder.style.offsetHeight = clampNumberValue(
+              $('#cylinder-offsetHeight').val()
+            )
+          })
+
+          //材质底图
+          $('#cylinder-image').bind('input propertychange', function () {
+            cylinder.style.material.uniforms.image = $('#cylinder-image').val()
+          })
+
+          //流动速度
+          $('#cylinder-duration').bind('input propertychange', function () {
+            cylinder.style.material.uniforms.duration = clampNumberValue(
+              $('#cylinder-duration').val(),
+              [0]
+            )
+          })
+
+          //流动方向
+          $('#cylinder-direction').bind('input propertychange', function () {
+            cylinder.style.material.uniforms.direction = clampNumberValue(
+              $('#cylinder-direction').val()
+            )
+          })
+
+          //圆波数量
+          $('#cylinder-count').bind('input propertychange', function () {
+            cylinder.style.material.uniforms.count = clampNumberValue(
+              $('#cylinder-count').val(),
+              [0]
+            )
+          })
+
+          //渐变度
+          $('#cylinder-gradient').bind('input propertychange', function () {
+            cylinder.style.material.uniforms.gradient = clampNumberValue(
+              $('#cylinder-gradient').val(),
+              [0]
+            )
+          })
+
+          //填充颜色
+          colorpicker.render({
+            elem: '#cylinder-color',
+            color: '#9dfafe',
+            done: function (color) {
+              $('#cylinder-color-input').val(color)
+              cylinder.style.color = Cesium.Color.fromCssColorString(color)
+            }
+          })
+
+          //材质填充颜色
+          colorpicker.render({
+            elem: '#cylinder-materialColor',
+            color: '#9dfafe',
+            done: function (color) {
+              $('#cylinder-materialColor-input').val(color)
+              cylinder.style.material.uniforms.color =
+                Cesium.Color.fromCssColorString(color)
+            }
+          })
+        })
+      }
+
+      //开始绘制
+      function startDrawing() {
+        $('#editPanel').hide()
+        graphicsLayer.startDrawing({
+          type: 'cylinder',
+          style: {
+            // 颜色
+            color: Cesium.Color.fromCssColorString(colors[0]).withAlpha(0.7),
+            // 离地高度
+            offsetHeight: 200,
+            // 顶部半径
+            topRadius: 1,
+            // 底部半径
+            bottomRadius: 200,
+            // 拉伸高度
+            extrudedHeight: 400
+          }
+        })
+      }
+
+      //结束绘制
+      function stopDrawing() {
+        graphicsLayer.stopDrawing()
+      }
+
+      //删除
+      function deleteLabel() {
+        cylinder.remove()
+        $('#editPanel').hide()
+      }
+
+      // 获取合法的number数据输入
+      function clampNumberValue(inputValue, limits) {
+        let max, min
+        if (Array.isArray(limits) && limits.length > 0) {
+          if (limits.length === 1) {
+            min = limits[0]
+          } else {
+            max = limits[1]
+          }
+        }
+        let value = Number(inputValue)
+        if (Number.isNaN(value)) {
+          if (typeof min === 'number') {
+            return min
+          } else {
+            return 0
+          }
+        }
+        if (typeof min === 'number' && value <= min) {
+          return min
+        }
+        if (typeof max === 'number' && value >= max) {
+          return max
+        }
+        return value
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div
+      class="layui-panel layui-panel-right"
+      style="text-align: center; width: 140px; padding: 10px"
+    >
+      <button
+        onclick="startDrawing()"
+        style="margin: 0 auto !important"
+        type="button"
+        class="layui-btn layui-btn-normal graphic-button-margin"
+      >
+        添加圆锥
+      </button>
+    </div>
+    <div
+      class="layui-panel layui-panel-right"
+      id="editPanel"
+      style="display: none; top: 70px"
+    >
+      <form class="layui-form" action="" lay-filter="example">
+        <div class="sample-main-panel">
+          <div class="layui-form-item">
+            <label class="layui-form-label">填充颜色</label>
+            <div
+              class="layui-input-inline"
+              style="width: 145px; margin-left: 10px"
+            >
+              <input
+                disabled
+                type="text"
+                name="color"
+                value="#00ffff"
+                placeholder="填充颜色"
+                class="layui-input"
+                id="cylinder-color-input"
+              />
+            </div>
+            <div class="layui-inline">
+              <div id="cylinder-color"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">填充颜色</label>
+            <div
+              class="layui-input-inline"
+              style="width: 145px; margin-left: 10px"
+            >
+              <input
+                disabled
+                type="text"
+                value="#00ffff"
+                placeholder="填充颜色"
+                class="layui-input"
+                id="cylinder-materialColor-input"
+                name="materialColor"
+              />
+            </div>
+            <div class="layui-inline">
+              <div id="cylinder-materialColor"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">顶部半径</label>
+            <div class="layui-input-block" style="width: 183px">
+              <input
+                id="cylinder-topRadius"
+                name="topRadius"
+                value="1"
+                type="text"
+                lay-verify="title"
+                autocomplete="off"
+                placeholder="40"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">底部半径</label>
+            <div class="layui-input-block" style="width: 183px">
+              <input
+                id="cylinder-bottomRadius"
+                name="bottomRadius"
+                value="100"
+                type="text"
+                lay-verify="title"
+                autocomplete="off"
+                placeholder="4"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">拉伸高度</label>
+            <div class="layui-input-block" style="width: 183px">
+              <input
+                id="cylinder-extrudedHeight"
+                name="extrudedHeight"
+                type="text"
+                value="400"
+                lay-verify="title"
+                autocomplete="off"
+                placeholder="100"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">离地高度</label>
+            <div class="layui-input-block" style="width: 183px">
+              <input
+                id="cylinder-offsetHeight"
+                name="offsetHeight"
+                type="text"
+                value="100"
+                lay-verify="title"
+                autocomplete="off"
+                placeholder="100"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">材质底图</label>
+            <div class="layui-input-block">
+              <input
+                id="cylinder-image"
+                value=""
+                type="text"
+                name="image"
+                lay-verify="image"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">流动速度</label>
+            <div class="layui-input-block">
+              <input
+                id="cylinder-duration"
+                value="1000"
+                type="text"
+                name="duration"
+                lay-verify="duration"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">流动方向</label>
+            <div class="layui-input-block">
+              <input
+                id="cylinder-direction"
+                value="1"
+                type="text"
+                name="direction"
+                lay-verify="direction"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">圆波数量</label>
+            <div class="layui-input-block">
+              <input
+                id="cylinder-count"
+                value="10"
+                type="text"
+                name="count"
+                lay-verify="direction"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">渐变度</label>
+            <div class="layui-input-block">
+              <input
+                id="cylinder-gradient"
+                value="0.3"
+                type="text"
+                name="gradient"
+                lay-verify="direction"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="sample-button-panel">
+          <button
+            onclick="$('#editPanel').hide()"
+            style="float: right; width: auto; margin-right: 0 !important"
+            type="button"
+            class="layui-btn layui-btn-normal graphic-button-margin"
+          >
+            关闭面板
+          </button>
+          <span
+            onclick="deleteLabel()"
+            style="
+              cursor: pointer;
+              float: right;
+              line-height: 32px;
+              margin-right: 15px;
+            "
+            >删除标绘</span
+          >
+        </div>
+      </form>
+    </div>
+
+    <div id="htmlGraph">我是html元素</div>
+  </body>
+  <style>
+    #htmlGraph {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(
+        -45deg,
+        #0acf00 25%,
+        #78c9db 0,
+        #78c9db 50%,
+        #0acf00 0,
+        #0acf00 75%,
+        #78c9db 0
+      );
+      background-size: 20px 20px;
+      display: none;
+      font-size: 36px;
+      font-weight: bold;
+      line-height: 50px;
+      color: red;
+      text-align: center;
+    }
+  </style>
+</html>

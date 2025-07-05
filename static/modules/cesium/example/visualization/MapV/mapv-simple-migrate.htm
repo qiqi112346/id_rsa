@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>单一迁移轨迹</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--引入mapv-->
+    <script type="text/javascript" src="http://webclient.smaryun.com/static/libs/cdn/mapv/mapv.min.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      // 定义三维视图的主要类
+      let viewer = null
+      let sceneViewer = null
+      let map = null
+
+      function initMapVData() {
+        httpGetPromise(
+          'http://webclient.smaryun.com:8200/Vector/json/simpleMigrate/china.json'
+        ).then((geojson) => {
+          let geojsonOptions = {
+            context: '2d',
+            gradient: {
+              0: 'rgba(55, 50, 250, 0.4)',
+              1: 'rgba(55, 50, 250, 1)'
+            },
+            max: 354551,
+            draw: 'intensity'
+          }
+
+          let geojsonDataSet = mapv.geojson.getDataSet(geojson)
+
+          let to = '北京'
+
+          let qianxi = new mapv.DataSet([
+            {
+              from: '河北',
+              count: 354551,
+              to: to
+            },
+            {
+              from: '天津',
+              count: 97323,
+              to: to
+            },
+            {
+              from: '山东',
+              count: 28664,
+              to: to
+            },
+            {
+              from: '山西',
+              count: 16650,
+              to: to
+            },
+            {
+              from: '辽宁',
+              count: 14379,
+              to: to
+            },
+            {
+              from: '河南',
+              count: 10980,
+              to: to
+            },
+            {
+              from: '内蒙古',
+              count: 9603,
+              to: to
+            },
+            {
+              from: '江苏',
+              count: 4536,
+              to: to
+            },
+            {
+              from: '上海',
+              count: 3556,
+              to: to
+            },
+            {
+              from: '广东',
+              count: 2600,
+              to: to
+            }
+          ])
+
+          let qianxiData = qianxi.get()
+
+          let lineData = []
+          let pointData = []
+          let textData = []
+          let timeData = []
+
+          let citys = {}
+
+          for (let i = 0; i < qianxiData.length; i++) {
+            let fromCenter = mapv.utilCityCenter.getCenterByCityName(
+              qianxiData[i].from
+            )
+            let toCenter = mapv.utilCityCenter.getCenterByCityName(
+              qianxiData[i].to
+            )
+            if (!fromCenter || !toCenter) {
+              continue
+            }
+            citys[qianxiData[i].from] = qianxiData[i].count
+            citys[qianxiData[i].to] = 100
+            pointData.push({
+              geometry: {
+                type: 'Point',
+                coordinates: [fromCenter.lng, fromCenter.lat]
+              }
+            })
+            pointData.push({
+              geometry: {
+                type: 'Point',
+                coordinates: [toCenter.lng, toCenter.lat]
+              }
+            })
+            textData.push({
+              geometry: {
+                type: 'Point',
+                coordinates: [fromCenter.lng, fromCenter.lat]
+              },
+              text: qianxiData[i].from
+            })
+            textData.push({
+              geometry: {
+                type: 'Point',
+                coordinates: [toCenter.lng, toCenter.lat]
+              },
+              text: qianxiData[i].to
+            })
+
+            let curve = mapv.utilCurve.getPoints([fromCenter, toCenter])
+
+            for (let j = 0; j < curve.length; j++) {
+              timeData.push({
+                geometry: {
+                  type: 'Point',
+                  coordinates: curve[j]
+                },
+                count: 1,
+                time: j
+              })
+            }
+
+            lineData.push({
+              geometry: {
+                type: 'LineString',
+                coordinates: curve
+                //coordinates: [[fromCenter.lng, fromCenter.lat], [toCenter.lng, toCenter.lat]]
+              },
+              count: 30 * Math.random()
+            })
+          }
+
+          let data = geojsonDataSet.get({
+            filter: function (item) {
+              if (!citys[item.name]) {
+                return false
+              }
+
+              item.count = citys[item.name]
+              return true
+            }
+          })
+          geojsonDataSet = new mapv.DataSet(data)
+          // 声明cesium的mapv图层并将其显示到三维球上
+          let layer = new zondy.layer.MapVLayer({
+            data: geojsonDataSet,
+            mapVOptions: geojsonOptions
+          })
+
+          map.add(layer)
+          // 构建对应的dataset
+          let textDataSet = new mapv.DataSet(textData)
+          // 设置对应的参数
+          // https://github.com/huiyan-fe/mapv/blob/master/API.md
+          let textOptions = {
+            context: '2d', //cesium必须设置画布为2d
+            draw: 'text',
+            font: '14px Arial',
+            fillStyle: 'white',
+            shadowColor: 'yellow',
+            shadowBlue: 10,
+            zIndex: 11,
+            shadowBlur: 10
+          }
+          // 声明cesium的mapv图层并将其显示到三维球上
+          let textLayer = new zondy.layer.MapVLayer({
+            data: textDataSet,
+            mapVOptions: textOptions
+          })
+
+          map.add(textLayer)
+
+          let lineDataSet = new mapv.DataSet(lineData)
+          // https://github.com/huiyan-fe/mapv/blob/master/API.md
+          let lineOptions = {
+            context: '2d', //cesium必须设置画布为2d
+            strokeStyle: 'rgba(255, 250, 50, 0.8)',
+            shadowColor: 'rgba(255, 250, 50, 1)',
+            shadowBlur: 20,
+            lineWidth: 2,
+            zIndex: 100,
+            draw: 'simple'
+          }
+          // 声明cesium的mapv图层并将其显示到三维球上
+          let lineLayer = new zondy.layer.MapVLayer({
+            data: lineDataSet,
+            mapVOptions: lineOptions
+          })
+
+          map.add(lineLayer)
+
+          // https://github.com/huiyan-fe/mapv/blob/master/API.md
+          let pointOptions = {
+            context: '2d', //cesium必须设置画布为2d
+            fillStyle: 'rgba(254,175,3,0.7)',
+            shadowColor: 'rgba(55, 50, 250, 0.5)',
+            shadowBlur: 10,
+            size: 5,
+            zIndex: 10,
+            draw: 'simple'
+          }
+
+          let pointDataSet = new mapv.DataSet(pointData)
+          // 声明cesium的mapv图层并将其显示到三维球上
+          let pointLayer = new zondy.layer.MapVLayer({
+            data: pointDataSet,
+            mapVOptions: pointOptions
+          })
+
+          map.add(pointLayer)
+
+          let timeDataSet = new mapv.DataSet(timeData)
+
+          // https://github.com/huiyan-fe/mapv/blob/master/API.md
+          let timeOptions = {
+            context: '2d', //cesium必须设置画布为2d
+            fillStyle: 'rgba(255, 250, 250, 0.5)',
+            zIndex: 200,
+            size: 2.5,
+            animation: {
+              type: 'time',
+              stepsRange: {
+                start: 0,
+                end: 50
+              },
+              trails: 10,
+              duration: 2
+            },
+            draw: 'simple'
+          }
+          // 声明cesium的mapv图层并将其显示到三维球上
+          let timeLayer = new zondy.layer.MapVLayer({
+            data: timeDataSet,
+            mapVOptions: timeOptions
+          })
+
+          map.add(timeLayer)
+        })
+      }
+
+      function init() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneViewer = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        viewer = sceneViewer.getInnerView()
+        // 添加天地图
+        const tdtUrl = 'https://t{s}.tianditu.gov.cn/';
+        // 服务负载子域
+        const subdomains=['0','1','2','3','4','5','6','7'];
+        // 叠加影像服务
+        const tdtProvider = new zondy.cesium.UrlTemplateImageryProvider({
+            url: tdtUrl + 'DataServer?T=img_w&x={x}&y={y}&l={z}&tk=' + getTDTToken(),
+            subdomains: subdomains,
+            tilingScheme : new Cesium.WebMercatorTilingScheme(),
+            maximumLevel : 18
+        });
+        viewer.imageryLayers.addImageryProvider(tdtProvider)
+        initMapVData()
+      }
+
+      // 发送请求获取数据
+      function httpGetPromise(url) {
+        return new Promise(function (resolve, reject) {
+          const handler = function () {
+            if (this.readyState !== 4) {
+              return
+            }
+            if (this.status === 200) {
+              resolve(this.response)
+            } else {
+              reject(new Error(this.statusText))
+            }
+          }
+          const client = new XMLHttpRequest()
+          client.open('GET', url)
+          client.onreadystatechange = handler
+          client.responseType = 'json'
+          client.setRequestHeader('Accept', 'application/json')
+          client.send()
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

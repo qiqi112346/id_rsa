@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>二维标绘图层使用</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha384-SOnAn/m2fVJCwnbEYgD4xzrPtvsXdElhOVvR8ND1YjB5nhGNwwf7nBQlhfAwHAZC"
+      crossorigin="anonymous"
+    />
+    <!--引入行业标绘脚本库-->
+    <script
+      include="panel,2D"
+      src="./static/libs/include-plot-local.js"
+    ></script>
+    <script>
+      'use strict'
+
+      //地图初始化函数
+      function init() {
+        /**
+         * ***********************地图框架部分***************************
+         */
+
+        const view = window.initView('content')
+
+        /**
+         * ***********************行业标绘库部分***************************
+         */
+
+        const zondy = window.zondy
+        const Plot = zondy.plot
+        const {
+          PlotLayer2D,
+          PlotLayer2DGroup,
+          SymbolManager,
+          TimeLine,
+          DrawTool,
+          PlotRegister,
+          PlotUtilBase,
+          FabricLayer
+        } = Plot
+
+        const symbolUrl = `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/symbolLib.json`
+        const symbolOptions = {
+          fontURL: `http://webclient.smaryun.com:8200/Plot/plot-sample/fonts/`,
+          baseUrl: `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/`
+        }
+
+        let layer1,
+          layer2,
+          plotLayer2DGroup,
+          timeline,
+          drawTool,
+          plotEditor,
+          currentPlot
+        // 获取overlay图层
+        const canvas = new FabricLayer(view, PlotLayer2DGroup)
+        // 创建符号管理器
+        const manager = new SymbolManager(symbolUrl, symbolOptions)
+        // 请求获取符号库
+        manager.getSymbols().then(() => {
+          // 创建二维图层组
+          plotLayer2DGroup = canvas.getFabricCanvas()
+          // 创建二维图层
+          layer1 = new PlotLayer2D()
+          layer2 = new PlotLayer2D()
+          // 设置图层标绘元素缩放比，默认为1
+          layer1.setPlotSize(1)
+          layer2.setPlotSize(1)
+          // 添加图层
+          plotLayer2DGroup.addLayer(layer1)
+          plotLayer2DGroup.addLayer(layer2)
+          // 读取保存的标绘物数据
+          layer1.addGeoJSONObject({
+            type: 'Feature',
+            properties: {
+              show: true,
+              symbolId: '56',
+              nodeStyles: {
+                path12770: {
+                  strokeStyle: 'rgba(255,0,0,1)'
+                }
+              }
+            },
+            geometry: {
+              type: 'MultiPoint',
+              coordinates: [[117.18944441797595, 34.2390284961602]]
+            }
+          })
+
+          // 读取保存的标绘物数据
+          layer2.addGeoJSONObject({
+            type: 'Feature',
+            properties: {
+              show: true,
+              symbolId: '56',
+              nodeStyles: {
+                path12770: {
+                  strokeStyle: 'rgba(0,0,0,1)'
+                }
+              }
+            },
+            geometry: {
+              type: 'MultiPoint',
+              coordinates: [[117.18944441797595, 34.2390284961602]]
+            }
+          })
+        })
+
+        /**
+         * ***********************ui部分***************************
+         */
+        const panel = new window.webclientPlot.PlotPanel('plot-show-table', {
+          titleText: '图层控制',
+          panelWidth: 200
+        })
+        const contentBody = panel.getBody()
+        contentBody.style.display = 'flex'
+        contentBody.style.flexDirection = 'column'
+
+        const btn1 = document.createElement('button')
+        btn1.setAttribute('class', 'btn')
+        let btn1_isAllowEdit = false
+        btn1.innerText = `图层1编辑状态${btn1_isAllowEdit ? '开启' : '关闭'}`
+        btn1.onclick = () => {
+          btn1_isAllowEdit = !btn1_isAllowEdit
+          layer1.editable = btn1_isAllowEdit
+          btn1.innerText = `图层1编辑状态${btn1_isAllowEdit ? '开启' : '关闭'}`
+        }
+        contentBody.appendChild(btn1)
+
+        const btn2 = document.createElement('button')
+        btn2.setAttribute('class', 'btn')
+        let btn2_isAllowEdit = false
+        btn2.innerText = `图层2编辑状态${btn2_isAllowEdit ? '开启' : '关闭'}`
+        btn2.onclick = () => {
+          btn2_isAllowEdit = !btn2_isAllowEdit
+          layer2.editable = btn2_isAllowEdit
+          btn2.innerText = `图层2编辑状态${btn2_isAllowEdit ? '开启' : '关闭'}`
+        }
+        contentBody.appendChild(btn2)
+
+        const btn1_1 = document.createElement('button')
+        btn1_1.setAttribute('class', 'btn')
+        let btn1_isAllowVisible = true
+        btn1_1.innerText = `图层1可见状态${
+          btn1_isAllowVisible ? '开启' : '关闭'
+        }`
+        btn1_1.onclick = () => {
+          btn1_isAllowVisible = !btn1_isAllowVisible
+          layer1.setVisible(btn1_isAllowVisible)
+          btn1_1.innerText = `图层1可见状态${
+            btn1_isAllowVisible ? '开启' : '关闭'
+          }`
+        }
+        contentBody.appendChild(btn1_1)
+
+        const btn2_2 = document.createElement('button')
+        btn2_2.setAttribute('class', 'btn')
+        let btn2_isAllowVisible = true
+        btn2_2.innerText = `图层2可见状态${
+          btn2_isAllowVisible ? '开启' : '关闭'
+        }`
+        btn2_2.onclick = () => {
+          btn2_isAllowVisible = !btn2_isAllowVisible
+          layer2.setVisible(btn2_isAllowVisible)
+          btn2_2.innerText = `图层2可见状态${
+            btn2_isAllowVisible ? '开启' : '关闭'
+          }`
+        }
+        contentBody.appendChild(btn2_2)
+
+        const btn3 = document.createElement('button')
+        btn3.setAttribute('class', 'btn')
+        btn3.innerText = `获取所有图层`
+        btn3.onclick = () => {
+          console.log('当前所有图层', plotLayer2DGroup.getLayers())
+        }
+        contentBody.appendChild(btn3)
+
+        const btn4 = document.createElement('button')
+        btn4.setAttribute('class', 'btn')
+        btn4.innerText = `清空所有图层`
+        btn4.onclick = () => {
+          ;[layer1, layer2].forEach((layer) => {
+            plotLayer2DGroup.removeLayer(layer)
+          })
+        }
+        contentBody.appendChild(btn4)
+
+        const btn5 = document.createElement('button')
+        btn5.innerText = '切换图层顺序'
+        btn5.setAttribute('class', 'btn')
+        let flag = false
+        btn5.onclick = () => {
+          flag = !flag
+          plotLayer2DGroup.bringObjectsByLayerToFront(flag ? layer1 : layer2)
+        }
+        contentBody.appendChild(btn5)
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-2d-viewer">
+      <div id="content" style="position: relative">
+        <div id="plot-show-table"></div>
+      </div>
+    </div>
+  </body>
+
+  <style>
+    #mapgis-2d-viewer {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      position: relative;
+    }
+    #content {
+      height: 100%;
+      flex: 6.5;
+      position: relative;
+    }
+    #plot-show-table {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      z-index: 999;
+    }
+    #plot-show-table .btn {
+      display: block;
+      padding: 5px 12px;
+      margin-bottom: 5px;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.53846154;
+      text-align: center;
+      white-space: nowrap;
+      cursor: pointer;
+      color: #fff;
+      background-color: #3a85c6;
+      border-color: #1970fc;
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+    }
+  </style>
+</html>

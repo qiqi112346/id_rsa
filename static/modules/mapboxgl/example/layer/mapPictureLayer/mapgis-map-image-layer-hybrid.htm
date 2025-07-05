@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>MapGIS地图图片图层-混合开发</title>
+  <!--引入Mapboxgl库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.js"></script>
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.css" />
+  <!--plugin脚本库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-mapboxgl-plugin.min.js"></script>
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+  <script>
+    'use strict'
+    let view
+    const { IGSMapImageLayer } = zondy.layer
+    const { initializeOptions, initializeCRS } = zondy.mapboxgl.util
+
+    // 初始地图视图
+    function initViewer() {
+      const layer = new IGSMapImageLayer({
+        // 服务基地址
+        url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省3857/MapServer'
+      })
+      // 加载图层元数据
+      layer.load().then(() => {
+        // 通过图层构建CRS
+        const crs = initializeCRS(layer)
+        // 创建view
+        view = new mapboxgl.Map({
+          // 容器ID
+          container: 'mapgis-viewer',
+          // 地图视图坐标系ID
+          crs: crs,
+          // 设置视图范围
+          maxBounds: [[108.34522558193939, 29.030019932784775], [116.13094, 33.273224]]
+        })
+        // 构建mapboxgl引擎需要的样式
+        const style = initializeOptions(layer)
+        // 添加到mapboxgl地图对象中
+        addStyleToMapboxglMap(style)
+      })
+    }
+
+    // 添加到mapboxgl地图对象中
+    function addStyleToMapboxglMap(style) {
+      const { sources, layers } = style
+      const sourcesArr = Object.entries(sources)
+      for (let i = 0; i < sourcesArr.length; i++) {
+        const sourceArr = sourcesArr[i]
+        view.addSource(sourceArr[0], sourceArr[1])
+      }
+      for (let j = 0; j < layers.length; j++) {
+        view.addLayer(layers[j])
+      }
+      return true
+    }
+
+    // 地图初始化函数
+    function init() {
+      // 初始地图视图
+      initViewer()
+    }
+  </script>
+</head>
+
+<body onload="init()">
+  <div id="mapgis-viewer"></div>
+</body>
+
+</html>

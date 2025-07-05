@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>分段专题图-模型缓存图层</title>
+    <!--引入Cesium.js库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/cesium/Cesium.js"></script>
+    <!--cesium样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/cesium/Widgets/widgets.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/cesium/MapGIS/css/mapgis.css"
+    />
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <script>
+      'use strict'
+      // 定义三维视图的主要类
+      let map, view
+      // 模型缓存图层
+      let layer
+      // 获取构造函数
+      const { Map, Color, renderer, symbol } = zondy
+      const { SceneView } = zondy.cesium
+      const { ClassBreakRenderer } = renderer
+      const { SimpleFillSymbol } = symbol
+      const { M3DModelCacheLayer } = zondy.layer
+
+      // 获取分段专题图渲染器
+      function getRenderer() {
+        return new ClassBreakRenderer({
+          // 专题图过滤字段名
+          field: 'Floor',
+          // 分段专题图过滤条件数组
+          classBreakInfos: [
+            {
+              // 最小过滤范围，field对应的值大于等于minValue
+              maxValue: 7,
+              // 最大过滤范围，field对应的值小于maxValue
+              minValue: 1,
+              // 匹配到该值后的样式
+              // M3D专题图仅支持SimpleFillSymbol符号
+              symbol: new SimpleFillSymbol({
+                // 填充颜色
+                color: new Color(122, 122, 100, 0.8)
+              })
+            },
+            {
+              // 最小过滤范围，field对应的值大于等于minValue
+              maxValue: 24,
+              // 最大过滤范围，field对应的值小于maxValue
+              minValue: 8,
+              // 匹配到该值后的样式
+              // M3D专题图仅支持SimpleFillSymbol符号
+              symbol: new SimpleFillSymbol({
+                // 填充颜色
+                color: new Color(180, 180, 100, 0.8)
+              })
+            },
+            {
+              // 最小过滤范围，field对应的值大于等于minValue
+              maxValue: 32,
+              // 最大过滤范围，field对应的值小于maxValue
+              minValue: 25,
+              // 匹配到该值后的样式
+              // M3D专题图仅支持SimpleFillSymbol符号
+              symbol: new SimpleFillSymbol({
+                // 填充颜色
+                color: new Color(240, 240, 100, 0.8)
+              })
+            }
+          ]
+        })
+      }
+
+      // 添加模型缓存图层
+      function addM3DModelCacheLayer() {
+        layer = new M3DModelCacheLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D/2.0/武汉建筑轮廓白/武汉建筑轮廓白.mcj',
+          // 设置专题图渲染器
+          renderer: getRenderer(),
+          // 初始化参数
+          extensionOptions: {
+            // 开启自动跳转
+            autoReset: true
+          }
+        })
+        map.add(layer)
+      }
+
+      // 切换专题图样式
+      function changeRenderer() {
+        layer.renderer = new ClassBreakRenderer({
+          // 专题图过滤字段名
+          field: 'Floor',
+          // 分段专题图过滤条件数组
+          classBreakInfos: [
+            {
+              // 最小过滤范围，field对应的值大于等于minValue
+              maxValue: 7,
+              // 最大过滤范围，field对应的值小于maxValue
+              minValue: 1,
+              // 匹配到该值后的样式
+              // M3D专题图仅支持SimpleFillSymbol符号
+              symbol: new SimpleFillSymbol({
+                // 填充颜色
+                color: new Color(100, 122, 122, 0.8)
+              })
+            },
+            {
+              // 最小过滤范围，field对应的值大于等于minValue
+              maxValue: 24,
+              // 最大过滤范围，field对应的值小于maxValue
+              minValue: 8,
+              // 匹配到该值后的样式
+              // M3D专题图仅支持SimpleFillSymbol符号
+              symbol: new SimpleFillSymbol({
+                // 填充颜色
+                color: new Color(100, 180, 180, 0.8)
+              })
+            },
+            {
+              // 最小过滤范围，field对应的值大于等于minValue
+              maxValue: 32,
+              // 最大过滤范围，field对应的值小于maxValue
+              minValue: 25,
+              // 匹配到该值后的样式
+              // M3D专题图仅支持SimpleFillSymbol符号
+              symbol: new SimpleFillSymbol({
+                // 填充颜色
+                color: new Color(100, 240, 240, 0.8)
+              })
+            }
+          ]
+        })
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new Map()
+        //初始化地图视图对象
+        view = new SceneView({
+          //视图id
+          viewId: 'mapgis-viewer',
+          //图层管理容器
+          map: map
+        })
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        // 添加模型缓存图层
+        addM3DModelCacheLayer()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <div class="layui-panel layui-panel-right" style="width: 166px">
+      <form class="layui-form" action="">
+        <button
+          type="button"
+          class="layui-btn layui-btn-normal"
+          id="button-point"
+          onclick="changeRenderer()"
+        >
+          切换专题图样式
+        </button>
+      </form>
+    </div>
+    <style type="text/css">
+      .layui-panel-right {
+        width: 345px;
+        z-index: 999;
+      }
+
+      .change-feature-item {
+        margin-top: 10px;
+      }
+
+      .layui-form-label {
+        width: 86px;
+      }
+    </style>
+  </body>
+</html>

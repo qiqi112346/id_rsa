@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>二三维联动</title>
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha384-SOnAn/m2fVJCwnbEYgD4xzrPtvsXdElhOVvR8ND1YjB5nhGNwwf7nBQlhfAwHAZC" crossorigin="anonymous" />
+  <!--引入MapBox库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.js"></script>
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.css" />
+  <!--加载不同版本Cesium库-->
+  <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+  <!--plugin脚本库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+  <!-- jquery -->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/jquery/jquery-3.7.1.min.js"></script>
+  <!-- plot -->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-plot.min.js"></script>
+  <!-- menu -->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotMenu/index.js"></script>
+  <link rel="stylesheet"
+    href="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotMenu/index.css" />
+  <!-- editor -->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/Pickr/pickr.min.js"></script>
+  <link rel="stylesheet"
+    href="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/Pickr/nano.min.css" />
+  <script
+    src="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotStyleEditor/index.js"></script>
+  <link rel="stylesheet"
+    href="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotStyleEditor/index.css" />
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/link.css" />
+  <script>
+    //使用严格模式
+    'use strict'
+    //天地图token
+    var tiandituKey = getTDTToken()
+    //定义三维视图的主要类
+    let map, sceneView, viewer, plotLayer
+    //定义二维试图的主要类
+    let mapBox, canvas
+
+    /**
+     * 地图初始化
+     */
+    function init() {
+      //创建切换Cesium版本的按钮
+      createChangeTab()
+      //初始化Cesium对象
+      initCesium()
+      //初始化MapBox对象
+      initMapbox()
+      //三维球体上初始化行业标绘
+      initPlot()
+    }
+
+    //初始化二三维联动工具
+    function initLink() {
+      let linkTool = new window.zondy.plot.LinkTool(
+        //主屏幕图层
+        plotLayer,
+        //所有屏幕的地图引擎容器
+        //请注意要确保所有容器都已加载完毕，才可正常联动
+        [viewer, canvas],
+        {
+          //三维上当仰角值小于某个数值时，才进行三维到二维的联动，默认0.0002
+          roll: 0.0004,
+          //进入地图（所有地图）时相机的视角范围
+          bbox: [
+            [116.2396164394222, 36.857699114405676],
+            [119.38483688908019, 33.044482287500756]
+          ]
+        }
+      )
+    }
+
+    //三维球体上初始化行业标绘
+    function initPlot() {
+      // 获取Zondy类
+      const zondy = window.zondy
+      // 获取标绘类
+      const plot = zondy.plot
+      const {
+        // 标绘库路径
+        PlotUtilBase,
+        // 三维图层
+        PlotLayer3D,
+        // 三维图层组
+        PlotLayer3DGroup,
+        // 符号管理器
+        SymbolManager,
+        // 绘制工具
+        DrawTool,
+        // 注册类
+        PlotRegister,
+        // 时间轴
+        TimeLine
+      } = plot
+      // 获取工具类点
+      const Point = new PlotUtilBase.Point()
+      // 符号库路径
+      const symbolUrl = `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/symbolLib.json`
+      const symbolOptions = {
+        // 符号库字体路径
+        fontURL: `http://webclient.smaryun.com:8200/Plot/plot-sample/fonts/`,
+        // 静态资源路径
+        baseUrl: `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/`
+      }
+
+      let plotLayer3DGroup, drawTool, plotEditor, currentPlot
+      // ui 插件
+      const { PlotMenu, PlotStyleEditor } = window.webclientPlot
+      // 创建符号管理器
+      const manager = new SymbolManager(symbolUrl, symbolOptions)
+      // 请求获取符号库
+      manager.getSymbols().then(function () {
+        // 创建图层组
+        plotLayer3DGroup = new PlotLayer3DGroup(viewer)
+        // 创建三维图层
+        plotLayer = new PlotLayer3D(Cesium, viewer, {
+          //设置为贴地模式
+          classificationType: 3
+        })
+        //初始化二三维联动工具
+        initLink()
+        // 设置图层标绘元素缩放比，默认为1
+        plotLayer.setPlotSize(0.5)
+        // 设置图层是否可编辑
+        plotLayer.editable = false
+        // 创建绘制工具
+        drawTool = new DrawTool(plotLayer, {
+          // 新增标绘对象回调
+          addedPlot: function (plot) { }
+        })
+        // 将三维图层添加到图层组内
+        plotLayer3DGroup.addLayer(plotLayer)
+
+        //点击获取要素
+        plotLayer.editable = true
+        plotLayer.pickPlot = function (plot) {
+          // 获取选中的标绘元素
+          currentPlot = plot
+          if (!currentPlot) {
+            plotEditor && plotEditor.destroyed()
+            return
+          }
+          if (!plotEditor) {
+            // 创建plotStyleEditor
+            plotEditor = new PlotStyleEditor('plot-editor')
+            // 监听属性变更事件
+            plotEditor.on('attributes-change', (attr) => {
+              currentPlot.setStyle(attr.type, attr.value, attr.key)
+            })
+          }
+
+          // 获取标绘元素样式，生成plotmenu
+          var style = plot.getStyle()
+          plot
+            .getElement()
+            .getSymbol()
+            .getSvg()
+            .then((svgDom) => {
+              plotEditor.setAttrs(style, style.nodeStyles, {
+                svgDom: svgDom
+              })
+            })
+        }
+
+        // 创建左侧符号目录树，并绑定绘制方法
+        function drawFunc(id) {
+          drawTool.stopDraw()
+          drawTool.drawPlot(manager.getLeafByID(id))
+        }
+        new PlotMenu(manager, drawFunc)
+      })
+    }
+
+    //初始化Cesium对象
+    function initCesium() {
+      //初始化图层管理容器
+      map = new zondy.Map()
+      //初始化地图视图对象
+      sceneView = new zondy.cesium.SceneView({
+        //视图id
+        viewId: 'mapgis-3d-viewer',
+        //图层管理容器
+        map: map
+      })
+      //获取视图对象
+      viewer = sceneView.getInnerView()
+      //加载天地图底图
+      let TDTLayer = new zondy.layer.WMTSLayer({
+        // 加载经纬度的影像地图
+        url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+        // 天地图必须加token，且token名为tk
+        tokenKey: 'tk',
+        // token请在天地图官网申请
+        tokenValue: getTDTToken()
+      })
+      map.add(TDTLayer)
+    }
+
+    //初始化MapBox对象
+    function initMapbox() {
+      //实例化要加载的source来源对象（世界矢量地图）
+      var dark = {
+        type: 'raster',
+        tiles: [
+          //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+          'http://t0.tianditu.gov.cn/img_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+          '&TILECOL=' +
+          '{x}' +
+          '&TILEROW=' +
+          '{y}' +
+          '&TILEMATRIX=' +
+          '{z}' +
+          '&tk=' +
+          tiandituKey
+        ],
+        //栅格瓦片的分辨率
+        tileSize: 256
+      }
+      //实例化Map对象加载地图
+      mapBox = new mapboxgl.Map({
+        crs: 'EPSG:4326', //经纬度一定要设置crs参数
+        maxBounds: [
+          [-180, -90],
+          [180, 90]
+        ],
+        //地图容器div的id
+        container: 'map',
+        //设置地图样式信息
+        style: {
+          //设置版本号，一定要设置
+          version: 8,
+          //添加来源
+          sources: {
+            dark: dark
+          },
+          //设置加载并显示来源的图层信息
+          layers: [
+            {
+              //图层id，要保证唯一性
+              id: 'dark',
+              //图层类型
+              type: 'raster',
+              //连接图层来源
+              source: 'dark',
+              //图层最小缩放级数
+              minzoom: 0,
+              //图层最大缩放级数
+              maxzoom: 22
+            }
+          ]
+        },
+        zoom: 7.5,
+        center: [116.39, 40.2]
+      })
+      mapBox.doubleClickZoom.disable()
+      //构造二维的标绘容器
+      canvas = new window.zondy.plot.FabricLayer(
+        mapBox,
+        window.zondy.plot.PlotLayer2DGroup
+      )
+    }
+  </script>
+</head>
+
+<body onload="init()">
+  <div id="map">
+    <div id="mouse-position"></div>
+  </div>
+  <div id="mapgis-3d-viewer">
+    <div id="side"></div>
+    <div id="content" style="position: relative">
+      <div id="plot-editor"></div>
+    </div>
+  </div>
+</body>
+
+</html>

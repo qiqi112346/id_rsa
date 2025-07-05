@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>散点图-微博签到</title>
+    <!--引入echarts-->
+    <script type="text/javascript" src="http://webclient.smaryun.com/static/libs/cdn/echarts/echarts.min.js"></script>
+    <!-- jquery -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/jquery/jquery-3.7.1.min.js"></script>
+    <!--该库集成了leaflet与MapGIS IGServer for JavaScript脚本库-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/leaflet/leaflet.css"/>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/leaflet/leaflet.js"></script>
+    <!--plugin库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-leaflet-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <!--css-->
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      const { WebTileLayer } = zondy.layer
+      const { initializeCRS, initializeOptions } = zondy.leaflet.util
+      // 初始化示例
+      function init() {
+        // 添加图层
+        addLayer()
+      }
+
+      // 添加图层
+      function addLayer() {
+        // 构造一个网路瓦片图层对象
+        const layer = new WebTileLayer({
+          // 服务基地址
+          url: 'http://t1.tianditu.com/DataServer?T=img_c&x={col}&y={row}&l={level}',
+          // token名
+          tokenKey: 'tk',
+          // token值
+          tokenValue: getTDTToken()
+        })
+        // 加载元数据
+        layer.load().then(function () {
+          // 构造Leaflet地图视图的初始化参数
+          const crs = initializeCRS(layer)
+          const mapViewOptions = {
+            crs: crs,
+            center: [31.147781205532336,112.21905099757561],
+            zoom: 4
+          }
+          // 构造Leaflet地图视图对象
+          const map = L.map('mapgis-viewer', mapViewOptions)
+          // 构造Leaflet瓦片图层的初始化参数
+          const layerOptions = initializeOptions(layer)
+          // 添加Leaflet瓦片图层到地图视图中
+          new zondy.leaflet.layer.WebTileLayer(layer.url, layerOptions).addTo(map)
+          // 添加Echarts图层
+          addEchartsLayer(map)
+        })
+
+        // 添加echarts图层
+        function addEchartsLayer(map) {
+          let grade = ['强', '中', '弱']
+          $.get(
+            'http://webclient.smaryun.com:8200/Vector/json/weibo/weibo.json',
+            function (weiboData) {
+              weiboData = weiboData.map(function (serieData, idx) {
+                let px = serieData[0] / 1000
+                let py = serieData[1] / 1000
+                let res = [[px, py]]
+
+                for (let i = 2; i < serieData.length; i += 2) {
+                  let dx = serieData[i] / 1000
+                  let dy = serieData[i + 1] / 1000
+                  let x = px + dx
+                  let y = py + dy
+                  res.push([x.toFixed(2), y.toFixed(2), 1])
+
+                  px = x
+                  py = y
+                }
+                return res
+              })
+
+              let option = {
+                coordinateSystem: 'leaflet',
+                title: {
+                  text: '中国微博签到图',
+                  subtext: 'From ThinkGIS',
+                  sublink: 'http://www.thinkgis.cn/public/sina',
+                  left: 'center',
+                  top: 'top',
+                  textStyle: {
+                    color: '#fff'
+                  }
+                },
+                tooltip: {},
+                legend: {
+                  left: 'left',
+                  top: 'bottom',
+                  data: [grade[0], grade[1], grade[2]],
+                  textStyle: {
+                    color: '#ccc'
+                  }
+                },
+                series: [
+                  {
+                    name: grade[2],
+                    type: 'scatter',
+                    coordinateSystem: 'leaflet',
+                    symbolSize: 1,
+                    large: true,
+                    itemStyle: {
+                      normal: {
+                        shadowBlur: 2,
+                        shadowColor: 'rgba(37, 140, 249, 0.8)',
+                        color: 'rgba(37, 140, 249, 0.8)'
+                      }
+                    },
+                    data: weiboData[0]
+                  },
+                  {
+                    name: grade[1],
+                    type: 'scatter',
+                    coordinateSystem: 'leaflet',
+                    symbolSize: 1,
+                    large: true,
+                    itemStyle: {
+                      normal: {
+                        shadowBlur: 2,
+                        shadowColor: 'rgba(14, 241, 242, 0.8)',
+                        color: 'rgba(14, 241, 242, 0.8)'
+                      }
+                    },
+                    data: weiboData[1]
+                  },
+                  {
+                    name: grade[0],
+                    type: 'scatter',
+                    coordinateSystem: 'leaflet',
+                    symbolSize: 1,
+                    large: true,
+                    itemStyle: {
+                      normal: {
+                        shadowBlur: 2,
+                        shadowColor: 'rgba(255, 255, 255, 0.8)',
+                        color: 'rgba(255, 255, 255, 0.8)'
+                      }
+                    },
+                    data: weiboData[2]
+                  }
+                ]
+              }
+              // 添加leaflet的echarts图层
+              new zondy.leaflet.layer.EchartsLayer(map, option).addTo(map)
+            }
+          )
+        }
+      }
+    </script>
+</head>
+
+<body onload="init();">
+<div
+        id="mapgis-viewer"
+        style="position: absolute; display: flex; width: 100%; height: 100%"
+></div>
+</body>
+</html>

@@ -1,0 +1,3794 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Graphic</title>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+                <h1> MapGIS Client for JavaScript API</h1>
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/common/api/common-mapgis/index.html"
+                        >
+                            Common
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/cesium/api/cesium-mapgis/index.html"
+                        >
+                            Cesium-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/mapboxgl/api/mapboxgl-mapgis/index.html"
+                        >
+                            MapboxGL-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/leaflet/api/leaflet-mapgis/index.html"
+                        >
+                            Leaflet-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/openlayers/api/openLayers-mapgis/index.html"
+                        >
+                            OpenLayers-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/video/api/video-mapgis/index.html"
+                        >
+                            Video-Plugin
+                        </a>
+                    
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            <div>
+                <span class="mapgis-api-document-span"><a href="index.html">API文档</a></span>
+            </div>
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="搜索文档..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <div class="category"><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">扩展模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="AlgorithmLib"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AlgorithmLib.html">AlgorithmLib</a><span style="display: none;"><p>通用算法工具集</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="AngulationTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AngulationTool.html">AngulationTool</a><span style="display: none;"><p>角度测量工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="AnimationTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AnimationTool.html">AnimationTool</a><span style="display: none;"><p>场景漫游工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISMapServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISMapServerImageryProvider.html">ArcGISMapServerImageryProvider</a><span style="display: none;"><p>ArcGIS地图图片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISTileServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISTileServerImageryProvider.html">ArcGISTileServerImageryProvider</a><span style="display: none;"><p>ArcGIS瓦片图层，现已不支持通过构造函数(new ArcGISTileServerImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISVectorTileImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISVectorTileImageryProvider.html">ArcGISVectorTileImageryProvider</a><span style="display: none;"><p>ArcGIS矢量瓦片图层，现已不支持通过构造函数(new ArcGISVectorTileImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Cesium3DTileset"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Cesium3DTileset.html">Cesium3DTileset</a><span style="display: none;"><p>Cesium3DTileset对象，现已不支持通过构造函数(new Cesium3DTileset())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Cesium.Material"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Cesium.Material.html">Material</a><span style="display: none;"><p>新增了部分Cesium材质<br>
+《PolylineTrailLink材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-polyline'>《线示例》</a>
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-wall'>《墙示例》</a><br>
+color: 材质颜色，Cesium.Color.WHITE<br>
+image: 材质使用的图片，Cesium.Material.PolylineTrailLinkImage<br>
+duration: 持续时间，100.0<br>
+direction: 方向，1.0<br>
+repeat: 重复次数，new Cesium.Cartesian2(1.0, 1.0)<br><br>
+《CircleWaveMaterial材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a>
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circular'>《圆锥示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+duration: 持续时间，100.0<br>
+count: 方向，1.0<br>
+gradient: 渐变因子，0.1<br><br>
+《RadarMaterial材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color.WHITE<br>
+speed: 速度，1<br><br>
+《AspectArrow材质》
+AspectArrowMap: 箭头图片，Cesium.Material.DefaultImageId<br>
+repeat: 箭头重复次数，Cesium.Cartesian2(1.0, 1.0)<br><br>
+《TextImage材质》<br>
+image: 文字图片，Cesium.Material.DefaultImageId<br>
+repeat: 图片重复次数，Cesium.Cartesian2(1.0, 1.0)<br>
+breathingLight: 是否开启呼吸灯，false<br>
+duration: 运行周期，1000<br><br>
+《LineFlickerMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，5<br><br>
+《CircleScanMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CirclePulseMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleDiffuseMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《ScanlineType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleFadeMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleColorfulMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleSpiralMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleBlurMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《RadarScanMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《RadarLineMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《RiverCoveringMaterial材质》<br>
+color: 材质颜色，Cesium.Color(1, 1, 1, 0.7)<br>
+animationSpeed: 播放速度，0.01<br>
+image: 材质图片，CustomMaterial.DefaultImageId<br>
+repeat: 重复次数，2.0<br><br></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Cesium.Viewer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Cesium.Viewer.html">Viewer</a><span style="display: none;"><p>重写Cesium.Viewer的方法</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CesiumHeatmap"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CesiumHeatmap.html">CesiumHeatmap</a><span style="display: none;"><p>热力图</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CesiumTerrainProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CesiumTerrainProvider.html">CesiumTerrainProvider</a><span style="display: none;"><p>Cesium地形图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CircleWaveMaterialProperty"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CircleWaveMaterialProperty.html">CircleWaveMaterialProperty</a><span style="display: none;"><p>动态圆波纹材质</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CollisionDetectionByRender"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CollisionDetectionByRender.html">CollisionDetectionByRender</a><span style="display: none;">undefined</span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CompatibleFunc"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CompatibleFunc.html">CompatibleFunc</a><span style="display: none;"><p>适配不同版本Cesium接口方法类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="createColorTexture"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="createColorTexture.html">createColorTexture</a><span style="display: none;"><p>天际线分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CustomProjection"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CustomProjection.html">CustomProjection</a><span style="display: none;"><p>实现自定义投影坐标系与地理坐标系经纬度（弧度表示）之间的投影变换</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CustomTilingScheme"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CustomTilingScheme.html">CustomTilingScheme</a><span style="display: none;"><p>自定义瓦片平铺方案，在使用时有如下限制：</p>
+<ol>
+<li>裁图原点必须在地图范围的左上角区域；</li>
+<li>仅支持如同谷歌地图的瓦片组织方式，即Y轴编号从上到下递增，X轴编号从左到右递增；</li>
+</ol></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CutFillAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CutFillAnalysis.html">CutFillAnalysis</a><span style="display: none;"><p>填挖方分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CuttingTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CuttingTool.html">CuttingTool</a><span style="display: none;"><p>三维场景裁剪工具集</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="DrawElement"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="DrawElement.html">DrawElement</a><span style="display: none;"><p>几何绘制类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="DrawTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="DrawTool.html">DrawTool</a><span style="display: none;"><p>绘制工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="DynamicEntityVisualizer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="DynamicEntityVisualizer.html">DynamicEntityVisualizer</a><span style="display: none;"><p>动态实体视图类封装
+1、支持BillBoard、Label、GroundPrimitive等动态显示，处理覆盖问题
+2、动态显隐效果
+3、视窗内性能优化</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="EditTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="EditTool.html">EditTool</a><span style="display: none;"><p>标绘编辑工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="FloodAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FloodAnalysis.html">FloodAnalysis</a><span style="display: none;"><p>洪水淹没分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="FloodAnalysisReflection"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FloodAnalysisReflection.html">FloodAnalysisReflection</a><span style="display: none;"><p>创建反射水面淹没分析的实例化对象</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GlobeIndependentTranslucency"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GlobeIndependentTranslucency.html">GlobeIndependentTranslucency</a><span style="display: none;"><p>单独控制地表透明度和影像图层的透明度，能够在开启地表透明后使部分影像图层不受地表透明的影响。</p>
+<p>实例化该类的对象同时也能够使用原生的地表透明参数，能够直接在实例化对象上修改 <code>GlobeTranslucency</code> 的参数（原生的
+viewer.scene.globe.translucency依然能够使用，但两者同时使用时会造成相互干扰，推荐仅使用GlobeIndependentTranslucency来实现地表透明），
+使用原生的地表透明方式还是该类的地表透明方式由 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 数组是否为空来区分。</p>
+<p>1. 当 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 不为空数组时，使用该类的地表透明方式，此时能够设置并生效的地表透明参数如下：</p>
+<ul>
+<li><code>globeFaceAlpha</code>：地表的透明度，若设置该参数则<code>globeFaceAlphaByDistance</code>不生效；</li>
+<li><code>globeFaceAlphaByDistance</code>：地表的透明度根据视点距离的变化范围，当<code>globeFaceAlpha</code>为<code>undefined</code>时生效；</li>
+</ul>
+<p>2. 当 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 为空数组时，使用原生的地表透明方式，此时能够设置并生效的地表透明参数如下：</p>
+<ul>
+<li><code>frontFaceAlpha</code>：地表正面的透明度；</li>
+<li><code>frontFaceAlphaByDistance </code>：地表正面的透明度根据视点距离的变化范围；</li>
+<li><code>backFaceAlpha</code>：地表背面的透明度；</li>
+<li><code>backFaceAlphaByDistance</code>：地表背面的透明度根据视点距离的变化范围；</li>
+<li><code>rectangle</code>：将地表透明的区域限制在一个矩形范围内。</li>
+</ul></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Graphic"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Graphic.html">Graphic</a><span style="display: none;"><p>标绘图元对象<br>
+请参考以下示例:<br>
+<a href='#example1'>1、初始化标绘图层</a><br>
+<a href='#example2'>2、添加一个多边形图元</a><br>
+<a href='#example3'>3、新增一个类型为div的标绘对象</a><br>
+<a href='http://webclient.smaryun.com/#/example-gallery/cesium#tdGraphBase' target='_blank'>4、更多示例</a></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GraphicsLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GraphicsLayer.html">GraphicsLayer</a><span style="display: none;"><p>标绘图层<br>
+请参考以下示例:<br>
+<a href='#example1'>1、初始化标绘图层</a><br>
+<a href='#example2'>2、重写提示框对象</a><br>
+<a href='http://webclient.smaryun.com/#/example-gallery/cesium#tdGraphBase' target='_blank'>3、更多示例</a></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="HeightLimited"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="HeightLimited.html">HeightLimited</a><span style="display: none;"><p>限高分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="initializeOptions"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="initializeOptions.html">initializeOptions</a><span style="display: none;"><p>构建实例化对象的配置参数</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="isCounterClockwise"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="isCounterClockwise.html">isCounterClockwise</a><span style="display: none;"><p>地形剖切工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="KeyboardCameraController"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="KeyboardCameraController.html">KeyboardCameraController</a><span style="display: none;"><p>场景相机漫游工具，可以实现沉浸式的鼠标键盘漫游功能，具体操作方法如下：</p>
+<p>1. 相机平移操作，这类操作不会改变相机的朝向，只会改变相机的位置：</p>
+<ul>
+<li><code>W</code>：相机位置向前移动</li>
+<li><code>S</code>：相机位置向后移动</li>
+<li><code>A</code>：相机位置向左移动</li>
+<li><code>D</code>：相机位置向右移动</li>
+<li><code>Q</code>：相机位置升高</li>
+<li><code>E</code>：相机位置降低</li>
+</ul>
+<p>2. 相对于相机视点操作，其中<code>U</code>，<code>O</code>，<code>J</code>，<code>L</code>操作会改变相机的位置，也会改变相机的朝向，而<code>I</code>，<code>K</code>操作只会改变相机相较视点的距离（在执行<code>U</code>，<code>O</code>，<code>J</code>，<code>L</code>操作时请勿同时执行其他按键操作）：</p>
+<ul>
+<li><code>I</code>：相机视角靠近屏幕中心点</li>
+<li><code>K</code>：相机视角远离屏幕中心点</li>
+<li><code>J</code>：绕屏幕中心点向左旋转</li>
+<li><code>L</code>：绕屏幕中心点向右旋转</li>
+<li><code>U</code>：绕屏幕中心点向上旋转</li>
+<li><code>O</code>：绕屏幕中心点向下旋转</li>
+</ul>
+<p>3. 相机自身操作，这类操作不会改变相机的位置，只会改变相机的朝向（在全屏状态下可使用鼠标调整相机视角）：</p>
+<ul>
+<li><code>↑</code>：向上抬高视角</li>
+<li><code>↓</code>：向下降低视角</li>
+<li><code>←</code>：向左移动视角</li>
+<li><code>→</code>：向右移动视角</li>
+</ul>
+<p>4. 鼠标操作：</p>
+<ul>
+<li>开启鼠标操作功能后，页面将进入全屏模式，此时相机视角可通过鼠标移动进行操作</li>
+</ul>
+<p>5. 辅助操作：</p>
+<ul>
+<li><code>Shift</code>：加速相机平移操作，调整移动步长为原来的两倍</li>
+<li><code>R</code>：重置视角到初始视角，仅在参数<code>initView</code>定义时有效</li>
+</ul></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISM3DSet"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISM3DSet.html">MapGISM3DSet</a><span style="display: none;"><p>MapGISM3DSet对象</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISMapServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISMapServerImageryProvider.html">MapGISMapServerImageryProvider</a><span style="display: none;"><p>MapGIS地图图片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISTerrainProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTerrainProvider.html">MapGISTerrainProvider</a><span style="display: none;"><p>MapGIS地形图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISTileAvailability"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTileAvailability.html">MapGISTileAvailability</a><span style="display: none;"><p>MapGIS的TileAvailability类，重写了Cesium.TileAvailability的所有方法，支持在内部自动筛选要使用的地形图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISTileServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTileServerImageryProvider.html">MapGISTileServerImageryProvider</a><span style="display: none;"><p>MapGIS瓦片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISVectorTileImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISVectorTileImageryProvider.html">MapGISVectorTileImageryProvider</a><span style="display: none;"><p>MapGIS矢量瓦片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MeasureAreaTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureAreaTool.html">MeasureAreaTool</a><span style="display: none;"><p>面积测量工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MeasureLengthTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureLengthTool.html">MeasureLengthTool</a><span style="display: none;"><p>距离测量</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MeasureSlopeTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureSlopeTool.html">MeasureSlopeTool</a><span style="display: none;"><p>坡度测量</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ModelEditor"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelEditor.html">ModelEditor</a><span style="display: none;"><p>模型矩阵编辑工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ModelFilterTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelFilterTool.html">ModelFilterTool</a><span style="display: none;"><p>模型空间过滤工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ModelTransformTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelTransformTool.html">ModelTransformTool</a><span style="display: none;"><p>模型变换工具集</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="PolylineTrailLinkMaterialProperty"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="PolylineTrailLinkMaterialProperty.html">PolylineTrailLinkMaterialProperty</a><span style="display: none;"><p>流动纹理线材质</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="PostProcessStageLibrary"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="PostProcessStageLibrary.html">PostProcessStageLibrary</a><span style="display: none;"><p>用于创建后处理特效的扩展库</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="RadarMaterialProperty"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="RadarMaterialProperty.html">RadarMaterialProperty</a><span style="display: none;"><p>雷达扫描材质</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ReImg"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ReImg.html">ReImg</a><span style="display: none;"><p>截图(保存图片)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="RoamParticle"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="RoamParticle.html">RoamParticle</a><span style="display: none;"><p>跟随模型移动粒子特效</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="S3MTileset"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="S3MTileset.html">S3MTileset</a><span style="display: none;"><p>S3MTileset类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SelectTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SelectTool.html">SelectTool</a><span style="display: none;"><p>绘制工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ShadowRateAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ShadowRateAnalysis.html">ShadowRateAnalysis</a><span style="display: none;">undefined</span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="StableParticle"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="StableParticle.html">StableParticle</a><span style="display: none;"><p>固定位置粒子特效，可通过更改image与附加参数来实现火焰、喷泉、烟雾等粒子特效</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Style"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Style.html">Style</a><span style="display: none;"><p>标绘图元样式</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TerrainAnalyse"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TerrainAnalyse.html">TerrainAnalyse</a><span style="display: none;"><p>地形分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TerrainProfile"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TerrainProfile.html">TerrainProfile</a><span style="display: none;">undefined</span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ThemeManager"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ThemeManager.html">ThemeManager</a><span style="display: none;"><p>统计图</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TriangulationTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TriangulationTool.html">TriangulationTool</a><span style="display: none;"><p>三角测量</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="UrlTemplateImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="UrlTemplateImageryProvider.html">UrlTemplateImageryProvider</a><span style="display: none;"><p>网络瓦片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="VisiblityAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="VisiblityAnalysis.html">VisiblityAnalysis</a><span style="display: none;"><p>通视分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WaterReflection"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WaterReflection.html">WaterReflection</a><span style="display: none;"><p>创建反射水面的实例化对象</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebMapServiceImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapServiceImageryProvider.html">WebMapServiceImageryProvider</a><span style="display: none;"><p>WMS图层，现已不支持通过构造函数(new WebMapServiceImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebMapTileServiceImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapTileServiceImageryProvider.html">WebMapTileServiceImageryProvider</a><span style="display: none;"><p>WMTS图层，现已不支持通过构造函数(new WebMapTileServiceImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Wind3D"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Wind3D.html">Wind3D</a><span style="display: none;"><p>风场系统</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">工具类模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GeoJSONLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GeoJSONLayerUtil.html">GeoJSONLayerUtil</a><span style="display: none;"><p>GeoJSON图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GraphicsLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GraphicsLayerUtil.html">GraphicsLayerUtil</a><span style="display: none;"><p>几何图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="IGSFeatureLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="IGSFeatureLayerUtil.html">IGSFeatureLayerUtil</a><span style="display: none;"><p>IGSFeature图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WFSLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WFSLayerUtil.html">WFSLayerUtil</a><span style="display: none;"><p>WFS图层的工具类</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">视图模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ISSceneLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ISSceneLayerUtil.html">ISSceneLayerUtil</a><span style="display: none;"><p>IS场景图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Popup"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Popup.html">Popup</a><span style="display: none;"><p>场景信息弹窗(cesium引擎)
+参考示例：
+<a href='#SceneView'>[初始化三维场景视图]</a>
+<br>[ES5引入方式]：<br/>
+zondy.cesium.SceneView() <br/>
+[ES6引入方式]：<br/>
+import { SceneView } from '@mapgis/webclient-cesium-plugin' <br/>
+自定义样式说明：<br/>
+zondy-popup__content 弹窗容器样式<br/>
+zondy-popup__tip 弹窗对话框箭头样式<br/>
+zondy-popup__header 弹窗头部样式<br/>
+zondy-popup__content 弹窗主体样式<br/>
+zondy-popup__footer 弹窗底部样式<br/></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SceneView"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SceneView.html">SceneView</a><span style="display: none;"><p>视图类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Screenshot"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Screenshot.html">Screenshot</a><span style="display: none;"><p>屏幕打印工具</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">草图编辑模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SketchEditorCesium"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SketchEditorCesium.html">SketchEditorCesium</a><span style="display: none;"><p>Cesium引擎草图编辑类<br/>
+<br>[ES5引入方式]：<br/>
+const { SketchEditor } = zondy.tool.sketch  <br/>
+[ES6引入方式]：<br/>
+import { SketchEditor } from &quot;@mapgis/webclient-leaflet-plugin&quot; <br/></p></span></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header id="page-title" class="page-title">
+                    <span class="page-title-main">类名</span>
+                    <span class="page-title-sub">Graphic</span>
+                </header>
+                
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="Graphic">
+        <a class="href-link" href="#Graphic">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                new Graphic<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>标绘图元对象<br>
+请参考以下示例:<br>
+<a href='#example1'>1、初始化标绘图层</a><br>
+<a href='#example2'>2、添加一个多边形图元</a><br>
+<a href='#example3'>3、新增一个类型为div的标绘对象</a><br>
+<a href='http://webclient.smaryun.com/#/example-gallery/cesium#tdGraphBase' target='_blank'>4、更多示例</a></p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+            <th style="min-width: 100px;">默认值</th>
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>type</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>图元类型<a href="Graphic.html#.graphicType"><code>Graphic.graphicType</code></a></p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>id</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>图元ID</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>positions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+|
+
+<span class="param-type">Array.&lt;Number></span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>图元坐标信息,笛卡尔世界坐标为cartesian3,经纬度数组为例如[-115.0, 37.0, 100000.0, -107.0, 33.0, 150000.0]，<a href='http://webclient.smaryun.com/static/modules/cesium/api/cesium/index.html?classFilter=Cartesian3' target='_blank'>详见Cesium.Cartesian3</a></p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>style</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>图元样式信息 详情参见<a href="Style.html"><code>Style</code></a></p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>editPointStyle</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>编辑点样式信息 详情参见<a href="Style.html#.EditPointStyle"><code>Style.EditPointStyle</code></a></p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>attributes</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>图元属性</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>name</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>图元名称</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>show</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          true
+      
+      </td>
+  
+
+  <td class="description last"><p>图元是否显示</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>asynchronous</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          false
+      
+      </td>
+  
+
+  <td class="description last"><p>默认为阻塞式更新，true为异步更新，false为阻塞式更新。</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>heading</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0.0
+      
+      </td>
+  
+
+  <td class="description last"><p>偏航角，弧度。</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>pitch</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0.0
+      
+      </td>
+  
+
+  <td class="description last"><p>俯仰角，弧度。</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>roll</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0.0
+      
+      </td>
+  
+
+  <td class="description last"><p>翻滚角，弧度。</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>transformX</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0.0
+      
+      </td>
+  
+
+  <td class="description last"><p>局部坐标系X方向平移量，单位米，X方向为纬线方向</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>transformY</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0.0
+      
+      </td>
+  
+
+  <td class="description last"><p>局部坐标系Y方向平移量，单位米，Y方向为经线方向</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>transformZ</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0.0
+      
+      </td>
+  
+
+  <td class="description last"><p>局部坐标系Z方向平移量，单位米，Z方向为垂直地表方向</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>enableVFC</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          false
+      
+      </td>
+  
+
+  <td class="description last"><p>是否开启模型内部的视锥体检测，即标绘在模型内部是否隐藏，仅当类型为div时生效</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>disappearByDistance</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          20000000
+      
+      </td>
+  
+
+  <td class="description last"><p>根据div对象和主相机的距离，显示或隐藏div对象</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p class="summary"><h5>支持如下方法：</h5>
+<a href='#addAttributes'>[1、给图元添加属性字段]</a><br/></p>
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7 id='example1'>初始化标绘图层</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// ES5引入方式
+const { GraphicsLayer, Graphic } = zondy.cesium
+// ES6引入方式
+import { GraphicsLayer, Graphic } from "@mapgis/webclient-cesium-plugin"
+
+//初始化一个标绘图层
+const graphicsLayer = new GraphicsLayer(viewer, {});
+viewer.scene.layers.appendGraphicsLayer(graphicsLayer);
+//添加一个Marker基础标绘对象
+const marker = new Graphic({
+  //类型
+  type: 'marker',
+  //位置点
+  positions: [new Cesium.Cartesian3(-1160028.4895404815, 5443801.569087819, 3103982.2120705717)],
+  //样式
+  style: {
+      labelStyle: {
+          //字体
+         font: '30px sans-serif',
+         //文字内容
+         text: '这是Marker',
+         //文字颜色
+         fillColor: Cesium.Color.RED
+      },
+      billboardStyle: {
+          //billboard图片链接
+          image: 'http://webclient.smaryun.com:8200/NoneSpatialData/image/icon.png'
+      },
+      //文字相对于图片方位
+      labelPlaceType: 'topCenter',
+      //文字相对于图片间距
+      labelPadding: 20,
+      //离地高度
+      offsetHeight: 100,
+      //marker的屏幕像素偏移
+      pixelOffset: new Cesium.Cartesian2(0, 0)
+  },
+});
+//添加Marker
+graphicsLayer.addGraphic(marker);
+//修改样式
+marker.style.labelPlaceType = "leftCenter";
+marker.style.labelStyle.fillColor = Cesium.Color.BLUE;
+marker.style.billboardStyle.width = 100;</code></pre>
+    
+
+        <p class="code-caption"><h7 id='example2'>添加一个多边形图元</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// ES5引入方式
+const { GraphicsLayer, Graphic } = zondy.cesium
+// ES6引入方式
+import { GraphicsLayer, Graphic } from "@mapgis/webclient-cesium-plugin"
+
+//初始化一个标绘图层
+const graphicsLayer = new GraphicsLayer(viewer, {});
+viewer.scene.layers.appendGraphicsLayer(graphicsLayer);
+
+// 添加一个多边形图元
+const polygonGraphic = new Graphic({
+  type: 'polygon',
+  positions: [
+      Cesium.Cartesian3.fromDegrees(113.9514, 30.0129, 0),
+      Cesium.Cartesian3.fromDegrees(113.964, 30.0219, 0),
+      Cesium.Cartesian3.fromDegrees(113.9753, 30.015, 0),
+      Cesium.Cartesian3.fromDegrees(113.9624, 30.0075, 0),
+      Cesium.Cartesian3.fromDegrees(113.9514, 30.0129, 0)
+  ],
+  style: {
+      color: Cesium.Color.AQUA
+  }
+});
+//将标绘点添加入标绘图层
+graphicsLayer.addGraphic(polygonGraphic);
+//平移多边形，修改transformX、transformY、transformZ，三个值组成一个平移向量，朝这个方向平移，笛卡尔坐标
+polygonGraphic.transformX += 100;
+polygonGraphic.transformY += 2000;
+polygonGraphic.transformZ += 300;
+//通过经纬度计算笛卡尔平移向量
+const position1 = new Cesium.Cartographic(114.103, 30.25, 100);
+const position2 = new Cesium.Cartographic(114.211, 30.46, 100);
+position1 = Cesium.Cartesian3.fromDegrees(position1.longitude, position1.latitude, position1.height);
+position2 = Cesium.Cartesian3.fromDegrees(position2.longitude, position2.latitude, position2.height);
+const translate = Cesium.Cartesian3.subtract(position2, position1);
+polygonGraphic.transformX += translate.x;
+polygonGraphic.transformY += translate.y;
+polygonGraphic.transformZ += translate.z;
+//旋转多边形，修改heading、pitch、roll来实现三个轴向旋转，弧度值
+polygonGraphic.heading += 0.1;
+polygonGraphic.pitch += 0.1;
+polygonGraphic.roll += 0.1;</code></pre>
+    
+
+        <p class="code-caption"><h7 id='example3'>新增一个类型为div的标绘对象</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// ES5引入方式
+const { GraphicsLayer, Graphic } = zondy.cesium
+// ES6引入方式
+import { GraphicsLayer, Graphic } from "@mapgis/webclient-cesium-plugin"
+
+//新增一个类型为div的标绘对象
+//创建一个html字符串或者一个html标签对象
+const html = "&lt;div style='width: 100px;height: 100px;background-color: #00A7AA;'>";
+//创建一个标绘对象
+const graphic = new Graphic({
+   //标绘类型
+   type: 'div',
+   //标绘位置
+   positions: [Cesium.Cartesian3.fromDegrees(114.285992, 30.585234, 0)],
+   //标绘样式
+   style: {
+       //html字符串或标签对象
+       html: html,
+       //html相对原始位置的屏幕像素偏移
+       pixelOffset: new Cesium.Cartesian2(0, 0),
+       //额外抬升高度
+       offsetHeight: 0
+   },
+   //开启时，当对象在模型内部时，会隐藏，开启此功能会有性能损耗
+   enableVFC: false,
+   //当div对象和主相机的距离超过20000000米时，隐藏div对象
+   disappearByDistance: 20000000
+});
+//将标绘添加入标绘图层
+graphicsLayer.addGraphic(graphic);
+//创建完成后，实时修改
+graphic.style.html = "新的html";
+graphic.style.pixelOffset = new Cesium.Cartesian2(0, 156);
+graphic.style.offsetHeight = 2000;</code></pre>
+    
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='member'>成员变量</h3>
+            <div class="members">
+            
+                <div class="member">
+
+<h4 class="name" id=".graphicType">
+    <a class="href-link" href="#.graphicType">#</a>
+    
+        
+            <span class='tag'>static</span>
+        
+    
+    <span class="code-name">
+        graphicType
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图元类型</p>
+</div>
+
+
+
+
+
+    <h5 class="subsection-title">属性:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>point</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'point'
+        
+        </td>
+    
+
+    <td class="description last"><p>点，类型（type）为point时样式参数参照<a href="Style.html#.PointStyle"><code>Style.PointStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>marker</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'marker'
+        
+        </td>
+    
+
+    <td class="description last"><p>marker，类型（type）为marker时样式参数参照<a href="Style.html#.MarkerStyle"><code>Style.MarkerStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>label</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'label'
+        
+        </td>
+    
+
+    <td class="description last"><p>文本,类型（type）为label时样式参数参照<code>Style.Cesium.LabelStyle</code></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>billboard</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'billboard'
+        
+        </td>
+    
+
+    <td class="description last"><p>广告牌，类型(type)为billboard时样式参数参照<a href="Style.html#.BillboardStyle"><code>Style.BillboardStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>polyline</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'polyline'
+        
+        </td>
+    
+
+    <td class="description last"><p>线，类型(type)为polyline时样式参数参照<a href="Style.html#.PolylineStyle"><code>Style.PolylineStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>polylineVolume</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'polylineVolume'
+        
+        </td>
+    
+
+    <td class="description last"><p>圆管线，类型(type)为polylineVolume时样式参数参照<a href="Style.html#.PolylineVolumeStyle"><code>Style.PolylineVolumeStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>polygon</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'polygon'
+        
+        </td>
+    
+
+    <td class="description last"><p>面（区），类型(type)为polygon时样式参数参照<a href="Style.html#.PolygonStyle"><code>Style.PolygonStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>rectangle</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'rectangle'
+        
+        </td>
+    
+
+    <td class="description last"><p>矩形，类型(type)为rectangle时样式参数参照<a href="Style.html#.RectangleStyle"><code>Style.RectangleStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>square</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'square'
+        
+        </td>
+    
+
+    <td class="description last"><p>正方形，类型(type)square<a href="Style.html#.SquareStyle"><code>Style.SquareStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>circle</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'circle'
+        
+        </td>
+    
+
+    <td class="description last"><p>圆，类型(type)为circle时样式参数参照<a href="Style.html#.CircleStyle"><code>Style.CircleStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>corridor</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'corridor'
+        
+        </td>
+    
+
+    <td class="description last"><p>方管线，类型(type)为corridor时样式参数参照<a href="Style.html#.CorridorStyle"><code>Style.CorridorStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>cylinder</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'cylinder'
+        
+        </td>
+    
+
+    <td class="description last"><p>圆台（圆锥），类型(type)为cylinder时样式参数参照<a href="Style.html#.CylinderStyle"><code>Style.CylinderStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>ellipsoid</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'ellipsoid'
+        
+        </td>
+    
+
+    <td class="description last"><p>椭球，类型(type)为ellipsoid时样式参数参照<a href="Style.html#.EllipsoidStyle"><code>Style.EllipsoidStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>sphere</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'sphere'
+        
+        </td>
+    
+
+    <td class="description last"><p>圆球，类型(type)为sphere时样式参数参照<a href="Style.html#.SphereStyle"><code>Style.SphereStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>wall</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'wall'
+        
+        </td>
+    
+
+    <td class="description last"><p>墙，类型(type)为wall时样式参数参照<a href="Style.html#.WallStyle"><code>Style.WallStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>box</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'box'
+        
+        </td>
+    
+
+    <td class="description last"><p>盒子,类型（type）为box时样式参数参照<a href="Style.html#.BoxStyle"><code>Style.BoxStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>model</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'model'
+        
+        </td>
+    
+
+    <td class="description last"><p>gltf模型,类型（type）为model时样式参数参照<a href="Style.html#.ModelStyle"><code>Style.ModelStyle</code></a></p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>dynamicRiver</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">String</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'dynamicRiver'
+        
+        </td>
+    
+
+    <td class="description last"><p>河流,类型（type）为dynamicRiver时样式参数参照<a href="Style.html#.RiverStyle"><code>Style.RiverStyle</code></a></p></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="allowPicking">
+    <a class="href-link" href="#allowPicking">#</a>
+    
+    <span class="code-name">
+        allowPicking
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形对象是否可以选中</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="asynchronous">
+    <a class="href-link" href="#asynchronous">#</a>
+    
+    <span class="code-name">
+        asynchronous
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形对象是否阻塞更新，一般设置为false避免更新时闪烁</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="attributes">
+    <a class="href-link" href="#attributes">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        attributes
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形对象属性键值对</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Cesium.BoundingSphere</span>
+
+
+    </span>
+
+<h4 class="name" id="boundingSphere">
+    <a class="href-link" href="#boundingSphere">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        boundingSphere
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图元对象包围盒</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+    </span>
+
+<h4 class="name" id="coordinate">
+    <a class="href-link" href="#coordinate">#</a>
+    
+    <span class="code-name">
+        coordinate
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形实体位置数组(经纬度+高程，度)</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="editing">
+    <a class="href-link" href="#editing">#</a>
+    
+    <span class="code-name">
+        editing
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形对象是否在编辑状态</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="enableVFC">
+    <a class="href-link" href="#enableVFC">#</a>
+    
+    <span class="code-name">
+        enableVFC
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>是否开启视锥体检测，仅当类型为div时生效</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="heading">
+    <a class="href-link" href="#heading">#</a>
+    
+    <span class="code-name">
+        heading
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形对象偏航角，弧度。</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">String</span>
+
+
+    </span>
+
+<h4 class="name" id="id">
+    <a class="href-link" href="#id">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        id
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形ID</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="isPoint">
+    <a class="href-link" href="#isPoint">#</a>
+    
+    <span class="code-name">
+        isPoint
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形是否为点，文本或者广告牌</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Cesium.Matrix4</span>
+
+
+    </span>
+
+<h4 class="name" id="modelMatrix">
+    <a class="href-link" href="#modelMatrix">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        modelMatrix
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图元对象旋转平移矩阵</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="name">
+    <a class="href-link" href="#name">#</a>
+    
+    <span class="code-name">
+        name
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形对象名称</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type"><a href="GraphicsLayer.html">GraphicsLayer</a></span>
+
+
+    </span>
+
+<h4 class="name" id="parentLayer">
+    <a class="href-link" href="#parentLayer">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        parentLayer
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图元父图层</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="pitch">
+    <a class="href-link" href="#pitch">#</a>
+    
+    <span class="code-name">
+        pitch
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形对象俯仰角，弧度。</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+    </span>
+
+<h4 class="name" id="positions">
+    <a class="href-link" href="#positions">#</a>
+    
+    <span class="code-name">
+        positions
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形实体位置数组</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Cesium.Primitive</span>
+
+
+    </span>
+
+<h4 class="name" id="primitive">
+    <a class="href-link" href="#primitive">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        primitive
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形对象primitive</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="roll">
+    <a class="href-link" href="#roll">#</a>
+    
+    <span class="code-name">
+        roll
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形对象翻滚角，弧度。</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="show">
+    <a class="href-link" href="#show">#</a>
+    
+    <span class="code-name">
+        show
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形是否显示</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type"><a href="Style.html">Style</a></span>
+
+
+    </span>
+
+<h4 class="name" id="style">
+    <a class="href-link" href="#style">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        style
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图元对象样式信息</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>示例</h5>
+    
+    
+        <pre class="prettyprint"><code>var graphic = new Graphic({type:label,style:{text:'mapgis'}});
+graphic.style.text = 'mapgispro';</code></pre>
+    
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="transformX">
+    <a class="href-link" href="#transformX">#</a>
+    
+    <span class="code-name">
+        transformX
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形对象局部坐标系X方向平移量，单位米，X方向为纬线方向</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="transformY">
+    <a class="href-link" href="#transformY">#</a>
+    
+    <span class="code-name">
+        transformY
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形对象局部坐标系y方向平移量，单位米，y方向为经线方向</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="transformZ">
+    <a class="href-link" href="#transformZ">#</a>
+    
+    <span class="code-name">
+        transformZ
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形对象局部坐标系z方向平移量，单位米，z方向为垂直地表方向</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">String</span>
+
+
+    </span>
+
+<h4 class="name" id="type">
+    <a class="href-link" href="#type">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        type
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图元类型 参照<a href="Graphic.html#.graphicType"><code>Graphic.graphicType</code></a></p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">function</span>
+
+
+    </span>
+
+<h4 class="name" id="updated">
+    <a class="href-link" href="#updated">#</a>
+    
+    <span class="code-name">
+        updated
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>图形更新后的回调，请在这个回调里面获取图形参数，不要在vue上绑定图形对象</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='function'>方法</h3>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="addAttributes">
+        <a class="href-link" href="#addAttributes">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                addAttributes<span class="signature">(key, value)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>给图元添加属性字段<a id='addAttributes'/></p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>key</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>关键字</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>value</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>值</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>文档生成<a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="http://www.smaryun.com" target="_blank">司马云</a> <span>© 2023 云生态圈</span>
+                        <a href="http://webclient.smaryun.com:8086/#/index" target="_blank">MapGIS Client for JavaScript</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#page-title">构造函数</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#member">成员变量</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#function">方法</a>
+            </div>
+            <div>
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#event">事件</a>
+            </div>
+        </div>
+    </div>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

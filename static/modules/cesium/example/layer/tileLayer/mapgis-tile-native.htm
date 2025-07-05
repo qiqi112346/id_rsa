@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>MapGIS瓦片服务-原生接口</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <!--cesium样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/cesium/Widgets/widgets.css" />
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/cesium/MapGIS/css/mapgis.css" />
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+    <script>
+      'use strict'
+      // 全局变量
+      let viewer
+
+      // MapGIS函数类
+      const { MapGISTileServerImageryProvider } = zondy.cesium
+
+      // 定义瓦片地图服务的基地址
+      const url = 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/%E6%AD%A6%E6%B1%89%E5%B8%82_4547_custom_1-10/TileServer'
+
+      // 加载IGS二维瓦片地图服务
+      async function addTileLayer() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/MapGISTileServerImageryProvider.html
+        const provider = await MapGISTileServerImageryProvider.fromUrl(url)
+        viewer.imageryLayers.addImageryProvider(provider)
+      }
+
+      // 飞到指定视角
+      function flyTo() {
+        viewer.camera.flyTo({
+          destination: Cesium.Rectangle.fromDegrees(
+            113.70355770441782,
+            29.969824356577785,
+            115.08798481692347,
+            31.356958666350742
+          ),
+          duration: 2
+        })
+      }
+
+      // 初始化球体
+      function initViewer() {
+        viewer = new Cesium.Viewer('mapgis-3d-viewer')
+      }
+
+      // 地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加栅格图层
+        addTileLayer()
+        // 图层加载成功后的回调，视角定位到图层区域
+        viewer.imageryLayers.layerAdded.addEventListener((event) => {
+          flyTo()
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

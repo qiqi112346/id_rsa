@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>视图跳转</title>
+    <!-- 引入地图引擎库 -->
+    <script
+      include="leaflet,mapboxgl"
+      src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"
+    ></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/analyse.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+      let map, view
+      const { IGSTileLayer } = zondy.layer
+      const { Map } = zondy
+      const { Extent, Point } = zondy.geometry
+      let $ = layui.jquery
+
+      // 按范围跳转
+      function setExtentFlyto() {
+        // 输入坐标清除空格，转为Number类型
+        const xmax = JSON.parse(
+          $('#extent-xmax-input')
+            .val()
+            .split(/[\t\r\f\n\s]*/g)
+            .join('')
+        )
+        const xmin = JSON.parse(
+          $('#extent-xmin-input')
+            .val()
+            .split(/[\t\r\f\n\s]*/g)
+            .join('')
+        )
+        const ymax = JSON.parse(
+          $('#extent-ymax-input')
+            .val()
+            .split(/[\t\r\f\n\s]*/g)
+            .join('')
+        )
+        const ymin = JSON.parse(
+          $('#extent-ymin-input')
+            .val()
+            .split(/[\t\r\f\n\s]*/g)
+            .join('')
+        )
+        // 视图跳转
+        view.flyTo({
+          // 范围几何
+          extent: new Extent({
+            xmax: xmax,
+            xmin: xmin,
+            ymax: ymax,
+            ymin: ymin
+          })
+        })
+        $('#extent-xmax-input').val(xmax)
+        $('#extent-xmin-input').val(xmin)
+        $('#extent-ymax-input').val(ymax)
+        $('#extent-ymin-input').val(ymin)
+      }
+
+      // 中心点跳转
+      function setCenterFlyto() {
+        let center
+        // 输入坐标清除空格，转为Number类型
+        const x = JSON.parse(
+          $('#center-lon-input')
+            .val()
+            .split(/[\t\r\f\n\s]*/g)
+            .join('')
+        )
+        const y = JSON.parse(
+          $('#center-lat-input')
+            .val()
+            .split(/[\t\r\f\n\s]*/g)
+            .join('')
+        )
+        // 如果是cesium引擎，根据视点跳转会增加高度
+        if (localStorage.getItem('engine-type') == 'cesium') {
+          const z = JSON.parse(
+            $('#center-height-input')
+              .val()
+              .split(/[\t\r\f\n\s]*/g)
+              .join('')
+          )
+          center = [x, y, z]
+          $('#center-height-input').val(z)
+        } else {
+          center = [x, y]
+        }
+
+        const zoom = JSON.parse(
+          $('#zoom-input')
+            .val()
+            .split(/[\t\r\f\n\s]*/g)
+            .join('')
+        )
+        // 视图跳转
+        view.flyTo({
+          // 跳转中心点
+          center: center,
+          // 地图层级
+          zoom: zoom
+        })
+        $('#center-lon-input').val(x)
+        $('#center-lat-input').val(y)
+        $('#zoom-input').val(zoom)
+      }
+
+      // 自动获取当前视图范围
+      function getViewParams() {
+        // 获取当前视图范围extent
+        let extent = view._extent
+        $('#extent-xmin-input').val(extent.xmin)
+        $('#extent-xmax-input').val(extent.xmax)
+        $('#extent-ymin-input').val(extent.ymin)
+        $('#extent-ymax-input').val(extent.ymax)
+        // 获取当前视点center
+        let center = view.center.coordinates
+        $('#center-lon-input').val(center[0])
+        $('#center-lat-input').val(center[1])
+        $('#center-height-input').val(center[2])
+        $('#zoom-input').val(view.zoom)
+      }
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加瓦片图层
+        addIGSTileLayer()
+        // 初始化示例UI操作
+        initUI()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 添加瓦片图层
+      function addIGSTileLayer() {
+        const igsTileLayer = new IGSTileLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        })
+        map.add(igsTileLayer)
+        igsTileLayer.on('layerview-created', (result) => {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+        view.on('view-change', function (event) {
+          getViewParams()
+          view.off('view-change')
+        })
+      }
+      // 初始化示例UI操作
+      function initUI() {
+        // 三维引擎显示视点center高度
+        if (localStorage.getItem('engine-type') == 'cesium') {
+          document.getElementById('cesium-center-height').style.display =
+            'inline-block'
+        } else {
+          document.getElementById('cesium-center-height').style.display = 'none'
+        }
+      }
+    </script>
+    <style>
+      .layui-panel {
+        width: auto;
+        z-index: 9999;
+      }
+      .layui-form-label {
+        width: 90px;
+      }
+    </style>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label">视图范围xmin:</label>
+          <div class="layui-input-block" style="margin-bottom: 6px">
+            <input
+              id="extent-xmin-input"
+              value="0"
+              autocomplete="off"
+              class="layui-input"
+            />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">视图范围ymin:</label>
+          <div class="layui-input-block" style="margin-bottom: 6px">
+            <input
+              id="extent-ymin-input"
+              value="0"
+              autocomplete="off"
+              class="layui-input"
+            />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">视图范围xmax:</label>
+          <div class="layui-input-block" style="margin-bottom: 6px">
+            <input
+              id="extent-xmax-input"
+              value="0"
+              autocomplete="off"
+              class="layui-input"
+            />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">视图范围ymax:</label>
+          <div class="layui-input-block" style="margin-bottom: 16px">
+            <input
+              id="extent-ymax-input"
+              value="0"
+              autocomplete="off"
+              class="layui-input"
+            />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <button
+            type="button"
+            class="layui-btn"
+            style="float: right; width: auto; margin-right: 0 !important"
+            onclick="setExtentFlyto()"
+          >
+            按范围跳转
+          </button>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">视图中心点center-lon:</label>
+          <div class="layui-input-block" style="margin-bottom: 6px">
+            <input
+              id="center-lon-input"
+              value="0"
+              autocomplete="off"
+              class="layui-input"
+            />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">视图中心点center-lat:</label>
+          <div class="layui-input-block" style="margin-bottom: 16px">
+            <input
+              id="center-lat-input"
+              value="0"
+              autocomplete="off"
+              class="layui-input"
+            />
+          </div>
+        </div>
+        <div
+          class="layui-form-item"
+          id="cesium-center-height"
+          style="display: none"
+        >
+          <label class="layui-form-label">视图中心点center-height:</label>
+          <div class="layui-input-block" style="margin-bottom: 16px">
+            <input
+              id="center-height-input"
+              value="0"
+              autocomplete="off"
+              class="layui-input"
+            />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">缩放层级zoom:</label>
+          <div class="layui-input-block" style="margin-bottom: 16px">
+            <input
+              id="zoom-input"
+              value="0"
+              autocomplete="off"
+              class="layui-input"
+            />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <button
+            type="button"
+            class="layui-btn"
+            style="float: right; width: auto; margin-right: 0 !important"
+            onclick="setCenterFlyto()"
+          >
+            按视点跳转
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

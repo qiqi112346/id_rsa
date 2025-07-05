@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>加载百度地图图层</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+
+      //加载无偏百度地图
+      function addBaiduMap() {
+        var lods = []
+        for (var i = 0; i < 19; i++) {
+          var resolution = Math.pow(2, 18 - i)
+          lods[i] = { level: i, resolution: resolution, scale: null }
+        }
+        // 构造baidu地图默认的tileInfo
+        var tileInfo = {
+          dpi: 0,
+          format: 'PNG',
+          size: [256, 256], // 瓦片宽高的像素大小
+          origin: {
+            coordinates: [0, 0], // 裁图原点
+            type: 'Point' // 裁图原点类型
+          },
+          lods: lods
+        }
+        // 构造baidu地图默认的tilingScheme
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/CustomTilingScheme.html
+        var tilingScheme = new zondy.cesium.CustomTilingScheme({
+          wkid: zondy.enum.CustomWKID.bd09mc,
+          tileInfo: tileInfo,
+          axisDirection: {
+            x: 1,
+            y: 1
+          },
+          rectangleSouthwest: new Cesium.Cartesian2(-20037726.37, -12474104.17),
+          rectangleNortheast: new Cesium.Cartesian2(20037726.37, 12474104.17)
+        })
+        // 构造UrlTemplateImageryProvider
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/UrlTemplateImageryProvider.html
+        var imageryProvider = new zondy.cesium.UrlTemplateImageryProvider({
+          url: 'https://api.map.baidu.com/customimage/tile?qt=customimage&x={x}&y={y}&z={z}&udt=20240513&scale=1&ak=E4805d16520de693a3fe707cdc962045&customid=midnight',
+          tilingScheme: tilingScheme
+        })
+        // 加载imageryProvider
+        var layer = viewer.imageryLayers.addImageryProvider(imageryProvider)
+        layer.alpha = 0.5
+      }
+
+      //飞到指定视角
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [116.5258, 41.8054, 20000000]
+        })
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          var layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form
+
+          //切换地图类型
+          form.on('select(tileType)', function (data) {
+            addBaiduMap($('#tileType').val())
+          })
+        })
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //加载百度地图
+        addBaiduMap()
+        //飞到指定视角
+        flyTo()
+        //初始化示例UI操作
+        initUI()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

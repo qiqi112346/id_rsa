@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>平面面积计算</title>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!-- 获取天地图token -->
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view, featureServer, graphicsLayer
+      const {
+        WMTSLayer,
+        GraphicsLayer
+      } = zondy.layer
+      const { Map, Color, Feature } = zondy
+      const { FeatureServer } = zondy.service
+      const { Polygon, Point, GeometryEngine } = zondy.geometry
+      const { SimpleFillSymbol, SimpleLineSymbol } = zondy.symbol
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加天地图
+        addWMTSLayer()
+        // 添加标绘图层
+        addGraphicsLayer()
+        // 计算面积
+        calculateArea()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 计算面积
+      function calculateArea() {
+        // 绘制要计算面积的几何对象
+        const geometry = new Polygon({
+          coordinates: [
+            [
+              [114.15, 30.5],
+              [114.25, 30.5],
+              [114.25, 30.4],
+              [114.15, 30.4],
+              [114.15, 30.5]
+            ]
+          ]
+        })
+        graphicsLayer.add(
+          new Feature({
+            geometry: geometry,
+            symbol: new SimpleFillSymbol({
+              //设置颜色
+              color: new Color(255, 23, 23, 0.5),
+              outline: new SimpleLineSymbol({
+                color: new Color(0, 52, 82, 1),
+                width: 2
+              })
+            })
+          })
+        )
+        const area = GeometryEngine.planarArea(
+          // 要计算面积的几何对象
+          geometry
+        )
+        document.getElementById("area").value = area.toFixed(6)
+      }
+
+      // 添加WMTS图层
+      function addWMTSLayer() {
+        const wmtsLayer = new WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(wmtsLayer)
+        // 图层加载完毕
+        wmtsLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          view.flyTo({
+            center: window.center,
+            zoom: 11
+          })
+        })
+      }
+
+      // 添加标绘图层
+      function addGraphicsLayer() {
+        // 创建Graphics图层对象
+        graphicsLayer = new GraphicsLayer({
+          graphics: []
+        })
+        // 添加图层对象到地图文档中
+        map.add(graphicsLayer)
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <!--  示例UI  -->
+    <div class="layui-panel layui-panel-right" style="width: 335px">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">平面面积：</label>
+                    <div class="layui-input-block" style="margin-bottom: 6px;width: 180px">
+                        <input id="area" value="0" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+  </body>
+</html>

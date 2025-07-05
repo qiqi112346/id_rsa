@@ -1,0 +1,4007 @@
+<header id="page-title" class="page-title">
+    
+        <span class="page-title-main">类名</span>
+        <span class="page-title-sub">VideoMapView</span>
+    
+</header>
+
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="VideoMapView">
+        <a class="href-link" href="#VideoMapView">#</a>
+        
+        <span class="code-name" id="VideoMapView" style="font-size:30px">
+            
+                new VideoMapView<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+            <th style="min-width: 100px;">默认值</th>
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>构造参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>map</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             <a link="Map.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="Map" Map.html>Map</a>
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          ''
+      
+      </td>
+  
+
+  <td class="description last"><p>图层管理器</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>viewId</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             String
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          ''
+      
+      </td>
+  
+
+  <td class="description last"><p>图层容器ID</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <div class="method-parameter columns">
+        <div class="column is-2"><label>绑定事件</label></div>
+        <div class="column is-10">
+            <ul>
+                <li><a href="#地图视图加载完毕事件">地图视图加载完毕事件</a></li>
+            
+                <li><a href="#鼠标点击事件">鼠标点击事件</a></li>
+            
+                <li><a href="#鼠标双击事件">鼠标双击事件</a></li>
+            
+                <li><a href="#鼠标按下事件">鼠标按下事件</a></li>
+            
+                <li><a href="#鼠标抬起事件">鼠标抬起事件</a></li>
+            
+                <li><a href="#鼠标移动事件">鼠标移动事件</a></li>
+            
+                <li><a href="#鼠标移出事件">鼠标移出事件</a></li>
+            
+                <li><a href="#鼠标移入事件">鼠标移入事件</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p class="summary"><h5>支持如下方法：</h5>
+<a href='#useInteriorHTMLVideoElement'>[1、初始化视频地图视图]</a><br/>
+<a href='#pixelCoordToGeoCoord'>[2、像素坐标转地理坐标]</a><br/>
+<a href='#geoCoordToPixelCoord'>[3、地理坐标转像素坐标]</a><br/></p>
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7>创建视频地图视图示例</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// ES5引入方式
+const { Map, VideoMapView } = Zondy
+// ES6引入方式
+import { Map, VideoMapView } from "@mapgis/webclient-common"
+// 新建一个map容器
+const videoMap = new Map()
+videoMapView = new VideoMapView({
+  viewId: 'videoMapView-container',
+  map: videoMap
+})
+// 传入视频标定数据
+videoMapView.init(data)</code></pre>
+    
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">继承关系</h3>
+
+        
+
+
+    <ul>
+        <li>Event</li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='member'>成员变量</h3>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">成员变量概述</h4>
+            <div class="table-container">
+                <table class="params table">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#videoPixelCoordTransforms">videoPixelCoordTransforms</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+<span class="param-type">
+    
+             <a link="VideoPixelCoordTransforms.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="VideoPixelCoordTransforms" VideoPixelCoordTransforms.html>VideoPixelCoordTransforms</a>
+    
+</span>
+
+
+
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>像素坐标与地理坐标转换对象</p></code></td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">成员变量详情</h4>
+            <div class="members">
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">
+    
+             <a link="VideoPixelCoordTransforms.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="VideoPixelCoordTransforms" VideoPixelCoordTransforms.html>VideoPixelCoordTransforms</a>
+    
+</span>
+
+
+
+    </span>
+
+<h4 class="name" id="videoPixelCoordTransforms">
+    <a class="href-link" href="#videoPixelCoordTransforms">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        videoPixelCoordTransforms
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>像素坐标与地理坐标转换对象</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='function'>方法</h3>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法概述</h4>
+            <div class="members">
+            <div class="table-container">
+                <table class="params table">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>返回值类型</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#geoCoordToPixelCoord">geoCoordToPixelCoord</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             <a link="Point.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="Point" Point.html>Point</a>
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>地理坐标转像素坐标，得到的像素坐标会受视频缩放影响</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#init">init</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>初始化视频地图视图<br/>
+支持播放MP4，HLS，RTMP格式视频，支持传入HTMLVideoElement标签，支持传入videojs实例化对象。HLS与RTMP视频流播放时会有延迟。</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#pixelCoordToGeoCoord">pixelCoordToGeoCoord</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             <a link="Point.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="Point" Point.html>Point</a>
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>像素坐标转地理坐标，传入视频地图视图上的像素坐标</p></code></td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法详情</h4>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="geoCoordToPixelCoord">
+        <a class="href-link" href="#geoCoordToPixelCoord">#</a>
+        
+        <span class="code-name" id="geoCoordToPixelCoord" style="font-size:30px">
+            
+                geoCoordToPixelCoord<span class="signature">(geoCoord)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>地理坐标转像素坐标，得到的像素坐标会受视频缩放影响</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>geoCoord</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             <a link="Point.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="Point" Point.html>Point</a>
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>地理坐标,经纬度表示</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>像素坐标,单位为像素值</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             <a link="Point.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="Point" Point.html>Point</a>
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7 id = geoCoordToPixelCoord>地理坐标转像素坐标示例</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// ES5引入方式
+const { Point } = Zondy.Geometry
+// ES6引入方式
+import { Point } from "@mapgis/webclient-common"
+const pixelCoord = videoMapView.geoCoordToPixelCoord(new Point({ coordinates: [longitude, latitude] }))</code></pre>
+    
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="init">
+        <a class="href-link" href="#init">#</a>
+        
+        <span class="code-name" id="init" style="font-size:30px">
+            
+                init<span class="signature">(videoMetaData)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>初始化视频地图视图<br/>
+支持播放MP4，HLS，RTMP格式视频，支持传入HTMLVideoElement标签，支持传入videojs实例化对象。HLS与RTMP视频流播放时会有延迟。</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>videoMetaData</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             <a link="VideoMetaData.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="VideoMetaData" VideoMetaData.html>VideoMetaData</a>
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>视频元数据<br/>
+视频标定数据使用的地图数据与运行时的地图数据要保持一致。如：标定数据是基于天地图的影像数据得到的，则运行时也需要使用天地图的影像数据。<br/>
+参考示例：<br/>
+<a href='#useInteriorHTMLVideoElement'>[1、由视频地图内部自己创建HTMLVideoElement示例]</a><br/></p>
+<p>支持传入外部的video播放器<br/></p>
+<ol>
+<li>
+<p>传入的视频播放器的宽高需要和传给VideoMapView的div容器的宽高保存一致，否则会出现草图编辑区域与视频区域无法重合的问题。<br/></p>
+</li>
+<li>
+<p>视频可进行同比例的缩放，不可拉伸变形。如400*300的视频可以等比例缩放为200*150，不可拉伸为300*300。<br/></p>
+</li>
+<li>
+<p>参考示例：<br/>
+外部video播放器播放MP4格式视频,传HTMLVideoElement。<br/>
+<a href='#playMP4'>[2、传入HTMLVideoElement,视频为MP4格式]</a><br/>
+外部video播放器播放HLS格式视频流，传HTMLVideoElement。<br/>
+<a href='#playHLS'>[3、传入HTMLVideoElement,视频为HLS格式]</a><br/>
+外部video播放器播放RTMP格式视频流，传入videojs对象。<br/>
+<a href='#playRTMP'>[4、传入videojs对象,视频为RTMP格式]</a><br/></p>
+</li>
+</ol></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7 id = useInteriorHTMLVideoElement>1. 由视频地图内部自己创建videoHTML示例</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// ES5引入方式
+const { Map, VideoMapView } = Zondy
+// ES6引入方式
+import { Map, VideoMapView } from "@mapgis/webclient-common"
+// 新建一个map容器
+const videoMap = new Map()
+videoMapView = new VideoMapView({
+  viewId: 'videoMapView-container',
+  map: videoMap
+})
+
+videoMapView.init(mockData)</code></pre>
+    
+
+        <p class="code-caption"><h7 id = playMP4>2. 传入HTMLVideoElement,视频为MP4格式</h7></p>
+    
+    
+        <pre class="prettyprint"><code>const videodom = document.getElementById('videolayer')
+videodom.play()
+// 使用HTMLVideoElement替换视频源
+mockData.videoSource = videodom
+videoMapView.init(mockData)</code></pre>
+    
+
+        <p class="code-caption"><h7 id = playHLS>3. 传入HTMLVideoElement,视频为HLS格式</h7></p>
+    
+    
+        <pre class="prettyprint"><code>const videodom = document.getElementById('videolayer')
+const player = videojs(videodom)
+player.play()
+// 使用HTMLVideoElement替换视频源
+mockData.videoSource = player.el().querySelector('video')
+
+videoMapView.init(mockData)</code></pre>
+    
+
+        <p class="code-caption"><h7 id = playRTMP>4. 传入videojs对象,视频为RTMP格式</h7></p>
+    
+    
+        <pre class="prettyprint"><code>const videodom = document.getElementById('videolayer')
+const player = videojs(videodom)
+player.play()
+// 使用videojs对象替换视频源
+mockData.videoSource = player
+videoMapView.init(mockData)</code></pre>
+    
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="pixelCoordToGeoCoord">
+        <a class="href-link" href="#pixelCoordToGeoCoord">#</a>
+        
+        <span class="code-name" id="pixelCoordToGeoCoord" style="font-size:30px">
+            
+                pixelCoordToGeoCoord<span class="signature">(pixelCoord)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>像素坐标转地理坐标，传入视频地图视图上的像素坐标</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pixelCoord</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             <a link="Point.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="Point" Point.html>Point</a>
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>像素坐标,单位为像素值</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>地理坐标,经纬度表示</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             <a link="Point.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="Point" Point.html>Point</a>
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7 id = pixelCoordToGeoCoord>像素坐标转地理坐标示例</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// ES5引入方式
+const { Point } = Zondy.Geometry
+// ES6引入方式
+import { Point } from "@mapgis/webclient-common"
+const geoCoord = videoMapView.pixelCoordToGeoCoord(new Point({ coordinates: [0, 0] }))</code></pre>
+    
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+        <div class='vertical-section' style='margin-top: 10px'>
+            <h3 id='event'>事件</h3>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">事件概述</h4>
+            <div class="table-container">
+                <table class="params table">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a  href="#地图视图加载完毕事件">地图视图加载完毕事件</a></code></td>
+                                <td class="name"><code>地图视图加载完毕事件</code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a  href="#鼠标双击事件">鼠标双击事件</a></code></td>
+                                <td class="name"><code>鼠标双击事件</code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a  href="#鼠标抬起事件">鼠标抬起事件</a></code></td>
+                                <td class="name"><code>鼠标抬起事件</code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a  href="#鼠标按下事件">鼠标按下事件</a></code></td>
+                                <td class="name"><code>鼠标按下事件</code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a  href="#鼠标点击事件">鼠标点击事件</a></code></td>
+                                <td class="name"><code>鼠标点击事件</code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a  href="#鼠标移入事件">鼠标移入事件</a></code></td>
+                                <td class="name"><code>鼠标移入事件</code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a  href="#鼠标移出事件">鼠标移出事件</a></code></td>
+                                <td class="name"><code>鼠标移出事件</code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a  href="#鼠标移动事件">鼠标移动事件</a></code></td>
+                                <td class="name"><code>鼠标移动事件</code></td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">事件详情</h4>
+            <div class="members">
+            
+                <div class="member">
+                    
+
+
+    
+    <h4 class="name" id="event:%E5%9C%B0%E5%9B%BE%E8%A7%86%E5%9B%BE%E5%8A%A0%E8%BD%BD%E5%AE%8C%E6%AF%95%E4%BA%8B%E4%BB%B6">
+        <a class="href-link" href="#event:%E5%9C%B0%E5%9B%BE%E8%A7%86%E5%9B%BE%E5%8A%A0%E8%BD%BD%E5%AE%8C%E6%AF%95%E4%BA%8B%E4%BB%B6">#</a>
+        
+        <span class="code-name" id="地图视图加载完毕事件" style="font-size:30px">
+            
+                地图视图加载完毕事件
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">属性:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>event</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>事件对象</p></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7>视频地图视图加载完毕事件</h7></p>
+    
+    
+        <pre class="prettyprint"><code>view.on('loaded', (event) => {
+  console.log("视频地图加载完成事件:", event)
+})</code></pre>
+    
+
+
+
+                </div>
+            
+                <div class="member">
+                    
+
+
+    
+    <h4 class="name" id="event:%E9%BC%A0%E6%A0%87%E5%8F%8C%E5%87%BB%E4%BA%8B%E4%BB%B6">
+        <a class="href-link" href="#event:%E9%BC%A0%E6%A0%87%E5%8F%8C%E5%87%BB%E4%BA%8B%E4%BB%B6">#</a>
+        
+        <span class="code-name" id="鼠标双击事件" style="font-size:30px">
+            
+                鼠标双击事件
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">属性:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>event</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>事件对象</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>type</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             <a link="ViewEventType.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="ViewEventType" global.html#ViewEventType>ViewEventType</a>
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'double-click'
+        
+        </td>
+    
+
+    <td class="description last"><p>事件类型</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>absolutePointer</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标在视图的绝对位置</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>pointer</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标在视图的像素位置</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>target</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>视图上被点击到的几何图形</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>isClick</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Boolean
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            false
+        
+        </td>
+    
+
+    <td class="description last"><p>是否是点击事件</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>e</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标原事件对象</p></td>
+</tr>
+
+  
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7>鼠标双击事件</h7></p>
+    
+    
+        <pre class="prettyprint"><code>view.on('double-click', (event) => {
+  console.log("双击事件:", event)
+})</code></pre>
+    
+
+
+
+                </div>
+            
+                <div class="member">
+                    
+
+
+    
+    <h4 class="name" id="event:%E9%BC%A0%E6%A0%87%E6%8A%AC%E8%B5%B7%E4%BA%8B%E4%BB%B6">
+        <a class="href-link" href="#event:%E9%BC%A0%E6%A0%87%E6%8A%AC%E8%B5%B7%E4%BA%8B%E4%BB%B6">#</a>
+        
+        <span class="code-name" id="鼠标抬起事件" style="font-size:30px">
+            
+                鼠标抬起事件
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">属性:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>event</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>事件对象</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>type</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             <a link="ViewEventType.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="ViewEventType" global.html#ViewEventType>ViewEventType</a>
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'mouse-up'
+        
+        </td>
+    
+
+    <td class="description last"><p>事件类型</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>absolutePointer</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标在视图的绝对位置</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>pointer</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标在视图的像素位置</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>target</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>视图上被点击到的几何图形</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>isClick</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Boolean
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            false
+        
+        </td>
+    
+
+    <td class="description last"><p>是否是点击事件</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>e</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标原事件对象</p></td>
+</tr>
+
+  
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7>鼠标抬起事件</h7></p>
+    
+    
+        <pre class="prettyprint"><code>view.on('mouse-up', (event) => {
+  console.log("抬起事件:", event)
+})</code></pre>
+    
+
+
+
+                </div>
+            
+                <div class="member">
+                    
+
+
+    
+    <h4 class="name" id="event:%E9%BC%A0%E6%A0%87%E6%8C%89%E4%B8%8B%E4%BA%8B%E4%BB%B6">
+        <a class="href-link" href="#event:%E9%BC%A0%E6%A0%87%E6%8C%89%E4%B8%8B%E4%BA%8B%E4%BB%B6">#</a>
+        
+        <span class="code-name" id="鼠标按下事件" style="font-size:30px">
+            
+                鼠标按下事件
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">属性:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>event</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>事件对象</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>type</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             <a link="ViewEventType.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="ViewEventType" global.html#ViewEventType>ViewEventType</a>
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'mouse-down'
+        
+        </td>
+    
+
+    <td class="description last"><p>事件类型</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>absolutePointer</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标在视图的绝对位置</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>pointer</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标在视图的像素位置</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>target</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>视图上被点击到的几何图形</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>isClick</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Boolean
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            false
+        
+        </td>
+    
+
+    <td class="description last"><p>是否是点击事件</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>e</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标原事件对象</p></td>
+</tr>
+
+  
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7>鼠标按下事件</h7></p>
+    
+    
+        <pre class="prettyprint"><code>view.on('mouse-down', (event) => {
+  console.log("按下事件:", event)
+})</code></pre>
+    
+
+
+
+                </div>
+            
+                <div class="member">
+                    
+
+
+    
+    <h4 class="name" id="event:%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB%E4%BA%8B%E4%BB%B6">
+        <a class="href-link" href="#event:%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB%E4%BA%8B%E4%BB%B6">#</a>
+        
+        <span class="code-name" id="鼠标点击事件" style="font-size:30px">
+            
+                鼠标点击事件
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">属性:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>event</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>事件对象</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>type</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             <a link="ViewEventType.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="ViewEventType" global.html#ViewEventType>ViewEventType</a>
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'click'
+        
+        </td>
+    
+
+    <td class="description last"><p>事件类型</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>absolutePointer</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标在视图的绝对位置</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>pointer</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标在视图的像素位置</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>target</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>视图上被点击到的几何图形</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>isClick</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Boolean
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            false
+        
+        </td>
+    
+
+    <td class="description last"><p>是否是点击事件</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>e</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标原事件对象</p></td>
+</tr>
+
+  
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7>鼠标点击事件</h7></p>
+    
+    
+        <pre class="prettyprint"><code>view.on('click', (event) => {
+  console.log("点击事件:", event)
+})</code></pre>
+    
+
+
+
+                </div>
+            
+                <div class="member">
+                    
+
+
+    
+    <h4 class="name" id="event:%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%85%A5%E4%BA%8B%E4%BB%B6">
+        <a class="href-link" href="#event:%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%85%A5%E4%BA%8B%E4%BB%B6">#</a>
+        
+        <span class="code-name" id="鼠标移入事件" style="font-size:30px">
+            
+                鼠标移入事件
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">属性:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>event</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>事件对象</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>type</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             <a link="ViewEventType.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="ViewEventType" global.html#ViewEventType>ViewEventType</a>
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'mouse-over'
+        
+        </td>
+    
+
+    <td class="description last"><p>事件类型</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>target</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>视图上的几何图形</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>e</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标原事件对象</p></td>
+</tr>
+
+  
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7>鼠标移入事件</h7></p>
+    
+    
+        <pre class="prettyprint"><code>view.on('mouse-over', (event) => {
+  console.log("移入事件:", event)
+})</code></pre>
+    
+
+
+
+                </div>
+            
+                <div class="member">
+                    
+
+
+    
+    <h4 class="name" id="event:%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%87%BA%E4%BA%8B%E4%BB%B6">
+        <a class="href-link" href="#event:%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%87%BA%E4%BA%8B%E4%BB%B6">#</a>
+        
+        <span class="code-name" id="鼠标移出事件" style="font-size:30px">
+            
+                鼠标移出事件
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">属性:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>event</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>事件对象</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>type</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             <a link="ViewEventType.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="ViewEventType" global.html#ViewEventType>ViewEventType</a>
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'mouse-out'
+        
+        </td>
+    
+
+    <td class="description last"><p>事件类型</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>target</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>视图上的几何图形</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>e</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标原事件对象</p></td>
+</tr>
+
+  
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7>鼠标移出事件</h7></p>
+    
+    
+        <pre class="prettyprint"><code>view.on('mouse-out', (event) => {
+  console.log("移出事件:", event)
+})</code></pre>
+    
+
+
+
+                </div>
+            
+                <div class="member">
+                    
+
+
+    
+    <h4 class="name" id="event:%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%8A%A8%E4%BA%8B%E4%BB%B6">
+        <a class="href-link" href="#event:%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%8A%A8%E4%BA%8B%E4%BB%B6">#</a>
+        
+        <span class="code-name" id="鼠标移动事件" style="font-size:30px">
+            
+                鼠标移动事件
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">属性:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>event</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>事件对象</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>type</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             <a link="ViewEventType.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="ViewEventType" global.html#ViewEventType>ViewEventType</a>
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            'mouse-move'
+        
+        </td>
+    
+
+    <td class="description last"><p>事件类型</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>absolutePointer</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标在视图的绝对位置</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>pointer</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标在视图的像素位置</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>target</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>视图上的几何图形</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>isClick</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Boolean
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            false
+        
+        </td>
+    
+
+    <td class="description last"><p>是否是点击事件</p></td>
+</tr>
+
+  
+      
+<tr class="deep-level-1">
+    
+        <td class="name"><code>e</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last"><p>鼠标原事件对象</p></td>
+</tr>
+
+  
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7>鼠标移动事件</h7></p>
+    
+    
+        <pre class="prettyprint"><code>view.on('mouse-move', (event) => {
+  console.log("移动事件:", event)
+})</code></pre>
+    
+
+
+
+                </div>
+            
+            </div>
+        </div>
+    
+</article>
+
+</section>

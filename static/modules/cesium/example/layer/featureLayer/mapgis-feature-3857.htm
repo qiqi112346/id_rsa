@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>MapGIS要素服务-3857</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+
+      //加载FeatureServer服务数据
+      function addIGSFeatureLayer() {
+        let renderer = getRenderer()
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/IGSFeatureLayer.html
+        let igsFeatureLayer = new zondy.layer.IGSFeatureLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省3857/FeatureServer',
+          sublayerId: 8,
+          // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SimpleRenderer.html
+          renderer: new zondy.renderer.SimpleRenderer({
+            // 因为该数据的几何类型为区，因此设置区样式
+            // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SimpleMarkerSymbol.html
+            symbol: new zondy.symbol.SimpleMarkerSymbol({
+              // 半径
+              size: 20,
+              // 填充颜色
+              color: new zondy.Color(0, 0, 255)
+            })
+          })
+        })
+        map.add(igsFeatureLayer)
+
+        // 图层加载完毕
+        igsFeatureLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          flyTo()
+        })
+      }
+
+      function getRenderer() {
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/UniqueValueRenderer.html
+        return new zondy.renderer.UniqueValueRenderer({
+          field: 'NAME',
+          // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SimpleFillSymbol.html
+          defaultSymbol: new zondy.symbol.SimpleFillSymbol({
+            //线符号颜色
+            color: '#6A3D9B99',
+            // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SimpleLineSymbol.html
+            outline: new zondy.symbol.SimpleLineSymbol({
+              color: '#6A3D9B',
+              width: 2
+            })
+          }),
+          uniqueValueInfos: [
+            {
+              value: '襄阳市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#6A3D9B99',
+                outline: {
+                  color: '#6A3D9B',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '武汉市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#9FC5DA99',
+                outline: {
+                  color: '#9FC5DA',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '黄冈市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#82F7FE99',
+                outline: {
+                  color: '#82F7FE',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '黄石市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#8287F799',
+                outline: {
+                  color: '#8287F7',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '宜昌市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#4CA12E99',
+                outline: {
+                  color: '#4CA12E',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '孝感市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#B2DF8A99',
+                outline: {
+                  color: '#B2DF8A',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '十堰市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#F17D3099',
+                outline: {
+                  color: '#F17D30',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '荆州市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#E4432D99',
+                outline: {
+                  color: '#E4432D',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '荆门市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#F2999899',
+                outline: {
+                  color: '#F29998',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '天门市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#F8BF6F99',
+                outline: {
+                  color: '#F8BF6F',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '仙桃市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#A6CEE399',
+                outline: {
+                  color: '#A6CEE3',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '咸宁市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#2578B499',
+                outline: {
+                  color: '#2578B4',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '潜江市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#78B3DE99',
+                outline: {
+                  color: '#78B3DE',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '鄂州市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#F2225F99',
+                outline: {
+                  color: '#F2225F',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '随州市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#8E22FA99',
+                outline: {
+                  color: '#8E22FA',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '恩施市',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#CAB2D799',
+                outline: {
+                  color: '#CAB2D7',
+                  width: 2.0
+                }
+              })
+            },
+            {
+              value: '神农架林区',
+              symbol: new zondy.symbol.SimpleFillSymbol({
+                color: '#ABB71999',
+                outline: {
+                  color: '#ABB719',
+                  width: 2.0
+                }
+              })
+            }
+          ]
+        })
+      }
+
+      function flyTo() {
+        sceneView.flyTo({
+          center: [112.21, 31.1, 650000]
+        })
+      }
+
+      // 蓝黑版深色地图
+      function addBlueImage() {
+        let blueImage = new zondy.cesium.UrlTemplateImageryProvider({
+          url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
+          tilingScheme: new Cesium.WebMercatorTilingScheme(),
+          maximumLevel: 18
+        })
+        viewer.imageryLayers.addImageryProvider(blueImage)
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //蓝黑版深色地图
+        addBlueImage()
+        //加载FeatureServer服务数据
+        addIGSFeatureLayer()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

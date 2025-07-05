@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>视图事件</title>
+    <!-- 引入地图引擎库 -->
+    <script
+      include="leaflet,mapboxgl"
+      src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"
+    ></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/analyse.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+      let map, view, eventHandler, eventType
+      //取得jquery对象
+      let $ = layui.$
+      const { IGSTileLayer } = zondy.layer
+      const { ViewEventType } = zondy.enum
+
+      // 注册视窗大小变化事件
+      function resizeEvent() {
+        if (eventHandler) {
+          offEvent(eventType, eventHandler)
+        }
+        const resizeHandler = function (event) {
+          console.log('注册视窗大小变化事件:', event)
+          console.log('变化前的视窗宽度，单位px:', event.oldWidth)
+          console.log('变化前的视窗高度，单位px:', event.oldHeight)
+          console.log('变化后的视窗宽度，单位px:', event.width)
+          console.log('变化后的视窗高度，单位px:', event.height)
+          layer.msg(
+            `<h4>视窗大小变化事件</h4>变化前视窗宽度：${event.oldWidth}px，变化前视窗高度：${event.oldHeight}px<br>变化后视窗宽度：${event.width}px，变化后视窗高度：${event.height}px`,
+            { time: 5000 }
+          )
+          eventType = event.type
+        }
+        eventHandler = resizeHandler
+        view.on('resize', resizeHandler)
+      }
+
+      // 注册地图视野改变事件
+      function viewChangeEvent() {
+        if (eventHandler) {
+          offEvent(eventType, eventHandler)
+        }
+        const viewChangeHandler = function (event) {
+          console.log('注册地图视野改变事件:', event)
+          console.log('事件地图视图对象:', event.mapView)
+          console.log('事件地图比例尺:', event.scale)
+          console.log('事件地图层级:', event.zoom)
+          console.log('事件地图视图中心:', event.center)
+          layer.msg(
+            `<h4>地图视野改变事件</h4>当前地图层级：${event.zoom}<br>地图视图中心经度坐标：${event.center.coordinates[0]}<br>地图视图中心纬度坐标：${event.center.coordinates[1]}`,
+            { time: 5000 }
+          )
+          eventType = event.type
+        }
+        eventHandler = viewChangeHandler
+        view.on('view-change', viewChangeHandler)
+      }
+
+      // 注销地图事件
+      function offEvent(eventType, eventHandler) {
+        view.off(eventType, eventHandler)
+        eventType = undefined
+        eventHandler = undefined
+      }
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加瓦片图层
+        addIGSTileLayer()
+        // 初始化示例UI操作
+        initUI()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new zondy.Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+        view.on('loaded', (event) => {
+          console.log('地图视图加载完毕：', event)
+          layer.msg(`地图视图加载完毕`, { time: 5000 })
+        })
+      }
+
+      // 添加瓦片图层
+      function addIGSTileLayer() {
+        const igsTileLayer = new IGSTileLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        })
+        map.add(igsTileLayer)
+        igsTileLayer.on('layerview-created', (result) => {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      function initUI() {
+        layui.use(function () {
+          var layer = layui.layer,
+            tips
+          $('#resize').on({
+            mouseenter: function () {
+              var that = this
+              tips = layer.tips(
+                "<span style='font-size:14px'>点击按钮注册事件后，鼠标拖动视图容器改变视图容器大小后触发</span>",
+                that,
+                {
+                  tips: [3, '#2C2C2C'],
+                  time: 0,
+                  area: 'auto',
+                  maxWidth: 200
+                }
+              )
+            },
+            mouseleave: function () {
+              layer.close(tips)
+            }
+          })
+        })
+      }
+    </script>
+    <style>
+      .layui-panel-right {
+        position: absolute;
+        top: 10px;
+        right: 35px;
+        color: #e1e1e1;
+        background-color: rgb(44, 44, 44);
+        border: none;
+        padding: 10px;
+        width: auto;
+        z-index: 999;
+      }
+      .layui-btn-normal {
+        margin: 5px !important;
+      }
+    </style>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <div class="layui-panel layui-panel-right">
+      <button
+        id="resize"
+        type="button"
+        class="layui-btn layui-btn-sm layui-btn-normal"
+        onclick="resizeEvent()"
+      >
+        注册地图大小变化事件
+      </button>
+      <button
+        type="button"
+        class="layui-btn layui-btn-sm layui-btn-normal"
+        onclick="viewChangeEvent()"
+      >
+        注册地图视野改变事件
+      </button>
+    </div>
+  </body>
+</html>

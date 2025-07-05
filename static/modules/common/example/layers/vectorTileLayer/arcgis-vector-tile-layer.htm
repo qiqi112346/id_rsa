@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ArcGIS矢量瓦片图层</title>
+    <!--mapboxgl库，矢量瓦片需要依赖该库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.css"/>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view, layer, layerOpacity = 1
+      const {
+        ArcGISVectorTileLayer
+      } = zondy.layer
+      const { FetchRequest } = zondy.service
+      const { Map } = zondy
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 初始化示例UI
+        initUI()
+        // 添加瓦片图层
+        addLayer('VectorTileServer')
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+        if(localStorage.getItem('engine-type') === 'mapboxgl'){
+          view = new zondy.mapboxgl.MapView({
+            viewId: 'mapgis-viewer',
+            map: map
+          })
+        }
+      }
+
+      // 添加矢量瓦片图层
+      function addLayer(type) {
+        // 如果layer存在，先删除图层
+        if (layer) {
+          deleteLayer()
+        }
+        // 根据类型创建矢量瓦片图层
+        switch (type) {
+          case 'VectorTileServer':
+          default:
+            layer = new ArcGISVectorTileLayer({
+              // 基地址
+              url: 'https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer'
+            })
+            break
+          case 'JSON':
+            layer = new ArcGISVectorTileLayer({
+              // 矢量瓦片样式文件地址
+              url: 'https://jsapi.maps.arcgis.com/sharing/rest/content/items/75f4dfdff19e445395653121a95a85db/resources/styles/root.json'
+            })
+            break
+          case 'Style':
+            FetchRequest.commit('get', 'http://webclient.smaryun.com:8200/VectorTile/湖北省4326矢量瓦片/湖北省4326矢量瓦片_style_192.168.82.91_8089.json', {}).then((result) => {
+              return result.json().then((styleJSON) => {
+                console.log('样式对象请求完毕:', styleJSON)
+                layer = new ArcGISVectorTileLayer({
+                  // 矢量瓦片样式对象
+                  style: styleJSON
+                })
+              })
+            })
+            break
+        }
+        // 添加图层
+        map.add(layer)
+        // 图层添加完毕后，跳转到图层范围内
+        layer.on('layerview-created', (result) => {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      // 删除图层
+      function deleteLayer() {
+        map.remove(layer)
+      }
+
+      // 显隐图层
+      function toggleLayer() {
+        layer.visible = !layer.visible
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          layui.slider.render({
+            elem: "#moveStep",
+            value: 100,
+            min: 0,
+            max: 100,
+            step: 1,
+            theme: 'rgb(21, 134, 238)',
+            //自定义提示文本
+            setTips: function (value) {
+              layerOpacity = value / 100
+              return value + '%';
+            },
+            change: function (value) {
+              layer.opacity = layerOpacity
+            }
+          });
+
+          //切换加载类型
+          layui.form.on('select(layerType)', function (data) {
+            // 线删除图层
+            deleteLayer()
+            // 重新加载图层
+            addLayer(data.value)
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <!--  示例UI  -->
+    <div class="layui-panel layui-panel-right vector-tile-layer-panel">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">加载方式</label>
+                <div class="layui-input-block layui-input-block-select">
+                    <select id="layerType" name="layerType" lay-filter="layerType">
+                        <option value="VectorTileServer">矢量瓦片服务</option>
+                        <option value="JSON">加载样式文件</option>
+                        <option value="Style">样式对象</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 100px;">图层透明度</label>
+                <div class="layui-input-block sample-slider" style="width: 320px;">
+                    <div id="moveStep"></div>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="layui-form-item">
+                <button type="button" class="layui-btn" onclick="addLayer()">添加图层</button>
+                <button type="button" class="layui-btn" onclick="deleteLayer()" style="margin-left: 6px">删除图层</button>
+                <button type="button" class="layui-btn" onclick="toggleLayer()" style="margin-left: 6px">显隐图层</button>
+
+            </div>
+        </form>
+    </div>
+  </body>
+</html>

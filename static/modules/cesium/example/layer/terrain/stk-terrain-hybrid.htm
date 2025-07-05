@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>STK地形缓存--混合接口</title>
+  <!--加载不同版本Cesium库-->
+  <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+  <!--plugin脚本库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+  <script>
+    'use strict'
+    //定义三维视图的主要类
+    let map, sceneView, viewer
+    const { initializeOptions } = zondy.cesium.util
+
+    // 添加地形缓存图层
+    async function addTerrainCacheLayer() {
+      // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/TerrainCacheLayer.html
+      let terrainCacheLayer = new zondy.layer.TerrainCacheLayer({
+        // 服务基地址
+        url: 'http://webclient.smaryun.com:8200/3DData/TerrainCache/HubeiTerrain/'
+      })
+      // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/MapGISMapServerImageryProvider.html
+      const options = initializeOptions(terrainCacheLayer, viewer)
+      // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/CesiumTerrainProvider.html
+      viewer.scene.terrainProvider = await zondy.cesium.CesiumTerrainProvider.fromUrl(options.url, options)
+    }
+
+    //加载天地图
+    function addTDT() {
+      let TDTLayer = new zondy.layer.WMTSLayer({
+        // 加载经纬度的影像地图
+        url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+        // 天地图必须加token，且token名为tk
+        tokenKey: 'tk',
+        // token请在天地图官网申请
+        tokenValue: getTDTToken()
+      })
+      map.add(TDTLayer)
+    }
+
+    //初始化球体
+    function initViewer() {
+      //初始化图层管理容器
+      map = new zondy.Map()
+      //初始化地图视图对象
+      sceneView = new zondy.cesium.SceneView({
+        //视图id
+        viewId: 'mapgis-3d-viewer',
+        //图层管理容器
+        map: map
+      })
+      viewer = sceneView.getInnerView()
+    }
+
+    // 飞到指定位置
+    function flyTo() {
+      viewer.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(110.31, 31.48, 3000),
+        orientation: {
+          heading: Cesium.Math.toRadians(60), //方位角
+          pitch: Cesium.Math.toRadians(-15), //俯仰角
+          roll: 0 //翻滚角
+        }
+      })
+    }
+
+    //地图初始化函数
+    function init() {
+      //初始化球体
+      initViewer()
+      //创建切换Cesium版本的按钮
+      createChangeTab()
+      //加载天地图
+      addTDT()
+      //添加STK地形
+      addTerrainCacheLayer()
+      //飞到指定位置
+      flyTo()
+    }
+  </script>
+</head>
+
+<body onload="init()">
+  <div id="mapgis-3d-viewer"></div>
+</body>
+</html>

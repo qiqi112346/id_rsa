@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>要素拾取</title>
+    <!-- 引入地图引擎库 -->
+    <script
+      include="leaflet,mapboxgl"
+      src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"
+    ></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/analyse.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view
+      const { IGSTileLayer, IGSFeatureLayer } = zondy.layer
+      const { Map, Color } = zondy
+      const { PictureFormat } = zondy.enum
+      const { SimpleRenderer } = zondy.renderer
+      const { SimpleMarkerSymbol, SimpleLineSymbol } = zondy.symbol
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加瓦片图层
+        addIGSTileLayer()
+        // 添加要素图层
+        addIGSFeatureLayer()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+        // 设置图元检测
+        initHitTest()
+      }
+
+      // 添加瓦片图层
+      function addIGSTileLayer() {
+        const igsTileLayer = new IGSTileLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        })
+        map.add(igsTileLayer)
+        igsTileLayer.on('layerview-created', (result) => {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      // 添加要素图层
+      function addIGSFeatureLayer() {
+        // 创建点要素图层
+        const featureLayerPoint = new IGSFeatureLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer',
+          // 指定图层id
+          sublayerId: 5,
+          // 设置渲染样式-统一专题图
+          renderer: new SimpleRenderer({
+            // 因为该数据的几何类型为区，因此设置区样式
+            symbol: new SimpleMarkerSymbol({
+              // 半径
+              size: 20,
+              // 填充颜色
+              color: new Color(211, 112, 34, 0.5),
+              // 外边线样式
+              outline: new SimpleLineSymbol({
+                // 外边线颜色
+                color: new Color(221, 0, 123),
+                // 外边线宽度
+                width: 2
+              })
+            })
+          })
+        })
+        // 添加要素图层
+        map.add(featureLayerPoint)
+      }
+
+      // 设置图元检测
+      function initHitTest() {
+        view.on('click', function (event) {
+          const result = view.hitTest({
+            x: event.x,
+            y: event.y
+          })
+          if (result.length > 0) {
+            console.log('点击的要素：', result)
+            const title = '拾取结果'
+            let content = ``
+            let location = null
+            result.forEach((item) => {
+              content =
+                content +
+                `<div>
+                <div>要素ID：${item.graphic.id}</div>
+                <div>类型：${
+                  item.graphic.geometry.type
+                } ; 坐标：${item.mapPoint.coordinates.toString()}
+              </div>`
+              location = item.mapPoint
+            })
+            // 弹窗展示hitTest结果
+            openPopup(title, stringToDom(content), location)
+          }
+        })
+      }
+
+      // 字符串转dom
+      function stringToDom(arg) {
+        const objE = document.createElement('div')
+        objE.innerHTML = arg
+        return objE.childNodes
+      }
+      // 打开视图弹窗
+      function openPopup(title, content, location) {
+        const popupObj = {
+          title: title,
+          content: content,
+          location: location,
+          alignment: 'bottom-center'
+        }
+        view.popup.open(popupObj)
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+  </body>
+</html>

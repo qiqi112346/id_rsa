@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>地图图片图层 - 4326</title>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+      let map, view, layer, layerOpacity = 1,
+        renderMode = 'tile', httpMethod = 'GET',
+        sublayers = undefined, clipGeometry = undefined, geometryFilter = undefined,
+        definitionExpression = undefined, filterLayerId = undefined,
+        url = 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/MapServer'
+      const {
+        IGSMapImageLayer
+      } = zondy.layer
+      const { SimpleRenderer, UniqueValueRenderer, ClassBreakRenderer } = zondy.renderer
+      const { SimpleLineSymbol, SimpleFillSymbol, PictureMarkerSymbol, PictureFillSymbol } =
+        zondy.symbol
+      const { Polygon, MultiPolygon, Extent, Circle } = zondy.geometry
+      const { Map, SpatialReference, Color } = zondy
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 初始化示例UI
+        initUI()
+        // 添加瓦片图层
+        addLayer()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 添加瓦片图层
+      function addLayer() {
+        // 如果layer存在，先删除图层
+        if (layer) {
+          deleteLayer()
+        }
+        // 创建图层，如果是IGS1.0版本的服务请在初始化时指的图层坐标系
+        layer = new IGSMapImageLayer({
+          // 服务基地址
+          url: url,
+          // 图层透明度
+          opacity: layerOpacity
+          // 图层坐标系，默认从服务器（IGS2.0）读取，无需用户设置，IGS1.0服务无法提供坐标系信息，请在图层初始化时指定参考系
+          // spatialReference: new SpatialReference({
+          //   wkid: 4326
+          // })
+        })
+        // 添加图层
+        map.add(layer)
+        // 图层添加完毕后，跳转到图层范围内
+        layer.on('layerview-created', (result) => {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      // 获取图层构造参数
+      function getParams() {
+        // 设置图层初始化参数
+        let options = {
+          // 服务基地址
+          url: url,
+          // 图层透明度
+          opacity: layerOpacity
+        }
+        // 获取token名
+        const tokenKey = document.getElementById('token-key').value
+        // 获取token值
+        const tokenValue = document.getElementById('token-value').value
+        // token存在
+        if (tokenKey && tokenValue) {
+          // 设置token名
+          options.tokenKey = tokenKey
+          // 设置token值
+          options.tokenValue = tokenValue
+        }
+        // 获取请求头
+        let headers = document.getElementById('headers').value
+        // 请求头存在
+        if (headers) {
+          headers = JSON.parse(String(headers))
+          if (headers instanceof Object && !(headers instanceof Array)) {
+            // 设置请求头
+            options.headers = headers
+            // 模式变为post请求模式
+            options.httpMethod = 'POST'
+          }
+        }
+        // 渲染模式
+        options.renderMode = renderMode
+        // 请求模式
+        options.httpMethod = httpMethod
+        // 设置子图层参数，如专题图信息等
+        options.sublayers = sublayers
+        // 客户端裁剪参数
+        options.clippingArea = clipGeometry
+        // 空间过滤，示例中裁剪第一个子图层
+        if (geometryFilter) {
+          if (options.sublayers && options.sublayers.length > 0) {
+            options.sublayers[0].geometryFilter = geometryFilter
+          } else {
+            options.sublayers = [{
+              // 裁剪id为0的子图层
+              id: '0',
+              // 裁剪参数
+              geometryFilter: geometryFilter
+            }]
+          }
+        }
+        // 设置要素过滤参数
+        filterLayerId = document.getElementById('filterLayerId').value
+        definitionExpression = document.getElementById('definitionExpression').value
+        if (filterLayerId && definitionExpression) {
+          if (options.sublayers && options.sublayers.length > 0) {
+            for (let i = 0; i < options.sublayers.length; i++) {
+              if (options.sublayers[i].id === filterLayerId) {
+                options.sublayers[i].definitionExpression = definitionExpression
+              }
+            }
+          } else {
+            options.sublayers = [{
+              id: filterLayerId,
+              definitionExpression: definitionExpression
+            }]
+          }
+        }
+        console.log("options:", options)
+        return options
+      }
+
+      // 设置单值专题图参数
+      function setUniqueRenderer() {
+        // 请求变为post
+        httpMethod = 'POST'
+        sublayers = [{
+          id: '0',
+          renderer: new UniqueValueRenderer({
+            //字段名
+            field: 'NAME',
+            // 默认样式
+            defaultSymbol: new SimpleFillSymbol({
+              // 设置填充颜色
+              color: 'rgba(102,159,118,0.5)',
+              // 外边线颜色
+              outline: new SimpleLineSymbol({
+                // 设置填充颜色
+                color: 'rgba(58,91,67,0.1)',
+                // 外边线宽度
+                width: 3,
+                // 线样式,默认'solid',可选"dash"|"dash-dot"|"dot"|"long-dash"|"long-dash-dot"|"long-dash-dot-dot"|"none"|"short-dash"|"short-dash-dot"|"short-dash-dot-dot"|"short-dot"|"solid"
+                style: 'solid'
+              }),
+              // 填充样式，默认"solid",可选"backward-diagonal"|"cross"|"diagonal-cross"|"forward-diagonal"|"horizontal"|"none"|"solid"|"vertical"
+              style: 'solid'
+            }),
+            // 字段表达式信息
+            //单值专题图字段样式
+            uniqueValueInfos: [
+              {
+                //指定字段值1
+                value: '武汉市',
+                // 是否可视化单值信息
+                visible: true,
+                // 匹配到该值后的样式
+                symbol: new PictureFillSymbol({
+                  // 设置图片数据
+                  url: 'http://webclient.smaryun.com/static/assets/logo/mapgis_logo_blue.png',
+                  // 简单填充符号宽度，默认为12，单位像素
+                  width: 12,
+                  // 简单填充符号高度，默认为12，单位像素
+                  height: 12,
+                  // x方向偏移，默认为0，单位像素
+                  xoffset: 0,
+                  // y方向偏移，默认为0，单位像素
+                  yoffset: 0,
+                  // x方向拉伸，取值在0-1之间
+                  xscale: 1,
+                  // y方向拉伸，取值在0-1之间
+                  yscale: 1
+                })
+              },
+              {
+                //指定字段值2
+                value: '天门市',
+                // 是否可视化单值信息
+                visible: true,
+                //匹配到该值后的样式
+                symbol: new SimpleFillSymbol({
+                  // 设置填充颜色
+                  color: 'rgba(220,203,35,0.5)',
+                  // 外边线颜色
+                  outline: new SimpleLineSymbol({
+                    // 设置填充颜色
+                    color: 'rgba(255,128,0,0.5)',
+                    // 外边线宽度
+                    width: 3,
+                    // 线样式,默认'solid',可选"dash"|"dash-dot"|"dot"|"long-dash"|"long-dash-dot"|"long-dash-dot-dot"|"none"|"short-dash"|"short-dash-dot"|"short-dash-dot-dot"|"short-dot"|"solid"
+                    style: 'solid'
+                  }),
+                  // 填充样式，默认"solid",可选"backward-diagonal"|"cross"|"diagonal-cross"|"forward-diagonal"|"horizontal"|"none"|"solid"|"vertical"
+                  style: 'solid'
+                })
+              }
+            ]
+          })
+        }]
+      }
+
+      // 设置统一专题图参数
+      function setSimpleRenderer() {
+        sublayers = [{
+          id: '0',
+          renderer: new SimpleRenderer({
+            symbol: new SimpleFillSymbol({
+              color: '#2578B499',
+              outline: new SimpleLineSymbol({
+                color: '#2578B4',
+                width: 1
+              })
+            })
+          })
+        }]
+      }
+
+      // 设置分段专题图参数
+      function setClassBreakRenderer() {
+        sublayers = [{
+          id: '0',
+          renderer: new ClassBreakRenderer({
+            field: 'GDP2016',
+            //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+            defaultSymbol: new PictureFillSymbol({
+              // 设置图片数据
+              url: 'http://webclient.smaryun.com/static/assets/logo/mapgis_logo_blue.png',
+              // 简单填充符号宽度，默认为12，单位像素
+              width: 12,
+              // 简单填充符号高度，默认为12，单位像素
+              height: 12,
+              // x方向偏移，默认为0，单位像素
+              xoffset: 0,
+              // y方向偏移，默认为0，单位像素
+              yoffset: 0,
+              // x方向拉伸，取值在0-1之间
+              xscale: 1,
+              // y方向拉伸，取值在0-1之间
+              yscale: 1
+            }),
+            //分段专题图字段样式
+            classBreakInfos: [
+              {
+                // 分段最大值
+                minValue: 0,
+                // 分段最大值
+                maxValue: 100,
+                //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+                symbol: new PictureFillSymbol({
+                  // 设置图片数据
+                  url: 'http://webclient.smaryun.com/static/assets/logo/mapgis_logo_blue.png',
+                  // 简单填充符号宽度，默认为12，单位像素
+                  width: 12,
+                  // 简单填充符号高度，默认为12，单位像素
+                  height: 12,
+                  // x方向偏移，默认为0，单位像素
+                  xoffset: 0,
+                  // y方向偏移，默认为0，单位像素
+                  yoffset: 0,
+                  // x方向拉伸，取值在0-1之间
+                  xscale: 1,
+                  // y方向拉伸，取值在0-1之间
+                  yscale: 1
+                })
+              },
+              {
+                // 分段最小值
+                minValue: 100,
+                // 分段最大值
+                maxValue: 200,
+                //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+                symbol: new SimpleFillSymbol({
+                  // 填充符号颜色
+                  color: new Color(130, 247, 254, 0.6),
+                  // 外边线样式
+                  outline: new SimpleLineSymbol({
+                    // 线符号颜色
+                    color: new Color(130, 247, 254, 1),
+                    // 线宽
+                    width: 1
+                  })
+                })
+              },
+              {
+                // 分段最小值
+                minValue: 200,
+                // 分段最大值
+                maxValue: 500,
+                //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+                symbol: new SimpleFillSymbol({
+                  // 填充符号颜色
+                  color: new Color(231, 147, 146, 0.6),
+                  // 外边线样式
+                  outline: new SimpleLineSymbol({
+                    // 线符号颜色
+                    color: new Color(231, 147, 146, 1),
+                    // 线宽
+                    width: 1
+                  })
+                })
+              }
+            ]
+          })
+        }]
+      }
+
+      // 设置裁剪多边形
+      function getPolygonClip() {
+        return new Polygon({
+          coordinates: [
+            [
+              [111.36341, 29.032578],
+              [113, 30],
+              [114.13094, 29.032578],
+              [114.13094, 31.273224],
+              [111.36341, 31.273224],
+              [111.36341, 29.032578]
+            ]
+          ]
+        })
+      }
+
+      // 设置裁剪多边形
+      function getMultiPolygonClip() {
+        return new MultiPolygon({
+          coordinates: [
+            [
+              [
+                [113.5, 30.5],
+                [114, 30.5],
+                [114, 31],
+                [113.5, 31],
+                [113.5, 30.5]
+              ]
+            ],
+            [
+              [
+                [111.5, 30.5],
+                [112, 30.5],
+                [112, 31],
+                [111.5, 31],
+                [111.5, 30.5]
+              ]
+            ]
+          ]
+        })
+      }
+
+      // 设置裁剪多边形
+      function getExtentClip() {
+        return new Extent({
+          xmin: 110,
+          xmax: 114,
+          ymin: 29.5,
+          ymax: 31
+        })
+      }
+
+      // 设置裁剪多边形
+      function getCircleClip() {
+        return new Circle({
+          // 设置圆的中心点
+          center: [113.2, 30.5],
+          // 设置圆的半径，单位米
+          radius: 100000,
+          // 设置圆转多边形时分割点的数量
+          numberOfPoints: 200
+        })
+      }
+
+      // 重置图层
+      function resetLayer() {
+        // 删除图层
+        map.remove(layer)
+        // 设置图层初始化参数
+        const options = getParams()
+        // 创建图层
+        layer = new IGSMapImageLayer(options)
+        // 添加图层
+        map.add(layer)
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          layui.slider.render({
+            elem: "#moveStep",
+            value: 100,
+            min: 0,
+            max: 100,
+            step: 1,
+            theme: 'rgb(21, 134, 238)',
+            //自定义提示文本
+            setTips: function (value) {
+              layerOpacity = value / 100
+              return value + '%';
+            },
+            change: function (value) {
+              layer.opacity = layerOpacity
+            }
+          });
+          const form = layui.form
+
+          // 切换渲染模式
+          form.on('select(renderMode)', function (data) {
+            renderMode = data.value
+            // 重置图层
+            resetLayer()
+          })
+
+          // 切换请求模式
+          form.on('select(httpMethod)', function (data) {
+            httpMethod = data.value
+            // 重置图层
+            resetLayer()
+          })
+
+          // 客户端裁剪
+          form.on('select(clipArea)', function (data) {
+            if (data.value === 'polygon') {
+              // 设置裁剪多边形
+              clipGeometry = getPolygonClip()
+              // 重置图层
+              resetLayer()
+            } else  if (data.value === 'multiPolygon') {
+              // 设置裁剪多边形
+              clipGeometry = getMultiPolygonClip()
+              // 重置图层
+              resetLayer()
+            } else  if (data.value === 'extent') {
+              // 设置裁剪多边形
+              clipGeometry = getExtentClip()
+              // 重置图层
+              resetLayer()
+            } else  if (data.value === 'circle') {
+              // 设置裁剪多边形
+              clipGeometry = getCircleClip()
+              // 重置图层
+              resetLayer()
+            } else {
+              // 不设置客户端裁剪
+              clipGeometry = undefined
+              // 重置图层
+              resetLayer()
+            }
+          })
+
+          // 空间过滤
+          form.on('select(geometryFilter)', function (data) {
+            // 清空客户端裁剪
+            clipGeometry = undefined
+            geometryFilter = {}
+            if (data.value === 'polygon') {
+              // 设置裁剪多边形
+              geometryFilter.geometry = getPolygonClip()
+              // 重置图层
+              resetLayer()
+            } else  if (data.value === 'multiPolygon') {
+              // 设置裁剪多边形
+              geometryFilter.geometry = getMultiPolygonClip()
+              // 重置图层
+              resetLayer()
+            } else  if (data.value === 'extent') {
+              // 设置裁剪多边形
+              geometryFilter.geometry = getExtentClip()
+              // 重置图层
+              resetLayer()
+            } else  if (data.value === 'circle') {
+              // 设置裁剪多边形
+              geometryFilter.geometry = getCircleClip()
+              // 重置图层
+              resetLayer()
+            } else {
+              // 不设置空间过滤
+              geometryFilter = undefined
+              // 重置图层
+              resetLayer()
+            }
+          })
+
+          // 切换专题图
+          form.on('select(renderer)', function (data) {
+            if (data.value === 'simpleRenderer') {
+              // 设置统一专题图
+              setSimpleRenderer()
+              // 重置图层
+              resetLayer()
+            } else  if (data.value === 'uniqueValueRenderer') {
+              // 设置单值专题图
+              setUniqueRenderer()
+              // 重置图层
+              resetLayer()
+            } else  if (data.value === 'classBreakRenderer') {
+              // 设置分段专题图
+              setClassBreakRenderer()
+              // 重置图层
+              resetLayer()
+            } else {
+              // 不设置专题图
+              sublayers = undefined
+              // 重置图层
+              resetLayer()
+            }
+          })
+        })
+      }
+    </script>
+    <style>
+        .layui-input-block-select {
+            width: 186px;
+        }
+    </style>
+</head>
+
+<body onload="init();">
+<!--  视图容器div  -->
+<div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+<!--  示例UI  -->
+<div class="layui-panel layui-panel-right map-image-layer-panel">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 100px;">图层透明度</label>
+            <div class="layui-input-block sample-slider" style="width: 188px;">
+                <div id="moveStep"></div>
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-bottom: 10px">
+            <label class="layui-form-label">渲染模式</label>
+            <div class="layui-input-block layui-input-block-select">
+                <select
+                        id="renderMode"
+                        name="renderMode"
+                        lay-filter="renderMode"
+                >
+                    <option value="tile">瓦片</option>
+                    <option value="image">图片</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-bottom: 10px">
+            <label class="layui-form-label">请求模式</label>
+            <div class="layui-input-block layui-input-block-select">
+                <select
+                        id="httpMethod"
+                        name="httpMethod"
+                        lay-filter="httpMethod"
+                >
+                    <option value="GET">GET请求</option>
+                    <option value="POST">POST请求</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-bottom: 10px">
+            <label class="layui-form-label">客户端裁剪</label>
+            <div class="layui-input-block layui-input-block-select">
+                <select
+                        id="clipArea"
+                        name="clipArea"
+                        lay-filter="clipArea"
+                >
+                    <option value="none">无</option>
+                    <option value="polygon">多边形(单区)</option>
+                    <option value="multiPolygon">多边形(多区)</option>
+                    <option value="extent">矩形</option>
+                    <option value="circle">圆形</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-bottom: 10px">
+            <label class="layui-form-label">空间过滤</label>
+            <div class="layui-input-block layui-input-block-select">
+                <select
+                        id="geometryFilter"
+                        name="geometryFilter"
+                        lay-filter="geometryFilter"
+                >
+                    <option value="none">无</option>
+                    <option value="polygon">多边形(单区)</option>
+                    <option value="multiPolygon">多边形(多区)</option>
+                    <option value="extent">矩形</option>
+                    <option value="circle">圆形</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设置专题图</label>
+            <div class="layui-input-block layui-input-block-select">
+                <select
+                        id="renderer"
+                        name="renderer"
+                        lay-filter="renderer"
+                >
+                    <option value="none">无</option>
+                    <option value="simpleRenderer">统一渲染器</option>
+                    <option value="uniqueValueRenderer">单值渲染器</option>
+                    <option value="classBreakRenderer">分段渲染器</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-top: 10px">
+            <label class="layui-form-label" style="width: 200px">设置过滤参数</label>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">过滤图层</label>
+            <div class="layui-input-block" style="margin-bottom: 6px">
+                <input
+                        id="filterLayerId"
+                        autocomplete="off"
+                        class="layui-input"
+                        placeholder="请设置过滤图层id，默认为0'"
+                />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">过滤参数</label>
+            <div class="layui-input-block" style="margin-bottom: 6px">
+                <input
+                        id="definitionExpression"
+                        autocomplete="off"
+                        class="layui-input"
+                        placeholder="过滤参数，例如name='test'"
+                />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设置Token</label>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">Token名</label>
+            <div class="layui-input-block" style="margin-bottom: 6px">
+                <input
+                        id="token-key"
+                        value="token"
+                        autocomplete="off"
+                        class="layui-input"
+                        placeholder="Token名"
+                />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">Token值</label>
+            <div class="layui-input-block" style="margin-bottom: 6px">
+                <input
+                        id="token-value"
+                        autocomplete="off"
+                        class="layui-input"
+                        placeholder="Token值"
+                />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设置请求头</label>
+            <textarea
+                    placeholder='请设置请求头，例如：{"Authorization":"authorization"}'
+                    id="headers"
+                    class="layui-textarea"
+            ></textarea>
+        </div>
+        <div class="layui-form-item">
+            <button
+                    type="button"
+                    class="layui-btn"
+                    style="float: right; width: auto; margin-top: 10px"
+                    onclick="resetLayer()"
+            >
+                重置图层
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

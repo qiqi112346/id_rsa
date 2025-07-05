@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>挖填方分析</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--引入Cesium.js库相关css样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/cesium/Widgets/widgets.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/cesium/MapGIS/css/mapgis.css"/>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/analyse.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+      //绘制多边形的工具
+      let drawElement = null
+      //定义填挖方计算类
+      let cutFill
+      //区域的集合
+      let polygon = []
+      //填方entities
+      let entities = null
+      //挖方primitives
+      let primitives = null
+      //采样数据类型
+      let dataType = 0.0
+
+      //地图初始化函数
+      function init() {
+        //创建三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //创建填挖方计算类
+        cutFill = fillCut()
+        //加载天地图
+        addTDT()
+        //加载地形
+        addTerrainCacheLayer()
+        //初始化UI操作
+        initUI()
+      }
+
+      //创建三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //打开深度检测
+        viewer.scene.globe.depthTestAgainstTerrain = true
+        //开启抗锯齿
+        viewer.scene.fxaa = true
+        viewer.scene.postProcessStages.fxaa.enabled = true
+      }
+
+      //添加天地图影像数据
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //加载3D景观模型
+      function addTerrainCacheLayer() {
+        let terrainCacheLayer = new zondy.layer.TerrainCacheLayer({
+          url: 'http://webclient.smaryun.com:8200/3DData/TerrainCache/HubeiTerrain/'
+        })
+        map.add(terrainCacheLayer)
+        // 图层加载完毕
+        terrainCacheLayer.on(
+          zondy.enum.LayerEventType.layerViewCreated,
+          function (result) {
+            // 视点跳转
+            flyToTerrain()
+          }
+        )
+      }
+
+      function flyToTerrain() {
+        sceneView.flyTo({
+          center: [110.31, 31.48, 3000],
+          orientation: {
+            pitch: Cesium.Math.toRadians(-35.0) //俯仰角
+          }
+        })
+      }
+
+      //创建填挖方计算类
+      function fillCut() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/CutFillAnalysis.html
+        return new zondy.cesium.CutFillAnalysis(viewer, {
+          //数据类型,0.0：地形，1.0：模型，2.0：通用
+          dataType: dataType,
+          //分析结果回调函数
+          callBack: callFillCut
+        });
+      }
+
+      //绘制多边形
+      function addDrawElement() {
+        //绘制前先清除
+        clearCube()
+        //绘制工具
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/DrawElement.html
+        let drawElement = new zondy.cesium.DrawElement(viewer)
+        //绘制区域
+        drawElement.startDrawingPolygon({
+          callback: function (result) {
+            //得到添加点坐标的集合
+            polygon = result.positions
+            //x坐标方向采样点的个数
+            cutFill.xPaneNum = Number(document.getElementById('xPaneNum').value)
+            //y坐标方向采样点的个数
+            cutFill.yPaneNum = Number(document.getElementById('yPaneNum').value)
+            //平整高程
+            cutFill.height = Number(document.getElementById('height').value)
+            //点坐标
+            cutFill._pointsPolygon = polygon
+            // 如果不是模型采样，则添加要采样的地形
+            if (dataType !== 1) {
+              cutFill.terrainProvider = viewer.terrainProvider;
+            }
+            //获取最大最小经纬度的值
+            let minMax = cutFill.getMinAndMaxCartesian()
+            //开始计算
+            cutFill.start(minMax)
+            //绘制完清除工具
+            if (drawElement) {
+              drawElement.stopDrawing()
+            }
+          }
+        })
+      }
+
+      //挖填方分析
+      function callFillCut(result) {
+        //表面积
+        let inputsurfaceArea = document.getElementById('surfaceArea')
+        //挖方体积
+        let inputcutVolume = document.getElementById('cutVolume')
+        //填方体积
+        let inputfillVolume = document.getElementById('fillVolume')
+        //面板input框赋值
+        inputsurfaceArea.value = result.surfaceArea
+        inputcutVolume.value = result.cutVolume
+        inputfillVolume.value = result.fillVolume
+        // 获取平整高度
+        let height = Number(document.getElementById('height').value)
+        // 当平整高度大于最小采样高度时，才绘制填方结果
+        if (height > result.minHeight) {
+          entities = viewer.entities.add({
+            polygon: {
+              hierarchy: {
+                positions: polygon
+              },
+              //高度
+              height: document.getElementById('height').value,
+              //开始填方的高度
+              extrudedHeight: result.minHeight,
+              //颜色
+              material: Cesium.Color.ORANGE
+            }
+          })
+        }
+        // 绘制挖方结果
+        let polygonGeometry = new Cesium.PolygonGeometry({
+          polygonHierarchy: new Cesium.PolygonHierarchy(polygon)
+        })
+        let polygonInstance = new Cesium.GeometryInstance({
+          //几何实例
+          geometry: polygonGeometry,
+          id: 'polygon',
+          attributes: {
+            //颜色
+            color: new Cesium.ColorGeometryInstanceAttribute(0.0, 0.0, 1.0, 0.8)
+          }
+        })
+        //渲染挖方结果
+        primitives = viewer.scene.primitives.add(
+          new Cesium.GroundPrimitive({
+            geometryInstances: polygonInstance
+          })
+        )
+      }
+
+      //清除分析结果，去掉挖方和填方
+      function clearCube() {
+        if (entities !== null) {
+          entities.entityCollection.removeAll()
+        }
+        if (primitives !== null) {
+          primitives.destroy()
+        }
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          const form = layui.form
+          //切换采样数据类型: 地形采样(0.0)，模型采样(0.0)，场景采样(2.0)
+          form.on('select(dataType)', function (data) {
+            switch (data.value) {
+              default:
+              case 'terrain':
+                dataType = 0.0
+                break
+              case 'model':
+                dataType = 1.0
+                break
+              case 'scene':
+                dataType = 2.0
+                break
+            }
+            //创建填挖方计算类
+            cutFill = fillCut()
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" style="width: 330px">
+      <form class="layui-form" action="">
+        <div class="sample-main-panel" style="height: 322px">
+          <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 91px;">x方向采样点数</label>
+            <div class="layui-input-block">
+              <input
+                style="width: 170px;"
+                type="number"
+                class="layui-input"
+                id="xPaneNum"
+                value="16"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 91px;">y方向采样点数</label>
+            <div class="layui-input-block">
+              <input
+                style="width: 170px;"
+                type="number"
+                class="layui-input"
+                id="yPaneNum"
+                value="16"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 108px;">填挖规整高度(米)</label>
+            <div class="layui-input-block">
+              <input
+                style="width: 170px;"
+                type="number"
+                class="layui-input"
+                id="height"
+                value="1200"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">采样类型</label>
+            <div class="layui-input-block layui-input-block-select" style="width: 170px;">
+              <select id="dataType" name="dataType" lay-filter="dataType">
+                <option value="terrain">地形采样</option>
+                <option value="model">模型采样</option>
+                <option value="scene">场景采样</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">填方体积</label>
+            <div class="layui-input-block">
+              <input
+                style="width: 170px;"
+                type="number"
+                disabled
+                class="layui-input"
+                id="fillVolume"
+                placeholder="立方米"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">挖方体积</label>
+            <div class="layui-input-block">
+              <input
+                style="width: 170px;"
+                type="number"
+                disabled
+                class="layui-input"
+                id="cutVolume"
+                placeholder="立方米"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">表面积</label>
+            <div class="layui-input-block">
+              <input
+                style="width: 170px;"
+                type="number"
+                disabled
+                class="layui-input"
+                id="surfaceArea"
+                placeholder="立方米"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">说明：</label>
+            <div class="layui-input-block">
+              <div class="tips">
+                橙色为从最低点填平到指定高度的区域体积，蓝色为从最高点挖平到指定高度的区域体积。
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sample-button-panel">
+          <button
+            type="button"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="addDrawElement()"
+          >
+            绘制分析区
+          </button>
+          <button
+            type="button"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="clearCube()"
+          >
+            清除
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

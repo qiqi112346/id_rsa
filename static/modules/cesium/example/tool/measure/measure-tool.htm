@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>测量工具</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+      //长度测量工具
+      let measureLengthTool = null
+      //面积测量工具
+      let measureAreaTool = null
+      //坡度测量工具
+      let measureSlopeTool = null
+      //三角测量工具
+      let measureTriangleTool = null
+      //夹角测量与方位角测量工具
+      let measureAngulationTool = null
+      // 是否显示实时面积、距离测量结果
+      let showRuntimeResult = true
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //天地图影像
+        addTDT()
+        //添加地形
+        addTerrain()
+        //初始化示例UI操作
+        initUI()
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //长度测量
+      function lengthMeasure() {
+        stopAllMeasureTool()
+        if (measureLengthTool === null) {
+          //长度测量工具的各种属性
+          let options = {
+            font: '13pt 楷体',
+            fillColor: new Cesium.Color(1.0, 0.0, 0.0, 1.0),
+            outlineColor: new Cesium.Color(1.0, 1.0, 0.0, 0.5),
+            outlineWidth: 4.0,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+            showBackground: true,
+            backgroundColor: new Cesium.Color(0, 0.6, 0.1, 0.4),
+            pixelOffset: new Cesium.Cartesian2(0, -4),
+            //地形贴地长度测量
+            isTerrain: true,
+            // 是否显示实时距离测量结果
+            showRuntimeResult: showRuntimeResult,
+            paneNum: 32,
+            showMoreInfo: true,
+            // 量测结果单位，可选"meters" | "kilometers"
+            unit: 'meters',
+            pointStyle: {
+              color: Cesium.Color.RED
+            },
+            lineStyle: {
+              material: new Cesium.PolylineGlowMaterialProperty({
+                glowPower: 0.15,
+                color: Cesium.Color.RED
+              }),
+              depthFailMaterial: new Cesium.PolylineGlowMaterialProperty({
+                glowPower: 0.15,
+                color: Cesium.Color.RED
+              })
+            },
+            // 回调函数，返回量测结果
+            callBack: function (result, positions) {
+              console.log('计算结果：', result)
+              console.log('位置点：', positions)
+            },
+            //测量完毕后提示框的回调函数，可以覆盖提示内容
+            labelCallBack: function (currentLength, totalLength, label) {
+              label.text =
+                '前段长度：' +
+                currentLength.toFixed(2).toString() +
+                '米' +
+                '\n' +
+                '总长度' +
+                totalLength.toFixed(2).toString() +
+                '米'
+              label.fillColor = Cesium.Color.BLUE
+            }
+          }
+          measureLengthTool = new zondy.cesium.MeasureLengthTool(viewer, options)
+        } else {
+          measureLengthTool.showRuntimeResult = showRuntimeResult
+        }
+        measureLengthTool.startTool()
+      }
+
+      //面积测量
+      function areaMeasure() {
+        stopAllMeasureTool()
+        if (measureAreaTool === null) {
+          let options = {
+            font: '13pt 楷体',
+            fillColor: new Cesium.Color(1.0, 0.0, 0.0, 1.0),
+            outlineColor: new Cesium.Color(1.0, 1.0, 0.0, 0.5),
+            outlineWidth: 4.0,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+            showBackground: true,
+            backgroundColor: new Cesium.Color(0, 0.6, 0.1, 0.4),
+            pixelOffset: new Cesium.Cartesian2(0, -4),
+            isTerrain: true,
+            // 是否显示实时面积测量结果
+            showRuntimeResult: showRuntimeResult,
+            classificationType: 2,
+            lineStyle: {
+              material: new Cesium.PolylineGlowMaterialProperty({
+                glowPower: 0.15,
+                color: Cesium.Color.RED
+              }),
+              depthFailMaterial: new Cesium.PolylineGlowMaterialProperty({
+                glowPower: 0.15,
+                color: Cesium.Color.RED
+              })
+            },
+            //是否连续绘制，true：是，false：否
+            isContinueDraw: false,
+            // 回调函数，返回量测结果
+            callBack: function (result, positions) {
+              console.log('计算结果：', result)
+              console.log('位置点：', positions)
+            },
+            //测量完毕后提示框的回调函数，可以覆盖提示内容
+            labelCallBack: function (result, label) {
+              label.text =
+                '当前面积：' + result.toFixed(2).toString() + '平方米'
+              label.fillColor = Cesium.Color.BLUE
+            }
+          }
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/MeasureAreaTool.html
+          measureAreaTool = new zondy.cesium.MeasureAreaTool(viewer, options)
+        } else {
+          measureAreaTool.showRuntimeResult = showRuntimeResult
+        }
+        measureAreaTool.startTool()
+      }
+
+      //坡度测量
+      function slopeMeasure() {
+        stopAllMeasureTool()
+        if (measureSlopeTool === null) {
+          let options = {
+            font: '13pt 楷体',
+            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+            fillColor: new Cesium.Color(1.0, 0.0, 0.0, 1.0),
+            outlineColor: new Cesium.Color(1.0, 1.0, 0.0, 0.5),
+            outlineWidth: 4.0,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+            showBackground: true,
+            backgroundColor: new Cesium.Color(0, 0.6, 0.1, 0.4),
+            //是否连续绘制，true：是，false：否
+            isContinueDraw: false,
+            pixelOffset: new Cesium.Cartesian2(0, -4),
+            // 回调函数，返回量测结果
+            callBack: function (result, positions) {
+              console.log('计算结果：', result)
+              console.log('位置点：', positions)
+            },
+            //测量完毕后提示框的回调函数，可以覆盖提示内容
+            labelCallBack: function (result, label) {
+              label.text = '当前坡度：' + result.toFixed(2).toString() + '度'
+            }
+          }
+          //创建坡度测量工具
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/MeasureSlopeTool.html
+          measureSlopeTool = new zondy.cesium.MeasureSlopeTool(viewer, options)
+        }
+        measureSlopeTool.startTool()
+      }
+
+      //三角测量
+      function triangleMeasure() {
+        stopAllMeasureTool()
+        if (measureTriangleTool === null) {
+          var options = {
+            font: '12pt 楷体',
+            fillColor: new Cesium.Color(1.0, 0.0, 0.0, 1.0),
+            outlineColor: new Cesium.Color(1.0, 1.0, 0.0, 0.5),
+            outlineWidth: 4.0,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+            showBackground: true,
+            backgroundColor: new Cesium.Color(0, 0.6, 0.1, 0.4),
+            pixelOffset: new Cesium.Cartesian2(0, -4),
+            //是否连续绘制，true：是，false：否
+            isContinueDraw: false,
+            showMoreInfo: false,
+            // 回调函数，返回量测结果
+            callBack: function (result, positions) {
+              console.log('计算结果：', result)
+              console.log('位置点：', positions)
+            },
+            //测量完毕后提示框的回调函数，可以覆盖提示内容
+            labelCallBack: function (result, label) {
+              label.verticalLabelEntity.text =
+                '高差：' + result.verticalDiatance.toFixed(2).toString() + '米'
+              label.slantLabelEntity.text =
+                '直线距离：' + result.slantDiatance.toFixed(2).toString() + '米'
+              label.horizontalLabelEntity.text =
+                '水平距离：' +
+                result.horizontalDiatance.toFixed(2).toString() +
+                '米'
+              label.slopeLabelEntity.text =
+                '坡度：' + result.slope.toFixed(2).toString() + ''
+            }
+          }
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/TriangulationTool.html
+          measureTriangleTool = new zondy.cesium.TriangulationTool(viewer, options)
+        }
+        measureTriangleTool.startTool()
+      }
+
+      //方位角测量
+      function azimuth() {
+        stopAllMeasureTool()
+        if (measureAngulationTool === null) {
+          let options = {
+            //是指南针模式还是测量夹角模式，true：指南针，false：夹角
+            isFixAxis: true,
+            //提示框样式
+            labelStyle: {
+              font: 'bolder 12pt 楷体',
+              fillColor: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+              outlineColor: new Cesium.Color(1.0, 1.0, 0.0, 0.5),
+              outlineWidth: 4.0,
+              verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+              showBackground: true,
+              backgroundColor: new Cesium.Color(0, 0.6, 0.1, 0.4),
+              pixelOffset: new Cesium.Cartesian2(0, -4)
+            },
+            //测量线式
+            lineStyle: {
+              width: 10
+            },
+            //删除测量结果图标样式
+            closePointStyle: {
+              scale: 1.4
+            },
+            //罗盘样式
+            compassStyle: {
+              material: new Cesium.ImageMaterialProperty({
+                image:
+                  'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNjYyNTQxNTk4MDk1IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjY2ODYiIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+PHBhdGggZD0iTTkxMi43MjE5MiA1MDEuOTEzNmwtNTguMjI0NjQtNy43ODI0Yy00LjMzMTUyLTgzLjQ5Njk2LTM4LjgxOTg0LTE1OS4wOTg4OC05Mi42ODIyNC0yMTYuMjU4NTZsNDEuMDExMi00MS4wMTEyYTEwLjIyOTc2IDEwLjIyOTc2IDAgMSAwLTE0LjQ3OTM2LTE0LjQ3OTM2bC00MS4wMTEyIDQxLjAxMTJjLTU3LjM4NDk2LTU0LjA2NzItMTMzLjM0NTI4LTg4LjU5NjQ4LTIxNy4yMjExMi05Mi43MTI5NmwtNy45NTY0OC01OS40MDIyNGExMC4yNTAyNCAxMC4yNTAyNCAwIDAgMC0yMC4zMDU5MiAwbC03Ljk2NjcyIDU5LjU0NTZjLTgyLjkyMzUyIDQuNjM4NzItMTU3Ljk5Mjk2IDM5LjAxNDQtMjE0LjgyNDk2IDkyLjU1OTM2bC00MS4wMTEyLTQxLjAxMTJhMTAuMjI5NzYgMTAuMjI5NzYgMCAxIDAtMTQuNDc5MzYgMTQuNDc5MzZsNDEuMDExMiA0MS4wMTEyYy01My43OTA3MiA1Ny4wNzc3Ni04OC4yNDgzMiAxMzIuNTU2OC05Mi42NjE3NiAyMTUuOTEwNGwtNjAuNjQxMjggOC4xNDA4YTEwLjI0IDEwLjI0IDAgMCAwIDAgMjAuMjk1NjhsNjAuNjQxMjggOC4xMjAzMmM0LjQyMzY4IDgzLjMyMjg4IDM4Ljg3MTA0IDE1OC43NjA5NiA5Mi42NDEyOCAyMTUuODE4MjRsLTQxLjAwMDk2IDQxLjAwMDk2YTEwLjIyOTc2IDEwLjIyOTc2IDAgMSAwIDE0LjQ3OTM2IDE0LjQ3OTM2bDQxLjAwMDk2LTQxLjAwMDk2YzU2LjgzMiA1My41NTUyIDEzMS45MDE0NCA4Ny45MzA4OCAyMTQuODI0OTYgOTIuNTc5ODRsNy45ODcyIDU5LjUwNDY0YTEwLjI0IDEwLjI0IDAgMCAwIDIwLjI5NTY4IDAuMDEwMjRsNy45NTY0OC01OS4zNTEwNGM4My44ODYwOC00LjEwNjI0IDE1OS44NTY2NC0zOC42NDU3NiAyMTcuMjQxNi05Mi43MjMybDQxLjAwMDk2IDQxLjAwMDk2YTEwLjIwOTI4IDEwLjIwOTI4IDAgMCAwIDE0LjQ3OTM2IDAgMTAuMjI5NzYgMTAuMjI5NzYgMCAwIDAgMC0xNC40NzkzNmwtNDEuMDAwOTYtNDEuMDAwOTZjNTMuODMxNjgtNTcuMTM5MiA4OC4zMDk3Ni0xMzIuNzAwMTYgOTIuNjYxNzYtMjE2LjE0NTkybDU4LjIyNDY0LTcuODAyODhhMTAuMjUwMjQgMTAuMjUwMjQgMCAwIDAgMC4wMTAyNC0yMC4zMDU5MnogbS03OC45NzA4OC0xMC41NTc0NGwtMzUuMjc2OC00LjcyMDY0Yy0xMi4xMjQxNi0xMzcuNTIzMi0xMjMuMjM4NC0yNDguMzQwNDgtMjYwLjg2NC0yNTkuOTkzNmwtNC43MjA2NC0zNS4yNDYwOGMxNjEuMTY3MzYgOS43ODk0NCAyOTAuNTgwNDggMTM4LjkxNTg0IDMwMC44NjE0NCAyOTkuOTYwMzJ6IG0tMzg5Ljc3NTM2LTM0LjA4ODk2TDI0OC45ODU2IDQ4My40MzA0YzYuMjQ2NC01Ny45OTkzNiAzMS41Njk5Mi0xMTAuNjUzNDQgNjkuNTM5ODQtMTUxLjYxMzQ0bDEyNS40NTAyNCAxMjUuNDUwMjR6TTMzMy4wMTUwNCAzMTcuMzQ3ODRjNDAuNzA0LTM3Ljc0NDY0IDkyLjk2ODk2LTYyLjk3NiAxNTAuNTU4NzItNjkuNDE2OTZMNDU3LjYxNTM2IDQ0MS45NTg0IDMzMy4wMTUwNCAzMTcuMzQ3ODR6IG0xMjQuNDc3NDQgMjY0LjgzNzEybDI2LjAxOTg0IDE5My45MjUxMmMtNTguMzg4NDgtNi40NjE0NC0xMTAuNjYzNjgtMzEuMjkzNDQtMTUxLjE2Mjg4LTY4Ljc3MTg0bDEyNS4xNDMwNC0xMjUuMTUzMjh6TTMxNy44NzAwOCA2OTIuODU4ODhjLTM3LjcwMzY4LTQwLjc0NDk2LTYyLjYxNzYtOTMuMzk5MDQtNjguODk0NzItMTUyLjE4Njg4bDE5NC45NTkzNiAyNi4xMjIyNC0xMjYuMDY0NjQgMTI2LjA2NDY0eiBtMTMzLjc5NTg0LTE4MC44NDg2NGMwLTMzLjkyNTEyIDI3LjU5NjgtNjEuNTMyMTYgNjEuNTMyMTYtNjEuNTMyMTZzNjEuNTMyMTYgMjcuNjA3MDQgNjEuNTMyMTYgNjEuNTMyMTYtMjcuNTk2OCA2MS41MzIxNi02MS41MzIxNiA2MS41MzIxNi02MS41MzIxNi0yNy42MDcwNC02MS41MzIxNi02MS41MzIxNnogbTg4Ljc2MDMyLTI2NC4zNDU2YzU4LjY0NDQ4IDYuMDEwODggMTExLjgwMDMyIDMxLjM2NTEyIDE1My4wMzY4IDY5LjU5MTA0TDU2Ni43MzI4IDQ0My45OTYxNmwtMjYuMzA2NTYtMTk2LjMzMTUyeiBtMjYuMjk2MzIgMzMyLjM1OTY4TDY5My40NzMyOCA3MDYuNzY0OGMtNDEuMjQ2NzIgMzguMjI1OTItOTQuMzkyMzIgNjMuNTgwMTYtMTUzLjA0NzA0IDY5LjU5MTA0bDI2LjI5NjMyLTE5Ni4zMzE1MnogbTE1LjQ0MTkyLTEzLjUyNzA0bDE5NS4yNDYwOC0yNi4xNTI5NmMtNi4yMDU0NCA1OC4yMjQ2NC0zMS40Nzc3NiAxMTAuOTYwNjQtNjkuNDY4MTYgMTUxLjk0MTEyTDU4Mi4xNjQ0OCA1NjYuNDk3Mjh6IG0tMC4xNjM4NC0xMDguODIwNDhsMTI1Ljk0MTc2LTEyNS45NDE3NmMzOC4wMjExMiA0MS4wMjE0NCA2My4zMDM2OCA5My44MDg2NCA2OS40ODg2NCAxNTIuMDg0NDhsLTE5NS40MzA0LTI2LjE0MjcyeiBtLTcwLjEyMzUyLTI2Ni45MTU4NGwwLjI1Ni0wLjAxMDI0IDMyLjkxMTM2IDI0NS42NzgwOGE4MS41NDExMiA4MS41NDExMiAwIDAgMC02Ni4xOTEzNiAxLjE5ODA4bDMzLjAyNC0yNDYuODY1OTJ6IG0tMjAuNzY2NzIgMC44MDg5NmwtNC43MjA2NCAzNS4yODcwNGMtMTM2LjE0MDggMTIuNjk3Ni0yNDYuMjUxNTIgMTIzLjE1NjQ4LTI1OC40NDczNiAyNTkuMzk5NjhsLTM1LjI3NjggNC43MzA4OGMxMC40MDM4NC0xNjAuMDcxNjggMTM4LjUwNjI0LTI4OC40OTE1MiAyOTguNDQ0OC0yOTkuNDE3NnpNMTkxLjg5NzYgNTEyLjAyMDQ4bDAuMDEwMjQtMC4yNjYyNCAyNDYuNDI1Ni0zMy4wNjQ5NmE4MS40MDggODEuNDA4IDAgMCAwLTcuMTQ3NTIgMzMuMzIwOTYgODEuNDA4IDgxLjQwOCAwIDAgMCA3LjE2OCAzMy4zNjE5MmwtMjQ2LjQ0NjA4LTMzLjAyNC0wLjAxMDI0LTAuMzI3Njh6IG0wLjc2OCAyMS4wOTQ0bDM1LjMzODI0IDQuNzMwODhDMjQwLjM1MzI4IDY3Ni4wMzQ1NiAzNDguMjYyNCA3ODQuMjYxMTIgNDg2LjMyODMyIDc5Ny4wODE2bDQuNzUxMzYgMzUuMzg5NDRjLTE1OS44OTc2LTEwLjkzNjMyLTI4Ny45Nzk1Mi0xMzkuMzE1Mi0yOTguNDE0MDgtMjk5LjM1NjE2eiBtMzE5LjQ1NzI4IDMwMC4xNzUzNmwtMC4yNzY0OC0wLjAxMDI0LTMzLjEzNjY0LTI0Ni45NjgzMmE4MS4zNDY1NiA4MS4zNDY1NiAwIDAgMCA2Ni4zMzQ3MiAxLjI1OTUybC0zMi45MjE2IDI0NS43MTkwNHogbTIwLjc1NjQ4LTAuNjM0ODhsNC43MzA4OC0zNS4yNzY4YzEzNy41OTQ4OC0xMS42NTMxMiAyNDguNjU3OTItMTIyLjM2OCAyNjAuODUzNzYtMjU5Ljg1MDI0bDM1LjI4NzA0LTQuNzMwODhjLTEwLjM0MjQgMTYwLjk5MzI4LTEzOS43MzUwNCAyOTAuMDU4MjQtMzAwLjg3MTY4IDI5OS44NTc5MnogbTU1LjMyNjcyLTI4Ny42MzEzNmE4MS41NDExMiA4MS41NDExMiAwIDAgMCAwLjA5MjE2LTY1Ljg0MzJsMjQ1Ljg4Mjg4IDMyLjg5MDg4LTI0NS45NzUwNCAzMi45NTIzMnoiIHAtaWQ9IjY2ODciPjwvcGF0aD48L3N2Zz4='
+              })
+            },
+            //是否显示罗盘
+            showCompass: true,
+            //测量点样式
+            pointStyle: {
+              pixelSize: 10
+            },
+            // 回调函数，返回量测结果
+            callBack: function (angle, positions) {
+              console.log('测量角度为' + angle)
+              console.log('位置点：', positions)
+            },
+            //测量完毕后提示框的回调函数，可以覆盖提示内容
+            labelCallBack: function (angle, label) {
+              label.text = '测量角度为：' + angle.toFixed(2).toString() + '度'
+            }
+          }
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/AngulationTool.html
+          measureAngulationTool = new zondy.cesium.AngulationTool(viewer, options)
+        }
+        measureAngulationTool.startTool()
+      }
+
+      //夹角测量
+      function intersection() {
+        if (measureAngulationTool === null) {
+          let options = {
+            //是指南针模式还是测量夹角模式，true：指南针，false：夹角
+            isFixAxis: false,
+            //当处于测量夹角模式时，是否支持钝角测量，true：否，false：是
+            isSemiCircle: true,
+            //提示框样式
+            labelStyle: {
+              font: 'bolder 12pt 楷体',
+              fillColor: new Cesium.Color(1.0, 0.0, 1.0, 1.0),
+              outlineColor: new Cesium.Color(1.0, 1.0, 0.0, 0.5),
+              outlineWidth: 4.0,
+              verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+              showBackground: true,
+              backgroundColor: new Cesium.Color(0, 0.6, 0.1, 0.4),
+              pixelOffset: new Cesium.Cartesian2(0, -4)
+            },
+            //测量线式
+            lineStyle: {
+              width: 10,
+              material: new Cesium.Color(0.0, 0.0, 1.0, 1.0)
+            },
+            //删除测量结果图标样式
+            closePointStyle: {
+              scale: 1.4
+            },
+            //罗盘样式
+            compassStyle: {
+              material: new Cesium.ImageMaterialProperty({
+                image:
+                  'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNjYyNTQxNTk4MDk1IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjY2ODYiIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+PHBhdGggZD0iTTkxMi43MjE5MiA1MDEuOTEzNmwtNTguMjI0NjQtNy43ODI0Yy00LjMzMTUyLTgzLjQ5Njk2LTM4LjgxOTg0LTE1OS4wOTg4OC05Mi42ODIyNC0yMTYuMjU4NTZsNDEuMDExMi00MS4wMTEyYTEwLjIyOTc2IDEwLjIyOTc2IDAgMSAwLTE0LjQ3OTM2LTE0LjQ3OTM2bC00MS4wMTEyIDQxLjAxMTJjLTU3LjM4NDk2LTU0LjA2NzItMTMzLjM0NTI4LTg4LjU5NjQ4LTIxNy4yMjExMi05Mi43MTI5NmwtNy45NTY0OC01OS40MDIyNGExMC4yNTAyNCAxMC4yNTAyNCAwIDAgMC0yMC4zMDU5MiAwbC03Ljk2NjcyIDU5LjU0NTZjLTgyLjkyMzUyIDQuNjM4NzItMTU3Ljk5Mjk2IDM5LjAxNDQtMjE0LjgyNDk2IDkyLjU1OTM2bC00MS4wMTEyLTQxLjAxMTJhMTAuMjI5NzYgMTAuMjI5NzYgMCAxIDAtMTQuNDc5MzYgMTQuNDc5MzZsNDEuMDExMiA0MS4wMTEyYy01My43OTA3MiA1Ny4wNzc3Ni04OC4yNDgzMiAxMzIuNTU2OC05Mi42NjE3NiAyMTUuOTEwNGwtNjAuNjQxMjggOC4xNDA4YTEwLjI0IDEwLjI0IDAgMCAwIDAgMjAuMjk1NjhsNjAuNjQxMjggOC4xMjAzMmM0LjQyMzY4IDgzLjMyMjg4IDM4Ljg3MTA0IDE1OC43NjA5NiA5Mi42NDEyOCAyMTUuODE4MjRsLTQxLjAwMDk2IDQxLjAwMDk2YTEwLjIyOTc2IDEwLjIyOTc2IDAgMSAwIDE0LjQ3OTM2IDE0LjQ3OTM2bDQxLjAwMDk2LTQxLjAwMDk2YzU2LjgzMiA1My41NTUyIDEzMS45MDE0NCA4Ny45MzA4OCAyMTQuODI0OTYgOTIuNTc5ODRsNy45ODcyIDU5LjUwNDY0YTEwLjI0IDEwLjI0IDAgMCAwIDIwLjI5NTY4IDAuMDEwMjRsNy45NTY0OC01OS4zNTEwNGM4My44ODYwOC00LjEwNjI0IDE1OS44NTY2NC0zOC42NDU3NiAyMTcuMjQxNi05Mi43MjMybDQxLjAwMDk2IDQxLjAwMDk2YTEwLjIwOTI4IDEwLjIwOTI4IDAgMCAwIDE0LjQ3OTM2IDAgMTAuMjI5NzYgMTAuMjI5NzYgMCAwIDAgMC0xNC40NzkzNmwtNDEuMDAwOTYtNDEuMDAwOTZjNTMuODMxNjgtNTcuMTM5MiA4OC4zMDk3Ni0xMzIuNzAwMTYgOTIuNjYxNzYtMjE2LjE0NTkybDU4LjIyNDY0LTcuODAyODhhMTAuMjUwMjQgMTAuMjUwMjQgMCAwIDAgMC4wMTAyNC0yMC4zMDU5MnogbS03OC45NzA4OC0xMC41NTc0NGwtMzUuMjc2OC00LjcyMDY0Yy0xMi4xMjQxNi0xMzcuNTIzMi0xMjMuMjM4NC0yNDguMzQwNDgtMjYwLjg2NC0yNTkuOTkzNmwtNC43MjA2NC0zNS4yNDYwOGMxNjEuMTY3MzYgOS43ODk0NCAyOTAuNTgwNDggMTM4LjkxNTg0IDMwMC44NjE0NCAyOTkuOTYwMzJ6IG0tMzg5Ljc3NTM2LTM0LjA4ODk2TDI0OC45ODU2IDQ4My40MzA0YzYuMjQ2NC01Ny45OTkzNiAzMS41Njk5Mi0xMTAuNjUzNDQgNjkuNTM5ODQtMTUxLjYxMzQ0bDEyNS40NTAyNCAxMjUuNDUwMjR6TTMzMy4wMTUwNCAzMTcuMzQ3ODRjNDAuNzA0LTM3Ljc0NDY0IDkyLjk2ODk2LTYyLjk3NiAxNTAuNTU4NzItNjkuNDE2OTZMNDU3LjYxNTM2IDQ0MS45NTg0IDMzMy4wMTUwNCAzMTcuMzQ3ODR6IG0xMjQuNDc3NDQgMjY0LjgzNzEybDI2LjAxOTg0IDE5My45MjUxMmMtNTguMzg4NDgtNi40NjE0NC0xMTAuNjYzNjgtMzEuMjkzNDQtMTUxLjE2Mjg4LTY4Ljc3MTg0bDEyNS4xNDMwNC0xMjUuMTUzMjh6TTMxNy44NzAwOCA2OTIuODU4ODhjLTM3LjcwMzY4LTQwLjc0NDk2LTYyLjYxNzYtOTMuMzk5MDQtNjguODk0NzItMTUyLjE4Njg4bDE5NC45NTkzNiAyNi4xMjIyNC0xMjYuMDY0NjQgMTI2LjA2NDY0eiBtMTMzLjc5NTg0LTE4MC44NDg2NGMwLTMzLjkyNTEyIDI3LjU5NjgtNjEuNTMyMTYgNjEuNTMyMTYtNjEuNTMyMTZzNjEuNTMyMTYgMjcuNjA3MDQgNjEuNTMyMTYgNjEuNTMyMTYtMjcuNTk2OCA2MS41MzIxNi02MS41MzIxNiA2MS41MzIxNi02MS41MzIxNi0yNy42MDcwNC02MS41MzIxNi02MS41MzIxNnogbTg4Ljc2MDMyLTI2NC4zNDU2YzU4LjY0NDQ4IDYuMDEwODggMTExLjgwMDMyIDMxLjM2NTEyIDE1My4wMzY4IDY5LjU5MTA0TDU2Ni43MzI4IDQ0My45OTYxNmwtMjYuMzA2NTYtMTk2LjMzMTUyeiBtMjYuMjk2MzIgMzMyLjM1OTY4TDY5My40NzMyOCA3MDYuNzY0OGMtNDEuMjQ2NzIgMzguMjI1OTItOTQuMzkyMzIgNjMuNTgwMTYtMTUzLjA0NzA0IDY5LjU5MTA0bDI2LjI5NjMyLTE5Ni4zMzE1MnogbTE1LjQ0MTkyLTEzLjUyNzA0bDE5NS4yNDYwOC0yNi4xNTI5NmMtNi4yMDU0NCA1OC4yMjQ2NC0zMS40Nzc3NiAxMTAuOTYwNjQtNjkuNDY4MTYgMTUxLjk0MTEyTDU4Mi4xNjQ0OCA1NjYuNDk3Mjh6IG0tMC4xNjM4NC0xMDguODIwNDhsMTI1Ljk0MTc2LTEyNS45NDE3NmMzOC4wMjExMiA0MS4wMjE0NCA2My4zMDM2OCA5My44MDg2NCA2OS40ODg2NCAxNTIuMDg0NDhsLTE5NS40MzA0LTI2LjE0MjcyeiBtLTcwLjEyMzUyLTI2Ni45MTU4NGwwLjI1Ni0wLjAxMDI0IDMyLjkxMTM2IDI0NS42NzgwOGE4MS41NDExMiA4MS41NDExMiAwIDAgMC02Ni4xOTEzNiAxLjE5ODA4bDMzLjAyNC0yNDYuODY1OTJ6IG0tMjAuNzY2NzIgMC44MDg5NmwtNC43MjA2NCAzNS4yODcwNGMtMTM2LjE0MDggMTIuNjk3Ni0yNDYuMjUxNTIgMTIzLjE1NjQ4LTI1OC40NDczNiAyNTkuMzk5NjhsLTM1LjI3NjggNC43MzA4OGMxMC40MDM4NC0xNjAuMDcxNjggMTM4LjUwNjI0LTI4OC40OTE1MiAyOTguNDQ0OC0yOTkuNDE3NnpNMTkxLjg5NzYgNTEyLjAyMDQ4bDAuMDEwMjQtMC4yNjYyNCAyNDYuNDI1Ni0zMy4wNjQ5NmE4MS40MDggODEuNDA4IDAgMCAwLTcuMTQ3NTIgMzMuMzIwOTYgODEuNDA4IDgxLjQwOCAwIDAgMCA3LjE2OCAzMy4zNjE5MmwtMjQ2LjQ0NjA4LTMzLjAyNC0wLjAxMDI0LTAuMzI3Njh6IG0wLjc2OCAyMS4wOTQ0bDM1LjMzODI0IDQuNzMwODhDMjQwLjM1MzI4IDY3Ni4wMzQ1NiAzNDguMjYyNCA3ODQuMjYxMTIgNDg2LjMyODMyIDc5Ny4wODE2bDQuNzUxMzYgMzUuMzg5NDRjLTE1OS44OTc2LTEwLjkzNjMyLTI4Ny45Nzk1Mi0xMzkuMzE1Mi0yOTguNDE0MDgtMjk5LjM1NjE2eiBtMzE5LjQ1NzI4IDMwMC4xNzUzNmwtMC4yNzY0OC0wLjAxMDI0LTMzLjEzNjY0LTI0Ni45NjgzMmE4MS4zNDY1NiA4MS4zNDY1NiAwIDAgMCA2Ni4zMzQ3MiAxLjI1OTUybC0zMi45MjE2IDI0NS43MTkwNHogbTIwLjc1NjQ4LTAuNjM0ODhsNC43MzA4OC0zNS4yNzY4YzEzNy41OTQ4OC0xMS42NTMxMiAyNDguNjU3OTItMTIyLjM2OCAyNjAuODUzNzYtMjU5Ljg1MDI0bDM1LjI4NzA0LTQuNzMwODhjLTEwLjM0MjQgMTYwLjk5MzI4LTEzOS43MzUwNCAyOTAuMDU4MjQtMzAwLjg3MTY4IDI5OS44NTc5MnogbTU1LjMyNjcyLTI4Ny42MzEzNmE4MS41NDExMiA4MS41NDExMiAwIDAgMCAwLjA5MjE2LTY1Ljg0MzJsMjQ1Ljg4Mjg4IDMyLjg5MDg4LTI0NS45NzUwNCAzMi45NTIzMnoiIHAtaWQ9IjY2ODciPjwvcGF0aD48L3N2Zz4='
+              })
+            },
+            //是否显示罗盘
+            showCompass: true,
+            //测量点样式
+            pointStyle: {
+              pixelSize: 10
+            },
+            // 回调函数，返回量测结果
+            callBack: function (angle, positions) {
+              console.log('测量角度为' + angle)
+              console.log('位置点：', positions)
+            },
+            //测量完毕后提示框的回调函数，可以覆盖提示内容
+            labelCallBack: function (angle, label) {
+              label.text = '测量角度为：' + angle.toFixed(2).toString() + '度'
+            }
+          }
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/AngulationTool.html
+          measureAngulationTool = new zondy.cesium.AngulationTool(viewer, options)
+        } else {
+          //是指南针模式还是测量夹角模式，true：指南针，false：夹角
+          measureAngulationTool.isFixAxis = false
+          //当处于测量夹角模式时，是否支持钝角测量，true：否，false：是
+          measureAngulationTool.isSemiCircle = true
+          //动态修改样式
+          measureAngulationTool.labelStyle.fillColor = new Cesium.Color(
+            1.0,
+            0.0,
+            1.0,
+            1.0
+          )
+          measureAngulationTool.lineStyle.material = new Cesium.Color(
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          )
+        }
+        measureAngulationTool.startTool()
+      }
+
+      //停止所有的测量
+      function stopAllMeasureTool() {
+        if (measureLengthTool) {
+          measureLengthTool.stopTool()
+        }
+        if (measureAreaTool) {
+          measureAreaTool.stopTool()
+        }
+        if (measureSlopeTool) {
+          measureSlopeTool.stopTool()
+        }
+        if (measureTriangleTool) {
+          measureTriangleTool.stopTool()
+        }
+        if (measureAngulationTool) {
+          measureAngulationTool.stopTool()
+        }
+      }
+
+      //添加天地图影像
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //添加地形数据
+      function addTerrain() {
+        let url =
+          'http://webclient.smaryun.com:8089/igs/rest/services/Scene/TwTerrain/SceneServer'
+        let igsSceneLayer = new zondy.layer.IGSSceneLayer({
+          url: url
+        })
+        map.add(igsSceneLayer)
+        flyToTerrain()
+      }
+
+      //定位到地形
+      function flyToTerrain() {
+        sceneView.flyTo({
+          center: [121.0076, 23.3814, 9000.0],
+          orientation: {
+            pitch: Cesium.Math.toRadians(-35.0)
+          }
+        })
+      }
+      function initUI() {
+        layui.form.on('switch(showRuntimeResult)', function (data) {
+            // 是否显示实时面积、距离测量结果
+            showRuntimeResult = !showRuntimeResult
+          })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" style="width: 558px">
+      <div class="sample-button-panel">
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="lengthMeasure()"
+        >
+          长度测量
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="areaMeasure()"
+        >
+          面积测量
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="slopeMeasure()"
+        >
+          坡度测量
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="triangleMeasure()"
+        >
+          三角测量
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="azimuth()"
+        >
+          方位角测量
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="intersection()"
+        >
+          夹角测量
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-danger"
+          onclick="stopAllMeasureTool()"
+        >
+          停止测量
+        </button>
+      </div>
+      <form class="layui-form" action="">
+      <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 220px;">是否显示实时面积、距离测量结果</label>
+        <div class="layui-input-block">
+          <input
+            type="checkbox"
+            lay-filter="showRuntimeResult"
+            lay-skin="switch"
+            lay-text="是|否"
+            checked
+          />
+        </div>
+      </div>
+      </form>
+    </div>
+  </body>
+</html>

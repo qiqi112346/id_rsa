@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>图形图层 - 4326</title>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map,
+        view,
+        layer,
+        layerOpacity = 1
+      const { IGSTileLayer, GraphicsLayer } = zondy.layer
+      const { Map, Feature, Color } = zondy
+      const { Point, LineString, Polygon, GeometryEngine } = zondy.geometry
+      const {
+        SimpleMarkerSymbol,
+        SimpleLineSymbol,
+        SimpleFillSymbol,
+        PictureMarkerSymbol,
+        PictureFillSymbol,
+        TextSymbol
+      } = zondy.symbol
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 初始化示例UI
+        initUI()
+        // 添加瓦片图层
+        addIGSTileLayer()
+        // 添加图形图层
+        addLayer()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+        // 获取地图引擎类型
+        const engineType = localStorage.getItem('engine-type', 'cesium')
+        // 针对三维进行特殊处理
+        if (engineType === 'cesium'){
+          // 获取三维场景视图对象
+          const viewer = view.getInnerView()
+          // 判断是否支持图像渲染像素化处理
+          if(Cesium.FeatureDetection.supportsImageRenderingPixelated()){
+            // 使得该值和浏览器保持一致，文字或者图形的渲染结果会更加平滑
+            viewer.resolutionScale = window.devicePixelRatio
+          }
+          // 开启抗锯齿，文字或者图形的渲染结果会更加平滑
+          viewer.scene.fxaa = true
+          viewer.scene.postProcessStages.fxaa.enabled = true
+        }
+      }
+
+      // 添加瓦片图层
+      function addIGSTileLayer() {
+        const igsTileLayer = new IGSTileLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        })
+        map.add(igsTileLayer)
+        igsTileLayer.on('layerview-created', (result) => {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      // 添加图形图层
+      function addLayer() {
+        // 如果layer存在，先删除图层
+        if (layer) {
+          deleteLayer()
+        }
+        // 创建Graphics图层对象
+        layer = new GraphicsLayer({
+          // 要素集合
+          graphics: [],
+          // 图层透明度
+          opacity: layerOpacity
+        })
+        // 添加图层对象到地图文档中
+        map.add(layer)
+        // 添加几何要素
+        addPointFeatures()
+        addLineFeatures()
+        addAreaFeatures()
+      }
+
+      // 添加点要素
+      function addPointFeatures() {
+        // SimpleMarkerSymbol
+        const feature1 = new Feature({
+          geometry: new Point({
+            coordinates: [111, 34]
+          }),
+          symbol: new SimpleMarkerSymbol({
+            color: 'rgba(244,0,0,0.5)',
+            outline: new SimpleLineSymbol({
+              color: '#000000'
+            })
+          })
+        })
+
+        // SimpleMarkerSymbol
+        const feature2 = new Feature({
+          geometry: new Point({
+            coordinates: [112, 34]
+          }),
+          symbol: new SimpleMarkerSymbol({
+            color: 'rgba(0,0,255,0.5)',
+            path: 'M300 300 L0 300 L150 0 L300 300',
+            outline: new SimpleLineSymbol({
+              color: 'rgba(0,255,0,0.3)',
+              width: 4
+            })
+          })
+        })
+        // PictureMarkerSymbol
+        const feature3 = new Feature({
+          geometry: new Point({
+            coordinates: [113, 34]
+          }),
+          symbol: new PictureMarkerSymbol({
+            // 图片源数据，支持Image、HTMLCanvasElement、SVGElement、Svg字符串、基础图像地址、相对路径等
+            url: 'static/assets/logo/mapgis_logo_blue.png'
+          })
+        })
+        // TextSymbol
+        const feature4 = new Feature({
+          geometry: new Point({
+            coordinates: [114, 34]
+          }),
+          symbol: new TextSymbol({
+            text: '文字',
+            color: '#ffffff',
+            font: {
+              family: 'simHei',
+              size: 30,
+              decoration:'underline'
+            },
+            haloSize: 5,
+            haloColor: '#cccccc'
+          })
+        })
+        layer.addMany([feature1, feature2, feature3, feature4])
+      }
+
+      // 添加线要素
+      function addLineFeatures() {
+        // SimpleLineSymbol
+        const feature1 = new Feature({
+          symbol: new SimpleLineSymbol({
+            width: 2,
+            color:'#3a85c6'
+          }),
+          geometry: {
+            type: 'LineString',
+            coordinates: [
+              [111, 32.5],
+              [114, 32.5]
+            ]
+          }
+        })
+
+        const feature2 = new Feature({
+          symbol: new SimpleLineSymbol({
+            style: 'short-dash-dot-dot',
+            width: 3
+          }),
+          geometry: {
+            type: 'LineString',
+            coordinates: [
+              [111, 32.25],
+              [114, 32.25]
+            ]
+          }
+        })
+
+        const feature3 = new Feature({
+          symbol: new SimpleLineSymbol({
+            width: 2,
+            marker: {
+              color: '#3a85c6',
+              placement: 'begin-end',
+              style: 'diamond'
+            }
+          }),
+          geometry: {
+            type: 'LineString',
+            coordinates: [
+              [111, 32],
+              [114, 32]
+            ]
+          }
+        })
+        // 构造一个带三点弧段的线几何对象
+        const line = new LineString({
+          coordinates: [
+            [111, 32.75],
+            [111.5, 32.75],
+            [112, 33.25],
+            [112.5, 32.75],
+            [114, 32.75]
+          ]
+        })
+
+        // 通过几何中的三点弧段数据，构造离散后的几何对象
+        const arcLine = GeometryEngine.getArcFromGeometry({
+          // 几何对象
+          geometry: line,
+          // 弧段信息参数，必填项
+          arcInfo: [
+            {
+              // 弧段在第几个环上
+              "ringIndex": 0,
+              // 弧段在该环的起始位置，位置从1开始
+              "centerPointIndex": 2
+            }
+          ],
+          // 弧段中点的数量
+          numberOfPoints: 360
+        })
+
+        const feature4 = new Feature({
+          symbol: new SimpleLineSymbol({
+            width: 2
+          }),
+          geometry: arcLine
+        })
+        layer.addMany([feature1, feature2, feature3, feature4])
+      }
+
+      // 添加区要素
+      function addAreaFeatures() {
+        // SimpleFillSymbol
+        const feature1 = new Feature({
+          symbol: new SimpleFillSymbol({
+            color: new Color(255, 0, 0, 0.3),
+            outline: new SimpleLineSymbol({
+              color: '#3a85c6',
+              width: 3
+            })
+          }),
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [111, 31.5],
+                [111, 31],
+                [112, 31],
+                [112, 31.5],
+                [111, 31.5],
+              ],
+            ],
+          },
+        });
+        // PictureFillSymbol
+        const feature2 = new Feature({
+          symbol: new PictureFillSymbol({
+              style:'cross',
+              url: "http://webclient.smaryun.com/static/assets/logo/mapgis_logo_blue.png",
+              width: 12,
+              height: 12,
+              xoffset:0,
+              yoffset:0,
+              color: "#ff0000",
+              outline: {
+                color: "#ff0000",
+                width: 1,
+              },
+          }),
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [112.5, 31.5],
+                [112.5, 31],
+                [113.5, 31],
+                [113.5, 31.5],
+                [112.5, 31.5],
+              ],
+            ],
+          },
+        });
+        // 构造一个带三点弧段的区几何对象
+        const polygon = new Polygon({
+          coordinates: [
+            [
+              [112.5, 30.5],
+              [112.5, 30],
+              [113.5, 30],
+              [113.5, 30.5],
+              [113.3, 30.5],
+              [113.0, 30.8],
+              [112.7, 30.5],
+              [112.5, 30.5]
+            ]
+          ]
+        })
+
+        // 通过几何中的三点弧段数据，构造离散后的几何对象
+        const polygonArc = GeometryEngine.getArcFromGeometry({
+          // 几何对象
+          geometry: polygon,
+          // 弧段信息参数，必填项
+          arcInfo: [
+            {
+              // 弧段在第几个环上
+              "ringIndex": 0,
+              // 弧段在该环的起始位置，位置从1开始
+              "centerPointIndex": 5
+            }
+          ],
+          // 弧段中点的数量
+          numberOfPoints: 360
+        })
+        const feature3 = new Feature({
+          symbol: new PictureFillSymbol({
+            url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAllJREFUOE99ks1LVGEUxp/nndHRIsH+gqCPTYGJkNyZwbkzgiD2sVAIjZAgosDImSFatHERhcncCYOwZaXWImohuYnpXifvQN8pZZtWGVFRQYu+x/fE3GZ0ZhLfzeF5zzk/zhdRfKG0ecCNOxMlvZoNp6JNs0l7rtzHgjAsY6NC4J5GIFYjP9Znk9nFaoA5ZPrzDTgxm3BSFYCwFe3jUv6F9vnmCAxqsjUXt/uqAcF0tIsiA27C6awAhCxTAE5T5JEGt5HyFcIpN2lPlweGrMgEwD4RHMwlnfGSj+F0pFeEk0IMU3CqYP3QV7Lx7KtSUDAdi1F0pqjn/tT62h8OZD4XNIMj5g4oxkhkFGWrFtyuaUS9c8j5WZxPvUKgkGyUVTTmJpxjHsAYbWtWefUUIgsgPwJohOCum3ROFgJCVtQCJF49Eyr2zw7aV70thCzzHIAmEUySuAZgyk04ew0rtktBP1h1teS8G7ebSgAbwAvFpbNafO8AjGn8Oq0YuATB/jVu47gHCKai3aTcFKCXwHUAhyWvHPr167UOC8CiBwino0dEpFlDnaHCZmp9XoijFDzztgN8gmDkf5h88QDeHNLmYwjqAGyH8KImhxX0WxBP8vR1+fXS+1WqebkMCFptHUp8PZryPZdwBlsut9TUfduwAGALtO4WqnXFAa9wyFvLAK8VK7JHiB43PtPv6QvmbtGYKmY8B7BzJVveiPa1VQAMy6hXrL3hxmf2LV9hyhwixQDYUfz7QMDW5Hgubt+pAPy7iUjGTcy0V/fbOtrZUKt/b7o/mJkv9/0FS9/oIgeLi6QAAAAASUVORK5CYII=",
+            width: 20,
+            height: 20,
+            xoffset:0,
+            yoffset:0,
+            color: "#ff0000",
+          }),
+          geometry: polygonArc
+        });
+        layer.addMany([feature1,feature2,feature3])
+      }
+
+      // 删除图层
+      function deleteLayer() {
+        map.remove(layer)
+      }
+
+      // 显隐图层
+      function toggleLayer() {
+        layer.visible = !layer.visible
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          layui.slider.render({
+            elem: '#moveStep',
+            value: 100,
+            min: 0,
+            max: 100,
+            step: 1,
+            theme: 'rgb(21, 134, 238)',
+            //自定义提示文本
+            setTips: function (value) {
+              layerOpacity = value / 100
+              return value + '%'
+            },
+            change: function (value) {
+              layer.opacity = layerOpacity
+            }
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <!--  示例UI  -->
+        <div class="layui-panel layui-panel-right graphics-layer-panel">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label" style="width: 100px"
+            >图层透明度</label
+          >
+          <div class="layui-input-block sample-slider" style="width: 160px">
+            <div id="moveStep"></div>
+          </div>
+        </div>
+        <div class="line"></div>
+        <div class="layui-form-item">
+          <button type="button" class="layui-btn" onclick="addLayer()">
+            添加图层
+          </button>
+          <button
+            type="button"
+            class="layui-btn"
+            onclick="deleteLayer()"
+            style="margin-left: 6px"
+          >
+            删除图层
+          </button>
+          <button
+            type="button"
+            class="layui-btn"
+            onclick="toggleLayer()"
+            style="margin-left: 6px"
+          >
+            显隐图层
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>地质体封边工具</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/tool.css"/>
+    <script>
+      'use strict'
+      // 定义三维视图的主要类
+      let map, sceneView, viewer
+      let layerList = []
+      let urlM3D2_0 =
+        'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D/2.0/wujiangdizhiti/wujiangdizhiti.mcj'
+      let urlM3D2_1 =
+        'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D/2.1/wujiangdizhiti_21/wujiangdizhiti_21.mcj'
+      // 绘制工具
+      let drawElement = undefined
+      // 裁剪的工具
+      let cutTool = undefined
+      // M3D图层对象
+      let M3DLayer = undefined
+      // 属性过滤方式
+      let cuttingFilterType = '0'
+
+      // 添加一个剖切工具
+      function addCuttingTool() {
+        if (layerList.length === 1) {
+          // 代表模型都添加完了
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/CuttingTool.html
+          cutTool = new zondy.cesium.CuttingTool(viewer, layerList, {
+            onErrorCallback: function (type, msg) {
+              console.log('错误信息：' + type + ':' + msg)
+            }
+          })
+          drawElement = new zondy.cesium.DrawElement(viewer)
+        } else {
+          // 如果没有添加完，那么继续等待
+          setTimeout(() => {
+            addCuttingTool()
+          }, 500)
+        }
+      }
+
+      function addCuttingPlane() {
+        layer.msg('左键选取点，右键结束')
+        // 先移除上次的切面
+        removeCuttingPlane()
+        // 点击绘制裁剪面，显示位置条
+        document.getElementById('planeSlideBar').style.display = 'block'
+        drawElement.startDrawingPolyline({
+          callback: function (result) {
+            let positions = result.positions
+            let lines = []
+            for (let i = 0; i < positions.length; i++) {
+              let tempPoint = Cesium.Cartographic.fromCartesian(positions[i])
+              lines.push(
+                new Cesium.Cartesian3(
+                  Cesium.Math.toDegrees(tempPoint.longitude),
+                  Cesium.Math.toDegrees(tempPoint.latitude),
+                  tempPoint.height
+                )
+              )
+            }
+            cutTool.createModelCuttingPlaneFromPolyline(lines, {
+              // 裁剪方向，false为原方向，true为反方向
+              unionClippingRegions: false
+            })
+            drawElement.stopDrawing()
+          }
+        })
+      }
+
+      function addCuttingPolygon() {
+        // 先移除上次的切面
+        removeCuttingPlane()
+        // 获取dom，隐藏位置条
+        document.getElementById('planeSlideBar').style.display = 'none'
+        drawElement.startDrawingPolygon({
+          callback: function (result) {
+            let positions = result.positions
+            let pnts = []
+            for (let i = 0; i < positions.length; i++) {
+              let position = positions[i]
+              let c1 = Cesium.Cartographic.fromCartesian(position)
+              let p1 = new Cesium.Cartesian3(
+                Cesium.Math.toDegrees(c1.longitude),
+                Cesium.Math.toDegrees(c1.latitude),
+                c1.height
+              )
+              pnts.push(p1)
+            }
+            cutTool.createModelCuttingVolume(pnts, -3000, 3000, {
+              unionClippingRegions: true,
+              distance: 0,
+              showCuttingPlane: false
+            })
+            drawElement.stopDrawing()
+          }
+        })
+      }
+
+      function updateCuttingPlaneDistance(value) {
+        let tileset = layerList[0]
+        if (tileset.clippingPlanes) {
+          let planes = tileset.clippingPlanes
+          if (planes && tileset.clippingPlanes.get(0)) {
+            for (let i = 0; i < planes.length; i++) {
+              tileset.clippingPlanes.get(i).distance = Number(value)
+            }
+          }
+        }
+      }
+
+      function removeCuttingPlane() {
+        addSlideBar()
+        let tileset = layerList[0]
+        if (tileset.clippingPlanes) {
+          tileset.clippingPlanes.removeAll()
+        }
+        if (drawElement) {
+          drawElement.stopDrawing()
+        }
+      }
+
+      function addModel(url) {
+        let modelCacheLayer = new zondy.layer.M3DModelCacheLayer({
+          url: url,
+          // 初始化参数
+          extensionOptions: {
+            autoReset: true,
+            fillClip: true,
+          }
+        })
+        map.add(modelCacheLayer)
+        modelCacheLayer.on('layerview-created', function (result) {
+          M3DLayer = sceneView.getInnerLayer(result.layer)
+          M3DLayer.enableCuttingFilter = document.getElementById(
+            'enableCuttingFilter'
+          ).checked
+          applyCuttingFilterType(cuttingFilterType)
+          layerList.push(M3DLayer)
+        })
+      }
+
+      // 初始隐藏切面位置
+      function hideSlideBar() {
+        // 获取dom，设置隐藏属性
+        document.getElementById('planeSlideBar').style.display = 'none'
+      }
+
+      function addSlideBar() {
+        //等值面透明度
+        layui.slider.render({
+          elem: '#planeDistance',
+          value: 0,
+          min: -400,
+          max: 400,
+          input: true,
+          theme: 'rgb(102, 147, 251)',
+          change: function (value) {
+            updateCuttingPlaneDistance(value)
+          }
+        })
+      }
+
+      // 初始化球体
+      function initViewer() {
+        // 初始化图层管理容器
+        map = new zondy.Map()
+        // 初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          // 视图id
+          viewId: 'mapgis-3d-viewer',
+          // 图层管理容器
+          map: map
+        })
+        // 获取视图对象
+        viewer = sceneView.getInnerView()
+        // 为了更好的展示，去掉地球
+        viewer.scene.skyAtmosphere.show = false;
+        viewer.scene.sun.show = false;
+        viewer.scene.moon.show = false;
+        viewer.scene.globe.showGroundAtmosphere = false;
+        viewer.scene.globe.show = false;
+      }
+
+      // 初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          let form = layui.form
+          // 监听选择框
+          form.on('select(type)', function (data) {
+            while (layerList.length > 0) {
+              let layer = layerList.shift()
+              viewer.scene.primitives.remove(layer)
+            }
+            if (data.value === '0') {
+              addModel(urlM3D2_0)
+            } else {
+              addModel(urlM3D2_1)
+            }
+          })
+        })
+        layui.use(function () {
+          let form = layui.form
+          // 监听选择框
+          form.on('select(cuttingFilterType)', function (data) {
+            cuttingFilterType = data.value
+            applyCuttingFilterType(cuttingFilterType)
+          })
+        })
+        layui.form.on('switch(enableCuttingFilter)', (data) => {
+          M3DLayer.enableCuttingFilter = data.elem.checked
+        })
+      }
+
+      function applyCuttingFilterType(cuttingFilterType) {
+        let cuttingFilter = []
+        if (cuttingFilterType === '0') {
+          M3DLayer.cuttingFilter = []
+        } else if (cuttingFilterType === '1') {
+          if (M3DLayer.version === '2.0') {
+            cuttingFilter = [
+              {
+                field: 'OID',
+                type: 'unique',
+                valueGroups: [1, 2, 3, 4, 5]
+              }
+            ]
+          } else if (M3DLayer.version === '2.1') {
+            cuttingFilter = [
+              {
+                field: 'tid',
+                type: 'unique',
+                valueGroups: [0, 1, 2, 3, 4]
+              }
+            ]
+          }
+        } else if (cuttingFilterType === '2') {
+          if (M3DLayer.version === '2.0') {
+            cuttingFilter = [
+              {
+                field: 'OID',
+                type: 'range',
+                valueGroups: [
+                  { start: 1, end: 4 },
+                  { start: 6, end: 7 }
+                ]
+              }
+            ]
+          } else if (M3DLayer.version === '2.1') {
+            cuttingFilter = [
+              {
+                field: 'tid',
+                type: 'range',
+                valueGroups: [
+                  { start: 1, end: 2 },
+                  { start: 5, end: 7 }
+                ]
+              }
+            ]
+          }
+        } else if (cuttingFilterType === '3') {
+          if (M3DLayer.version === '2.0') {
+            cuttingFilter = [
+              {
+                field: 'FeaName',
+                type: 'contain',
+                valueGroups: ['object']
+              }
+            ]
+          } else if (M3DLayer.version === '2.1') {
+            cuttingFilter = [
+              {
+                field: 'LayerName',
+                type: 'contain',
+                valueGroups: ['BottomFace']
+              }
+            ]
+          }
+        }
+        M3DLayer.cuttingFilter = cuttingFilter
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //三维试图类构造完毕，添加模型
+        addModel(urlM3D2_0)
+        //模型添加完毕了之后，创建一个cutting的工具
+        addCuttingTool()
+        //简单切面位置控制的滑块条
+        addSlideBar()
+        //初始隐藏位置
+        hideSlideBar()
+        //初始化UI组件
+        initUI()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" id="layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label">吴江地质体:</label>
+          <div
+            class="layui-input-block"
+            style="width: 100px; margin-bottom: 20px"
+          >
+            <select name="type" lay-verify="required" lay-filter="type">
+              <option value="0" selected>M3D2.0</option>
+              <option value="1">M3D2.1</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">属性过滤方式:</label>
+          <div
+            class="layui-input-block"
+            style="width: 100px; margin-bottom: 20px"
+          >
+            <select
+              name="type"
+              lay-verify="required"
+              lay-filter="cuttingFilterType"
+              id="cuttingFilterType"
+            >
+              <option value="0">请选择</option>
+              <option value="1">单值</option>
+              <option value="2">分段</option>
+              <option value="3">包含</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">属性过滤:</label>
+          <div class="layui-input-block">
+            <input
+              type="checkbox"
+              name="switch"
+              lay-skin="switch"
+              lay-text="开启|关闭"
+              lay-filter="enableCuttingFilter"
+              id="enableCuttingFilter"
+            />
+          </div>
+        </div>
+      </form>
+
+      <div class="sample-main-panel" id="planeSlideBar">
+        <div class="slideBarDiv" id="planeSlideBarDiv">
+          <label class="layui-form-label">切面位置:</label>
+          <div id="planeDistance" class="demo-slider"></div>
+        </div>
+      </div>
+
+      <div class="sample-button-panel">
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="addCuttingPlane()"
+        >
+          绘制裁剪面
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="addCuttingPolygon()"
+        >
+          绘制裁剪体
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-danger"
+          onclick="removeCuttingPlane()"
+        >
+          移除裁剪面
+        </button>
+      </div>
+    </div>
+    <style>
+      .layui-slider {
+        margin-left: 75px;
+      }
+      .layui-slider-input {
+        top: 0px;
+      }
+      .layui-panel-right {
+        width: 305px;
+      }
+      .sample-main-panel {
+        margin-top: 20px;
+      }
+      .layui-form {
+        margin-bottom: 20px;
+      }
+      .layui-form-label {
+        width: 100px;
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>无人机视频投放</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/tool.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, graphicsLayer, squareGraphic, animation
+      //坐标数组
+      let pathPositions = [
+        Cesium.Cartesian3.fromDegrees(114.4027, 30.4664, 50),
+        Cesium.Cartesian3.fromDegrees(114.4033, 30.4728, 50)
+      ]
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //加载天地图
+        addTDT()
+        //添加视频
+        addVideo()
+        //初始化漫游工具
+        initAnimationTool()
+        //视点跳转
+        flyTo()
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //加载天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/vec_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      // 添加视频
+      function addVideo() {
+        if (squareGraphic) {
+          squareGraphic.remove()
+        }
+        graphicsLayer = new zondy.cesium.GraphicsLayer(viewer)
+        let videoElement = document.getElementById('trailer')
+        squareGraphic = new zondy.cesium.Graphic({
+          //类型
+          type: 'square',
+          //几何点坐标
+          positions: getPosition(pathPositions[0]),
+          //样式
+          style: {
+            // 图片材质
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Material.html
+            material: Cesium.Material.fromType(Cesium.Material.ImageType, {
+              //图片url
+              image: videoElement,
+              // x、y轴重复
+              repeat: new Cesium.Cartesian2(1.0, 1.0)
+            }),
+            // 离地高度
+            height: 10
+          }
+        })
+        //将标绘添加入标绘图层
+        graphicsLayer.addGraphic(squareGraphic)
+      }
+
+      //初始化漫游工具
+      function initAnimationTool() {
+        // 定义动画漫游对象
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/AnimationTool.html
+        animation = new zondy.cesium.AnimationTool(viewer, {
+          // 漫游的方向角
+          heading: Cesium.Math.toRadians(90),
+          // 漫游的俯仰角
+          pitch: Cesium.Math.toRadians(-30),
+          // 相机距离模型的距离（米）
+          range: 400,
+          // 设置漫游的视角类型。0：正常，不移动相机；1：跟随；2：锁定第一视角；3：上帝视角
+          animationType: 1,
+          // 是否循环漫游动画
+          isLoop: true,
+          // 是否显示漫游路径
+          showPath: false,
+          // 漫游路径(世界坐标点数组)
+          positions: pathPositions,
+          // 漫游速度(m/s)
+          speed: 10,
+          // 倍速
+          speedupFactor: 1,
+          // 附加高程
+          exHeight: 0,
+          // 是否显示用时和距离提示信息
+          showInfo: false,
+          // 漫游的模型对象的url，为空表示不显示
+          modelUrl: 'http://webclient.smaryun.com:8200/3DData/Model/glb/uav.glb',
+          //模型对象参数，详见ModelGraphics对象的文档
+          model: {
+            //放大比例
+            scale: 5,
+            //固定大小设为0
+            minimumPixelSize: 0
+          },
+          // 完成漫游后的回调函数
+          complete: function () {},
+          // 路径插值算法。可选：拉格朗日算法Cesium.LagrangePolynomialApproximation、线性插值 Cesium.LinearApproximation、埃尔米特插值插值Cesium.HermitePolynomialApproximation
+          interpolationAlgorithm: Cesium.LinearApproximation,
+          //是否获取当前点坐标，为true时，需配合返回当前点坐标的回调函数callBack一起使用
+          isGetPositionNow: true,
+          // 是否执行回调函数
+          onPositionTag: true,
+          // 回调函数
+          callback: function (data) {
+            updatePosition(data.position)
+          },
+          //是否需要将较大转弯点处理为圆弧
+          isProcessCorner: true,
+          //设置判断为转弯点的角度的最大值，不超过150的转角会被执行插值，处理为圆弧
+          maxAngle: 150.0,
+          //转弯处往圆弧曲线上插值点的步长，点个数=1/curveStep
+          curveStep: 0.01,
+          // 是否挂载动态扫描特效
+          isAddScanEffect: false,
+          // 是否获取路径点的真实高程
+          isGetRealHeight: false,
+          // 用于判断当前点是否在路径点所在位置附近的精度
+          disFactor: 10
+        })
+        // 开启动画漫游
+        animation.start()
+      }
+
+      // 更新正方形视频坐标
+      function updatePosition(position) {
+        let positionNew = getPosition(position)
+        squareGraphic.positions = positionNew
+      }
+
+      //根据无人机当前坐标算出正方形视频坐标
+      function getPosition(position) {
+        // 经纬度坐标
+        let cartographic = Cesium.Cartographic.fromCartesian(position)
+        let lng = Cesium.Math.toDegrees(cartographic.longitude)
+        let lat = Cesium.Math.toDegrees(cartographic.latitude)
+        let alt = cartographic.height
+
+        // 正方形坐标
+        let position1 = Cesium.Cartesian3.fromDegrees(
+          lng + 30 * 0.00001,
+          lat - 30 * 0.00001,
+          alt - 20
+        )
+        let position2 = Cesium.Cartesian3.fromDegrees(
+          lng - 30 * 0.00001,
+          lat + 30 * 0.00001,
+          alt - 20
+        )
+        let positionNew = [position1, position2]
+        return positionNew
+      }
+
+      // 视点跳转
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [114.4026, 30.4649, 240],
+          duration: 2,
+          orientation: {
+            heading: Cesium.Math.toRadians(2), //方位角
+            pitch: Cesium.Math.toRadians(-47), //俯仰角
+            roll: 0 //翻滚角
+          }
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <video
+      id="trailer"
+      style="display: none"
+      autoplay=""
+      loop=""
+      crossorigin=""
+      controls=""
+    >
+      <source
+        src="http://webclient.smaryun.com:8200/NoneSpatialData/video/scenePro.mp4"
+        type="video/mp4"
+      />
+    </video>
+  </body>
+</html>

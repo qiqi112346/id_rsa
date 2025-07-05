@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>广告牌</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--html2canvas库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/html2canvas/html2canvas.min.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/graphic.css"
+    />
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, options, graphicsLayer, billboard
+      //取得jquery对象
+      let $ = layui.$
+
+      //初始化标绘图层
+      function addGraphicLayer() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/GraphicsLayer.html
+        graphicsLayer = new zondy.cesium.GraphicsLayer(viewer, {
+          //点击标绘对象的回调函数
+          clickGraphic: function (graphic) {
+            if (!graphic) return
+            billboard = graphic
+            //更新样式面板
+            if (graphic.type === 'billboard') {
+              $('#billboard-width').val(billboard.style.width)
+              $('#billboard-height').val(billboard.style.height)
+              $('#billboard-offsetHeight').val(billboard.style.offsetHeight)
+              if (typeof billboard.style.image !== 'undefined') {
+                $('#billboard-image').val(billboard.style.image)
+                $('#billboard-image').parents('.layui-form-item').show()
+              }
+              $('#editPanel').show()
+            }
+          },
+          getGraphic: function () {
+            graphicsLayer.stopDrawing()
+          }
+        })
+      }
+
+      //图片广告牌
+      function addImageBillboard() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let billboardGraphic = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'billboard',
+          //标绘位置
+          positions: [Cesium.Cartesian3.fromDegrees(114.3852, 30.463, 0)],
+          //标绘样式
+          style: {
+            //广告牌图片URL
+            image: 'http://webclient.smaryun.com:8200/NoneSpatialData/image/icon.png',
+            //广告牌宽度
+            width: 64,
+            //广告牌高度
+            height: 64,
+            //离地高度
+            offsetHeight: 600
+          }
+        })
+        //将标绘添加入标绘图层
+        graphicsLayer.addGraphic(billboardGraphic)
+      }
+
+      //动态图片广告牌
+      function addDynamicImageBillboard() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let billboardGraphic1 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'billboard',
+          //标绘位置
+          positions: [Cesium.Cartesian3.fromDegrees(114.4202, 30.463, 0)],
+          //标绘样式
+          style: {
+            //广告牌图片URL
+            image:
+              'http://webclient.smaryun.com:8200/NoneSpatialData/image/explosion.png',
+            //广告牌宽度
+            width: 100,
+            //广告牌高度
+            height: 100,
+            //离地高度
+            offsetHeight: 0,
+            //帧数率
+            frameRate: 70
+            //重复次数，不设置就无限重复
+            // cycles: 10,
+          }
+        })
+
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let billboardGraphic2 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'billboard',
+          //标绘位置
+          positions: [Cesium.Cartesian3.fromDegrees(114.4552, 30.463, 0)],
+          //标绘样式
+          style: {
+            //广告牌图片URL
+            image: 'http://webclient.smaryun.com:8200/NoneSpatialData/image/tips02.png',
+            //广告牌宽度
+            width: 96,
+            //广告牌高度
+            height: 140,
+            //帧数率
+            frameRate: 30
+            //重复次数，不设置就无限重复
+            // cycles: 10,
+          }
+        })
+
+        //将标绘添加入标绘图层
+        graphicsLayer.addGraphic(billboardGraphic1)
+        graphicsLayer.addGraphic(billboardGraphic2)
+      }
+
+      //简单文本广告牌
+      function addTextBillboard() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let billboardGraphic2 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'div',
+          //标绘位置
+          positions: [Cesium.Cartesian3.fromDegrees(114.3852, 30.423, 0)],
+          //标绘样式
+          style: {
+            //广告牌HTML文本
+            html: '<div style="font-weight: bold;color: #b5fff8;font-size: 20px">这是div广告牌</div>',
+            //离地高度
+            offsetHeight: 600,
+            //屏幕像素偏移
+            pixelOffset: new Cesium.Cartesian2(0, 0)
+          }
+        })
+        //将标绘添加入标绘图层
+        graphicsLayer.addGraphic(billboardGraphic2)
+      }
+
+      //Html广告牌
+      function addHtmlBillboard() {
+        let billboardDiv = document.createElement('DIV')
+        billboardDiv.className = 'billboard-test' //这个div类拥有自定义的样式，是一张背景图片
+        billboardDiv.innerHTML =
+          '<div class="billboard-test-content">自定义广告牌</div>'
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+        let billboardGraphic3 = new zondy.cesium.Graphic({
+          //标绘类型
+          type: 'div',
+          //标绘位置
+          positions: [Cesium.Cartesian3.fromDegrees(114.4202, 30.423, 0)],
+          //标绘样式
+          style: {
+            //广告牌dom对象
+            html: billboardDiv
+          }
+        })
+        //将标绘添加入标绘图层
+        graphicsLayer.addGraphic(billboardGraphic3)
+      }
+
+      //html转canvas广告牌
+      function addHtmlImageBillboard() {
+        //先将html可见
+        document.getElementById('htmlGraph').style.display = 'block'
+        //再利用html2canvas转换成图片
+        html2canvas(document.getElementById('htmlGraph'), {
+          //canvas宽度
+          width: 100,
+          //canvas高度
+          height: 100,
+          //canvas分辨率，越大越清晰
+          scale: 2
+        }).then(function (canvas) {
+          //在这里可以拿到base64编码的图片
+          let dataUrl = canvas.toDataURL('image/png', 1.0)
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/Graphic.html
+          let billboardGraphic = new zondy.cesium.Graphic({
+            //标绘类型
+            type: 'billboard',
+            //标绘位置
+            positions: [Cesium.Cartesian3.fromDegrees(114.4752, 30.423, 10)],
+            //标绘样式
+            style: {
+              //广告牌图片URL
+              image: dataUrl,
+              //广告牌宽度
+              width: 100,
+              //广告牌高度
+              height: 100,
+              //离地高度
+              offsetHeight: 600
+            }
+          })
+          //将标绘添加入标绘图层
+          graphicsLayer.addGraphic(billboardGraphic)
+        })
+      }
+
+      function startDrawing() {
+        $('#editPanel').hide()
+        //开始绘制
+        graphicsLayer.startDrawing({
+          type: 'billboard',
+          style: {
+            //广告牌图片URL
+            image: 'http://webclient.smaryun.com:8200/NoneSpatialData/image/icon.png',
+            //广告牌宽度
+            width: Number($('#billboard-width').val()),
+            //广告牌高度
+            height: Number($('#billboard-height').val()),
+            //离地高度
+            offsetHeight: Number($('#billboard-offsetHeight').val())
+          }
+        })
+      }
+
+      function deleteBillboard() {
+        billboard.remove()
+        $('#editPanel').hide()
+      }
+
+      //视点跳转
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [114.423, 30.333, 16643],
+          duration: 2,
+          orientation: {
+            heading: Cesium.Math.toRadians(2.661), //方位角
+            pitch: Cesium.Math.toRadians(-51), //俯仰角
+            roll: 0 //翻滚角
+          }
+        })
+      }
+
+      //初始化示例UI
+      function initUI() {
+        //示例UI相关代码
+        layui.use(function () {
+          //宽度
+          $('#billboard-width').bind('input propertychange', function () {
+            billboard.style.width = clampNumberValue(
+              $('#billboard-width').val(),
+              [0]
+            )
+          })
+
+          //高度
+          $('#billboard-height').bind('input propertychange', function () {
+            billboard.style.height = clampNumberValue(
+              $('#billboard-height').val(),
+              [0]
+            )
+          })
+
+          //离地高度
+          $('#billboard-offsetHeight').bind(
+            'input propertychange',
+            function () {
+              billboard.style.offsetHeight = clampNumberValue(
+                $('#billboard-offsetHeight').val()
+              )
+            }
+          )
+
+          //离地高度
+          $('#billboard-image').bind('input propertychange', function () {
+            billboard.style.image = clampNumberValue(
+              $('#billboard-image').val()
+            )
+          })
+        })
+      }
+
+      //加载天地图底图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //构造三维视图类（视图容器div的id，三维视图设置参数）
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //显示鼠标位置
+        viewer.showPosition()
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //初始化标绘图层
+        addGraphicLayer()
+        //图片广告牌
+        addImageBillboard()
+        //动态图片广告牌
+        addDynamicImageBillboard()
+        //简单文本广告牌
+        addTextBillboard()
+        //html广告牌
+        addHtmlBillboard()
+        //html转canvas的广告牌
+        addHtmlImageBillboard()
+        //加载天地图底图
+        addTDT()
+        //视点跳转
+        flyTo()
+        //初始化示例UI
+        initUI()
+      }
+
+      // 获取合法的number数据输入
+      function clampNumberValue(inputValue, limits) {
+        let max, min
+        if (Array.isArray(limits) && limits.length > 0) {
+          if (limits.length === 1) {
+            min = limits[0]
+          } else {
+            max = limits[1]
+          }
+        }
+        let value = Number(inputValue)
+        if (Number.isNaN(value)) {
+          if (typeof min === 'number') {
+            return min
+          } else {
+            return 0
+          }
+        }
+        if (typeof min === 'number' && value <= min) {
+          return min
+        }
+        if (typeof max === 'number' && value >= max) {
+          return max
+        }
+        return value
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div
+      class="layui-panel layui-panel-right"
+      style="text-align: center; width: 140px; padding: 10px"
+    >
+      <button
+        onclick="startDrawing()"
+        style="margin: 0 auto !important; width: 120px"
+        type="button"
+        class="layui-btn layui-btn-normal graphic-button-margin"
+      >
+        添加广告牌
+      </button>
+    </div>
+    <div class="layui-panel layui-panel-right" id="editPanel">
+      <form class="layui-form" action="">
+        <div class="sample-main-panel">
+          <div class="layui-form-item">
+            <label class="layui-form-label">广告牌宽度</label>
+            <div class="layui-input-block">
+              <input
+                id="billboard-width"
+                value="64"
+                type="text"
+                name="title"
+                lay-verify="title"
+                autocomplete="off"
+                placeholder="40"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">广告牌高度</label>
+            <div class="layui-input-block">
+              <input
+                id="billboard-height"
+                value="64"
+                type="text"
+                name="title"
+                lay-verify="title"
+                autocomplete="off"
+                placeholder="4"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">离地高度</label>
+            <div class="layui-input-block">
+              <input
+                id="billboard-offsetHeight"
+                type="text"
+                value="600"
+                name="title"
+                lay-verify="title"
+                autocomplete="off"
+                placeholder="100"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block" style="width: 183px">
+              <input
+                id="billboard-image"
+                type="text"
+                name="image"
+                value=""
+                name="title"
+                lay-verify="title"
+                autocomplete="off"
+                placeholder="图片"
+                class="layui-input"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="sample-button-panel">
+          <button
+            onclick="$('#editPanel').hide()"
+            style="float: right; width: auto; margin-right: 0 !important"
+            type="button"
+            class="layui-btn layui-btn-normal graphic-button-margin"
+          >
+            关闭面板
+          </button>
+          <span
+            onclick="deleteBillboard()"
+            style="
+              cursor: pointer;
+              float: right;
+              line-height: 32px;
+              margin-right: 15px;
+            "
+            >删除标绘</span
+          >
+        </div>
+      </form>
+    </div>
+    <div id="htmlGraph">我是html元素</div>
+  </body>
+  <style>
+    #htmlGraph {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(
+        -45deg,
+        #0acf00 25%,
+        #78c9db 0,
+        #78c9db 50%,
+        #0acf00 0,
+        #0acf00 75%,
+        #78c9db 0
+      );
+      background-size: 30px 30px;
+      display: none;
+      font-size: 16px;
+      font-weight: bold;
+      line-height: 100px;
+      color: red;
+      text-align: center;
+    }
+
+    .billboard-test {
+      width: 150px;
+      height: 150px;
+      background: url('http://webclient.smaryun.com:8200/NoneSpatialData/image/background.png');
+      background-size: cover;
+      display: flex;
+      align-items: center;
+    }
+
+    .billboard-test-content {
+      font-weight: bolder;
+      color: white;
+      font-size: 20px;
+      padding-left: 30px;
+    }
+  </style>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>态势推演二三维联动</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha384-SOnAn/m2fVJCwnbEYgD4xzrPtvsXdElhOVvR8ND1YjB5nhGNwwf7nBQlhfAwHAZC" crossorigin="anonymous"/>
+    <!--引入MapBox库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.css"
+    />
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!-- jquery -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/jquery/jquery-3.7.1.min.js"></script>
+    <!-- plot -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-plot.min.js"></script>
+    <!-- panel -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotPanel/index.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotPanel/index.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/link.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/plot/plot.css"
+    />
+    <script>
+      //使用严格模式
+      'use strict'
+      //天地图token
+      var tiandituKey = getTDTToken()
+      //定义三维视图的主要类
+      let map, sceneView, viewer, plotLayer
+      //态势推演主要类
+      let animationTool, plotLayer3DGroup, drawTool, plotEditor, currentPlot
+      //定义二维试图的主要类
+      let mapBox, canvas
+
+      /**
+       * 地图初始化
+       */
+      function init() {
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //初始化Cesium对象
+        initCesium()
+        //初始化MapBox对象
+        initMapbox()
+        //初始化态势推演工具
+        initPlotAnimation()
+        //初始化态势推演UI界面
+        initAnimationUI()
+      }
+
+      //初始化二三维联动工具
+      function initLink() {
+        let linkTool = new window.zondy.plot.LinkTool(
+          //主屏幕图层
+          plotLayer,
+          //所有屏幕的地图引擎容器
+          //请注意要确保所有容器都已加载完毕，才可正常联动
+          [viewer, canvas],
+          {
+            //三维上当仰角值小于某个数值时，才进行三维到二维的联动，默认0.0002
+            roll: 0.0004,
+            //进入地图（所有地图）时相机的视角范围
+            bbox: [
+              [116.2396164394222, 36.857699114405676],
+              [119.38483688908019, 33.044482287500756]
+            ]
+          }
+        )
+      }
+
+      //三维球体上初始化行业标绘
+      function initPlotAnimation() {
+        // 获取Zondy类
+        const zondy = window.zondy
+        // 获取标绘类
+        const plot= zondy.plot
+        const {
+          // 标绘库路径
+          PlotUtilBase,
+          // 三维图层
+          PlotLayer3D,
+          // 三维图层组
+          PlotLayer3DGroup,
+          // 符号管理器
+          SymbolManager,
+          // 绘制工具
+          DrawTool,
+          // 注册类
+          PlotRegister,
+          // 态势推演工具
+          TimeLine
+        } = plot
+        // 符号库路径
+        const symbolUrl = `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/symbolLib.json`
+        const symbolOptions = {
+          // 符号库字体路径
+          fontURL: `http://webclient.smaryun.com:8200/Plot/plot-sample/fonts/`,
+          // 静态资源路径
+          baseUrl: `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/`
+        }
+
+        // 创建符号管理器
+        const manager = new SymbolManager(symbolUrl, symbolOptions)
+        // 请求获取符号库
+        manager.getSymbols().then(() => {
+          // 创建图层组
+          plotLayer3DGroup = new PlotLayer3DGroup(viewer)
+          // 创建三维图层
+          plotLayer = new PlotLayer3D(Cesium, viewer, {})
+          // 添加图层
+          plotLayer3DGroup.addLayer(plotLayer)
+          // 加载标绘图层
+          $.getJSON(
+            `http://webclient.smaryun.com:8200/Plot/plot-sample/layers/bbbbb.json`,
+            (res) => {
+              plotLayer.fromJSON(res)
+              let interval = setInterval(function () {
+                if (plotLayer.loaded) {
+                  //确保所有标绘资源加载完毕
+                  //获取资源后，建立二三维联动
+                  initLink()
+                  clearInterval(interval)
+                }
+              }, 100)
+            }
+          )
+          // 创建态势推演工具
+          $.getJSON(
+            `http://webclient.smaryun.com:8200/Plot/plot-sample/scripts/abc.json`,
+            (t) => {
+              animationTool = new TimeLine(plotLayer3DGroup, {})
+              animationTool.fromJSON(t)
+            }
+          )
+          // 图层拾取标绘
+          plotLayer.pickPlot = (plot) => {
+            currentPlot = plot
+          }
+        })
+      }
+
+      //初始化态势推演UI界面
+      function initAnimationUI() {
+        //生成UI面板
+        const panel = new window.webclientPlot.PlotPanel('plot-show-table', {
+          titleText: '态势推演',
+          panelWidth: 280
+        })
+        const contentBody = panel.getBody()
+        contentBody.style.display = 'flex'
+        contentBody.style.flexDirection = 'column'
+
+        //态势推演点击事件
+        const items = [
+          {
+            children: [
+              {
+                name: '0.5倍速',
+                action: () => {
+                  animationTool.setSpeed(0.5)
+                }
+              },
+              {
+                name: '1倍速',
+                action: () => {
+                  animationTool.setSpeed(1)
+                }
+              },
+              {
+                name: '2倍速',
+                action: () => {
+                  animationTool.setSpeed(2)
+                }
+              }
+            ]
+          },
+          {
+            children: [
+              {
+                name: '跳转0s',
+                action: () => {
+                  animationTool.seek(0)
+                }
+              },
+              {
+                name: '跳转2s',
+                action: () => {
+                  animationTool.seek(2000)
+                }
+              },
+              {
+                name: '跳转5s',
+                action: () => {
+                  animationTool.seek(5000)
+                }
+              }
+            ]
+          },
+          {
+            children: [
+              {
+                name: '顺序播放',
+                action: () => {
+                  animationTool.reversed(false)
+                }
+              },
+              {
+                name: '逆序播放',
+                action: () => {
+                  animationTool.reversed(true)
+                }
+              }
+            ]
+          },
+          {
+            name: '播放动画',
+            action: () => {
+              //   animationTool.restore();
+              animationTool.play()
+            }
+          },
+          {
+            name: '暂停动画',
+            action: () => {
+              animationTool.pause()
+            }
+          },
+          {
+            name: '重置动画',
+            action: () => {
+              animationTool.restore()
+            }
+          },
+          {
+            name: '清空动画',
+            action: () => {
+              animationTool.pause()
+              animationTool.clear()
+            }
+          },
+          {
+            name: '保存动画',
+            action: () => {
+              const a = document.createElement('a')
+              // 态势推演工具导出动画参数对象
+              const datastr =
+                'data:text/json;charset=utf-8,' +
+                encodeURIComponent(JSON.stringify(animationTool.toJSON()))
+              a.href = datastr
+              a.setAttribute('download', 'animation.json')
+              a.style.display = 'none'
+              a.click()
+            }
+          }
+        ]
+
+        items.forEach((item) => {
+          const f = (v, direction) => {
+            const div = document.createElement('div')
+            if (direction === 'left') {
+              div.setAttribute('class', 'list-item list-item-left')
+            } else if (direction === 'right') {
+              div.setAttribute('class', 'list-item list-item-right')
+            } else if (direction === 'center') {
+              div.setAttribute('class', 'list-item list-item-center')
+            } else {
+              div.setAttribute('class', 'list-item')
+            }
+            div.innerText = v.name
+            div.addEventListener('click', v.action.bind(this))
+            return div
+          }
+          const list = document.createElement('div')
+          list.setAttribute('class', 'listdom')
+          if (item.children) {
+            item.children.forEach((t, index) => {
+              if (index % 3 === 1) {
+                list.appendChild(f(t, 'center'))
+              } else if (index % 3 === 0) {
+                list.appendChild(f(t, 'left'))
+              } else {
+                list.appendChild(f(t, 'right'))
+              }
+            })
+          } else {
+            list.appendChild(f(item))
+          }
+          contentBody.appendChild(list)
+        })
+      }
+
+      //初始化Cesium对象
+      function initCesium() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //加载天地图底图
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //初始化MapBox对象
+      function initMapbox() {
+        //实例化要加载的source来源对象（世界矢量地图）
+        var dark = {
+          type: 'raster',
+          tiles: [
+            //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+            'http://t0.tianditu.gov.cn/img_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+              '&TILECOL=' +
+              '{x}' +
+              '&TILEROW=' +
+              '{y}' +
+              '&TILEMATRIX=' +
+              '{z}' +
+              '&tk=' +
+              tiandituKey
+          ],
+          //栅格瓦片的分辨率
+          tileSize: 256
+        }
+        //实例化Map对象加载地图
+        mapBox = new mapboxgl.Map({
+          crs: 'EPSG:4326', //经纬度一定要设置crs参数
+          maxBounds: [
+            [-180, -90],
+            [180, 90]
+          ],
+          //地图容器div的id
+          container: 'map',
+          //设置地图样式信息
+          style: {
+            //设置版本号，一定要设置
+            version: 8,
+            //添加来源
+            sources: {
+              dark: dark
+            },
+            //设置加载并显示来源的图层信息
+            layers: [
+              {
+                //图层id，要保证唯一性
+                id: 'dark',
+                //图层类型
+                type: 'raster',
+                //连接图层来源
+                source: 'dark',
+                //图层最小缩放级数
+                minzoom: 0,
+                //图层最大缩放级数
+                maxzoom: 22
+              }
+            ]
+          },
+          zoom: 7.5,
+          center: [116.39, 40.2]
+        })
+        mapBox.doubleClickZoom.disable()
+        //构造二维的标绘容器
+        canvas = new window.zondy.plot.FabricLayer(
+          mapBox,
+          window.zondy.plot.PlotLayer2DGroup
+        )
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="map">
+      <div id="mouse-position"></div>
+    </div>
+    <div id="mapgis-3d-viewer">
+      <div id="content" style="position: relative">
+        <div id="plot-show-table"></div>
+      </div>
+    </div>
+  </body>
+</html>

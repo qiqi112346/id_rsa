@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>路径图-渐进绘制</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--引入echarts-->
+    <script type="text/javascript" src="http://webclient.smaryun.com/static/libs/cdn/echarts/echarts.min.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      // 定义三维视图的主要类
+      let map, sceneView, viewer
+      // 数据
+      let busLines = null
+      // echarts实例
+      let layer = null
+
+      //初始化
+      function init() {
+        // 初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // echarts
+        initEcharts()
+      }
+
+      // 初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        // 添加天地图
+        addTDTLayer()
+      }
+
+      function addTDTLayer() {
+        // 添加天地图
+        const tdtUrl = 'https://t{s}.tianditu.gov.cn/';
+        // 服务负载子域
+        const subdomains=['0','1','2','3','4','5','6','7'];
+        // 叠加影像服务
+        const tdtProvider = new zondy.cesium.UrlTemplateImageryProvider({
+            url: tdtUrl + 'DataServer?T=img_w&x={x}&y={y}&l={z}&tk=' + getTDTToken(),
+            subdomains: subdomains,
+            tilingScheme : new Cesium.WebMercatorTilingScheme(),
+            maximumLevel : 18
+        });
+        viewer.imageryLayers.addImageryProvider(tdtProvider)
+      }
+
+      //飞到指定视角
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [116, 40, 200000.0]
+        })
+      }
+
+      //echarts
+      function initEcharts() {
+        // options参数请参考百度echarts-options
+        // https://echarts.apache.org/zh/option.html#title
+        httpGetPromise(
+          'http://webclient.smaryun.com:8200/Vector/json/line/line-bus.json'
+        ).then((data) => {
+          // 遍历数据并处理成对应echarts格式
+          busLines = [].concat.apply(
+            [],
+            data.map(function (busLine, idx) {
+              let prevPt
+              let points = []
+              for (let i = 0; i < busLine.length; i += 2) {
+                let pt = [busLine[i], busLine[i + 1]]
+                if (i > 0) {
+                  pt = [prevPt[0] + pt[0], prevPt[1] + pt[1]]
+                }
+                prevPt = pt
+                points.push([pt[0] / 1e4, pt[1] / 1e4])
+              }
+              return {
+                coords: points
+              }
+            })
+          )
+          let option = {
+            cesium: {
+              roam: true
+            },
+            animation: false,
+            postRender: true,
+            postRenderFrame: 2,
+            series: [
+              {
+                type: 'lines',
+                coordinateSystem: 'cesium', // 设置cesium坐标系
+                polyline: true,
+                data: busLines,
+                silent: true,
+                lineStyle: {
+                  normal: {
+                    color: 'rgb(200, 35, 45)',
+                    opacity: 0.2,
+                    width: 1
+                  }
+                },
+                progressiveThreshold: 500, // 一次渲染500点
+                progressive: 200 // 渲染频率
+              }
+            ]
+          }
+          // 声明cesium的echarts图层并将其显示到三维球上
+          layer = new zondy.layer.EchartsLayer({
+            echartsOptions: option
+          })
+          map.add(layer)
+          layer.on('layerview-created', function (result) {
+            // 图层视图加载完毕之后，飞到指定视角
+            flyTo()
+          })
+        })
+      }
+
+      // 发送请求获取数据
+      function httpGetPromise(url) {
+        return new Promise(function (resolve, reject) {
+          const handler = function () {
+            if (this.readyState !== 4) {
+              return
+            }
+            if (this.status === 200) {
+              resolve(this.response)
+            } else {
+              reject(new Error(this.statusText))
+            }
+          }
+          const client = new XMLHttpRequest()
+          client.open('GET', url)
+          client.onreadystatechange = handler
+          client.responseType = 'json'
+          client.setRequestHeader('Accept', 'application/json')
+          client.send()
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

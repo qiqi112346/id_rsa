@@ -1,0 +1,319 @@
+#mapgis-viewer, #mapgis-3d-viewer, #mapgis-2d-viewer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: absolute;
+}
+
+/*第三方layui的样式改造*/
+.layui-panel {
+  background-color: white;
+  padding: 5px;
+  width: max-content;
+  box-sizing: border-box;
+  z-index: 9999999;
+}
+
+.layui-panel.bg {
+  background-color: rgba(1, 1, 1, 0.5);
+}
+
+.loading-div {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(1, 1, 1, 0.1);
+  text-align: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: none;
+  background-image: url("../libs/cdn/layui/css/modules/layer/default/loading-2.gif");
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.loading-tip {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  margin-top: 22px;
+  color: #fff;
+}
+
+.layui-panel-right {
+  position: absolute !important;
+  top: 10px;
+  right: 10px;
+  color: #E1E1E1;
+  background-color: rgb(44, 44, 44);
+  border: none;
+  padding: 16px;
+  width: 320px;
+}
+
+.layui-panel-right-line {
+  position: absolute !important;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+}
+
+.layui-form-label {
+  text-align: left;
+}
+
+.layui-tab {
+  margin: 0;
+}
+
+.layui-tab-bar {
+  display: none;
+}
+
+.layui-slider {
+  top: 16px;
+}
+
+.layui-slider-wrap {
+  top: -16px;
+}
+
+.layui-colorpicker-trigger-i {
+  margin-left: 6px;
+}
+
+.layui-form-onswitch {
+  border-color: rgb(102 147 251);
+  background-color: rgb(102 147 251);
+  margin-top: 6px;
+}
+
+.layui-btn {
+  background-color: rgb(24, 144, 255);
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+}
+
+.layui-btn+.layui-btn {
+  margin: 0;
+}
+
+.layui-btn-primary:hover{
+  border-color: rgb(24, 144, 255);
+  color: #fff;
+}
+
+.layui-form-item .layui-inline {
+  margin-right: -16px;
+  margin-bottom: 0;
+}
+
+.layui-form-item .layui-input-inline {
+  width: 163px;
+}
+
+.layui-input,
+.layui-select,
+.layui-textarea {
+  color: rgba(225, 225, 225, 0.698039215686274);
+  background-color: rgb(44, 44, 44);
+  border-color: rgba(68, 68, 68, 1);
+}
+
+.layui-input[disabled], .layui-textarea[disabled] {
+  background-color: rgb(44, 44, 44);
+}
+
+.layui-form-checkbox[lay-skin=primary]:hover>i {
+  border-color: rgb(102, 147, 251);
+}
+
+.layui-form-checkbox[lay-skin=primary]>div{
+  color: #E1E1E1;
+}
+
+.layui-slider-input-btn {
+  border-left-color: rgba(68, 68, 68, 1);
+}
+
+.layui-slider-input-btn i:first-child {
+  border-bottom-color: rgba(68, 68, 68, 1);
+}
+
+.layui-slider-input {
+  top: -17px;
+  border-color: rgba(68, 68, 68, 1);
+}
+
+.layui-form-item {
+  margin-bottom: 0;
+}
+
+.layui-tab-title .layui-this {
+  color: #1890FF;
+}
+
+.layui-tab-title .layui-this:after {
+  border: none;
+  border-bottom: 1px solid rgba(24, 144, 255, 1);
+}
+
+.layui-tab-title {
+  border-bottom: 1px solid rgb(68, 68, 68);
+}
+
+.layui-colorpicker {
+  border: 1px solid rgb(68, 68, 68);
+}
+
+.layui-input-block {
+  float: right;
+  margin-left: -2px;
+  min-height: 34px;
+}
+
+.layui-tab-content {
+  padding: 8px 0 0 0;
+}
+
+.layui-form-pane .layui-form-label {
+  color: black;
+}
+
+.layui-form-label {
+  padding: 7px 15px 7px 0;
+}
+
+.layui-form-select dl dd.layui-this {
+  background-color: rgba(24, 144, 255, 1);
+  color: #fff;
+}
+
+.layui-form-select dl dd {
+  color: #0c0c0c;
+}
+
+.layui-input:focus,
+.layui-textarea:focus {
+  border-color: #d2d2d2 !important;
+  box-shadow: none;
+}
+
+.sample-main-panel {
+  padding: 0;
+  border-bottom: 1px solid rgb(68, 68, 68);
+}
+
+.sample-button-panel {
+  padding: 0 0;
+  text-align: left;
+  margin-bottom: 8px;
+}
+
+.sample-input {
+  background: rgba(255, 255, 255, 0);
+  height: 32px;
+  border: 1px solid rgba(68, 68, 68, 1);
+  color: rgba(225, 225, 225, 0.698039215686274);
+  padding: 0 0 2px 12px;
+}
+
+.sample-select {
+  width: 184px;
+  height: 36px;
+  margin-right: 12px;
+}
+
+.sample-select>option {
+  background-color: rgb(44, 44, 44);
+  color: #E1E1E1;
+}
+
+.sample-title {
+  padding-left: 12px;
+}
+
+.sample-slider {
+  width: 200px;
+}
+
+.layui-input-block-select {
+  width: 160px;
+}
+
+body {
+  scrollbar-width: thin; /* 定义滚动条宽度为窄型 */
+  scrollbar-color: rgb(102, 104, 104) rgb(44, 44, 44); /* 定义滚动条颜色为红色/绿色 */
+}
+
+.mapgis-layer-div {
+  height: 22px;
+  position: relative;
+}
+
+.mapgis-check-box {
+  display: inline-block!important;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.mapgis-sublayer-title-1 {
+  padding-left: 20px;
+}
+
+.mapgis-sublayer-title-2 {
+  padding-left: 40px;
+}
+
+.mapgis-layer-title {
+  font-weight: bolder;
+}
+
+.toggle-sublayer {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  cursor: pointer;
+}
+
+.layer-list {
+  overflow-y: scroll;
+  height: 430px;
+}
+
+.vector-tile-layer-panel {
+  min-width: 488px;
+}
+
+.tile-layer-panel, .feature-layer-panel, .geojson-layer-panel, .graphics-layer-panel, .scene-layer-panel
+, .model-cache-layer-panel, .ogc-layer-panel{
+  min-width: 335px;
+}
+
+.graphics-layer-elevation-panel {
+  min-width: 320px;
+}
+
+.base-map-panel {
+  min-width: 330px;
+}
+
+@media (max-width: 740px) {
+  .map-image-layer-panel {
+    min-width: 335px;
+    height: 400px;
+    overflow-y: scroll;
+  }
+}
+
+@media (min-width: 741px) {
+  .map-image-layer-panel {
+    min-width: 335px;
+    max-height:80%;
+    overflow-y: scroll;
+  }
+}
+
+
+

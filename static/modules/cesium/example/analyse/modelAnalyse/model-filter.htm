@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>模型空间过滤工具</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--引入Cesium.js库相关css样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/cesium/Widgets/widgets.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/cesium/MapGIS/css/mapgis.css"/>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+      let layerList = []
+      let urlM3D2_0 = 'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D/1.0/DaYanTa-M3D/dayanta.mcj'
+      let urlM3D2_1 = 'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D/2.1/DaYanTa_M3D21/DaYanTa_M3D21.mcj'
+      //模型
+      let model = null
+      //模型编辑工具
+      let modelFilterTool = null
+      //绘制工具
+      let drawElement = null
+      //带高度过滤时的初始化参数
+      let boundHeightMin = 30
+      let boundHeightMax = 60
+      let centerHeightMin = 30
+      let centerHeightMax = 60
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //三维试图类构造完毕，添加一个模型
+        addModel(urlM3D2_0)
+        //当选择带高度的过滤条件时，拖动条
+        addSlideBar()
+        initUI()
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //为了更好的展示模型的过滤，去掉地球
+        viewer.scene.globe.show = false
+        // 针对cesium10.7.4.10版本隐藏大气环境光
+        if (viewer.scene.skyAtmosphere) {
+          viewer.scene.skyAtmosphere.show = false;
+        }
+        if (viewer.scene.sun.show) {
+          viewer.scene.sun.show = false;
+        }
+        if (viewer.scene.moon.show) {
+          viewer.scene.moon.show = false;
+        }
+        if (viewer.scene.globe.showGroundAtmosphere) {
+          viewer.scene.globe.showGroundAtmosphere = false;
+        }
+      }
+
+      function createDrawElement() {
+        if (drawElement === null) {
+          return new zondy.cesium.DrawElement(viewer)
+        } else {
+          drawElement.stopDrawing()
+          return drawElement
+        }
+      }
+
+      function boundFilter() {
+        //清空之前的filter
+        removeFilter()
+        drawElement = createDrawElement()
+        drawElement.startDrawingPolygon({
+          callback: function (result) {
+            drawElement.stopDrawing()
+            let positions = result.positions
+            modelFilterTool.filterWithBoundingVolume(positions)
+          }
+        })
+      }
+
+      function boundWithHeightFilter() {
+        //清空之前的filter
+        removeFilter()
+        drawElement = createDrawElement()
+        drawElement.startDrawingPolygon({
+          callback: function (result) {
+            drawElement.stopDrawing()
+            let positions = result.positions
+            //如果最小高度和最大高度不传递的话，那么过滤将忽略高度
+            modelFilterTool.filterWithBoundingVolume(
+              positions,
+              boundHeightMin,
+              boundHeightMax
+            )
+          }
+        })
+      }
+
+      function centerFilter() {
+        //清空之前的filter
+        removeFilter()
+        drawElement = createDrawElement()
+        drawElement.startDrawingPolygon({
+          callback: function (result) {
+            drawElement.stopDrawing()
+            let positions = result.positions
+            modelFilterTool.filterWithCenter(positions)
+          }
+        })
+      }
+
+      function centerWithHeightFilter() {
+        //清空之前的filter
+        removeFilter()
+        drawElement = createDrawElement()
+        drawElement.startDrawingPolygon({
+          callback: function (result) {
+            drawElement.stopDrawing()
+            let positions = result.positions
+            //如果最小高度和最大高度不传递的话，那么过滤将忽略高度
+            modelFilterTool.filterWithCenter(
+              positions,
+              centerHeightMin,
+              centerHeightMax
+            )
+          }
+        })
+      }
+
+      function removeFilter() {
+        if (modelFilterTool) {
+          modelFilterTool.removeFilter()
+        }
+      }
+
+      function addModel(url) {
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/M3DModelCacheLayer.html
+        let M3DLayer = new zondy.layer.M3DModelCacheLayer({
+          url: url,
+          // 初始化参数
+          extensionOptions: {
+            autoReset: true
+          }
+        });
+        map.add(M3DLayer);
+        M3DLayer.on("layerview-created", function (result) {
+          let layer = sceneView.getInnerLayer(result.layer)
+          layerList.push(layer);
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/ModelFilterTool.html
+          modelFilterTool = new zondy.cesium.ModelFilterTool(layer, {
+            //支持输入范围为笛卡尔坐标
+            enableCartesian: true
+          })
+        })
+      }
+
+      function addSlideBar() {
+        //等值面透明度
+        layui.slider.render({
+          elem: '#boundHeight',
+          theme: 'rgb(102, 147, 251)',
+          value: [boundHeightMin, boundHeightMax], //初始值
+          range: true, //范围选择
+          change: function (values) {
+            boundHeightMin = values[0]
+            boundHeightMax = values[1]
+          }
+        })
+        //等值面宽度
+        layui.slider.render({
+          elem: '#centerHeight',
+          theme: 'rgb(102, 147, 251)',
+          value: [centerHeightMin, centerHeightMax], //初始值
+          range: true, //范围选择
+          change: function (values) {
+            centerHeightMin = values[0]
+            centerHeightMax = values[1]
+          }
+        })
+      }
+      // 初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          let form = layui.form
+          //监听选择框
+          form.on('select(type)', function (data) {
+            if (modelFilterTool) {
+              modelFilterTool.destroy()
+            }
+            while (layerList.length > 0) {
+              let layer = layerList.shift()
+              viewer.scene.primitives.remove(layer)
+            }
+            if (data.value === '0') {
+              boundHeightMin = 30
+              boundHeightMax = 60
+              centerHeightMin = 30
+              centerHeightMax = 60
+              addModel(urlM3D2_0)
+            } else {
+              boundHeightMin = 0
+              boundHeightMax = 500
+              centerHeightMin = 0
+              centerHeightMax = 500
+              addModel(urlM3D2_1)
+            }
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" style="width: 559px">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label">大雁塔</label>
+          <div class="layui-input-block" style="width: 100px">
+            <select name="type" lay-verify="required" lay-filter="type">
+              <option value="0" selected>M3D2.0</option>
+              <option value="1">M3D2.1</option>
+            </select>
+          </div>
+        </div>
+      </form>
+      <div class="sample-button-panel">
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="boundFilter()"
+        >
+          外包盒过滤
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="boundWithHeightFilter()"
+        >
+          外包盒过滤(带高度)
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="centerFilter()"
+        >
+          中心点过滤
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-normal"
+          onclick="centerWithHeightFilter()"
+        >
+          中心点过滤(带高度)
+        </button>
+        <button
+          type="button"
+          class="layui-btn layui-btn-sm layui-btn-danger"
+          onclick="removeFilter()"
+        >
+          取消过滤
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

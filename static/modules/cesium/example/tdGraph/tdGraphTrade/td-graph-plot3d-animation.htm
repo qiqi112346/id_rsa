@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>三维标绘图层使用</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha384-SOnAn/m2fVJCwnbEYgD4xzrPtvsXdElhOVvR8ND1YjB5nhGNwwf7nBQlhfAwHAZC" crossorigin="anonymous"/>
+    <!--引入行业标绘脚本库-->
+    <!-- jquery -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/jquery/jquery-3.7.1.min.js"></script>
+    <!-- cesium -->
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!-- plot -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-plot.min.js"></script>
+    <!-- panel -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotPanel/index.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotPanel/index.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/plot/plot3d-layer-use.css"/>
+    <script>
+      'use strict'
+
+      //定义三维视图的主要类
+      let map,
+        sceneView,
+        viewer,
+        plotLayer,
+        plotLayer3DGroup,
+        plotEditor,
+        currentPlot,
+        timeline,
+        manager
+      // 获取Zondy类
+      const zondy = window.zondy
+      // 获取标绘类
+      const plot= zondy.plot
+      const {
+        // 三维图层
+        PlotLayer3D,
+        // 三维图层组
+        PlotLayer3DGroup,
+        // 符号管理器
+        SymbolManager,
+        // 绘制工具
+        DrawTool,
+        // 时间轴
+        TimeLine
+      } = plot
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加天地图
+        addTDT()
+        //视图跳转
+        flyTo()
+        //初始化标绘符号管理器
+        initPlotManager(function () {
+          //确保符号获取完毕后，初始化标绘图层
+          initPlotLayer()
+          //初始化UI
+          initUI()
+        })
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //显示鼠标位置
+        viewer.showPosition()
+        //抗锯齿处理
+        viewer.scene.fxaa = true
+        viewer.scene.postProcessStages.fxaa.enabled = true
+      }
+
+      //加载天地图底图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //视图跳转
+      function flyTo() {
+        const result = {
+          heading: 0.0540480297599903,
+          pitch: -29.31964649959001,
+          roll: 0.0003774539801004507,
+          x: 117.68748899387914,
+          y: 27.872636253750766,
+          z: 406964.63689109177
+        }
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [result.x, result.y, result.z],
+          duration: 2,
+          orientation: {
+            heading: Cesium.Math.toRadians(result.heading), //方位角
+            pitch: Cesium.Math.toRadians(result.pitch), //俯仰角
+            roll: Cesium.Math.toRadians(result.roll) //翻滚角
+          }
+        })
+      }
+
+      /**
+       * 初始化标绘符号管理器
+       * @param callback 回调函数
+       * */
+      function initPlotManager(callback) {
+        // 符号库路径
+        const symbolUrl = `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/symbolLib.json`
+        const symbolOptions = {
+          // 符号库字体路径
+          fontURL: `http://webclient.smaryun.com:8200/Plot/plot-sample/fonts/`,
+          // 静态资源路径
+          baseUrl: `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/`
+        }
+
+        // 创建符号管理器
+        manager = new SymbolManager(symbolUrl, symbolOptions)
+        // 请求获取符号库
+        manager.getSymbols().then(() => {
+          //获取符号库后执行回调
+          callback()
+        })
+      }
+
+      /**
+       * 初始化标绘图层
+       * */
+      function initPlotLayer() {
+        // 创建图层组
+        plotLayer3DGroup = new PlotLayer3DGroup(viewer)
+        // 创建三维图层
+        plotLayer = new PlotLayer3D(Cesium, viewer, {})
+        // 添加图层
+        plotLayer3DGroup.addLayer(plotLayer)
+        // 加载标绘图层
+        $.getJSON(
+          `http://webclient.smaryun.com:8200/Plot/plot-sample/layers/bbbbb.json`,
+          (res) => {
+            plotLayer.fromJSON(res)
+          }
+        )
+        // 创建时间轴
+        $.getJSON(
+          `http://webclient.smaryun.com:8200/Plot/plot-sample/scripts/abc.json`,
+          (t) => {
+            timeline = new TimeLine(plotLayer3DGroup, {})
+            timeline.fromJSON(t)
+          }
+        )
+        // 图层拾取标绘
+        plotLayer.pickPlot = (plot) => {
+          currentPlot = plot
+        }
+      }
+
+      //初始化UI
+      function initUI() {
+        const panel = new window.webclientPlot.PlotPanel('plot-show-table', {
+          titleText: '态势推演',
+          panelWidth: 320
+        })
+        const contentBody = panel.getBody()
+        contentBody.style.display = 'flex'
+        contentBody.style.flexDirection = 'column'
+
+        const items = [
+          {
+            children: [
+              {
+                name: '0.5倍速',
+                action: () => {
+                  timeline.setSpeed(0.5)
+                }
+              },
+              {
+                name: '1倍速',
+                action: () => {
+                  timeline.setSpeed(1)
+                }
+              },
+              {
+                name: '2倍速',
+                action: () => {
+                  timeline.setSpeed(2)
+                }
+              }
+            ]
+          },
+          {
+            children: [
+              {
+                name: '跳转1s',
+                action: () => {
+                  timeline.seek(1000)
+                }
+              },
+              {
+                name: '跳转2s',
+                action: () => {
+                  timeline.seek(2000)
+                }
+              },
+              {
+                name: '跳转5s',
+                action: () => {
+                  timeline.seek(5000)
+                }
+              }
+            ]
+          },
+          {
+            children: [
+              {
+                name: '顺序播放',
+                action: () => {
+                  timeline.reversed(false)
+                }
+              },
+              {
+                name: '逆序播放',
+                action: () => {
+                  timeline.reversed(true)
+                }
+              }
+            ]
+          },
+          {
+            name: '播放动画',
+            action: () => {
+              //   timeline.restore();
+              timeline.play()
+            }
+          },
+          {
+            name: '暂停动画',
+            action: () => {
+              timeline.pause()
+            }
+          },
+          {
+            name: '重置动画',
+            action: () => {
+              timeline.restore()
+            }
+          },
+          {
+            name: '清空动画',
+            action: () => {
+              timeline.pause()
+              timeline.clear()
+            }
+          },
+          {
+            name: '保存动画',
+            action: () => {
+              const a = document.createElement('a')
+              // 时间轴导出动画参数对象
+              const datastr =
+                'data:text/json;charset=utf-8,' +
+                encodeURIComponent(JSON.stringify(timeline.toJSON()))
+              a.href = datastr
+              a.setAttribute('download', 'animation.json')
+              a.style.display = 'none'
+              a.click()
+            }
+          }
+        ]
+
+        items.forEach((item) => {
+          const f = (v, direction) => {
+            const div = document.createElement('div')
+            if (direction === 'left') {
+              div.setAttribute('class', 'list-item list-item-left')
+            } else if (direction === 'right') {
+              div.setAttribute('class', 'list-item list-item-right')
+            } else if (direction === 'center') {
+              div.setAttribute('class', 'list-item list-item-center')
+            } else {
+              div.setAttribute('class', 'list-item')
+            }
+            div.innerText = v.name
+            div.addEventListener('click', v.action.bind(this))
+            return div
+          }
+          const list = document.createElement('div')
+          list.setAttribute('class', 'listdom')
+          if (item.children) {
+            item.children.forEach((t, index) => {
+              if (index % 3 === 1) {
+                list.appendChild(f(t, 'center'))
+              } else if (index % 3 === 0) {
+                list.appendChild(f(t, 'left'))
+              } else {
+                list.appendChild(f(t, 'right'))
+              }
+            })
+          } else {
+            list.appendChild(f(item))
+          }
+          contentBody.appendChild(list)
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer">
+      <div id="content" style="position: relative">
+        <div id="plot-show-table"></div>
+      </div>
+    </div>
+  </body>
+</html>

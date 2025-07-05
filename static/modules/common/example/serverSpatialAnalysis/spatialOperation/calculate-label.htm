@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>求Label点分析</title>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view, geometryServer, featureServer, graphicsLayer
+      const {
+        IGSTileLayer,
+        GraphicsLayer
+      } = zondy.layer
+      const { Map, Color, Feature } = zondy
+      const { GeometryServer, FeatureServer } = zondy.service
+      const { Polygon, Point } = zondy.geometry
+      const { SimpleFillSymbol, SimpleMarkerSymbol } = zondy.symbol
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加瓦片图层
+        addIGSTileLayer()
+        // 添加标绘图层
+        addGraphicsLayer()
+        // 初始化server对象
+        initServer()
+        // 要素查询，之后计算label点
+        query()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 初始化server对象
+      function initServer() {
+        geometryServer = new GeometryServer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/system/GeometryServer'
+        });
+        featureServer = new FeatureServer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer'
+        })
+      }
+
+      // 计算label点
+      function calculateLabelPoints(polygon) {
+        geometryServer.calculateLabelPoints({
+          // 要计算label点的几何
+          polygons: polygon
+        }).then(function (result) {
+          console.log("result:",result)
+          // 绘制label点
+          const labelPoints = result.data.labelPoints
+          for (let i = 0; i < labelPoints.length; i++) {
+            graphicsLayer.add(
+              new Feature({
+                geometry: new Point({
+                  coordinates: [
+                    labelPoints[i].x, labelPoints[i].y
+                  ]
+                }),
+                symbol: new SimpleMarkerSymbol({
+                  color: new Color(255, 1, 255, 1)
+                })
+              })
+            )
+          }
+        })
+      }
+
+      // 要素查询
+      function query() {
+        // 开始查询
+        featureServer.queryFeatures({
+          layerId: "0",
+          geometry: new Point({
+            coordinates: [114, 30.45214]
+          })
+        }).then(function (result) {
+          console.log("查询成功：", result)
+          // 清空绘制的要素
+          graphicsLayer.removeAll()
+          // 设置填充颜色为红色，请开发人员自行设置，这里仅作展示
+          const features = result.data.featureSet.features
+          for (let i = 0; i < features.length; i++) {
+            features[i].symbol.color = new Color(233, 0, 0)
+          }
+          // 绘制要素
+          graphicsLayer.addMany(result.data.featureSet)
+          // 计算label点
+          calculateLabelPoints(features[0].geometry)
+        })
+      }
+
+      // 添加瓦片图层
+      function addIGSTileLayer() {
+        const igsTileLayer = new IGSTileLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        })
+        map.add(igsTileLayer)
+        igsTileLayer.on('layerview-created', (result) => {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      // 添加标绘图层
+      function addGraphicsLayer() {
+        // 创建Graphics图层对象
+        graphicsLayer = new GraphicsLayer({
+          graphics: []
+        })
+        // 添加图层对象到地图文档中
+        map.add(graphicsLayer)
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+  </body>
+</html>

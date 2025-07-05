@@ -1,0 +1,6239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> AlgorithmLib</title>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+                <h1> MapGIS Client for JavaScript API</h1>
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/common/api/common-mapgis/index.html"
+                        >
+                            Common
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/cesium/api/cesium-mapgis/index.html"
+                        >
+                            Cesium-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/mapboxgl/api/mapboxgl-mapgis/index.html"
+                        >
+                            MapboxGL-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/leaflet/api/leaflet-mapgis/index.html"
+                        >
+                            Leaflet-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/openlayers/api/openLayers-mapgis/index.html"
+                        >
+                            OpenLayers-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/video/api/video-mapgis/index.html"
+                        >
+                            Video-Plugin
+                        </a>
+                    
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            <div>
+                <span class="mapgis-api-document-span"><a href="index.html">API文档</a></span>
+            </div>
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="搜索文档..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <div class="category"><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">扩展模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="AlgorithmLib"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AlgorithmLib.html">AlgorithmLib</a><span style="display: none;"><p>通用算法工具集</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="AngulationTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AngulationTool.html">AngulationTool</a><span style="display: none;"><p>角度测量工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="AnimationTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AnimationTool.html">AnimationTool</a><span style="display: none;"><p>场景漫游工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISMapServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISMapServerImageryProvider.html">ArcGISMapServerImageryProvider</a><span style="display: none;"><p>ArcGIS地图图片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISTileServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISTileServerImageryProvider.html">ArcGISTileServerImageryProvider</a><span style="display: none;"><p>ArcGIS瓦片图层，现已不支持通过构造函数(new ArcGISTileServerImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISVectorTileImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISVectorTileImageryProvider.html">ArcGISVectorTileImageryProvider</a><span style="display: none;"><p>ArcGIS矢量瓦片图层，现已不支持通过构造函数(new ArcGISVectorTileImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Cesium3DTileset"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Cesium3DTileset.html">Cesium3DTileset</a><span style="display: none;"><p>Cesium3DTileset对象，现已不支持通过构造函数(new Cesium3DTileset())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Cesium.Material"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Cesium.Material.html">Material</a><span style="display: none;"><p>新增了部分Cesium材质<br>
+《PolylineTrailLink材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-polyline'>《线示例》</a>
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-wall'>《墙示例》</a><br>
+color: 材质颜色，Cesium.Color.WHITE<br>
+image: 材质使用的图片，Cesium.Material.PolylineTrailLinkImage<br>
+duration: 持续时间，100.0<br>
+direction: 方向，1.0<br>
+repeat: 重复次数，new Cesium.Cartesian2(1.0, 1.0)<br><br>
+《CircleWaveMaterial材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a>
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circular'>《圆锥示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+duration: 持续时间，100.0<br>
+count: 方向，1.0<br>
+gradient: 渐变因子，0.1<br><br>
+《RadarMaterial材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color.WHITE<br>
+speed: 速度，1<br><br>
+《AspectArrow材质》
+AspectArrowMap: 箭头图片，Cesium.Material.DefaultImageId<br>
+repeat: 箭头重复次数，Cesium.Cartesian2(1.0, 1.0)<br><br>
+《TextImage材质》<br>
+image: 文字图片，Cesium.Material.DefaultImageId<br>
+repeat: 图片重复次数，Cesium.Cartesian2(1.0, 1.0)<br>
+breathingLight: 是否开启呼吸灯，false<br>
+duration: 运行周期，1000<br><br>
+《LineFlickerMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，5<br><br>
+《CircleScanMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CirclePulseMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleDiffuseMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《ScanlineType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleFadeMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleColorfulMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleSpiralMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleBlurMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《RadarScanMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《RadarLineMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《RiverCoveringMaterial材质》<br>
+color: 材质颜色，Cesium.Color(1, 1, 1, 0.7)<br>
+animationSpeed: 播放速度，0.01<br>
+image: 材质图片，CustomMaterial.DefaultImageId<br>
+repeat: 重复次数，2.0<br><br></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Cesium.Viewer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Cesium.Viewer.html">Viewer</a><span style="display: none;"><p>重写Cesium.Viewer的方法</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CesiumHeatmap"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CesiumHeatmap.html">CesiumHeatmap</a><span style="display: none;"><p>热力图</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CesiumTerrainProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CesiumTerrainProvider.html">CesiumTerrainProvider</a><span style="display: none;"><p>Cesium地形图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CircleWaveMaterialProperty"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CircleWaveMaterialProperty.html">CircleWaveMaterialProperty</a><span style="display: none;"><p>动态圆波纹材质</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CollisionDetectionByRender"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CollisionDetectionByRender.html">CollisionDetectionByRender</a><span style="display: none;">undefined</span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CompatibleFunc"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CompatibleFunc.html">CompatibleFunc</a><span style="display: none;"><p>适配不同版本Cesium接口方法类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="createColorTexture"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="createColorTexture.html">createColorTexture</a><span style="display: none;"><p>天际线分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CustomProjection"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CustomProjection.html">CustomProjection</a><span style="display: none;"><p>实现自定义投影坐标系与地理坐标系经纬度（弧度表示）之间的投影变换</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CustomTilingScheme"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CustomTilingScheme.html">CustomTilingScheme</a><span style="display: none;"><p>自定义瓦片平铺方案，在使用时有如下限制：</p>
+<ol>
+<li>裁图原点必须在地图范围的左上角区域；</li>
+<li>仅支持如同谷歌地图的瓦片组织方式，即Y轴编号从上到下递增，X轴编号从左到右递增；</li>
+</ol></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CutFillAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CutFillAnalysis.html">CutFillAnalysis</a><span style="display: none;"><p>填挖方分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CuttingTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CuttingTool.html">CuttingTool</a><span style="display: none;"><p>三维场景裁剪工具集</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="DrawElement"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="DrawElement.html">DrawElement</a><span style="display: none;"><p>几何绘制类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="DrawTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="DrawTool.html">DrawTool</a><span style="display: none;"><p>绘制工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="DynamicEntityVisualizer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="DynamicEntityVisualizer.html">DynamicEntityVisualizer</a><span style="display: none;"><p>动态实体视图类封装
+1、支持BillBoard、Label、GroundPrimitive等动态显示，处理覆盖问题
+2、动态显隐效果
+3、视窗内性能优化</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="EditTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="EditTool.html">EditTool</a><span style="display: none;"><p>标绘编辑工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="FloodAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FloodAnalysis.html">FloodAnalysis</a><span style="display: none;"><p>洪水淹没分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="FloodAnalysisReflection"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FloodAnalysisReflection.html">FloodAnalysisReflection</a><span style="display: none;"><p>创建反射水面淹没分析的实例化对象</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GlobeIndependentTranslucency"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GlobeIndependentTranslucency.html">GlobeIndependentTranslucency</a><span style="display: none;"><p>单独控制地表透明度和影像图层的透明度，能够在开启地表透明后使部分影像图层不受地表透明的影响。</p>
+<p>实例化该类的对象同时也能够使用原生的地表透明参数，能够直接在实例化对象上修改 <code>GlobeTranslucency</code> 的参数（原生的
+viewer.scene.globe.translucency依然能够使用，但两者同时使用时会造成相互干扰，推荐仅使用GlobeIndependentTranslucency来实现地表透明），
+使用原生的地表透明方式还是该类的地表透明方式由 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 数组是否为空来区分。</p>
+<p>1. 当 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 不为空数组时，使用该类的地表透明方式，此时能够设置并生效的地表透明参数如下：</p>
+<ul>
+<li><code>globeFaceAlpha</code>：地表的透明度，若设置该参数则<code>globeFaceAlphaByDistance</code>不生效；</li>
+<li><code>globeFaceAlphaByDistance</code>：地表的透明度根据视点距离的变化范围，当<code>globeFaceAlpha</code>为<code>undefined</code>时生效；</li>
+</ul>
+<p>2. 当 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 为空数组时，使用原生的地表透明方式，此时能够设置并生效的地表透明参数如下：</p>
+<ul>
+<li><code>frontFaceAlpha</code>：地表正面的透明度；</li>
+<li><code>frontFaceAlphaByDistance </code>：地表正面的透明度根据视点距离的变化范围；</li>
+<li><code>backFaceAlpha</code>：地表背面的透明度；</li>
+<li><code>backFaceAlphaByDistance</code>：地表背面的透明度根据视点距离的变化范围；</li>
+<li><code>rectangle</code>：将地表透明的区域限制在一个矩形范围内。</li>
+</ul></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Graphic"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Graphic.html">Graphic</a><span style="display: none;"><p>标绘图元对象<br>
+请参考以下示例:<br>
+<a href='#example1'>1、初始化标绘图层</a><br>
+<a href='#example2'>2、添加一个多边形图元</a><br>
+<a href='#example3'>3、新增一个类型为div的标绘对象</a><br>
+<a href='http://webclient.smaryun.com/#/example-gallery/cesium#tdGraphBase' target='_blank'>4、更多示例</a></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GraphicsLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GraphicsLayer.html">GraphicsLayer</a><span style="display: none;"><p>标绘图层<br>
+请参考以下示例:<br>
+<a href='#example1'>1、初始化标绘图层</a><br>
+<a href='#example2'>2、重写提示框对象</a><br>
+<a href='http://webclient.smaryun.com/#/example-gallery/cesium#tdGraphBase' target='_blank'>3、更多示例</a></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="HeightLimited"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="HeightLimited.html">HeightLimited</a><span style="display: none;"><p>限高分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="initializeOptions"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="initializeOptions.html">initializeOptions</a><span style="display: none;"><p>构建实例化对象的配置参数</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="isCounterClockwise"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="isCounterClockwise.html">isCounterClockwise</a><span style="display: none;"><p>地形剖切工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="KeyboardCameraController"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="KeyboardCameraController.html">KeyboardCameraController</a><span style="display: none;"><p>场景相机漫游工具，可以实现沉浸式的鼠标键盘漫游功能，具体操作方法如下：</p>
+<p>1. 相机平移操作，这类操作不会改变相机的朝向，只会改变相机的位置：</p>
+<ul>
+<li><code>W</code>：相机位置向前移动</li>
+<li><code>S</code>：相机位置向后移动</li>
+<li><code>A</code>：相机位置向左移动</li>
+<li><code>D</code>：相机位置向右移动</li>
+<li><code>Q</code>：相机位置升高</li>
+<li><code>E</code>：相机位置降低</li>
+</ul>
+<p>2. 相对于相机视点操作，其中<code>U</code>，<code>O</code>，<code>J</code>，<code>L</code>操作会改变相机的位置，也会改变相机的朝向，而<code>I</code>，<code>K</code>操作只会改变相机相较视点的距离（在执行<code>U</code>，<code>O</code>，<code>J</code>，<code>L</code>操作时请勿同时执行其他按键操作）：</p>
+<ul>
+<li><code>I</code>：相机视角靠近屏幕中心点</li>
+<li><code>K</code>：相机视角远离屏幕中心点</li>
+<li><code>J</code>：绕屏幕中心点向左旋转</li>
+<li><code>L</code>：绕屏幕中心点向右旋转</li>
+<li><code>U</code>：绕屏幕中心点向上旋转</li>
+<li><code>O</code>：绕屏幕中心点向下旋转</li>
+</ul>
+<p>3. 相机自身操作，这类操作不会改变相机的位置，只会改变相机的朝向（在全屏状态下可使用鼠标调整相机视角）：</p>
+<ul>
+<li><code>↑</code>：向上抬高视角</li>
+<li><code>↓</code>：向下降低视角</li>
+<li><code>←</code>：向左移动视角</li>
+<li><code>→</code>：向右移动视角</li>
+</ul>
+<p>4. 鼠标操作：</p>
+<ul>
+<li>开启鼠标操作功能后，页面将进入全屏模式，此时相机视角可通过鼠标移动进行操作</li>
+</ul>
+<p>5. 辅助操作：</p>
+<ul>
+<li><code>Shift</code>：加速相机平移操作，调整移动步长为原来的两倍</li>
+<li><code>R</code>：重置视角到初始视角，仅在参数<code>initView</code>定义时有效</li>
+</ul></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISM3DSet"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISM3DSet.html">MapGISM3DSet</a><span style="display: none;"><p>MapGISM3DSet对象</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISMapServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISMapServerImageryProvider.html">MapGISMapServerImageryProvider</a><span style="display: none;"><p>MapGIS地图图片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISTerrainProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTerrainProvider.html">MapGISTerrainProvider</a><span style="display: none;"><p>MapGIS地形图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISTileAvailability"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTileAvailability.html">MapGISTileAvailability</a><span style="display: none;"><p>MapGIS的TileAvailability类，重写了Cesium.TileAvailability的所有方法，支持在内部自动筛选要使用的地形图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISTileServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTileServerImageryProvider.html">MapGISTileServerImageryProvider</a><span style="display: none;"><p>MapGIS瓦片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISVectorTileImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISVectorTileImageryProvider.html">MapGISVectorTileImageryProvider</a><span style="display: none;"><p>MapGIS矢量瓦片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MeasureAreaTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureAreaTool.html">MeasureAreaTool</a><span style="display: none;"><p>面积测量工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MeasureLengthTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureLengthTool.html">MeasureLengthTool</a><span style="display: none;"><p>距离测量</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MeasureSlopeTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureSlopeTool.html">MeasureSlopeTool</a><span style="display: none;"><p>坡度测量</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ModelEditor"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelEditor.html">ModelEditor</a><span style="display: none;"><p>模型矩阵编辑工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ModelFilterTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelFilterTool.html">ModelFilterTool</a><span style="display: none;"><p>模型空间过滤工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ModelTransformTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelTransformTool.html">ModelTransformTool</a><span style="display: none;"><p>模型变换工具集</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="PolylineTrailLinkMaterialProperty"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="PolylineTrailLinkMaterialProperty.html">PolylineTrailLinkMaterialProperty</a><span style="display: none;"><p>流动纹理线材质</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="PostProcessStageLibrary"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="PostProcessStageLibrary.html">PostProcessStageLibrary</a><span style="display: none;"><p>用于创建后处理特效的扩展库</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="RadarMaterialProperty"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="RadarMaterialProperty.html">RadarMaterialProperty</a><span style="display: none;"><p>雷达扫描材质</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ReImg"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ReImg.html">ReImg</a><span style="display: none;"><p>截图(保存图片)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="RoamParticle"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="RoamParticle.html">RoamParticle</a><span style="display: none;"><p>跟随模型移动粒子特效</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="S3MTileset"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="S3MTileset.html">S3MTileset</a><span style="display: none;"><p>S3MTileset类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SelectTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SelectTool.html">SelectTool</a><span style="display: none;"><p>绘制工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ShadowRateAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ShadowRateAnalysis.html">ShadowRateAnalysis</a><span style="display: none;">undefined</span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="StableParticle"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="StableParticle.html">StableParticle</a><span style="display: none;"><p>固定位置粒子特效，可通过更改image与附加参数来实现火焰、喷泉、烟雾等粒子特效</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Style"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Style.html">Style</a><span style="display: none;"><p>标绘图元样式</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TerrainAnalyse"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TerrainAnalyse.html">TerrainAnalyse</a><span style="display: none;"><p>地形分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TerrainProfile"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TerrainProfile.html">TerrainProfile</a><span style="display: none;">undefined</span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ThemeManager"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ThemeManager.html">ThemeManager</a><span style="display: none;"><p>统计图</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TriangulationTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TriangulationTool.html">TriangulationTool</a><span style="display: none;"><p>三角测量</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="UrlTemplateImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="UrlTemplateImageryProvider.html">UrlTemplateImageryProvider</a><span style="display: none;"><p>网络瓦片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="VisiblityAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="VisiblityAnalysis.html">VisiblityAnalysis</a><span style="display: none;"><p>通视分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WaterReflection"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WaterReflection.html">WaterReflection</a><span style="display: none;"><p>创建反射水面的实例化对象</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebMapServiceImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapServiceImageryProvider.html">WebMapServiceImageryProvider</a><span style="display: none;"><p>WMS图层，现已不支持通过构造函数(new WebMapServiceImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebMapTileServiceImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapTileServiceImageryProvider.html">WebMapTileServiceImageryProvider</a><span style="display: none;"><p>WMTS图层，现已不支持通过构造函数(new WebMapTileServiceImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Wind3D"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Wind3D.html">Wind3D</a><span style="display: none;"><p>风场系统</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">工具类模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GeoJSONLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GeoJSONLayerUtil.html">GeoJSONLayerUtil</a><span style="display: none;"><p>GeoJSON图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GraphicsLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GraphicsLayerUtil.html">GraphicsLayerUtil</a><span style="display: none;"><p>几何图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="IGSFeatureLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="IGSFeatureLayerUtil.html">IGSFeatureLayerUtil</a><span style="display: none;"><p>IGSFeature图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WFSLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WFSLayerUtil.html">WFSLayerUtil</a><span style="display: none;"><p>WFS图层的工具类</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">视图模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ISSceneLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ISSceneLayerUtil.html">ISSceneLayerUtil</a><span style="display: none;"><p>IS场景图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Popup"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Popup.html">Popup</a><span style="display: none;"><p>场景信息弹窗(cesium引擎)
+参考示例：
+<a href='#SceneView'>[初始化三维场景视图]</a>
+<br>[ES5引入方式]：<br/>
+zondy.cesium.SceneView() <br/>
+[ES6引入方式]：<br/>
+import { SceneView } from '@mapgis/webclient-cesium-plugin' <br/>
+自定义样式说明：<br/>
+zondy-popup__content 弹窗容器样式<br/>
+zondy-popup__tip 弹窗对话框箭头样式<br/>
+zondy-popup__header 弹窗头部样式<br/>
+zondy-popup__content 弹窗主体样式<br/>
+zondy-popup__footer 弹窗底部样式<br/></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SceneView"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SceneView.html">SceneView</a><span style="display: none;"><p>视图类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Screenshot"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Screenshot.html">Screenshot</a><span style="display: none;"><p>屏幕打印工具</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">草图编辑模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SketchEditorCesium"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SketchEditorCesium.html">SketchEditorCesium</a><span style="display: none;"><p>Cesium引擎草图编辑类<br/>
+<br>[ES5引入方式]：<br/>
+const { SketchEditor } = zondy.tool.sketch  <br/>
+[ES6引入方式]：<br/>
+import { SketchEditor } from &quot;@mapgis/webclient-leaflet-plugin&quot; <br/></p></span></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header id="page-title" class="page-title">
+                    <span class="page-title-main">类名</span>
+                    <span class="page-title-sub">AlgorithmLib</span>
+                </header>
+                
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="AlgorithmLib">
+        <a class="href-link" href="#AlgorithmLib">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                new AlgorithmLib<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>通用算法工具集</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='function'>方法</h3>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".calAngleOf3Pnt">
+        <a class="href-link" href="#.calAngleOf3Pnt">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                calAngleOf3Pnt<span class="signature">(p1, p2, p3)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>计算三点的角度（0-180之间）</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>p1</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>顶点1</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>p2</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>顶点2</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>p3</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>顶点3</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".Cartesian3ArrayToDegrees">
+        <a class="href-link" href="#.Cartesian3ArrayToDegrees">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                Cartesian3ArrayToDegrees<span class="signature">(positions, result<span class="signature-attributes">opt</span>)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>笛卡尔世界坐标数组转经纬度degree数组</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>positions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>笛卡尔世界坐标数组</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>result</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Number></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>经纬度（含高度）度数组</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>经纬度数组</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Array.&lt;Number></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".compute_3D_polygon_area">
+        <a class="href-link" href="#.compute_3D_polygon_area">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                compute_3D_polygon_area<span class="signature">(points)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>计算 polygon 面积</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>points</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>polygon顶点集</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Number</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".computeTileInPolygon">
+        <a class="href-link" href="#.computeTileInPolygon">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                computeTileInPolygon<span class="signature">(tile, positions)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>判断tile与绘制范围是否相交</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>tile</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;<a href="MapGISM3DSet.html">MapGISM3DSet</a>></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>MapGISM3DSet对象数组，详见<a href='http://webclient.smaryun.com/static/modules/cesium/api/cesium/MapGISM3DSet.html' target='_blank'>Cesium.MapGISM3DSet</a></p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>positions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>范围坐标点序列</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Cesium.Intersect.OUTSIDE, Cesium.Intersect.INTERSECTING, or Cesium.Intersect.INSIDE表示完全包围、相交和在外部.false表示计算失败</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Cesium.Intersect</span>
+|
+
+<span class="param-type">false</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".deepCopy">
+        <a class="href-link" href="#.deepCopy">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                deepCopy<span class="signature">(o)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>深度拷贝对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>o</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>被拷贝对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".getCenterFromPoints">
+        <a class="href-link" href="#.getCenterFromPoints">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getCenterFromPoints<span class="signature">(positions)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据输入笛卡尔坐标数组，计算中心点</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>positions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>坐标点序列</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>根据坐标点序列计算出的中心点</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".getCenterOfCartesian3Points">
+        <a class="href-link" href="#.getCenterOfCartesian3Points">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getCenterOfCartesian3Points<span class="signature">(points, useHeight)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>计算Cartesian3数组的中心</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>points</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>useHeight</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>是否使用高度</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".getCenterOfGravityPoint">
+        <a class="href-link" href="#.getCenterOfGravityPoint">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getCenterOfGravityPoint<span class="signature">(points)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>计算Cartesian3数组的重心</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>points</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".getEastNorthUpXYZ">
+        <a class="href-link" href="#.getEastNorthUpXYZ">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getEastNorthUpXYZ<span class="signature">(viewer, point, windowPosition)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>计算屏幕坐标相对于地表某点垂直（或平行方向XY）的位置</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>viewer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>视图</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>point</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>地表点</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>windowPosition</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian2</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>屏幕坐标</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>与经过地表点的垂直地表的平面的交点,endPositionX表示X方向(经线方向)的面的交点位置(世界坐标)，endPositionY表示Y方向(纬线方向)的面的交点位置(世界坐标)，XYZLocPosition表示在地表点坐标系下局部坐标系XYZ方向的坐标</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Object</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".getPixelsPerMeter">
+        <a class="href-link" href="#.getPixelsPerMeter">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getPixelsPerMeter<span class="signature">(scene)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取当前场景下，每米占据多少个像素值</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>scene</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Scene</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>pixel/m</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Number</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".getPointOntoLine">
+        <a class="href-link" href="#.getPointOntoLine">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getPointOntoLine<span class="signature">(ellipsoid, pointA, pointB, pointP, result)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>计算三维场景中，直线外一点在直线上的投影点</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>ellipsoid</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Ellipsoid</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>椭球参数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pointA</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>直线上的点 A 经纬度</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pointB</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>直线上的点 B 经纬度</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pointP</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>直线外的点 P 经纬度</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>result</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>返回结果，直线上的投影点</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>result 经纬度坐标</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".getPointOntoLineByWorldPosition">
+        <a class="href-link" href="#.getPointOntoLineByWorldPosition">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getPointOntoLineByWorldPosition<span class="signature">(pointA, pointB, pointP, result)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>计算三维场景中，直线外一点在直线上的投影点</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pointA</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>直线上一点A，世界坐标</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pointB</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>直线上一点B，世界坐标</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pointP</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>直线外一点P，世界坐标</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>result</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>直线外一点，到直线的垂足点，世界坐标</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>result</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".getPointOntoPlane">
+        <a class="href-link" href="#.getPointOntoPlane">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getPointOntoPlane<span class="signature">(ellipsoid, originPoint, normal, outPoint, result)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>计算平面(此平面由一个点，与法线构成)外一点到此平面上的投影点</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>ellipsoid</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Ellipsoid</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>椭球参数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>originPoint</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>平面上的一个点，世界坐标</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>normal</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>平面的法线</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>outPoint</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>平面外一点，世界坐标</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>result</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>平面外一点在平面上的投影，世界坐标</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>result 平面外一点在平面上的投影，世界坐标</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".getRandomPointByRect">
+        <a class="href-link" href="#.getRandomPointByRect">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getRandomPointByRect<span class="signature">(west, south, east, north, count, result)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>计算矩形范围内的随机点</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>west</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>西向经度数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>south</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>南向纬度数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>east</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>东向经度数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>north</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>北向纬度数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>count</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>需要的随机点数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>result</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Object></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>result 返回随机点数集合</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Array.&lt;Object></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".getRect3DPointsByLine">
+        <a class="href-link" href="#.getRect3DPointsByLine">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getRect3DPointsByLine<span class="signature">(direct, p1, p2, result)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据两点，确定一个平行于视窗的矩形</p>
+<p>顶点顺序为：
+0---3
+| \ |
+1---2</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>direct</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>朝向,使用时一般用相机朝右的朝向</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>p1</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>起始点，世界坐标</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>p2</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>绘制结束点，世界坐标</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>result</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>返回值，矩形的4个顶点</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>result</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".getSquarePointsByLine">
+        <a class="href-link" href="#.getSquarePointsByLine">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getSquarePointsByLine<span class="signature">(p1, p2, result)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>通过两点确定一个正方形</p>
+<p>顶点顺序为：
+0---3
+| \ |
+1---2</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>p1</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>起始点, 值类型为世界坐标</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>p2</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>结束点, 值类型为世界坐标</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>result</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>返回值</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>result 正方形四个顶点, 值类型为世界坐标</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".getTransform">
+        <a class="href-link" href="#.getTransform">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                getTransform<span class="signature">(longitude, latitude, height)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>计算矩阵</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>longitude</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>角度制经度</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>latitude</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>角度制纬度</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>height</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>高程</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Cesium.Matrix4</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".isConvex">
+        <a class="href-link" href="#.isConvex">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                isConvex<span class="signature">(points)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>计算是否为凸多边形</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>points</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>点坐标</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>result 0：数量小于2；-1：凹多边形；1：凸多边形；</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Number</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".linearInterpolate">
+        <a class="href-link" href="#.linearInterpolate">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                linearInterpolate<span class="signature">(positions, step)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>线性插值（二维坐标）</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>positions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian2></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>坐标点序列</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>step</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>步长</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>插值后的坐标点序列</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Array.&lt;Cesium.Cartesian2></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".linearInterpolate3D">
+        <a class="href-link" href="#.linearInterpolate3D">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                linearInterpolate3D<span class="signature">(positions, step)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>线性插值(三维坐标)</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>positions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>坐标点序列</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>step</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>步长</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>插值后的坐标点序列</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".mergeLayersBoundingSphere">
+        <a class="href-link" href="#.mergeLayersBoundingSphere">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                mergeLayersBoundingSphere<span class="signature">(layers)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取 M3D 缓存图层组合并后的包围球</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layers</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;<a href="MapGISM3DSet.html">MapGISM3DSet</a>></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>MapGISM3DSet对象数组，详见<a href='http://webclient.smaryun.com/static/modules/cesium/api/cesium/MapGISM3DSet.html' target='_blank'>Cesium.MapGISM3DSet</a></p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>boundingSphere 包围球</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Cesium.BoundingSphere</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".pickFromRay">
+        <a class="href-link" href="#.pickFromRay">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                pickFromRay<span class="signature">(scene, viewPosition, options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>射线求交</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+            <th style="min-width: 100px;">默认值</th>
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>scene</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Scene</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>viewPosition</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">options</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>direction</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>方向向量，传入该参数时后续方向参数无效</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>heading</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0
+      
+      </td>
+  
+
+  <td class="description last"><p>方位角</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>pitch</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0
+      
+      </td>
+  
+
+  <td class="description last"><p>俯仰角</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>distance</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>传入该值，则射线求交无结果时返回方向上该距离的点</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>返回射线物体相交的第一个交点坐标，没有交点则返回undefined</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Cesium.Cartesian3</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".pointIsInPolygon">
+        <a class="href-link" href="#.pointIsInPolygon">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                pointIsInPolygon<span class="signature">(positions, point)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>点是否在范围内(多边形)</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>positions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartographic></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>多边形坐标点序列</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>point</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartographic</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>点</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>true在范围内，false不在范围内。</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".polygonInterpolate">
+        <a class="href-link" href="#.polygonInterpolate">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                polygonInterpolate<span class="signature">(positions, step)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>区域插值(多边形)</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>positions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>坐标点序列</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>step</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>步长</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>插值后的坐标点序列</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".randomNum">
+        <a class="href-link" href="#.randomNum">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                randomNum<span class="signature">(minNum, maxNum)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>获取区间范围内的随机数</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>minNum</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>区间最小值</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>maxNum</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>区间最大值</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>result 在范围[minNum, maxNum]内的随机数</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Number</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".setZValueByTerrain">
+        <a class="href-link" href="#.setZValueByTerrain">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                setZValueByTerrain<span class="signature">(TerrainProvider, level, positions)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据地形设置二维坐标的高程值</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>TerrainProvider</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="CesiumTerrainProvider.html">CesiumTerrainProvider</a></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>地形</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>level</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>以地形的级数为基准</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>positions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian2></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>需设置高程的二维坐标点序列</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>设置成功后的回调</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">function</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".simplifyLine">
+        <a class="href-link" href="#.simplifyLine">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                simplifyLine<span class="signature">(positions)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>化简抽稀(用于折线路绘制)</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>positions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>坐标点序列</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>抽稀后的坐标点序列</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".sphericalPolygonAreaMeters">
+        <a class="href-link" href="#.sphericalPolygonAreaMeters">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" style="font-size:30px">
+            
+                sphericalPolygonAreaMeters<span class="signature">(points)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>计算球面 投影面积方法</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>points</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Cesium.Cartesian3></span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>polygon顶点集</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">Number</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>文档生成<a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="http://www.smaryun.com" target="_blank">司马云</a> <span>© 2023 云生态圈</span>
+                        <a href="http://webclient.smaryun.com:8086/#/index" target="_blank">MapGIS Client for JavaScript</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#page-title">构造函数</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#member">成员变量</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#function">方法</a>
+            </div>
+            <div>
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#event">事件</a>
+            </div>
+        </div>
+    </div>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

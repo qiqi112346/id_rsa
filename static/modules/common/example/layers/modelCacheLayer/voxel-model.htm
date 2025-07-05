@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>栅格体元数据显示</title>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/cesium/Cesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--cesium样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/cesium/Widgets/widgets.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/cesium/MapGIS/css/mapgis.css"
+    />
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/visual.css"
+    />
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map,
+        sceneView,
+        innerView,
+        igsSceneLayer,
+        innerLayer,
+        intervalId,
+        voxelVisible,
+        handler
+      let minthreshold = 0,
+        maxthreshold = 100,
+        heightScale = 10
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map,
+          //额外参数
+          extensionOptions: {
+            //开启webgl2
+            contextOptions: {
+              requestWebgl2: true
+            }
+          }
+        })
+        // 获取viewer对象
+        innerView = sceneView.getInnerView()
+
+        innerView.scene.logarithmicDepthBuffer = true
+      }
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        // 创建栅格体元图元
+        addLayer(true)
+        initUI()
+      }
+      function addLayer(needRender) {
+        removeLayer()
+        const renderer = {
+          //专题图着色参数
+          visualVariables: [
+            {
+              // 视觉变量类型
+              type: 'color',
+              // 视觉变量字段表达式
+              field: 'rhum',
+              // 颜色分段数组
+              stops: [
+                {
+                  color: 'rgba(255,255,0,1)',
+                  value: 0
+                },
+                {
+                  color: 'rgba(0,255,255,1)',
+                  value: 1.0
+                }
+              ]
+            }
+          ]
+        }
+
+        igsSceneLayer = new zondy.layer.M3DModelCacheLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/M3Dv2/rhum2011/M3dServer',
+          renderer: needRender ? renderer : undefined,
+          clientFilters: [{ minValue: 0, maxValue: 100 }],
+          elevationInfo: {
+            featureExpressionInfo: {
+              expression: '$feature.z * ' + heightScale
+            }
+          },
+          // 初始化参数
+          extensionOptions: {
+            // 开启自动跳转
+            autoReset: true
+          }
+        })
+        map.add(igsSceneLayer)
+        igsSceneLayer.on('layerview-created', (result) => {
+          console.log('result:', result)
+          innerLayer = result.layerView.innerLayer
+        })
+      }
+      function changeTime(stop) {
+        if (!igsSceneLayer || !igsSceneLayer.timeInfo) {
+          return
+        }
+        if (intervalId) {
+          clearInterval(intervalId)
+          intervalId = null
+        }
+        if (stop) {
+          return
+        }
+        const { stops } = igsSceneLayer.timeInfo
+        let n = 0
+        intervalId = setInterval(() => {
+          const stop = stops[n % stops.length]
+          igsSceneLayer.timeExtent = { start: stop }
+          n++
+        }, 200)
+      }
+      function changeTheme(type) {
+        if (!igsSceneLayer) {
+          return
+        }
+        let visualVariable = {
+          // 视觉变量类型
+          type: 'color',
+          // 视觉变量字段表达式
+          field: 'rhum',
+          // 颜色分段数组
+          stops: [
+            {
+              color: 'rgba(255,0,0,1)',
+              value: 0
+            },
+            {
+              color: 'rgba(0,0,255,1)',
+              value: 1.0
+            }
+          ]
+        }
+        switch (type) {
+          case 1: {
+            visualVariable.stops = [
+              {
+                color: 'rgba(255,0,0,1)',
+                value: 0
+              },
+              {
+                color: 'rgba(0,0,255,1)',
+                value: 1.0
+              }
+            ]
+            break
+          }
+          case 2: {
+            visualVariable.stops = [
+              {
+                color: 'rgba(255,255,0,1)',
+                value: 0
+              },
+              {
+                color: 'rgba(0,255,255,1)',
+                value: 1.0
+              }
+            ]
+            break
+          }
+        }
+        const renderer_unique = {
+          //专题图字段
+          field: 'OID',
+          //专题图着色参数
+          visualVariables: [visualVariable]
+        }
+        //const innerLayer = sceneView.getInnerLayer(igsSceneLayer)
+        igsSceneLayer.renderer = type ? renderer_unique : undefined
+      }
+      function changeTime(stop) {
+        if (!igsSceneLayer || !igsSceneLayer.timeInfo) {
+          return
+        }
+        if (intervalId) {
+          clearInterval(intervalId)
+          intervalId = null
+        }
+        if (stop) {
+          return
+        }
+        const { stops } = igsSceneLayer.timeInfo
+        let n = 0
+        intervalId = setInterval(() => {
+          const stop = stops[n % stops.length]
+          igsSceneLayer.timeExtent = { start: stop }
+          n++
+        }, 200)
+      }
+      function changeVisible() {
+        if (!igsSceneLayer) {
+          return
+        }
+        igsSceneLayer.visible = !!voxelVisible
+        voxelVisible = !voxelVisible
+      }
+      function changeMinMaxValue(minValue, maxValue) {
+        if (!igsSceneLayer) {
+          return
+        }
+
+        igsSceneLayer.clientFilters = [
+          { minValue: minValue, maxValue: maxValue }
+        ]
+      }
+
+      function startPickVoxel(remove) {
+        if (!igsSceneLayer) {
+          return
+        }
+        if (remove) {
+          handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK)
+          return
+        }
+        handler = new Cesium.ScreenSpaceEventHandler(innerView.scene.canvas)
+        handler.setInputAction(function (movement) {
+          // console.log(volxel.queryPropertyValue(movement.position));
+          var voxelCell = innerView.scene.pickVoxel(movement.position)
+
+          if (voxelCell instanceof Cesium.VoxelCell) {
+            console.log(voxelCell.metadata)
+            const propertyIds = voxelCell.getNames()
+            const length = propertyIds.length
+            for (let i = 0; i < length; ++i) {
+              const propertyId = propertyIds[i]
+              console.log(`${propertyId}: ${voxelCell.getProperty(propertyId)}`)
+            }
+          }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
+      }
+      function changeHeightscale(heightScale) {
+        if (!igsSceneLayer) {
+          return
+        }
+        igsSceneLayer.elevationInfo = {
+          featureExpressionInfo: {
+            expression: '$feature.z * ' + heightScale
+          }
+        }
+      }
+      function setLayerOpacity(layerOpacity) {
+        if (!igsSceneLayer) {
+          return
+        }
+        igsSceneLayer.opacity = layerOpacity
+      }
+      function removeLayer() {
+        if (!igsSceneLayer) {
+          return
+        }
+        map.remove(igsSceneLayer)
+        igsSceneLayer = undefined
+      }
+
+      function initUI() {
+        let rangeSlider = layui.slider.render({
+          elem: '#range',
+          range: true,
+          value: [minthreshold, maxthreshold],
+          min: minthreshold,
+          max: maxthreshold,
+          theme: 'rgb(102, 147, 251)',
+          change: function (value) {
+            // // 通过BatchID最小值、最大值，控制要素可见范围
+            changeMinMaxValue(value[0], value[1])
+          }
+        })
+        layui
+          .config({
+            //  配置 Layui 第三方扩展模块存放的基础目录
+            base: 'http://webclient.smaryun.com/static/libs/cdn/layui/modules/'
+          })
+          .extend({
+            // 扩展
+            decimalSlider: 'decimalSlider/index'
+          })
+
+        layui.use('decimalSlider', (decimalSlider) => {
+          let form = layui.form
+          form.on('switch(time)', function (data) {
+            // 是否开启时态变化
+            if (data.elem.checked) {
+              changeTime()
+            } else {
+              changeTime(true)
+            }
+          })
+          form.on('switch(show)', function (data) {
+            // 是否显示
+            changeVisible()
+          })
+          form.on('switch(query)', function (data) {
+            // 属性查询
+            if (data.elem.checked) {
+              startPickVoxel()
+            } else {
+              startPickVoxel(true)
+            }
+          })
+          form.on('switch(color)', function (data) {
+            // 是否显示地球外圈大气
+            if (data.elem.checked) {
+              changeTheme(2)
+            } else {
+              changeTheme()
+            }
+          })
+          // 透明度
+          let alphaSlider = decimalSlider.render({
+            elem: '#opacity',
+            decimalPlaces: 3, // 小数点1位
+            value: 1,
+            min: 0,
+            max: 1,
+            step: 0.001,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              setLayerOpacity(parseFloat(value))
+            }
+          })
+          // 高度缩放
+          let heightScaleSlider = decimalSlider.render({
+            elem: '#heightScale',
+            decimalPlaces: 1, // 小数点位
+            value: 10,
+            min: 10,
+            max: 1000,
+            step: 10,
+            input: true,
+            theme: 'rgb(102, 147, 251)',
+            change: function (value) {
+              changeHeightscale(parseFloat(value))
+            }
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="sample-main-panel">
+          <div class="layui-form-item">
+            <label class="layui-form-label">透明度</label>
+            <div class="layui-input-block decimal-slider">
+              <div id="opacity"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">高度缩放</label>
+            <div class="layui-input-block decimal-slider">
+              <div id="heightScale"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">属性过滤</label>
+            <div class="layui-input-block">
+              <div id="range"></div>
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">配色方案</label>
+          <div class="layui-input-block">
+            <input
+              type="checkbox"
+              lay-filter="color"
+              lay-skin="switch"
+              lay-text="自定义|默认"
+              checked
+            />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">时态变化</label>
+          <div class="layui-input-block">
+            <input
+              type="checkbox"
+              lay-filter="time"
+              lay-skin="switch"
+              lay-text="开启|关闭"
+            />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">属性查询</label>
+          <div class="layui-input-block">
+            <input
+              type="checkbox"
+              lay-filter="query"
+              lay-skin="switch"
+              lay-text="开启|关闭"
+            />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">是否显示</label>
+          <div class="layui-input-block">
+            <input
+              type="checkbox"
+              lay-filter="show"
+              lay-skin="switch"
+              lay-text="显示|隐藏"
+              checked
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <style type="text/css">
+      .layui-panel-right {
+        width: 350px;
+      }
+
+      .sample-main-panel {
+        height: auto;
+      }
+
+      .layui-form-label {
+        width: 100px;
+      }
+
+      .layui-input-block {
+        width: 195px;
+      }
+    </style>
+  </body>
+</html>

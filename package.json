@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@mapgis/cesium": "^17.2.6",
+    "@mapgis/webclient-cesium-plugin": "^17.2.12"
+  }
+}

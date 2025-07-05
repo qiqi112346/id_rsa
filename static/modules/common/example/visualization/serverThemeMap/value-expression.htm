@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>字段表达式</title>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+
+      const { Map, Color } = zondy
+      const { IGSMapImageLayer } = zondy.layer
+      const { ClassBreakRenderer } = zondy.renderer
+      const { SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol } =
+        zondy.symbol
+      let map, view, igsMapImageLayer
+      // 点、线、区要素图层
+      let layerOfPoint, layerOfLine, layerOfRegion
+      // 样式颜色是否随机的标识
+      let isRandom = false
+
+      //获取点renderer
+      function getRendererOfPoint() {
+        return new ClassBreakRenderer({
+          //字段名
+          field: 'population',
+          //默认样式
+          defaultSymbol: new SimpleMarkerSymbol({
+            //填充颜色
+            color: isRandom ? randomColor() : new Color(178, 223, 138, 0.6),
+            //点半径
+            size: 25,
+            //外边线样式
+            outline: {
+              //线颜色
+              color: isRandom ? randomColor() : new Color(178, 223, 138, 1),
+              //线宽
+              width: 1
+            }
+          }),
+          //分段专题图字段样式
+          classBreakInfos: [
+            {
+              //分段最小值
+              minValue: 0,
+              //分段最大值
+              maxValue: 4000000,
+              //匹配到该值后的样式，更多样式详见：《SimpleMarkerSymbol》
+              symbol: new SimpleMarkerSymbol({
+                //填充颜色
+                color: isRandom ? randomColor() : new Color(76, 161, 46, 0.6),
+                //点半径
+                size: 25,
+                //外边线样式
+                outline: new SimpleLineSymbol({
+                  //线颜色
+                  color: isRandom ? randomColor() : new Color(76, 161, 46, 1),
+                  //线宽
+                  width: 1
+                })
+              })
+            },
+            {
+              //分段最小值
+              minValue: 4000000,
+              //分段最大值
+              maxValue: 8000000,
+              //匹配到该值后的样式，更多样式详见：《SimpleMarkerSymbol》
+              symbol: new SimpleMarkerSymbol({
+                //填充颜色
+                color: isRandom ? randomColor() : new Color(228, 67, 45, 0.6),
+                //点半径
+                size: 25,
+                //外边线样式
+                outline: new SimpleLineSymbol({
+                  //线颜色
+                  color: isRandom ? randomColor() : new Color(228, 67, 45, 1),
+                  //线宽
+                  width: 1
+                })
+              })
+            }
+          ]
+        })
+      }
+
+      //获取线renderer
+      function getRendererOfLine() {
+        return new ClassBreakRenderer({
+          field: 'osm_id',
+          //匹配到该值后的样式
+          defaultSymbol: new SimpleLineSymbol({
+            // 填充符号颜色
+            color: isRandom ? randomColor() : new Color(37, 120, 180, 1),
+            //线宽
+            width: 2
+          }),
+          //分段专题图字段样式
+          classBreakInfos: [
+            {
+              // 分段最大值
+              minValue: 100000000,
+              // 分段最大值
+              maxValue: 200000000,
+              //匹配到该值后的样式，更多样式详见：《SimpleLineSymbol》
+              symbol: new SimpleLineSymbol({
+                // 填充符号颜色
+                color: isRandom ? randomColor() : new Color(228, 67, 45, 1),
+                //线宽
+                width: 2
+              })
+            },
+            {
+              // 分段最小值
+              minValue: 200000000,
+              // 分段最大值
+              maxValue: 300000000,
+              //匹配到该值后的样式，更多样式详见：《SimpleLineSymbol》
+              symbol: new SimpleLineSymbol({
+                // 填充符号颜色
+                color: isRandom ? randomColor() : new Color(178, 223, 138, 1),
+                //线宽
+                width: 2
+              })
+            }
+          ]
+        })
+      }
+
+      //获取区renderer
+      function getRendererOfRegion() {
+        return new ClassBreakRenderer({
+          // 设置字段表达式，会覆盖field参数
+          valueExpression: '$feature.GDP2015+$feature.GDP2016',
+          //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+          defaultSymbol: new SimpleFillSymbol({
+            // 填充符号颜色
+            color: isRandom ? randomColor() : new Color(130, 135, 247, 0.6),
+            // 外边线样式
+            outline: new SimpleLineSymbol({
+              // 线符号颜色
+              color: isRandom ? randomColor() : new Color(130, 135, 247, 1),
+              // 线宽
+              width: 1
+            })
+          }),
+          //分段专题图字段样式
+          classBreakInfos: [
+            {
+              // 分段最大值
+              minValue: 0,
+              // 分段最大值
+              maxValue: 200,
+              //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+              symbol: new SimpleFillSymbol({
+                // 填充符号颜色
+                color: isRandom ? randomColor() : new Color(248, 191, 111, 0.6),
+                // 外边线样式
+                outline: new SimpleLineSymbol({
+                  //线符号颜色
+                  color: isRandom ? randomColor() : new Color(248, 191, 111, 1),
+                  //线宽
+                  width: 1
+                })
+              })
+            },
+            {
+              // 分段最小值
+              minValue: 200,
+              // 分段最大值
+              maxValue: 600,
+              //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+              symbol: new SimpleFillSymbol({
+                // 填充符号颜色
+                color: isRandom ? randomColor() : new Color(130, 247, 254, 0.6),
+                // 外边线样式
+                outline: new SimpleLineSymbol({
+                  // 线符号颜色
+                  color: isRandom ? randomColor() : new Color(130, 247, 254, 1),
+                  // 线宽
+                  width: 1
+                })
+              })
+            },
+            {
+              // 分段最小值
+              minValue: 600,
+              // 分段最大值
+              maxValue: 1000,
+              //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+              symbol: new SimpleFillSymbol({
+                // 填充符号颜色
+                color: isRandom ? randomColor() : new Color(231, 147, 146, 0.6),
+                // 外边线样式
+                outline: new SimpleLineSymbol({
+                  // 线符号颜色
+                  color: isRandom ? randomColor() : new Color(231, 147, 146, 1),
+                  // 线宽
+                  width: 1
+                })
+              })
+            }
+          ]
+        })
+      }
+
+      // 随机颜色值
+      function randomColor() {
+        return new Color(
+          parseInt(Math.random() * 255),
+          parseInt(Math.random() * 255),
+          parseInt(Math.random() * 255),
+          0.6
+        )
+      }
+
+      // 初始化示例
+      function init() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+        // 添加专题图图层
+        addThemLayer()
+      }
+      // 添加专题图图层
+      function addThemLayer() {
+        igsMapImageLayer = new IGSMapImageLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/MapServer',
+          httpMethod: 'POST'
+        })
+
+        // 添加图层
+        map.add(igsMapImageLayer)
+
+        // 图层加载完毕事件
+        igsMapImageLayer.on('layerview-created', (result) => {
+          console.log('加载完毕', result.layer)
+          layerOfPoint = igsMapImageLayer.findSublayerById(5)
+          layerOfLine = igsMapImageLayer.findSublayerById('2-23')
+          layerOfRegion = igsMapImageLayer.findSublayerById(0)
+          // 设置点图层的专题图
+          layerOfPoint.renderer = getRendererOfPoint()
+          // 设置线图层的专题图
+          layerOfLine.renderer = getRendererOfLine()
+          // 设置区图层的专题图
+          layerOfRegion.renderer = getRendererOfRegion()
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+  </body>
+</html>

@@ -1,0 +1,511 @@
+{
+    "name": "",
+    "title": "MapGIS WebClinet-MapboxGL演示网站",
+    "mapmode": "mapboxgl",
+    "childs": [
+        {
+            "name": "数据图层",
+            "iconfont": "iconserver1",
+            "folder": "layer",
+            "leaffolder": false,
+            "childs": [
+                {
+                    "name": "OGC",
+                    "iconfont": "iconmap",
+                    "folder": "ogc",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "WMS图层-混合开发",
+                            "file": "wms-layer-hybrid",
+                            "diffcult": "1",
+                            "icon": "wms-layer-hybrid.png"
+                        },
+                        {
+                            "name": "WMTS图层-混合开发",
+                            "file": "wmts-layer-hybrid",
+                            "diffcult": "1",
+                            "icon": "wmts-layer-hybrid.png"
+                        },
+                        {
+                            "name": "WFS图层-混合开发",
+                            "file": "wfs-layer-hybrid",
+                            "diffcult": "1",
+                            "icon": "wfs-layer-hybrid.png"
+                        }
+                    ]
+                },
+                {
+                    "name": "地图图片图层",
+                    "folder": "mapPictureLayer",
+                    "leaffolder": true,
+                    "hideleaf": true,
+                    "childs": [
+                        {
+                            "name": "MapGIS地图图片图层-混合开发",
+                            "file": "mapgis-map-image-layer-hybrid",
+                            "diffcult": "1",
+                            "icon": "mapgis-map-image-layer-hybrid.png"
+                        },
+                        {
+                            "name": "ArcGIS地图图片图层-混合开发",
+                            "file": "arcgis-map-image-layer-hybrid",
+                            "diffcult": "1",
+                            "icon": "arcgis-map-image-layer-hybrid.png"
+                        }
+                    ]
+                },
+                {
+                    "name": "瓦片图层",
+                    "iconfont": "iconmap",
+                    "folder": "tileLayer",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "MapGIS瓦片图层-混合开发",
+                            "file": "mapgis-tile-layer-hybrid",
+                            "diffcult": "1",
+                            "icon": "mapgis-tile-layer-hybrid.png"
+                        },
+                        {
+                            "name": "ArcGIS瓦片图层-混合开发",
+                            "file": "arcgis-tile-layer-hybrid",
+                            "diffcult": "1",
+                            "icon": "arcgis-tile-layer-hybrid.png"
+                        },
+                        {
+                            "name": "网络瓦片图层-混合开发",
+                            "file": "web-tile-layer-hybrid",
+                            "diffcult": "1",
+                            "icon": "web-tile-layer-hybrid.png"
+                        }
+                    ]
+                },
+                {
+                    "name": "要素图层",
+                    "folder": "feature",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "MapGIS要素图层-混合开发",
+                            "file": "mapgis-feature-layer-hybrid",
+                            "icon": "mapgis-feature-layer-hybrid.png",
+                            "diffcult": "1",
+                            "tags": ["IGSFeatureLayer"]
+                        }
+                    ]
+                },
+                {
+                    "name": "GeoJson图层",
+                    "folder": "geoJsonLayer",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "GeoJSON图层-混合开发",
+                            "file": "geojson-layer-hybrid",
+                            "icon": "geojson-layer-hybrid.png",
+                            "diffcult": "1",
+                            "tags": ["GeoJSONLayer"]
+                        }
+                    ]
+                },
+                {
+                    "name": "矢量瓦片图层",
+                    "folder": "vectorTile",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "MapGIS矢量瓦片-混合开发",
+                            "file": "mapgis-vector-tile-layer-hybrid",
+                            "icon": "mapgis-vector-tile-layer-hybrid.png",
+                            "diffcult": "1"
+                        },
+                        {
+                            "name": "ArcGIS矢量瓦片-混合开发",
+                            "file": "arcgis-vector-tile-layer-hybrid",
+                            "icon": "arcgis-vector-tile-layer-hybrid.png",
+                            "diffcult": "1"
+                        }
+                    ]
+                },
+                {
+                    "name": "几何图层",
+                    "folder": "graphicsLayer",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "几何图层-混合开发",
+                            "file": "graphics-layer-hybrid",
+                            "icon": "graphics-layer-hybrid.png",
+                            "diffcult": "1",
+                            "tags": ["GraphicsLayer"]
+                        }
+                    ]
+                },
+                {
+                    "name": "图层管理",
+                    "folder": "layer-manager",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "图层列表",
+                            "file": "layer-list-hybrid",
+                            "icon": "layer-list-hybrid.png",
+                            "diffcult": "1",
+                            "tags": ["layer-manager"]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "地图视图",
+            "folder": "mapControl",
+            "childs": [
+                {
+                    "name": "控件",
+                    "folder": "widget",
+                    "leaffolder": true,
+                    "hideleaf": true,
+                    "childs": [
+                        {
+                            "name": "卷帘（纵向）",
+                            "file": "compare",
+                            "diffcult": "1",
+                            "detail": "卷帘组件",
+                            "icon": "compare.png",
+                            "update": "最后更新时间：2020-12-30"
+                        },
+                        {
+                            "name": "卷帘（横向）",
+                            "file": "compare-hori",
+                            "diffcult": "1",
+                            "detail": "卷帘组件-纵轴",
+                            "icon": "compare-hori.png",
+                            "update": "最后更新时间：2020-12-30"
+                        },
+                        {
+                            "name": "FPS组件",
+                            "file": "fps-control",
+                            "diffcult": "1",
+                            "detail": "卷帘组件-纵轴",
+                            "icon": "fps-control.png",
+                            "update": "最后更新时间：2021-01-06"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "可视化",
+            "folder": "visualization",
+            "childs": [
+                {
+                    "name": "通用可视化",
+                    "iconfont": "iconapp_mw_cluster",
+                    "folder": "common",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "聚类（聚合标注）",
+                            "file": "cluster",
+                            "diffcult": "1",
+                            "detail": "GeoJSON格式的聚类分析",
+                            "icon": "cluster.png",
+                            "update": "最后更新时间：2021-01-05"
+                        }
+                    ]
+                },
+                {
+                    "name": "Echarts",
+                    "iconfont": "iconview-map-1",
+                    "folder": "echarts",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "全国微博签到图",
+                            "file": "echartsweibo",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "echartsweibo.png",
+                            "update": "最后更新时间：2018-07-11"
+                        },
+                        {
+                            "name": "全国主要城市微博热力图",
+                            "file": "echartsheater",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "echartsheater.png",
+                            "update": "最后更新时间：2018-07-11"
+                        },
+                        {
+                            "name": "迁徙图",
+                            "file": "echartsmigarate",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "migarate.png",
+                            "update": "最后更新时间：2018-07-11"
+                        },
+                        {
+                            "name": "世界飞行航线图",
+                            "file": "echartsflight",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "echartsflight.png",
+                            "update": "最后更新时间：2018-07-11"
+                        },
+                        {
+                            "name": "全国主要城市空气质量图",
+                            "file": "echartsair",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "echartsair.png",
+                            "update": "最后更新时间：2018-07-11"
+                        },
+                        {
+                            "name": "北京道路图（渐进线）",
+                            "file": "echartsline",
+                            "diffcult": "1",
+                            "detail": "百度Echarts北京公交路线图",
+                            "icon": "echartsline.png",
+                            "update": "最后更新时间：2018-07-11"
+                        },
+                        {
+                            "name": "北京公交线路图",
+                            "file": "echartslineanimate",
+                            "diffcult": "1",
+                            "detail": "北京公交路线-线特效",
+                            "icon": "lineanimate.png",
+                            "update": "最后更新时间：2018-07-11"
+                        },
+                        {
+                            "name": "北京网格专题图",
+                            "file": "echartsgrid",
+                            "diffcult": "1",
+                            "detail": "北京网格图",
+                            "icon": "grid.png",
+                            "update": "最后更新时间：2018-07-11"
+                        },
+                        {
+                            "name": "纽约出租车点分布图（140万点）",
+                            "file": "echartsbigpoint",
+                            "diffcult": "1",
+                            "detail": "纽约-140万点数据",
+                            "icon": "bigpoint.png",
+                            "update": "最后更新时间：2018-07-11"
+                        },
+                        {
+                            "name": "纽约道路图（100万线）",
+                            "file": "echartsbigline",
+                            "diffcult": "1",
+                            "detail": "纽约-100万线数据",
+                            "icon": "bigline.png",
+                            "update": "最后更新时间：2018-07-11"
+                        },
+                        {
+                            "name": "全国道路图（100万线）",
+                            "file": "echartsbigroad",
+                            "diffcult": "1",
+                            "detail": "纽约-100万线",
+                            "icon": "bigroad.png",
+                            "update": "最后更新时间：2018-07-11"
+                        },
+                        {
+                            "name": "全球GPS点位图（1000万点）",
+                            "file": "echartsbiggps",
+                            "diffcult": "1",
+                            "data": "数据来自：https://blog.openstreetmap.org/2012/04/01/bulk-gps-point-data/",
+                            "detail": "世界-1000万GPS点数据",
+                            "icon": "biggps.png",
+                            "update": "最后更新时间：2018-07-11"
+                        }
+                    ]
+                },
+                {
+                    "name": "Echarts Gl",
+                    "iconfont": "iconview-map-1",
+                    "folder": "echartsgl",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "开普敦出租车路线图",
+                            "file": "echartsglcapton",
+                            "diffcult": "1",
+                            "detail": "针对出租车轨迹与建筑进行动态显示",
+                            "icon": "capton.png",
+                            "update": "最后更新时间：2018-05-24"
+                        },
+                        {
+                            "name": "伦敦飞机航线图",
+                            "file": "echartsglflight",
+                            "diffcult": "1",
+                            "detail": "针对Uber的数据进行的飞行航线的可视化",
+                            "icon": "flight.png",
+                            "update": "最后更新时间：2018-05-24"
+                        },
+                        {
+                            "name": "上海房价图",
+                            "file": "echartsglshanghai",
+                            "diffcult": "1",
+                            "detail": "针对上海的房价进行统计图可视化",
+                            "icon": "shanghai.png",
+                            "update": "最后更新时间：2018-05-24"
+                        },
+                        {
+                            "name": "全国微博签到图",
+                            "file": "echartsglweibo",
+                            "diffcult": "1",
+                            "detail": "针对全国微博数据的签到可视化",
+                            "icon": "weibo.png",
+                            "update": "最后更新时间：2018-05-24"
+                        },
+                        {
+                            "name": "彩色建筑图",
+                            "file": "echartsglbuildings",
+                            "diffcult": "1",
+                            "detail": "针对建筑模型的彩色可视化",
+                            "icon": "buildings.png",
+                            "update": "最后更新时间：2018-05-24"
+                        },
+                        {
+                            "name": "纽约公交夜景图",
+                            "file": "echartsglnewyork",
+                            "diffcult": "1",
+                            "detail": "针对纽约公交夜景的彩色可视化",
+                            "icon": "newyork.png",
+                            "update": "最后更新时间：2018-06-21"
+                        },
+                        {
+                            "name": "北京公交夜景图",
+                            "file": "echartsglbeijing",
+                            "diffcult": "1",
+                            "detail": "针对北京公交夜景的彩色可视化",
+                            "icon": "beijing.png",
+                            "update": "最后更新时间：2018-06-27"
+                        },
+                        {
+                            "name": "世界航线图",
+                            "file": "echartsgllines",
+                            "diffcult": "1",
+                            "detail": "针对世界航线的彩色可视化",
+                            "icon": "lines.png",
+                            "update": "最后更新时间：2018-07-06"
+                        }
+                    ]
+                },
+                {
+                    "name": "MapV",
+                    "iconfont": "iconmap1",
+                    "folder": "mapv",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "轨迹汇聚",
+                            "file": "mapvpath_converge",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "path_converge.png",
+                            "update": "最后更新时间：2018-05-12"
+                        },
+                        {
+                            "name": "热力图",
+                            "file": "mapvheater",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "heater.png",
+                            "update": "最后更新时间：2018-07-4"
+                        },
+                        {
+                            "name": "迁移图",
+                            "file": "mapvmigrate",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "migrate.png",
+                            "update": "最后更新时间：2018-05-12"
+                        },
+                        {
+                            "name": "区数据渲染",
+                            "file": "mapvrender_polygon",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "render_polygon.png",
+                            "update": "最后更新时间：2018-05-12"
+                        },
+                        {
+                            "name": "点数据播放",
+                            "file": "mapvpoint_animate",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "point_animate.png",
+                            "update": "最后更新时间：2018-05-12"
+                        },
+                        {
+                            "name": "密度图（方形格网）",
+                            "file": "mapvpoint_grid",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "point_grid.png",
+                            "update": "最后更新时间：2018-05-12"
+                        },
+                        {
+                            "name": "密度图（蜂窝形）",
+                            "file": "mapvpoint_honeycomb",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "point_honeycomb.png",
+                            "update": "最后更新时间：2018-05-12"
+                        },
+                        {
+                            "name": "点重叠播放",
+                            "file": "mapvpoint_mutilanimate",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "point_mutilanimate.png",
+                            "update": "最后更新时间：2018-05-12"
+                        },
+                        {
+                            "name": "全国微博签到图",
+                            "file": "mapvpoint_weibo",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "point_weibo.png",
+                            "update": "最后更新时间：2018-05-12"
+                        },
+                        {
+                            "name": "多值统计线",
+                            "file": "mapvcountline",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "countline.png",
+                            "update": "最后更新时间：2018-05-12"
+                        },
+                        {
+                            "name": "单一迁移轨迹",
+                            "file": "mapvsimplemigrate",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "simplemigrate.png",
+                            "update": "最后更新时间：2018-05-12"
+                        },
+                        {
+                            "name": "动态轨迹",
+                            "file": "mapvtracker",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "tracker.png",
+                            "update": "最后更新时间：2018-05-12"
+                        },
+                        {
+                            "name": "交通轨迹",
+                            "file": "mapvtrackerline",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "trackerline.png",
+                            "update": "最后更新时间：2018-05-12"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

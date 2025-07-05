@@ -1,0 +1,1620 @@
+<header id="page-title" class="page-title">
+    
+        <span class="page-title-main">类名</span>
+        <span class="page-title-sub">ArcGisPolyline</span>
+    
+</header>
+
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="ArcGisPolyline">
+        <a class="href-link" href="#ArcGisPolyline">#</a>
+        
+        <span class="code-name" id="ArcGisPolyline" style="font-size:30px">
+            
+                new ArcGisPolyline<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>ArcGis服务</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>必选项，构造点对象参数。</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>paths</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             String
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>可选项。构成线的点坐标，可有多条。
+Example: [[[x1,y1],[x2,y2],[x3,y3]],[[x4,y4],[x5,y5],[x6,y6]]]</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>spatialReference</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             ArcGisSpatialReference
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>可选项。多边形的空间坐标系，默认4326。</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">作者:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>基础平台-杨琨</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='function'>方法</h3>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法概述</h4>
+            <div class="members">
+            <div class="table-container">
+                <table class="params table">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>返回值类型</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#addRing">addRing</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>传入坐标数组或者[ArcGisPoint]数组，新增一条线</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#getPoint">getPoint</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>根据pathIndex和pointIndex返回ArcGisPoint对象</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#insertPoint">insertPoint</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>根据ringIndex、pointIndex，在pointIndex之后插入一个点对象</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#removePoint">removePoint</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>根据ringIndex、pointIndex删除一个点，并返回该点对象</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#removeRing">removeRing</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>根据index删除一条线，并返回点对象数组</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#setPoint">setPoint</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>根据ringIndex、pointIndex，更新一个点对象</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#toGeometryJSON">toGeometryJSON</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>将点坐标转换为Json对象</p></code></td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法详情</h4>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="addRing">
+        <a class="href-link" href="#addRing">#</a>
+        
+        <span class="code-name" id="addRing" style="font-size:30px">
+            
+                addRing<span class="signature">(points)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>传入坐标数组或者[ArcGisPoint]数组，新增一条线</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>points</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Array
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>必选项，要插入的一组多边形点坐标数组，
+example：[[x1,y1],[x2,y2],[x3,y3]]。</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>ArcGisPolyline，线对象</p></div>
+    
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getPoint">
+        <a class="href-link" href="#getPoint">#</a>
+        
+        <span class="code-name" id="getPoint" style="font-size:30px">
+            
+                getPoint<span class="signature">(pathIndex, pointIndex)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据pathIndex和pointIndex返回ArcGisPoint对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pathIndex</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>必选项，要查询的多边形序号。</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pointIndex</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>必选项，要查询的点序号。</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>ArcGisPoint，点对象</p></div>
+    
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="insertPoint">
+        <a class="href-link" href="#insertPoint">#</a>
+        
+        <span class="code-name" id="insertPoint" style="font-size:30px">
+            
+                insertPoint<span class="signature">(pathIndex, pointIndex, point)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据ringIndex、pointIndex，在pointIndex之后插入一个点对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pathIndex</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>必选项，要插入的多边形序号。</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pointIndex</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>必选项，在第pointIndex之后插入一个点，线标从0开始。</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>point</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>必选项，要要插入的点对象。</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>ArcGisPolyline，线对象</p></div>
+    
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="removePoint">
+        <a class="href-link" href="#removePoint">#</a>
+        
+        <span class="code-name" id="removePoint" style="font-size:30px">
+            
+                removePoint<span class="signature">(pathIndex, pointIndex)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据ringIndex、pointIndex删除一个点，并返回该点对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pathIndex</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>必选项，要删除的点所在的多边形序号。</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pointIndex</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>必选项，在pointIndex处，删除这个点。</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>ArcGisPoint，点对象</p></div>
+    
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="removeRing">
+        <a class="href-link" href="#removeRing">#</a>
+        
+        <span class="code-name" id="removeRing" style="font-size:30px">
+            
+                removeRing<span class="signature">(index)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据index删除一条线，并返回点对象数组</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>index</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Array
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>必选项，要删除的多边形序号。</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>[ArcGisPoint]，被删除的线的点对象数组</p></div>
+    
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="setPoint">
+        <a class="href-link" href="#setPoint">#</a>
+        
+        <span class="code-name" id="setPoint" style="font-size:30px">
+            
+                setPoint<span class="signature">(pathIndex, pointIndex, point)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据ringIndex、pointIndex，更新一个点对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pathIndex</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>必选项，要删除的点所在的多边形序号。</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>pointIndex</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>必选项，在pointIndex处，删除这个点。</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>point</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             ArcGisPoint
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>必选项，ArcGisPoint对象或者[x,y]或[x,y,z]数组,要更新的点。</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>ArcGisPolyline，线对象</p></div>
+    
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="toGeometryJSON">
+        <a class="href-link" href="#toGeometryJSON">#</a>
+        
+        <span class="code-name" id="toGeometryJSON" style="font-size:30px">
+            
+                toGeometryJSON<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>将点坐标转换为Json对象</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>String</p></div>
+    
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>

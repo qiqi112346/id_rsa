@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>二维标绘</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha384-SOnAn/m2fVJCwnbEYgD4xzrPtvsXdElhOVvR8ND1YjB5nhGNwwf7nBQlhfAwHAZC"
+      crossorigin="anonymous"
+    />
+    <!--引入行业标绘脚本库-->
+    <script
+      include="menu,editor,2D"
+      src="./static/libs/include-plot-local.js"
+    ></script>
+    <script>
+      'use strict'
+
+      //地图初始化函数
+      function init() {
+        /**
+         * ***********************地图框架部分***************************
+         */
+
+        const view = window.initView('content')
+
+        /**
+         * ***********************行业标绘库部分***************************
+         */
+
+        const zondy = window.zondy
+        const Plot = zondy.plot
+        const {
+          PlotLayer2D,
+          PlotLayer2DGroup,
+          SymbolManager,
+          TimeLine,
+          DrawTool,
+          PlotRegister,
+          PlotUtilBase,
+          FabricLayer
+        } = Plot
+
+        const symbolUrl = `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/symbolLib.json`
+        const symbolOptions = {
+          fontURL: `http://webclient.smaryun.com:8200/Plot/plot-sample/fonts/`,
+          baseUrl: `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/`
+        }
+
+        let layer1,
+          plotLayer2DGroup,
+          timeline,
+          drawTool,
+          plotEditor,
+          currentPlot
+        let PlotMenu = window.webclientPlot.PlotMenu
+        let PlotStyleEditor = window.webclientPlot.PlotStyleEditor
+        // 获取overlay图层
+        const canvas = new FabricLayer(view, PlotLayer2DGroup)
+        // 创建符号管理器
+        const manager = new SymbolManager(symbolUrl, symbolOptions)
+        // 请求获取符号库
+        manager.getSymbols().then(() => {
+          // 创建二维图层组
+          plotLayer2DGroup = canvas.getFabricCanvas()
+          // 创建二维图层
+          layer1 = new PlotLayer2D()
+          // 设置图层标绘元素缩放比，默认为1
+          layer1.setPlotSize(1)
+          // 添加图层
+          plotLayer2DGroup.addLayer(layer1)
+          // 创建绘制工具
+          drawTool = new DrawTool(layer1, {
+            // 新增标绘对象回调
+            addedPlot: function (plot) {}
+          })
+          // 请求保存的标绘物数据
+          $.getJSON(
+            `http://webclient.smaryun.com:8200/Plot/plot-sample/layers/bbbbb.json`,
+            (res) => {
+              // 读取保存的标绘物数据
+              layer1.fromJSON(res)
+            }
+          )
+
+          //点击获取要素
+          layer1.editable = true
+          layer1.pickPlot = function (plot) {
+            // 获取选中的标绘元素
+            currentPlot = plot
+            if (!currentPlot) {
+              plotEditor && plotEditor.destroyed()
+              return
+            }
+            if (!plotEditor) {
+              // 创建plotStyleEditor
+              plotEditor = new PlotStyleEditor('plot-editor')
+              // 监听属性变更事件
+              plotEditor.on('attributes-change', (attr) => {
+                currentPlot.setStyle(attr.type, attr.value, attr.key)
+              })
+            }
+
+            // 获取标绘元素样式，生成plotmenu
+            var style = plot.getStyle()
+            plot
+              .getElement()
+              .getSymbol()
+              .getSvg()
+              .then((svgDom) => {
+                plotEditor.setAttrs(style, style.nodeStyles, {
+                  svgDom: svgDom
+                })
+              })
+          }
+
+          // 创建左侧符号目录树，并绑定绘制方法
+          function drawFunc(id) {
+            drawTool.stopDraw()
+            drawTool.drawPlot(manager.getLeafByID(id))
+          }
+          new PlotMenu(manager, drawFunc)
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-2d-viewer">
+      <div id="side"></div>
+      <div id="content" style="position: relative">
+        <div id="plot-editor"></div>
+      </div>
+    </div>
+  </body>
+
+  <style>
+    #mapgis-2d-viewer {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      position: relative;
+    }
+    #side {
+      flex: 1;
+      height: 100%;
+      background-color: antiquewhite;
+    }
+    #content {
+      height: 100%;
+      flex: 6.5;
+      position: relative;
+    }
+    #plot-editor {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+  </style>
+</html>

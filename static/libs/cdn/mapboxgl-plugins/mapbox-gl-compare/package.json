@@ -1,0 +1,27 @@
+{
+  "name": "@mapgis/mapbox-gl-compare",
+"version" : "17.4.0",
+  "description": "mapboxgl的分屏对比功能",
+  "main": "index.js",
+  "scripts": {
+  },
+  "author": "mapgis",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "browserify": "^16.2.3",
+    "budo": "^11.6.0",
+    "documentation": "^12.1.4",
+    "envify": "^4.1.0",
+    "eslint": "^5.13.0",
+    "smokestack": "^3.6.0",
+    "tap-status": "^1.0.1",
+    "tape": "^4.9.2",
+    "uglify-js": "^3.4.9"
+  },
+  "dependencies": {
+    "@mapbox/mapbox-gl-sync-move": "^0.3.0",
+    "@mapgis/mapbox-gl-draw": "^17.4.0"
+  }
+}

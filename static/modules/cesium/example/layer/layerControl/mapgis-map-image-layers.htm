@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>MapGIS地图服务-子图层过滤</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      // 定义三维视图的主要类
+      let viewer,
+        igsMapImageLayer,
+        imageryProvider1,
+        imageryLayer1,
+        imageryLayer2
+      // 目录树数据
+      const treeData = []
+
+      // 获取构造函数
+      const { layer } = zondy
+      const { IGSMapImageLayer } = layer
+      const { MapGISMapServerImageryProvider } = zondy.cesium
+
+      // 方法1：通过IGSMapImageLayer对象获取所有子图层对象，使用子图层对象上的visible参数
+      // 控制子图层显隐，然后通过igsMapImageLayer.layers参数直接获取子图层过滤参数layers
+      function addImageryProvider1() {
+        const url =
+          'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/MapServer'
+
+        igsMapImageLayer = new IGSMapImageLayer({
+          url
+        })
+
+        igsMapImageLayer.load().then(async () => {
+          // igsMapImageLayer.allSublayers：所有的子图层对象
+          // igsMapImageLayer.layers：当前图层的过滤参数（根据各个子图层的显隐动态获取）
+          // 获取所有子图层对象
+          const subLayers = igsMapImageLayer.allSublayers.items
+          for (let i = 0; i < subLayers.length; i++) {
+            // 显示第0和73的子图层
+            subLayers[i].visible = i === 0 || i === 73
+
+            // 组合目录树显示需要的数据结构
+            const res = {}
+            res.children = []
+            res.id = subLayers[i].id
+            res.index = i
+            res.title = subLayers[i].name
+            res.checked = subLayers[i].visible
+            const endIndex = subLayers[i].id.indexOf('-')
+            const index = parseInt(
+              endIndex === -1
+                ? subLayers[i].id
+                : subLayers[i].id.slice(0, endIndex)
+            )
+            if (endIndex === -1) {
+              treeData[index] = res
+            } else {
+              treeData[index].children.push(res)
+            }
+          }
+          const options = {
+            layers: igsMapImageLayer.layers
+          }
+          imageryProvider1 = await MapGISMapServerImageryProvider.fromUrl(
+            url,
+            options
+          )
+          imageryLayer1 =
+            viewer.imageryLayers.addImageryProvider(imageryProvider1)
+          viewer.imageryLayers.lower(imageryLayer1)
+          //初始化面板UI
+          initUI()
+        })
+      }
+
+      // 方法2：根据子图层对象ID手动拼接子图层过滤参数layers
+      async function addImageryProvider2() {
+        const url =
+          'http://webclient.smaryun.com:8089/igs/rest/services/Map/武汉市4547/MapServer'
+        // 若要控制显示部分子图层，则layers参数以"show:"开始，后续拼接子图层的ID并以逗号分隔
+        const options = {
+          layers:
+            'show:0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42'
+        }
+        const imageryProvider = await MapGISMapServerImageryProvider.fromUrl(
+          url,
+          options
+        )
+        imageryLayer2 = viewer.imageryLayers.addImageryProvider(imageryProvider)
+      }
+
+      //视角跳转
+      function flyTo() {
+        viewer.camera.flyTo({
+          destination: Cesium.Rectangle.fromDegrees(
+            108.34522,
+            29.03001,
+            116.13094,
+            33.27322
+          ),
+          duration: 2
+        })
+      }
+
+      //初始化面板UI
+      function initUI() {
+        const tree = layui.tree
+        tree.render({
+          elem: '#layui-tree',
+          id: 'tree',
+          showLine: false, // 是否开启连接线
+          showCheckbox: true,
+          data: treeData,
+          oncheck: function (obj) {
+            try {
+              // 对imageryProvider1.layers重新赋值，切换展示的图层
+              const treeCheckedData = tree.getChecked('tree')
+              let layersRes = 'show:'
+              treeCheckedData.forEach((item) => {
+                layersRes +=
+                  layersRes === 'show:' ? `${item.id}` : `,${item.id}`
+                if (item.children && item.children.length > 0) {
+                  item.children.forEach((itemC) => {
+                    layersRes += `,${itemC.id}`
+                  })
+                }
+              })
+              layersRes = layersRes === 'show:' ? 'show:null' : layersRes
+              // 移除
+              viewer.imageryLayers.remove(imageryLayer1)
+              imageryProvider1.layers = layersRes
+              // 添加
+              imageryLayer1 =
+                viewer.imageryLayers.addImageryProvider(imageryProvider1)
+              viewer.imageryLayers.raiseToTop(imageryLayer2)
+            } catch (e) {
+              return
+            }
+          }
+        })
+      }
+
+      //构造三维视图类（视图容器div的id，三维视图设置参数）
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        viewer = sceneView.getInnerView()
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //视角跳转
+        flyTo()
+        //方法1
+        addImageryProvider1()
+        //方法2
+        addImageryProvider2()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div id="layui-tree"></div>
+    <style type="text/css">
+      #layui-tree {
+        width: 260px;
+        color: #ccc;
+        font-size: 12px;
+        background: rgba(43, 45, 47, 0.9);
+        padding: 5px 0px;
+        max-height: 400px;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .layui-tree-main {
+        width: 100%;
+        cursor: default;
+      }
+
+      .layui-tree-txt {
+        color: #ccc;
+        word-break: break-all;
+        white-space: normal;
+        width: calc(100% - 30px);
+      }
+
+      .layui-tree-entry {
+        height: auto;
+      }
+
+      .layui-tree-entry:hover {
+        background: rgba(28, 31, 32, 0.9);
+      }
+
+      .layui-form-checked[lay-skin='primary'] i {
+        border-color: #6693fb !important;
+        background-color: #6693fb;
+      }
+
+      .layui-tree-iconClick {
+        width: 10px;
+      }
+
+      /*高宽分别对应横竖滚动条的尺寸，滑块*/
+      ::-webkit-scrollbar {
+        width: 5px;
+      }
+
+      /*定义滚动条轨道内阴影+圆角*/
+      ::-webkit-scrollbar-track {
+        border-radius: 5px;
+        background-color: rgba(0, 0, 0, 0);
+      }
+
+      /*定义滑块内阴影+圆角*/
+      ::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+    </style>
+  </body>
+</html>

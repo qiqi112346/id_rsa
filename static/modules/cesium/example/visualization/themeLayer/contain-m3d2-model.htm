@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset='utf-8' />
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <title>M3D-单值专题图</title>
+  <!--加载不同版本Cesium库-->
+  <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+  <!--plugin脚本库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+  <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+  <script>
+    'use strict';
+    //定义三维视图的主要类
+    let map, sceneView, viewer, MapGISM3DSet, rendererContain1, rendererContain2;
+
+
+    //设置专题图参数
+    function setRender1() {
+      //包含专题图参数
+      rendererContain1 = {
+        //专题图字段
+        field: "mpArea",
+        //专题图类型-单值
+        type: "unique-value",
+        //额外过滤公式，此时为包含关系
+        valueExpression: "contain",
+        //专题图着色参数
+        uniqueValueInfos: [{
+          //单值过滤条件
+          value: "12",
+          //渲染符号
+          symbol: {
+            //渲染类型为M3D
+            type: 'mesh-3d',
+            //覆盖物图层
+            symbolLayers: [{
+              //图层类型-颜色填充
+              type: "fill",
+              //图层材质
+              material: {
+                //填充颜色
+                color: new Cesium.Color(1.0, 0.0, 1.0, 0.3)
+              }
+            }]
+          }
+        }]
+      };
+    }
+
+    //设置专题图参数
+    function setRender2() {
+      //包含专题图参数
+      rendererContain2 = {
+        //专题图字段
+        field: "mpArea",
+        //专题图类型-单值
+        type: "unique-value",
+        //额外过滤公式，此时为包含关系
+        valueExpression: "contain",
+        //专题图着色参数
+        uniqueValueInfos: [{
+          //单值过滤条件
+          value: "10",
+          //渲染符号
+          symbol: {
+            //渲染类型为M3D
+            type: 'mesh-3d',
+            //覆盖物图层
+            symbolLayers: [{
+              //图层类型-颜色填充
+              type: "fill",
+              //图层材质
+              material: {
+                //填充颜色
+                color: new Cesium.Color(1.0, 0.7, 0.0, 0.7)
+              }
+            }]
+          }
+        }]
+      };
+    }
+
+    //添加M3D专题图
+    function addM3DThemeLayer() {
+      // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/IGSSceneLayer.html
+      let layer = new zondy.layer.IGSSceneLayer({
+        url: 'http://webclient.smaryun.com:8089/igs/rest/services/Scene/武汉建筑轮廓白模/SceneServer',
+        // 设置场景初始化参数
+        scenes: [{
+          // 设置子图层初始化参数
+          sublayers: [{
+            // 子图层id
+            id: '0',
+            // 子图层初始化参数
+            extensionOptions: {
+              // 开启自动跳转
+              autoReset: true,
+              // 如果后续会addSectionGeometry方法给m3d图层设置剖面设置为true,在m3d加载时统计oid等信息支持剖面的拾取高亮
+              hasSectionGeometry: true
+            }
+          }]
+        }]
+      });
+      map.add(layer);
+      // 图层加载完毕
+      layer.on("layerview-created", function (result) {
+        // 获取图层，可以通过MapGISM3DSet更改renderer
+        MapGISM3DSet = sceneView.getInnerLayer(result.layer);
+        // 更改renderer
+        changeRenderer(1);
+      });
+    }
+
+    // 更改renderer
+    function changeRenderer(styleValue) {
+      if (!MapGISM3DSet) { return false }
+      switch (styleValue) {
+        case 1:
+          MapGISM3DSet[0].renderer = rendererContain1
+          break;
+        case 2:
+          MapGISM3DSet[0].renderer = rendererContain2
+          break;
+        case 0:
+        default:
+          MapGISM3DSet[0].renderer = null
+          break;
+      }
+    }
+
+    //初始化示例UI操作
+    function initUI() {
+      layui.use(function () {
+        var form = layui.form;
+        //监听选择框
+        form.on("select(styleValue)", function (data) {
+          // 更改renderer
+          changeRenderer(Number(data.value))
+        });
+      })
+    }
+
+    //初始化三维球体
+    function initViewer() {
+      //初始化图层管理容器
+      map = new zondy.Map();
+      //初始化地图视图对象
+      sceneView = new zondy.cesium.SceneView({
+        //视图id
+        viewId: "mapgis-3d-viewer",
+        //图层管理容器
+        map: map
+      });
+      //获取视图对象
+      viewer = sceneView.getInnerView();
+    }
+
+    //地图初始化函数
+    function init() {
+      //初始化三维球体
+      initViewer();
+      //设置专题图参数1
+      setRender1();
+      //设置专题图参数2
+      setRender2();
+      //添加M3D专题图
+      addM3DThemeLayer();
+      //初始化示例UI操作
+      initUI();
+    }
+
+  </script>
+</head>
+
+<body onload="init()">
+  <div id="mapgis-3d-viewer"></div>
+  <div class="layui-panel layui-panel-right">
+    <form class="layui-form" action="">
+      <div class="layui-form-item">
+        <label class="layui-form-label">渲染样式</label>
+        <div class="layui-input-block" style="width: 180px">
+          <select name="styleValue" lay-verify="required" lay-filter="styleValue">
+            <option value="0">默认样式</option>
+            <option value="1" selected>渲染样式一</option>
+            <option value="2">渲染样式二</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+</body>
+</body>
+
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>统一专题图</title>
+  <!-- 引入地图引擎库 -->
+  <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+  <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+  <script type="text/javascript">
+    //使用严格模式
+    'use strict'
+
+    const { Map } = zondy
+    const { IGSMapImageLayer } = zondy.layer
+    const { SimpleRenderer } = zondy.renderer
+    const { SimpleLineSymbol, SimpleFillSymbol, PictureMarkerSymbol } =
+      zondy.symbol
+    let map, view, igsMapImageLayer
+    // 点、线、区要素图层
+    let layerOfPoint, layerOfLine, layerOfRegion
+    // 样式颜色是否随机的标识
+    let isRandom = false
+
+    //获取点renderer
+    function getRendererOfPoint() {
+      return new SimpleRenderer({
+        symbol: new PictureMarkerSymbol({
+          // 设置图片数据
+          url: 'http://webclient.smaryun.com/static/assets/logo/mapgis_logo_blue.png',
+          // 图片宽度，单位像素
+          width: 40,
+          // 图片高度，单位像素
+          height: 40,
+          // marker的x轴偏移，单位像素
+          xoffset: 0,
+          // marker的y轴偏移，单位像素
+          yoffset: 0,
+          // Marker图标的旋转角度，单位度，0~360度，顺时针旋转
+          angle: 0
+        })
+      })
+    }
+
+    //获取线renderer
+    function getRendererOfLine() {
+      return new SimpleRenderer({
+        symbol: new SimpleLineSymbol({
+          //线符号颜色
+          color: isRandom ? randomColor() : '#F17D30',
+          width: 2
+        })
+      })
+    }
+
+    //获取区renderer
+    function getRendererOfRegion() {
+      return new SimpleRenderer({
+        symbol: new SimpleFillSymbol({
+          color: isRandom ? randomColor() : '#2578B499',
+          outline: new SimpleLineSymbol({
+            color: isRandom ? randomColor() : '#2578B4',
+            width: 1
+          })
+        })
+      })
+    }
+
+    // 随机颜色值
+    function randomColor() {
+      return new zondy.Color(
+        parseInt(Math.random() * 255),
+        parseInt(Math.random() * 255),
+        parseInt(Math.random() * 255),
+        0.6
+      )
+    }
+
+    // 初始化示例
+    function init() {
+      // 初始化图层管理容器
+      map = new Map()
+      // 初始化地图视图对象
+      view = createView('mapgis-viewer', map)
+      // 添加专题图图层
+      addThemLayer()
+    }
+
+    // 添加专题图图层
+    function addThemLayer() {
+      igsMapImageLayer = new IGSMapImageLayer({
+        // 服务基地址
+        url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/MapServer',
+        httpMethod: 'POST'
+      })
+
+      // 添加图层
+      map.add(igsMapImageLayer)
+
+      // 图层加载完毕事件
+      igsMapImageLayer.on('layerview-created', (result) => {
+        console.log('加载完毕', result.layer)
+        // layerOfPoint = igsMapImageLayer.findSublayerById(5)
+        layerOfLine = igsMapImageLayer.findSublayerById('2-23')
+        layerOfRegion = igsMapImageLayer.findSublayerById(0)
+        // 设置点图层的专题图
+        // layerOfPoint.renderer = getRendererOfPoint()
+        // 设置线图层的专题图
+        layerOfLine.renderer = getRendererOfLine()
+        // 设置区图层的专题图
+        layerOfRegion.renderer = getRendererOfRegion()
+        view.flyTo({
+          extent: result.layer.extent
+        })
+      })
+    }
+  </script>
+</head>
+
+<body onload="init();">
+  <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+</body>
+
+</html>

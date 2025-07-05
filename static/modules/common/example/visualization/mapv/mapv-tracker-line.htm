@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>交通轨迹</title>
+    <!--引入mapv-->
+    <script
+      type="text/javascript"
+      src="http://webclient.smaryun.com/static/libs/cdn/mapv/mapv.min.js"
+    ></script>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+      let view, map, wmtsLayer
+
+      const {
+        WMTSLayer, MapVLayer
+      } = zondy.layer
+      const { Map, SpatialReference } = zondy
+      const { Point } = zondy.geometry
+
+      // 初始化示例
+      function init() {
+        //初始化图层管理容器
+        initView()
+        // 添加WMTS底图
+        addWMTSLayer()
+        // 添加MapV图层
+        initMapVData()
+      }
+
+      // 初始化MapV数据，并加载图层
+      function initMapVData() {
+        httpGetPromise(
+          'http://webclient.smaryun.com:8200/Vector/csv/trackerLine/car.csv'
+        ).then((csvstr) => {
+          console.log('csvstr: ', csvstr)
+          let options = {
+            strokeStyle: 'rgba(50, 50, 255, 0.8)',
+            lineWidth: 0.05,
+            globalCompositeOperation: 'lighter',
+            draw: 'simple'
+          }
+          let dataSet = mapv.csv.getDataSet(csvstr)
+          let layer = new MapVLayer({
+            data: dataSet,
+            mapVOptions: options
+          })
+
+          map.add(layer)
+        })
+      }
+      // 添加WMTS图层
+      function addWMTSLayer() {
+        wmtsLayer = new WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(wmtsLayer)
+
+        // 图层加载完毕
+        wmtsLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          view.flyTo({
+            center: new Point({
+              coordinates: [11847996.73, 3447179.55, 4000000],
+              spatialReference: new SpatialReference({
+                wkid: 3857
+              })
+            }),
+            zoom: 10
+          })
+        })
+      }
+
+      // 初始化地图视图对象
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 发送请求获取数据
+      function httpGetPromise(url) {
+        return new Promise(function (resolve, reject) {
+          const handler = function () {
+            if (this.readyState !== 4) {
+              return
+            }
+            if (this.status === 200) {
+              resolve(this.response)
+            } else {
+              reject(new Error(this.statusText))
+            }
+          }
+          const client = new XMLHttpRequest()
+          client.open('GET', url)
+          client.onreadystatechange = handler
+          client.responseType = 'text/csv'
+          client.setRequestHeader('Accept', 'application/json')
+          client.send()
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+  </body>
+</html>

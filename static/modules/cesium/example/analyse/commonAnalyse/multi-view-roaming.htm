@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>多视图漫游</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/tool.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, animation
+      //取得jquery对象
+      let $ = layui.$
+
+      //初始化漫游工具
+      function initAnimationTool() {
+        //坐标数组
+        const pathPositions = [
+          Cesium.Cartesian3.fromDegrees(
+            120.96144802774623,
+            23.488796609325565,
+            9000
+          ),
+          Cesium.Cartesian3.fromDegrees(
+            121.18949251259373,
+            23.618491557566376,
+            5000
+          ),
+          Cesium.Cartesian3.fromDegrees(
+            121.33827000327243,
+            23.725887297550766,
+            5500
+          )
+        ]
+        //定义动画漫游对象
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/AnimationTool.html
+        animation = new zondy.cesium.AnimationTool(viewer, {
+          //漫游的方向角
+          heading: Cesium.Math.toRadians(90),
+          //漫游的俯仰角
+          pitch: Cesium.Math.toRadians(0),
+          //相机距离模型的距离（米）
+          range: 800,
+          //设置漫游的视角类型。0：正常，不移动相机；1：跟随；2：锁定第一视角；3：上帝视角
+          animationType: 2,
+          //是否循环漫游动画
+          isLoop: true,
+          //是否显示漫游路径
+          showPath: false,
+          //漫游路径(世界坐标点数组)
+          positions: pathPositions,
+          //漫游速度(m/s)
+          speed: 800,
+          //倍速
+          speedupFactor: 1,
+          //附加高程
+          exHeight: 0,
+          //是否显示用时和距离提示信息
+          showInfo: false,
+          //漫游的模型对象的url，为空表示不显示
+          modelUrl:
+            'http://webclient.smaryun.com:8200/3DData/Model/glb/TravelPlane.glb',
+          //模型对象参数，详见ModelGraphics对象的文档
+          model: {
+            //放大比例
+            scale: 30,
+            //固定大小设为0
+            minimumPixelSize: 0
+          },
+          //模型的方位角
+          modelHeading: 0,
+          //修改模型的俯仰角
+          modelPitch: 0,
+          //修改模型的倾斜角
+          modelRoll: 0,
+          //路径插值算法。可选：拉格朗日算法Cesium.LagrangePolynomialApproximation、线性插值 Cesium.LinearApproximation、埃尔米特插值插值Cesium.HermitePolynomialApproximation
+          interpolationAlgorithm: Cesium.LagrangePolynomialApproximation,
+          //是否需要将较大转弯点处理为圆弧
+          isProcessCorner: true,
+          //设置判断为转弯点的角度的最大值，不超过150的转角会被执行插值，处理为圆弧
+          maxAngle: 15.0,
+          //转弯处往圆弧曲线上插值点的步长，点个数=1/curveStep
+          curveStep: 0.01,
+          //是否挂载动态扫描特效
+          isAddScanEffect: false,
+          //是否获取路径点的真实高程
+          isGetRealHeight: false,
+          //是否让无人机模型的姿态按照矢量速度方向变化
+          isSetModelPosture: true,
+          //第一视角下，相机焦点的偏移值
+          firstPersonCameraFocusOffset: { offsetX: 50, offsetY: 0, offsetZ: 57 }
+        })
+        //开始漫游
+        animation.start()
+      }
+
+      //开启/关闭多视图
+      function startOrCloseMultiViewports(state) {
+        //开启或关闭多视图
+        viewer.scene.useMultiViewports = state
+        //开启和关闭时展示不同的文字
+        if (state) {
+          $('.view-mode-multi').show()
+          $('.view-mode-single').hide()
+        } else {
+          $('.view-mode-multi').hide()
+          $('.view-mode-single').show()
+        }
+      }
+
+      //设置多视图
+      function setMultiViewports() {
+        viewer.scene.multiViewports = [
+          //n个对象出现n个视图
+          //第一个视图
+          {
+            //设置视图左下角的x坐标
+            x: 0,
+            //设置视图左下角的y坐标
+            y: 0,
+            //设置视口相对屏幕的宽度比
+            w: 1,
+            //设置视口相对屏幕的高度比
+            h: 0.5,
+            //相机控制，参照Cesium.Camera()接口设置
+            cameraControl: function () {}
+          },
+          //第二个视图
+          {
+            //设置视图左下角的x坐标
+            x: 0,
+            //设置视图左下角的y坐标
+            y: 0.5,
+            //设置视口相对屏幕的宽度比
+            w: 0.5,
+            //设置视口相对屏幕的高度比
+            h: 0.5,
+            //相机控制，参照Cesium.Camera()接口设置
+            cameraControl: function (camera) {
+              //沿相机向上的方向，变换相机的位置
+              camera.moveUp(0)
+              //绕着向右的方向，向下方向以弧度为单位旋转
+              camera.lookDown(Cesium.Math.toRadians(10))
+              //绕着向上的方向，向右方向以弧度为单位旋转
+              camera.lookRight(Cesium.Math.toRadians(-60))
+              //沿direction变换相机的位置
+              const backDirection = Cesium.Cartesian3.negate(
+                viewer.scene.camera.direction,
+                new Cesium.Cartesian3()
+              )
+              camera.move(backDirection, 200 / Math.tan(20))
+              //沿相机观察方向的相反方向，变换相机的位置。（后退）
+              camera.moveBackward(470)
+            }
+          },
+          //第三个视图
+          {
+            //设置视图左下角的x坐标
+            x: 0.5,
+            //设置视图左下角的y坐标
+            y: 0.5,
+            //设置视口相对屏幕的宽度比
+            w: 0.5,
+            //设置视口相对屏幕的高度比
+            h: 0.5,
+            //相机控制，参照Cesium.Camera()接口设置
+            cameraControl: function (camera) {
+              //沿相机向上的方向，变换相机的位置
+              camera.moveUp(2000)
+              //绕着向右的方向，向下方向以弧度为单位旋转
+              camera.lookDown(Cesium.Math.toRadians(90))
+              //沿direction变换相机的位置
+              const backDirection = Cesium.Cartesian3.negate(
+                viewer.scene.camera.direction,
+                new Cesium.Cartesian3()
+              )
+              camera.move(backDirection, 50 / Math.tan(20))
+            }
+          }
+        ]
+      }
+
+      //添加地形数据
+      function addTerrain() {
+        let layer = new zondy.layer.IGSSceneLayer({
+          //服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Scene/TwTerrain/SceneServer'
+        })
+        map.add(layer)
+      }
+
+      //初始化示例UI
+      function initUI() {
+        layui.use(function () {
+          //多视图是否开启
+          layui.form.on('switch(useMultiViewports)', function (data) {
+            startOrCloseMultiViewports(data.elem.checked)
+          })
+        })
+      }
+
+      //加载天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          //加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          //天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          //token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //开启抗锯齿
+        viewer.scene.fxaa = true
+        viewer.scene.postProcessStages.fxaa.enabled = true
+        if (Cesium.FeatureDetection.supportsImageRenderingPixelated()) {
+          //判断是否支持图像渲染像素化处理
+          viewer.resolutionScale = window.devicePixelRatio
+        }
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //加载天地图
+        addTDT()
+        //加载地形
+        addTerrain()
+        //初始化漫游工具
+        initAnimationTool()
+        //开启多视图
+        startOrCloseMultiViewports(true)
+        //设置多视图
+        setMultiViewports()
+        //初始化UI
+        initUI()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label" style="width: 150px"
+            >多视图是否开启</label
+          >
+          <div class="layui-input-block">
+            <input
+              type="checkbox"
+              lay-filter="useMultiViewports"
+              lay-skin="switch"
+              lay-text="是|否"
+              checked
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="view-mode-area view-mode-multi">
+      <div class="view-mode1">驾驶舱内视角</div>
+      <div class="view-mode2">右侧跟随视角</div>
+      <div class="view-mode3">上帝视角</div>
+    </div>
+    <div class="view-mode-area view-mode-single">
+      <div class="view-mode4">驾驶舱内视角</div>
+    </div>
+    <style type="text/css">
+      html, body{
+        width: 100%;
+        height: 100%;
+      }
+      .layui-form-switch,
+      .layui-form-onswitch {
+        margin-top: 5px;
+      }
+
+      .sample-main-panel {
+        height: auto;
+        line-height: 37px;
+        margin-bottom: 8px;
+      }
+
+      .view-mode-area {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .view-mode-area > div {
+        padding: 10px;
+        font-size: 16px;
+        font-family: 'KaiTi';
+      }
+
+      .view-mode1 {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        color: #fdfd0b;
+      }
+
+      .view-mode2 {
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: #fdfd0b;
+      }
+
+      .view-mode3 {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        color: #fdfd0b;
+      }
+
+      .view-mode4 {
+        text-align: center;
+        color: #fdfd0b;
+        font-size: 20px;
+      }
+    </style>
+  </body>
+</html>

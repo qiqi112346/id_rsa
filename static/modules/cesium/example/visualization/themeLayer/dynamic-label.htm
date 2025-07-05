@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>动态注记</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/visual.css"
+    />
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let $ = layui.jquery
+      let map, sceneView, viewer, dynamicEntityVisualizer
+      let igsFeatureLayer1, igsFeatureLayer2, igsFeatureLayer3
+      let pointLabelClass, lineLabelClass, areaLabelClass
+      let currentSelectLayer = '全图层'
+
+      // canvas绘制弧段
+      function drawArcRect(ctx, x, y, radius, width, height) {
+        ctx.beginPath()
+        ctx.arc(x + radius, y + radius, radius, Math.PI, (Math.PI * 3) / 2)
+        ctx.lineTo(width - radius + x, y)
+        ctx.arc(
+          width - radius + x,
+          radius + y,
+          radius,
+          (Math.PI * 3) / 2,
+          Math.PI * 2
+        )
+        ctx.lineTo(width + x, height + y - radius)
+        ctx.arc(
+          width - radius + x,
+          height - radius + y,
+          radius,
+          0,
+          (Math.PI * 1) / 2
+        )
+        ctx.lineTo(radius + x, height + y)
+        ctx.arc(
+          radius + x,
+          height - radius + y,
+          radius,
+          (Math.PI * 1) / 2,
+          Math.PI
+        )
+        ctx.closePath()
+      }
+      //加载三维视图
+      function init() {
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //加载天地图
+        addTDT()
+        //初始化
+        initAll()
+        //初始化UI
+        initUI()
+        //飞到指定视角
+        flyTo()
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //加载天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      function setPointLabelClass() {
+        let iconImage = new Image()
+        iconImage.src =
+          'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNjc2MjcyNjA2OTgyIiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwNjAgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjQ1MjIiIGRhdGEtc3BtLWFuY2hvci1pZD0iYTMxM3guNzc4MTA2OS4wLmkwIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgd2lkdGg9IjIwNy4wMzEyNSIgaGVpZ2h0PSIyMDAiPjxwYXRoIGQ9Ik04MzEuMjQ3IDBMNTMwLjA3MSAzMDEuMTc2IDIyOC44OTQgMEgwdjEwMjRoMjI4Ljg5NFYzMDEuMTc2bDMwMS4xNzcgMzAxLjE3Ny0zMDEuMTc3IDMwMS4xNzZoNjAyLjM1M0w1MzAuMDcxIDYwMi4zNTNsMzAxLjE3Ni0zMDEuMTc3VjEwMjRoMjI4Ljg5NFYweiIgZmlsbD0iIzEzMjI3YSIgcC1pZD0iNDUyMyIgZGF0YS1zcG0tYW5jaG9yLWlkPSJhMzEzeC43NzgxMDY5LjAuaTMiIGNsYXNzPSJzZWxlY3RlZCI+PC9wYXRoPjwvc3ZnPg=='
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/LabelClass.html
+        pointLabelClass = new zondy.layer.LabelClass({
+          symbol: {
+            // 填充颜色 rgba or 16进制颜色
+            color: 'rgba(255,255,255,1)',
+            // 描边颜色
+            haloColor: 'rgba(0,0,0,0.5)',
+            // 描边宽度
+            haloSize: 2,
+            // 行高
+            lineHeight: 1.1,
+            // 文本间距
+            letterSpacing: '2px',
+            // 字体样式 参考css
+            font: {
+              size: 12,
+              family: '微软雅黑',
+              weight: 'normal',
+              style: 'normal'
+            },
+            // 额外的图标
+            textExtraIcon: iconImage
+          },
+          // 渲染方式 1.canvas 2.label 3.ground
+          renderMode: 'canvas',
+          // 可见范围，此处为高度。单位为米
+          // 最大可见范围
+          maxScale: 500,
+          // 最小可见范围
+          minScale: 600000,
+          // 高度模式
+          elevationInfo:{
+              mode:'OnTheGround',
+              offset:0
+          },
+          // 布局位置 可选 1.above-left 2.above-center 3.above-right 4.center-left 5.center-center 6.center-right 7.below-left 8.below-center 9.below-right
+          labelPlacement: 'above-center',
+          // label表达式
+          labelExpression: '$feature.n'
+        })
+      }
+      // 添加点要素图层
+      function addPointFeatureLayer() {
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/IGSFeatureLayer.html
+        igsFeatureLayer1 = new zondy.layer.IGSFeatureLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/武汉市地图文档/FeatureServer',
+          labelsVisible: true,
+          labelingInfo: [pointLabelClass],
+          // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SimpleRenderer.html
+          renderer: new zondy.renderer.SimpleRenderer({
+            // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SimpleMarkerSymbol.html
+            symbol: new zondy.symbol.SimpleMarkerSymbol({
+              color: '#2578B4',
+              size: 5
+            })
+          })
+        })
+        map.add(igsFeatureLayer1)
+      }
+
+      function setLineLabelClass() {
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/LabelClass.html
+        lineLabelClass = new zondy.layer.LabelClass({
+          symbol: {
+            color: 'rgba(255,255,255,1)',
+            haloColor: 'rgba(0,0,0,1)',
+            haloSize: 1,
+            lineHeight: 1.1,
+            textWraps: false,
+            letterSpacing: 4,
+            font: {
+              size: 14,
+              family: 'simHei'
+            },
+            // 背景边距
+            backgroundPadding: [6, 4],
+            // 背景图片
+            backgroundImage: function (ctx, x, y, width, height) {
+              ctx.save()
+              drawArcRect(ctx, x, y, 5, width, height)
+              ctx.fillStyle = '#183f7d'
+              ctx.fill()
+              ctx.restore()
+
+              ctx.save()
+              drawArcRect(ctx, x + 2, y + 2, 5, width - 4, height - 4)
+              ctx.strokeStyle = 'rgba(255,255,255,1)'
+              ctx.lineWidth = 2
+              ctx.stroke()
+              ctx.restore()
+            }
+          },
+          // 渲染方式 1.canvas 2.label 3.ground
+          renderMode: 'canvas',
+          // 可见范围，此处为高度。单位为米
+          // 最大可见范围
+          minScale: 600000,
+          // 最小可见范围
+          maxScale: 500,
+          // 布局位置 可选 1.'on-line' 压线 2.'above-line' 线上 3.'under-line' 线下
+          labelPlacement: 'above-line',
+          // label表达式
+          labelExpression: '$feature.ln',
+          //- 线注记重复参数
+          // 开启注记重复
+          repeatLabel: true,
+          // 重复步长,单位米
+          repeatLabelDistance: 8000,
+          // 步长分段开始比例
+          repeatStartRate: 0.4,
+          // 步长分段结束比例
+          repeatEndRate: 0.7,
+          // 文字分布 1.'auto-spread' 字母集中，汉字分散 2.'centralization-spread'集中 3.'decentralize-spread' 分散
+          lineLabelSpread: 'centralization-spread',
+          // 文字与线关系 仅集中注记时生效  1.'start' 线头 2.'middle' 线中点 3.'end' 线尾
+          labelPositionAlong: 'middle'
+        })
+      }
+
+      // 添加线要素图层
+      function addLineFeatureLayer() {
+        igsFeatureLayer2 = new zondy.layer.IGSFeatureLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/武汉市地图文档/FeatureServer/1',
+          labelsVisible: true,
+          labelingInfo: [lineLabelClass],
+          renderer: new zondy.renderer.UniqueValueRenderer({
+            //字段名
+            field: 'ln',
+            //单值专题图字段样式
+            defaultSymbol: new zondy.symbol.SimpleLineSymbol({
+              color: '#3786C8',
+              width: 2
+            }),
+            uniqueValueInfos: [
+              {
+                value: '1号线',
+                symbol: new zondy.symbol.SimpleLineSymbol({
+                  color: '#3786C8',
+                  width: 3
+                })
+              },
+              {
+                value: '2号线',
+                symbol: new zondy.symbol.SimpleLineSymbol({
+                  color: '#EB7CAE',
+                  width: 3
+                })
+              },
+              {
+                value: '3号线',
+                symbol: new zondy.symbol.SimpleLineSymbol({
+                  color: '#DEB965',
+                  width: 3
+                })
+              },
+              {
+                value: '4号线',
+                symbol: new zondy.symbol.SimpleLineSymbol({
+                  color: '#8ECB1F',
+                  width: 3
+                })
+              },
+              {
+                value: '5号线',
+                symbol: new zondy.symbol.SimpleLineSymbol({
+                  color: '#DE5E53',
+                  width: 3
+                })
+              },
+              {
+                value: '6号线',
+                symbol: new zondy.symbol.SimpleLineSymbol({
+                  color: '#018634',
+                  width: 3
+                })
+              },
+              {
+                value: '7号线',
+                symbol: new zondy.symbol.SimpleLineSymbol({
+                  color: '#EF7801',
+                  width: 3
+                })
+              },
+              {
+                value: '8号线',
+                symbol: new zondy.symbol.SimpleLineSymbol({
+                  color: '#99ADAE',
+                  width: 3
+                })
+              },
+              {
+                value: '11号线',
+                symbol: new zondy.symbol.SimpleLineSymbol({
+                  color: '#F3D301',
+                  width: 3
+                })
+              },
+              {
+                value: '16号线',
+                symbol: new zondy.symbol.SimpleLineSymbol({
+                  color: '#D9577D',
+                  width: 3
+                })
+              },
+              {
+                value: '21号线',
+                symbol: new zondy.symbol.SimpleLineSymbol({
+                  color: '#B60081',
+                  width: 3
+                })
+              }
+            ]
+          })
+        })
+        map.add(igsFeatureLayer2)
+      }
+
+      function setAreaLabelClass() {
+        // LabelClass
+        areaLabelClass = new zondy.layer.LabelClass({
+          symbol: {
+            color: 'rgba(255,255,255,1)',
+            haloColor: 'rgba(0,0,0,1)',
+            haloSize: 1,
+            lineHeight: 1.1,
+            lineWidth: 150,
+            lineMaxNum: 3,
+            xoffset: 0,
+            yoffset: 0,
+            font: {
+              size: 20,
+              family: 'simHei'
+            },
+            // 背景边距
+            backgroundPadding: [4, 4]
+          },
+          // label表达式
+          labelExpression: '$feature.name',
+          // 渲染模式
+          renderMode: 'ground',
+          // 布局位置 可选 1.'parallel' 平行 2.'outside' 区外 3.'bottom' 底部 4.'skeleton' 骨架线
+          labelPlacement: 'skeleton',
+          // 骨架线注记开始比例
+          skeletonLineStartRate: 0,
+          // 骨架线注记结束比例
+          skeletonLineEndRate: 1,
+          // 贴地时像素和实际单位的比例
+          groundScale: 50
+        })
+      }
+
+      // 添加区要素图层
+      function addAreaFeatureLayer() {
+        igsFeatureLayer3 = new zondy.layer.IGSFeatureLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/武汉市地图文档/FeatureServer/2',
+          opacity: 0.8,
+          labelsVisible: true,
+          labelingInfo: [areaLabelClass],
+          renderer: new zondy.renderer.UniqueValueRenderer({
+            //字段名
+            field: 'name',
+            //单值专题图字段样式
+            defaultSymbol: new zondy.symbol.SimpleFillSymbol({
+              //颜色
+              color: '#E7939299',
+              outline: new zondy.symbol.SimpleLineSymbol({
+                color: '#E79392',
+                width: 1
+              })
+            }),
+            uniqueValueInfos: [
+              {
+                //指定字段值
+                value: '新洲区',
+                //匹配到该值后的样式
+                symbol: new zondy.symbol.SimpleFillSymbol({
+                  //颜色
+                  color: '#2578B499',
+                  outline: new zondy.symbol.SimpleLineSymbol({
+                    color: '#2578B4',
+                    width: 1
+                  })
+                })
+              },
+              {
+                //指定字段值
+                value: '黄陂区',
+                //匹配到该值后的样式
+                symbol: new zondy.symbol.SimpleFillSymbol({
+                  //颜色
+                  color: '#78B3DE99',
+                  outline: new zondy.symbol.SimpleLineSymbol({
+                    color: '#78B3DE',
+                    width: 1
+                  })
+                })
+              },
+              {
+                //指定字段值
+                value: '洪山区',
+                //匹配到该值后的样式
+                symbol: new zondy.symbol.SimpleFillSymbol({
+                  //颜色
+                  color: '#9FC5DA99',
+                  outline: new zondy.symbol.SimpleLineSymbol({
+                    color: '#9FC5DA',
+                    width: 1
+                  })
+                })
+              },
+              {
+                //指定字段值
+                value: '东西湖区',
+                //匹配到该值后的样式
+                symbol: new zondy.symbol.SimpleFillSymbol({
+                  //颜色
+                  color: '#6A3D9B99',
+                  outline: new zondy.symbol.SimpleLineSymbol({
+                    color: '#6A3D9B',
+                    width: 1
+                  })
+                })
+              },
+              {
+                //指定字段值
+                value: '蔡甸区',
+                //匹配到该值后的样式
+                symbol: new zondy.symbol.SimpleFillSymbol({
+                  //颜色
+                  color: '#8287F799',
+                  outline: new zondy.symbol.SimpleLineSymbol({
+                    color: '#8287F7',
+                    width: 1
+                  })
+                })
+              },
+              {
+                //指定字段值
+                value: '江夏区',
+                //匹配到该值后的样式
+                symbol: new zondy.symbol.SimpleFillSymbol({
+                  //颜色
+                  color: '#82F7FE99',
+                  outline: new zondy.symbol.SimpleLineSymbol({
+                    color: '#82F7FE',
+                    width: 1
+                  })
+                })
+              },
+              {
+                //指定字段值
+                value: '青山区',
+                //匹配到该值后的样式
+                symbol: new zondy.symbol.SimpleFillSymbol({
+                  //颜色
+                  color: '#B2DF8A99',
+                  outline: new zondy.symbol.SimpleLineSymbol({
+                    color: '#B2DF8A',
+                    width: 1
+                  })
+                })
+              },
+              {
+                //指定字段值
+                value: '汉阳区',
+                //匹配到该值后的样式
+                symbol: new zondy.symbol.SimpleFillSymbol({
+                  //颜色
+                  color: '#4CA12E99',
+                  outline: new zondy.symbol.SimpleLineSymbol({
+                    color: '#4CA12E',
+                    width: 1
+                  })
+                })
+              },
+              {
+                //指定字段值
+                value: '武昌区',
+                //匹配到该值后的样式
+                symbol: new zondy.symbol.SimpleFillSymbol({
+                  //颜色
+                  color: '#E4432D99',
+                  outline: new zondy.symbol.SimpleLineSymbol({
+                    color: '#E4432D',
+                    width: 1
+                  })
+                })
+              },
+              {
+                //指定字段值
+                value: '硚口区',
+                //匹配到该值后的样式
+                symbol: new zondy.symbol.SimpleFillSymbol({
+                  //颜色
+                  color: '#F17D3099',
+                  outline: new zondy.symbol.SimpleLineSymbol({
+                    color: '#F17D30',
+                    width: 1
+                  })
+                })
+              },
+              {
+                //指定字段值
+                value: '江岸区',
+                //匹配到该值后的样式
+                symbol: new zondy.symbol.SimpleFillSymbol({
+                  //颜色
+                  color: '#F8BF6F99',
+                  outline: new zondy.symbol.SimpleLineSymbol({
+                    color: '#F8BF6F',
+                    width: 1
+                  })
+                })
+              },
+              {
+                //指定字段值
+                value: '汉南区',
+                //匹配到该值后的样式
+                symbol: new zondy.symbol.SimpleFillSymbol({
+                  //颜色
+                  color: '#B2DF8A99',
+                  outline: new zondy.symbol.SimpleLineSymbol({
+                    color: '#B2DF8A',
+                    width: 1
+                  })
+                })
+              }
+            ]
+          })
+        })
+        map.add(igsFeatureLayer3)
+      }
+
+      // 移除所有图层
+      function removeLayers(type) {
+        switch (type) {
+          case '点要素图层':
+            map.remove(igsFeatureLayer1)
+            break
+          case '线要素图层':
+            map.remove(igsFeatureLayer2)
+            break
+          case '区要素图层':
+            map.remove(igsFeatureLayer3)
+            break
+          case '全图层':
+          default:
+            map.remove(igsFeatureLayer1)
+            map.remove(igsFeatureLayer2)
+            map.remove(igsFeatureLayer3)
+            break
+        }
+      }
+
+      // 根据当前选择图层初始化
+      function addLayerByType(type) {
+        switch (type) {
+          case '点要素图层':
+            addPointFeatureLayer()
+            break
+          case '线要素图层':
+            addLineFeatureLayer()
+            break
+          case '区要素图层':
+            addAreaFeatureLayer()
+            break
+          case '全图层':
+          default:
+            addPointFeatureLayer()
+            addLineFeatureLayer()
+            addAreaFeatureLayer()
+            break
+        }
+      }
+
+      // 不同图层，面板参数展示不一样
+      function initPanel() {
+        $('.layui-form-item').hide()
+        $(
+          '.item-of-selectLayer, .item-of-renderMode, .item-of-deconflictionStrategy'
+        ).show()
+        switch (currentSelectLayer) {
+          case '点要素图层':
+            $('.item-of-pointLabelPlacement').show()
+            $('.item-of-pointCurrentAttributeName').show()
+            break
+          case '线要素图层':
+            $('.item-of-lineLabelPlacement').show()
+            $('.item-of-lineCurrentAttributeName').show()
+            $('.item-of-lineLabelSpread').show()
+            $('.item-of-labelPositionAlong').show()
+            $('.item-of-repeatLabel').show()
+            $('.item-of-repeatLabelDistance').show()
+            break
+          case '区要素图层':
+            $('.item-of-areaLabelPlacement').show()
+            $('.item-of-areaCurrentAttributeName').show()
+            $('.item-of-areaShowBackground').show()
+            break
+          case '全图层':
+          default:
+            $('.layui-form-item').show()
+            break
+        }
+      }
+
+      // 重新加载当前选择图层
+      function initLayerByCurrentSelectLayer() {
+        // 根据currentSelectLayer重新加载图层
+        initLayerByType(currentSelectLayer)
+      }
+
+      // 根据当前选择图层初始化
+      function initLayerByType(type) {
+        // 先移除图层
+        removeLayers(type)
+        // 添加图层
+        addLayerByType(type)
+      }
+
+      // 初始化
+      function initAll() {
+        // 设置点要素图层labelingInfo
+        setPointLabelClass()
+        // 设置线要素图层labelingInfo
+        setLineLabelClass()
+        // 设置区要素图层labelingInfo
+        setAreaLabelClass()
+        // 重新加载当前选择图层
+        initLayerByCurrentSelectLayer()
+      }
+
+      // 选择图层
+      function selectLayer() {
+        // 不同图层，面板参数展示不一样
+        initPanel()
+        // 先移除所有图层
+        removeLayers()
+        // 添加图层
+        addLayerByType(currentSelectLayer)
+      }
+
+      function renderMode(target) {
+        pointLabelClass.renderMode = target
+        lineLabelClass.renderMode = target
+        areaLabelClass.renderMode = target
+        // 要素贴地时，为了观察方便，比例放大20倍
+        pointLabelClass.scale = target == 'ground' ? 20 : 1
+        lineLabelClass.scale = target == 'ground' ? 20 : 1
+        areaLabelClass.scale = target == 'ground' ? 20 : 0.4
+        // 重新加载当前选择图层
+        initLayerByCurrentSelectLayer()
+      }
+
+      // 注记避让
+      function deconflictionStrategy(data) {
+        pointLabelClass.deconflictionStrategy = data ? 'static' : 'none'
+        lineLabelClass.deconflictionStrategy = data ? 'static' : 'none'
+        areaLabelClass.deconflictionStrategy = data ? 'static' : 'none'
+        // 重新加载当前选择图层
+        initLayerByCurrentSelectLayer()
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          let layer = layui.layer,
+            form = layui.form
+
+          //监听选取图层
+          form.on('select(selectLayer)', function (data) {
+            currentSelectLayer = data.value
+            selectLayer()
+          })
+
+          // 注记渲染方式
+          form.on('select(renderMode)', function (data) {
+            renderMode(data.value)
+          })
+
+          // 是否允许注记避让
+          form.on('switch(deconflictionStrategy)', function (data) {
+            deconflictionStrategy(data.elem.checked)
+          })
+
+          form.on('select(pointLabelPlacement)', function (data) {
+            pointLabelClass.labelPlacement = data.value
+            initLayerByType('点要素图层')
+          })
+
+          form.on('select(pointCurrentAttributeName)', function (data) {
+            pointLabelClass.currentAttributeName = data.value
+            initLayerByType('点要素图层')
+          })
+
+          form.on('select(lineLabelPlacement)', function (data) {
+            lineLabelClass.labelPlacement = data.value
+            initLayerByType('线要素图层')
+          })
+
+          form.on('select(lineCurrentAttributeName)', function (data) {
+            lineLabelClass.currentAttributeName = data.value
+            initLayerByType('线要素图层')
+          })
+
+          form.on('select(lineLabelSpread)', function (data) {
+            if (data.value === 'centralization-spread') {
+              //只有'集中'状态下，才能调整线注记的位置
+              $('#labelPositionAlongSelect').removeAttr('disabled')
+              form.render('select')
+            } else {
+              $('#labelPositionAlongSelect').attr('disabled', 'disabled')
+              form.render('select')
+            }
+            lineLabelClass.lineLabelSpread = data.value
+            initLayerByType('线要素图层')
+          })
+
+          form.on('select(labelPositionAlong)', function (data) {
+            lineLabelClass.labelPositionAlong = data.value
+            initLayerByType('线要素图层')
+          })
+
+          form.on('select(repeatLabel)', function (data) {
+            lineLabelClass.repeatLabel = !!data.value
+            initLayerByType('线要素图层')
+          })
+
+          form.on('select(repeatLabelDistance)', function (data) {
+            lineLabelClass.repeatLabelDistance = parseInt(data.value)
+            initLayerByType('线要素图层')
+          })
+
+          form.on('select(areaLabelPlacement)', function (data) {
+            areaLabelClass.labelPlacement = data.value
+            initLayerByType('区要素图层')
+          })
+
+          form.on('select(areaCurrentAttributeName)', function (data) {
+            areaLabelClass.currentAttributeName = data.value
+            initLayerByType('区要素图层')
+          })
+
+          // 是否允许区背景色
+          form.on('switch(areaShowBackground)', function (data) {
+            areaLabelClass.symbol.showBackground = data.elem.checked
+            initLayerByType('区要素图层')
+          })
+        })
+      }
+
+      //飞到指定视角
+      function flyTo() {
+        sceneView.flyTo({
+          center: [114.37, 30.62, 209631],
+          duration: 2, // 持续时间
+          orientation: {
+            heading: Cesium.Math.toRadians(0), //方位角
+            pitch: Cesium.Math.toRadians(-90), //俯仰角
+            roll: Cesium.Math.toRadians(0) //翻滚角
+          }
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" id="editPanel">
+      <form class="layui-form layui-form-pane" action="">
+        <div class="sample-main-panel">
+          <div class="layui-form-item item-of-selectLayer">
+            <label>选取图层</label>
+            <div class="layui-input-block">
+              <select lay-filter="selectLayer">
+                <option value="全图层">全图层</option>
+                <option value="点要素图层">点要素图层</option>
+                <option value="线要素图层">线要素图层</option>
+                <option value="区要素图层">区要素图层</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item item-of-renderMode">
+            <label>注记渲染方式</label>
+            <div class="layui-input-block">
+              <select lay-filter="renderMode">
+                <option value="canvas">canvas</option>
+                <option value="label">label</option>
+                <option value="ground">ground</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item item-of-deconflictionStrategy">
+            <label>注记避让</label>
+            <div class="layui-input-block">
+              <input
+                type="checkbox"
+                lay-filter="deconflictionStrategy"
+                lay-skin="switch"
+                lay-text="开启|关闭"
+                checked
+              />
+            </div>
+          </div>
+          <div class="layui-form-item item-of-pointLabelPlacement">
+            <label>点注记位置</label>
+            <div class="layui-input-block">
+              <select lay-filter="pointLabelPlacement">
+                <option value="above-center">上</option>
+                <option value="below-center">下</option>
+                <option value="center-left">左</option>
+                <option value="center-right">右</option>
+                <option value="center-center">中心</option>
+                <option value="above-left">左上</option>
+                <option value="below-left">左下</option>
+                <option value="above-right">右上</option>
+                <option value="below-right">右下</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item item-of-pointCurrentAttributeName">
+            <label>点注记字段</label>
+            <div class="layui-input-block">
+              <select lay-filter="pointCurrentAttributeName">
+                <option value="n">n</option>
+                <option value="kn">kn</option>
+                <option value="sp">sp</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item item-of-lineLabelPlacement">
+            <label>线注记位置</label>
+            <div class="layui-input-block">
+              <select lay-filter="lineLabelPlacement">
+                <option value="above-line">线上</option>
+                <option value="on-line">压盖</option>
+                <option value="below-line">线下</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item item-of-lineCurrentAttributeName">
+            <label>线注记字段</label>
+            <div class="layui-input-block">
+              <select lay-filter="lineCurrentAttributeName">
+                <option value="ln">ln</option>
+                <option value="kn">kn</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item item-of-lineLabelSpread">
+            <label>线注记分布</label>
+            <div class="layui-input-block">
+              <select lay-filter="lineLabelSpread">
+                <option value="auto-spread">自动</option>
+                <option value="centralization-spread">集中</option>
+                <option value="decentralize-spread">分散</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item item-of-labelPositionAlong">
+            <label>注记与线关系</label>
+            <div class="layui-input-block">
+              <select
+                id="labelPositionAlongSelect"
+                disabled
+                lay-filter="labelPositionAlong"
+              >
+                <option value="middle">线中部</option>
+                <option value="start">线头</option>
+                <option value="end">线尾</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item item-of-repeatLabel">
+            <label>线是否重复</label>
+            <div class="layui-input-block">
+              <select lay-filter="repeatLabel">
+                <option value="yes">是</option>
+                <option value="">否</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item item-of-repeatLabelDistance">
+            <label>重复步长</label>
+            <div class="layui-input-block">
+              <select lay-filter="repeatLabelDistance">
+                <option value="8000">8000米分段</option>
+                <option value="6000">6000米分段</option>
+                <option value="4000">4000米分段</option>
+                <option value="2000">2000米分段</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item item-of-areaLabelPlacement">
+            <label>区注记位置</label>
+            <div class="layui-input-block">
+              <select lay-filter="areaLabelPlacement">
+                <option value="skeleton">骨架线</option>
+                <option value="parallel">平行</option>
+                <option value="outside">区外</option>
+                <option value="bottom">底部</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item item-of-areaCurrentAttributeName">
+            <label>区注记字段</label>
+            <div class="layui-input-block">
+              <select lay-filter="areaCurrentAttributeName">
+                <option value="name">name</option>
+                <option value="adcode">adcode</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item item-of-areaShowBackground">
+            <label>区注记填充背景</label>
+            <div class="layui-input-block">
+              <input
+                type="checkbox"
+                lay-filter="areaShowBackground"
+                lay-skin="switch"
+                lay-text="开启|关闭"
+                checked
+              />
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+  <style>
+    .sample-main-panel {
+      height: auto;
+      border: none;
+    }
+
+    #editPanel{
+      max-height: calc(100% - 70px);
+    }
+
+    .layui-select-disabled .layui-disabled {
+      border-color: #333 !important;
+      color: #666 !important;
+    }
+
+    .layui-select-disabled .layui-edge {
+      border-top-color: #666 !important;
+    }
+
+    .item-of-pointCurrentAttributeName .layui-form-select dl,
+    .item-of-labelPositionAlong .layui-form-select dl,
+    .item-of-repeatLabel .layui-form-select dl,
+    .item-of-repeatLabelDistance .layui-form-select dl,
+    .item-of-areaLabelPlacement .layui-form-select dl,
+    .item-of-areaCurrentAttributeName .layui-form-select dl {
+      top: auto;
+      bottom: 42px;
+    }
+  </style>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> VideoSketchEditor</title>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+                <h1> MapGIS Client for JavaScript API</h1>
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/common/api/common-mapgis/index.html"
+                        >
+                            Common
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/cesium/api/cesium-mapgis/index.html"
+                        >
+                            Cesium-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/mapboxgl/api/mapboxgl-mapgis/index.html"
+                        >
+                            MapboxGL-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/leaflet/api/leaflet-mapgis/index.html"
+                        >
+                            Leaflet-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/openlayers/api/openLayers-mapgis/index.html"
+                        >
+                            OpenLayers-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/video/api/video-mapgis/index.html"
+                        >
+                            Video-Plugin
+                        </a>
+                    
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            <div>
+                <span class="mapgis-api-document-span"><a href="index.html">API文档</a></span>
+            </div>
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="搜索文档..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <div class="category"><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">视图模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="VideoMapView"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="VideoMapView.html">VideoMapView</a><span style="display: none;">undefined</span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">草图编辑模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="VideoSketchEditor"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="VideoSketchEditor.html">VideoSketchEditor</a><span style="display: none;"><p>视频草图编辑类<br/>
+<br>[ES5引入方式]：<br/>
+const { SketchEditor } = zondy.video.tool.sketch <br/>
+[ES6引入方式]：<br/>
+import { SketchEditor } from &quot;@mapgis/webclient-leaflet-plugin&quot; <br/></p></span></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header id="page-title" class="page-title">
+                    <span class="page-title-main">类名</span>
+                    <span class="page-title-sub">VideoSketchEditor</span>
+                </header>
+                
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="VideoSketchEditor">
+        <a class="href-link" href="#VideoSketchEditor">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                new VideoSketchEditor<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>视频草图编辑类<br/>
+<br>[ES5引入方式]：<br/>
+const { SketchEditor } = zondy.video.tool.sketch <br/>
+[ES6引入方式]：<br/>
+import { SketchEditor } from &quot;@mapgis/webclient-leaflet-plugin&quot; <br/></p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>构造参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>view</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">MapView</span>
+|
+
+<span class="param-type">SceneView</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>地图视图对象</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>layer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">GraphicsLayer</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>草图图层管对象</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>sketchStyle</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">SketchStyle</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>草图符号</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>snapOption</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>草图捕获配置项</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <div class="method-parameter columns">
+        <div class="column is-2"><label>绑定事件:</label></div>
+        <div class="column is-10">
+            <ul>
+                <li>SketchEditor#event:草图绘制完成事件</li>
+            
+                <li>SketchEditor#event:草图被选中事件</li>
+            </ul>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p class="summary"><h5>支持如下方法：</h5>
+<a href='#start'>[1、开始绘制草图]</a><br/>
+<a href='#stop'>[2、停止绘制]</a><br/>
+<a href='#remove'>[3、移除当前草图]</a><br/>
+<a href='#addVertex'>[4、向草线或面草图中插入新的顶点]</a><br/>
+<a href='#updateVertex'>[5、更新草图图形的某个顶点]</a><br/>
+<a href='#removeVertex'>[6、移除草图图形的某个顶点]</a><br/>
+<a href='#getSketchDataType'>[7、获取草图图形类型]</a><br/>
+<a href='#setSketchStyle'>[8、设置草图样式]</a><br/>
+<a href='#getSketchStyle'>[9、获取草图样式]</a><br/>
+<a href='#getGeometry'>[10、获取草图几何对象]</a><br/>
+<a href='#union'>[11、合并多个区几何]</a><br/>
+<a href='#split'>[12、分割草图对象或区几何对象]</a><br/>
+<a href='#undo'>[13、撤销当前编辑操作]</a><br/>
+<a href='#redo'>[14、恢复被撤销的草图]</a><br/>
+<a href='#drawPolylineToPolygon'>[15、拓扑线造区]</a><br/></p>
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7>初始化一个二维场景草图编辑类</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// [ES5引入方式]：
+const { VideoMapView } = zondy.video
+const { SketchEditor } = zondy.video.tool.sketch
+[ES6引入方式]：
+import { VideoMapView, SketchEditor } from "@mapgis/webclient-leaflet-plugin" &lt;br/>
+import { SketchStyle, SimpleMarkerSymbol, Color, SketchDataType} from "@mapgis/webclient-common" &lt;br/>
+var map = new Map()
+var mapView = new VideoMapView({
+  viewId: "mapgis-2d-viewer",
+  map: map,
+})
+var videoLayer = new VideoMapLayer({})
+mapView.add(videoLayer)
+var simpleMarkerSymbol = new SimpleMarkerSymbol({
+  color: new Color(24, 144, 255, 1),
+  size: 10,
+});
+var sketchStyle = new SketchStyle({
+  vertexStyle: simpleMarkerSymbol,
+    lineStyle: undefined,
+    fillStyle: undefined
+  })
+var sketchEditor = new SketchEditor({
+  view: mapView,
+  layer: new GraphicsLayer(),
+  vertexStyle: vertexStyle
+})
+sketchEditor.start(SketchDataType.POINT) // 绘制点
+sketchEditor.start(SketchDataType.POLYLINE) // 绘制线
+sketchEditor.start(SketchDataType.POLYGON) // 绘制区
+*</code></pre>
+    
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">继承关系</h3>
+
+        
+
+
+    <ul>
+        <li>SketchEditor</li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>文档生成<a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="http://www.smaryun.com" target="_blank">司马云</a> <span>© 2023 云生态圈</span>
+                        <a href="http://webclient.smaryun.com:8086/#/index" target="_blank">MapGIS Client for JavaScript</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#page-title">构造函数</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#member">成员变量</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#function">方法</a>
+            </div>
+            <div>
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#event">事件</a>
+            </div>
+        </div>
+    </div>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

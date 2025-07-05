@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>自定义导航控件</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let viewer
+      // 最大相机高度，根据此高度，计算相机旋转角度，是一个示意值
+      let maxCameraHeight = 11000000
+      // 相机旋转速度
+      let rotateSpeed = 1
+      // 相机平移速度
+      let moveSpeed = 100000
+
+      // 初始化三维球体
+      function initViewer() {
+        viewer = new Cesium.Viewer('mapgis-3d-viewer')
+      }
+
+      // 相机视角向上旋转
+      function up() {
+        viewer.scene.camera.rotate(viewer.camera.rightWC, Cesium.Math.toRadians(
+          getRotateSpeed()
+        ))
+      }
+
+      // 相机视角向下旋转
+      function down() {
+        viewer.scene.camera.rotate(viewer.camera.rightWC, Cesium.Math.toRadians(
+          getRotateSpeed() * -1
+        ))
+      }
+
+      // 相机视角向左旋转
+      function left() {
+        viewer.scene.camera.rotate(viewer.camera.upWC, Cesium.Math.toRadians(
+          getRotateSpeed()
+        ))
+      }
+
+      // 相机视角向右旋转
+      function right() {
+        viewer.scene.camera.rotate(viewer.camera.upWC, Cesium.Math.toRadians(
+          getRotateSpeed() * -1
+        ))
+      }
+
+      // 相机视角向前移动
+      function moveForward() {
+        viewer.scene.camera.moveForward(getMoveSpeed())
+      }
+
+      // 相机视角向后移动
+      function moveBackward() {
+        viewer.scene.camera.moveBackward(getMoveSpeed())
+      }
+
+      // 获取旋转速度
+      function getRotateSpeed() {
+        const ratio = viewer.camera.positionCartographic.height / maxCameraHeight
+        return ratio > 0.3 ? rotateSpeed * ratio : rotateSpeed * 0.3
+      }
+
+      // 获取平移速度
+      function getMoveSpeed() {
+        const ratio = viewer.camera.positionCartographic.height / maxCameraHeight
+        return ratio > 0.3 ? moveSpeed * ratio : moveSpeed * 0.05
+      }
+
+
+      // 添加相机罗盘的点击事件
+      function addCompassClickEvent(type, moveFunction, CameraAxis) {
+        const compassDom = document.getElementById(type)
+        let compassInterval
+        compassDom.addEventListener('mousedown', function () {
+          compassInterval = setInterval(function () {
+            moveFunction()
+          }, 20)
+        });
+        compassDom.addEventListener('mouseup', function () {
+          clearInterval(compassInterval)
+        });
+      }
+
+      // 添加相机的前后移动事件
+      function addMoveClickEvent(type, moveFunction) {
+        const compassDom = document.getElementById(type)
+        let compassInterval
+        compassDom.addEventListener('mousedown', function () {
+          compassInterval = setInterval(function () {
+            moveFunction()
+          }, 20)
+        });
+        compassDom.addEventListener('mouseup', function () {
+          clearInterval(compassInterval)
+        });
+      }
+
+      // 地图初始化函数
+      function init() {
+        // 初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // 相机向上旋转点击事件
+        addCompassClickEvent('compassUp', up)
+        // 相机向下旋转点击事件
+        addCompassClickEvent('compassDown', down)
+        // 相机向左旋转点击事件
+        addCompassClickEvent('compassLeft', left)
+        // 相机向右旋转点击事件
+        addCompassClickEvent('compassRight', right)
+        // 相机前进点击事件
+        addMoveClickEvent('compassMoveForward', moveForward)
+        // 相机后退点击事件
+        addMoveClickEvent('compassMoveBackward', moveBackward)
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="compass_active"></div>
+    <div id="compassUp" style="position: absolute;width: 20px;height: 20px;right: 64px;top: 46px;z-index: 10000"></div>
+    <div id="compassDown" style="position: absolute;width: 20px;height: 20px;right: 64px;top: 82px;z-index: 10000"></div>
+    <div id="compassLeft" style="position: absolute;width: 20px;height: 20px;right: 82px;top: 65px;z-index: 10000"></div>
+    <div id="compassRight" style="position: absolute;width: 20px;height: 20px;right: 42px;top: 65px;z-index: 10000"></div>
+    <div id="compassMoveForward" style="position: absolute;width: 20px;height: 20px;right: 64px;top: 122px;z-index: 10000"></div>
+    <div id="compassMoveBackward" style="position: absolute;width: 20px;height: 20px;right: 64px;top: 162px;z-index: 10000"></div>
+  </body>
+  <style>
+      .compass_active{
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          width: 128px;
+          height: 128px;
+          background-image: url('/static/assets/example/compass.png');
+      }
+      #compassMoveForward{
+          background-image: url('/static/assets/example/plus.png');
+          background-size: 20px 20px;
+      }
+      #compassMoveBackward{
+          background-image: url('/static/assets/example/minus.png');
+          background-size: 20px 20px;
+      }
+  </style>
+</html>

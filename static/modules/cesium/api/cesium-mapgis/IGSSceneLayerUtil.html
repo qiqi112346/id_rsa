@@ -1,0 +1,2313 @@
+<header id="page-title" class="page-title">
+    
+        <span class="page-title-main">类名</span>
+        <span class="page-title-sub">IGSSceneLayerUtil</span>
+    
+</header>
+
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="IGSSceneLayerUtil">
+        <a class="href-link" href="#IGSSceneLayerUtil">#</a>
+        
+        <span class="code-name" id="IGSSceneLayerUtil" style="font-size:30px">
+            
+                new IGSSceneLayerUtil<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>IGS场景图层的工具类</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p class="summary"><h5>支持如下方法：</h5>
+<a href='#toTerrainProvider'>[1、将地形图层对象转换为MapGISTerrainProvider]</a><br/>
+<a href='#toPrimitive'>[2、将模型和注记图层对象转换为Primitive]</a><br/></p>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='function'>方法</h3>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法概述</h4>
+            <div class="members">
+            <div class="table-container">
+                <table class="params table">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>返回值类型</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#addSceneLayer">addSceneLayer</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>添加场景图层</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#initializeOptions">initializeOptions</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>根据场景图层的子图层对象获取构造参数options</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#removeLayer">removeLayer</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>移除图层</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#reset">reset</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>重置视角到子图层外包盒处</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#setOpacity">setOpacity</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>设置图层透明度</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#setSubLayerOpacity">setSubLayerOpacity</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>设置子图层透明度</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#setSubLayerVisible">setSubLayerVisible</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>设置子图层显隐，受最大最小比例尺影响，会在内部进行判断</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#setVisible">setVisible</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>设置图层显隐，受最大最小比例尺影响，会在内部进行判断</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#toPrimitive">toPrimitive</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             Primitive
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>将模型和注记图层对象转换为Primitive</p></code></td>
+                            </tr>
+                        
+                            <tr class="deep-level-0">
+                                <td class="name"><code><a href="#toTerrainProvider">toTerrainProvider</a></code></td>
+                                <td class="name">
+                                    <code>
+                                        
+                                                
+<span class="param-type">
+    
+             <a link="MapGISTerrainProvider.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="MapGISTerrainProvider" MapGISTerrainProvider.html>MapGISTerrainProvider</a>
+    
+</span>
+|
+
+<span class="param-type">
+    
+             undefined
+    
+</span>
+
+
+
+                                            
+                                    </code>
+                                </td>
+                                <td class="name"><code><p>将地形图层对象转换为MapGISTerrainProvider</p></code></td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top: 20px;margin-bottom: 20px;">方法详情</h4>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".addSceneLayer">
+        <a class="href-link" href="#.addSceneLayer">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" id="addSceneLayer" style="font-size:30px">
+            
+                addSceneLayer<span class="signature">(layerView, callback, errorCallback)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>添加场景图层</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             LayerView
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>图层视图对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>callback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             function
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>所有子图层加载完毕后的回调函数</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>errorCallback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             function
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>加载失败的回调函数</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".initializeOptions">
+        <a class="href-link" href="#.initializeOptions">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" id="initializeOptions" style="font-size:30px">
+            
+                initializeOptions<span class="signature">(subLayer, innerView)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>根据场景图层的子图层对象获取构造参数options</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>subLayer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>地形图层对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>innerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             View
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>cesium的view对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".removeLayer">
+        <a class="href-link" href="#.removeLayer">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" id="removeLayer" style="font-size:30px">
+            
+                removeLayer<span class="signature">(tileSets, sceneView, innerView)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>移除图层</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>tileSets</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Array
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>tileSet数组</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>sceneView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             SceneView
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>场景视图对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>innerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Viewer
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>Cesium的视图对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".reset">
+        <a class="href-link" href="#.reset">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" id="reset" style="font-size:30px">
+            
+                reset<span class="signature">(id, layerView)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>重置视角到子图层外包盒处</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>id</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             String
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>子图层ID</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             LayerView
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>图层视图对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".setOpacity">
+        <a class="href-link" href="#.setOpacity">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" id="setOpacity" style="font-size:30px">
+            
+                setOpacity<span class="signature">(opacity, layerView)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>设置图层透明度</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>opacity</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>图层透明度</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             LayerView
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>图层视图对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".setSubLayerOpacity">
+        <a class="href-link" href="#.setSubLayerOpacity">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" id="setSubLayerOpacity" style="font-size:30px">
+            
+                setSubLayerOpacity<span class="signature">(opacity, id, layerView)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>设置子图层透明度</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>opacity</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Number
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>子图层透明度</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>id</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             String
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>子图层ID</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             LayerView
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>图层视图对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".setSubLayerVisible">
+        <a class="href-link" href="#.setSubLayerVisible">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" id="setSubLayerVisible" style="font-size:30px">
+            
+                setSubLayerVisible<span class="signature">(visible, id, layerView)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>设置子图层显隐，受最大最小比例尺影响，会在内部进行判断</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>visible</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Boolean
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>是否显隐图层</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>id</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             String
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>子图层ID</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             LayerView
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>图层视图对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".setVisible">
+        <a class="href-link" href="#.setVisible">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" id="setVisible" style="font-size:30px">
+            
+                setVisible<span class="signature">(visible, layerView)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>设置图层显隐，受最大最小比例尺影响，会在内部进行判断</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>visible</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Boolean
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>是否显隐图层</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>layerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             LayerView
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>图层视图对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".toPrimitive">
+        <a class="href-link" href="#.toPrimitive">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" id="toPrimitive" style="font-size:30px">
+            
+                toPrimitive<span class="signature">(subLayer, innerView)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>将模型和注记图层对象转换为Primitive</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>subLayer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>地形图层对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>innerView</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             View
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>cesium的view对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             Primitive
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+    
+        <pre class="prettyprint"><code>const url = 'http://webclient.smaryun.com:8089/igs/rest/services/Scene/DaYanTa-M3D/SceneServer'
+const addSceneLayer = async (url) => {
+  const layer = new IGSSceneLayer({
+    url,
+  })
+  const loadedLayer = await layer.load()
+  const subLayers = loadedLayer.activeScene.sublayers
+  for (let i = 0; i &lt; subLayers.length; i++) {
+    switch (_subLayer.type) {
+      case SceneSubLayerType.g3d:
+      case SceneSubLayerType.label:
+      case SceneSubLayerType.sceneServer:
+        // 若是注记类型则要传入viewer对象实现注记避让效果
+        const primitive = IGSSceneLayerUtil.toPrimitive(_subLayer, viewer)
+        viewer.scene.primitives.add(primitive)
+        viewer.zoomTo(primitive)
+        break
+    }
+  }
+}
+addSceneLayer(url)</code></pre>
+    
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".toTerrainProvider">
+        <a class="href-link" href="#.toTerrainProvider">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name" id="toTerrainProvider" style="font-size:30px">
+            
+                toTerrainProvider<span class="signature">(subLayer)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>将地形图层对象转换为MapGISTerrainProvider</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>subLayer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">
+    
+             Object
+    
+</span>
+
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>地形图层对象</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>返回值</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>类型: </label>
+        
+<span class="param-type">
+    
+             <a link="MapGISTerrainProvider.html" onclick="getTypeHTML(event)" class="mapgis-link-name" title="MapGISTerrainProvider" MapGISTerrainProvider.html>MapGISTerrainProvider</a>
+    
+</span>
+|
+
+<span class="param-type">
+    
+             undefined
+    
+</span>
+
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+    
+        <pre class="prettyprint"><code>const url = 'http://webclient.smaryun.com:8089/igs/rest/services/Scene/TwTerrain/SceneServer'
+const addSceneLayer = async (url) => {
+  const layer = new IGSSceneLayer({
+    url,
+  })
+  const loadedLayer = await layer.load()
+  const subLayers = loadedLayer.activeScene.sublayers
+  for (let i = 0; i &lt; subLayers.length; i++) {
+    switch (_subLayer.type) {
+      case SceneSubLayerType.terrain:
+        const provider = IGSSceneLayerUtil.toTerrainProvider(_subLayer)
+        if (provider) {
+          viewer.terrainProvider = provider
+        }
+        break
+    }
+  }
+}
+addSceneLayer(url)</code></pre>
+    
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>

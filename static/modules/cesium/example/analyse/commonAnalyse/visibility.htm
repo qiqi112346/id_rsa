@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>通视分析</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+   <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/analyse.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+      //定义可视域分析
+      let visibility = null
+      //鼠标移动方式的可视域，对鼠标操作的标志位
+      let mouseLeftOnceClicked = false //是否点击了一次鼠标左键
+      let mouseEventDone = false //可视域分析的鼠标事件完整结束
+      //Cesium的鼠标事件
+      let handler = null
+      //当前分析类型
+      let currentType = 'model'
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //三维试图类构造完毕，添加一个模型
+        addModel()
+        // 这里我们采用鼠标左键标记观察点，鼠标移动和右键标记终止点的方式来展示
+        addCesiumScreenSpaceEventHandler()
+        //加载天地图
+        addTDT()
+        //初始化示例UI
+        initUI()
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //添加一个通视分析
+      function addVisibility() {
+        if (visibility === null) {
+          //构造一个通视分析
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/VisiblityAnalysis.html
+          visibility = new zondy.cesium.VisiblityAnalysis({ scene: viewer.scene })
+          //将通视分析添加到分析管理类中
+          viewer.scene.visualAnalysisManager.add(visibility)
+        }
+        mouseLeftOnceClicked = false
+        mouseEventDone = false
+        //可视域分析，需要关注观察点和目标点的位置。
+        layer.msg('鼠标左键选取，再次左键结束')
+      }
+
+      //添加一个环形通视分析
+      function addVisibilityCircle() {
+        if (visibility === null) {
+          //构造一个通视分析
+          visibility = new zondy.cesium.VisiblityAnalysis({ scene: viewer.scene })
+          //将通视分析添加到分析管理类中
+          viewer.scene.visualAnalysisManager.add(visibility)
+        }
+        //因为环形通视分析，是得到部分球面通视结果，调用的是visibility分析中的lookAroundAnalysis接口，参数是观察点与可视半径
+        //所以这里不用Cesium的鼠标事件handle了，利用DrawElement接口，绘制一个圆，快捷的得到中心点和半径
+        let drawElement = new zondy.cesium.DrawElement(viewer)
+        drawElement.startDrawingCircle({
+          color: new Cesium.Color(0.2, 0.4, 0.3, 1.0), //圆面的颜色
+          callback: function (result) {
+            //绘制圆结束，进入回调，得到中心点与半径，调用通视分析的环形分析接口得到结果
+            drawElement.stopDrawing()
+            visibility.lookAroundAnalysis({
+              viewPosition: result.center, //观察点位置
+              radius: result.radius, //可视半径
+              percentCallback: function (percent) {
+                console.log(percent)
+              }
+            })
+          }
+        })
+      }
+
+      //增加Cesium的ScreenSpaceEventHandler中的左键、移动、右键三个鼠标事件。
+      function addCesiumScreenSpaceEventHandler() {
+        handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
+        //鼠标左击
+        handler.setInputAction(function (movement) {
+          //如果有可视域分析对象，那么确定其观察点
+          if (visibility !== null && mouseEventDone === false) {
+            //获取当前点击的Cartesian3坐标点
+            let cartesian = viewer.scene.pickPosition(movement.position)
+            //转换成cartographic
+            let cartographic = Cesium.Cartographic.fromCartesian(cartesian)
+            //再反转成Cartesian3坐标
+            if (mouseLeftOnceClicked === false) {
+              //如果是观察点，那么加2米方便展示
+              cartographic.height += 2
+            }
+            cartesian = Cesium.Cartographic.toCartesian(cartographic)
+            if (cartesian !== undefined) {
+              if (mouseLeftOnceClicked) {
+                visibility.targetPosition = cartesian
+                mouseEventDone = true
+                mouseLeftOnceClicked = false
+              } else {
+                visibility.viewPosition = cartesian
+                mouseLeftOnceClicked = true
+              }
+            }
+          }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
+
+        //鼠标移动
+        handler.setInputAction(function (movement) {
+          if (mouseLeftOnceClicked === true && mouseEventDone === false) {
+            let cartesian = viewer.scene.pickPosition(movement.endPosition)
+            if (cartesian !== undefined) {
+              visibility.targetPosition = cartesian
+            }
+          }
+        }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
+      }
+
+      //移除通视分析
+      function removeVisibility() {
+        if (visibility) {
+          viewer.scene.visualAnalysisManager.remove(visibility)
+          visibility.destroy()
+          visibility = null
+        }
+        mouseLeftOnceClicked = false
+        mouseEventDone = false
+      }
+
+      //为方便展示效果，添加一个m3d模型到地球
+      function addModel() {
+        let igsSceneLayer = new zondy.layer.IGSSceneLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Scene/DaYanTa-M3D/SceneServer',
+          // 设置场景初始化参数
+          scenes: [
+            {
+              // 设置子图层初始化参数
+              sublayers: [
+                {
+                  // 子图层id
+                  id: '0',
+                  // 子图层初始化参数
+                  extensionOptions: {
+                    // 开启自动跳转
+                    autoReset: true
+                  }
+                }
+              ]
+            }
+          ]
+        })
+        map.add(igsSceneLayer)
+      }
+
+      //添加地形
+      function addTerrain() {
+        let url =
+          'http://webclient.smaryun.com:8089/igs/rest/services/Scene/TwTerrain/SceneServer'
+        let igsSceneLayer = new zondy.layer.IGSSceneLayer({
+          url: url
+        })
+        map.add(igsSceneLayer)
+      }
+
+      //视点跳转
+      function flyTo(type) {
+        switch (type) {
+          case 'terrain':
+            // 定位到地形，并调整到合适的视角
+            sceneView.flyTo({
+              center: [120.5558, 23.2979, 2000],
+              duration: 2,
+              orientation: {
+                heading: Cesium.Math.toRadians(0), //方位角
+                pitch: Cesium.Math.toRadians(-15), //俯仰角
+                roll: Cesium.Math.toRadians(0) //翻滚角
+              }
+            })
+            break
+        }
+      }
+
+      //初始化示例UI
+      function initUI() {
+        layui.use(function () {
+          let form = layui.form
+          //监听选择的分析数据类型
+          form.on('select(content)', function (data) {
+            //删除所有模型数据
+            viewer.scene.layers.removeAllSceneLayers()
+            //更新当前分析类型
+            currentType = data.value
+            switch (data.value) {
+              case 'model':
+                //如果要进模型的可视域分析，不必开启地形深度检测
+                viewer.scene.globe.depthTestAgainstTerrain = false
+                //添加大雁塔倾斜摄影
+                addModel()
+                break
+              case 'terrain':
+                //如果要进行地形的可视域分析，一定要开启地形深度检测
+                viewer.scene.globe.depthTestAgainstTerrain = true
+                //添加地形
+                addTerrain()
+                //试点跳转
+                flyTo(data.value)
+                break
+            }
+          })
+        })
+      }
+
+      //加载天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" style="width: 414px">
+      <form class="layui-form" action="">
+        <div class="sample-main-panel">
+          <div class="layui-form-item">
+            <label class="layui-form-label">模型或地形</label>
+            <div class="layui-input-block">
+              <select lay-filter="content">
+                <option value="model">模型</option>
+                <option value="terrain">地形</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="sample-button-panel">
+          <button
+            type="button"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="addVisibility()"
+          >
+            通视分析(线性)
+          </button>
+          <button
+            type="button"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="addVisibilityCircle()"
+          >
+            通视分析(环形)
+          </button>
+          <button
+            type="button"
+            class="layui-btn layui-btn-sm layui-btn-danger"
+            onclick="removeVisibility()"
+          >
+            清除
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>统计图</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/visual.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map,
+        sceneView,
+        viewer,
+        options,
+        dataSource,
+        currentType,
+        currentResult,
+        theme,
+        isPicking,
+        queryResult
+
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //设置数据源
+        setDataSource()
+        //添加专题图
+        addThemeLayer()
+        //添加点击时间
+        setInputAction()
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //处理锯齿化
+        if (Cesium.FeatureDetection.supportsImageRenderingPixelated()) {
+          //判断是否支持图像渲染像素化处理
+          viewer.resolutionScale = window.devicePixelRatio
+        }
+        //开启抗锯齿
+        viewer.scene.fxaa = true
+        viewer.scene.postProcessStages.fxaa.enabled = true
+      }
+
+      //设置数据源
+      function setDataSource() {
+        //设置数据源
+        dataSource = {}
+        dataSource.geoJSONData = {
+          geojson: 'http://webclient.smaryun.com:8200/Vector/geojson/省级行政区.geojson'
+        }
+      }
+
+      //渲染专题图
+      function addThemeLayer() {
+        //设置当前数据类型
+        currentType = 'geojson'
+        clearTheme()
+        var geoJsonUrl = dataSource.geoJSONData.geojson
+        var promise
+        //解析geojson
+        var url = Cesium.Resource.createIfNeeded(geoJsonUrl)
+        //获取promise对象
+        promise = url.fetchJson()
+        //获取查询结果
+        promise.then(function (json) {
+          currentResult = json
+        })
+        //创建专题图对象
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/ThemeManager.html
+        theme = new zondy.cesium.ThemeManager(viewer, {
+          successCallback: function (result) {
+            queryResult = result
+          },
+          errorCallback: function (result) {
+            console.log(result)
+          },
+          // 在定义专题图对象时，设置好属性与对应颜色
+          attributeName: ['GDP_2007', 'GDP_2008'],
+          attributeColor: [
+            new Cesium.Color(234 / 255, 175 / 255, 200 / 255),
+            new Cesium.Color(56 / 255, 239 / 255, 125 / 255)
+          ],
+          width: 50000
+        })
+      }
+
+      //设置cesium点击事件
+      function setInputAction() {
+        isPicking = false
+        var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
+        //鼠标左击
+        handler.setInputAction(function (movement) {
+          if (isPicking) {
+            var pickedFeature = scene.pick(movement.endPosition)
+            if (pickedFeature !== undefined) {
+              var feature = pickedFeature.id.feature //仅限Geojson解析添加专题图
+            }
+            scene.requestRender()
+          }
+        }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
+      }
+
+      // 清空专题图
+      function clearTheme() {
+        if (theme) {
+          //如果专题图存在，清空专题图
+          theme.remove()
+        }
+      }
+
+      // 添加水平柱状专题图
+      function addHorizontalColumn() {
+        //清空专题图
+        clearTheme()
+        isPicking = false
+        theme.attributeName = ['GDP_2007', 'GDP_2008']
+        // theme.attributeName = ['czrk', 'ldrk'];
+        theme.attributeColor = [
+          new Cesium.Color(234 / 255, 175 / 255, 200 / 255),
+          new Cesium.Color(56 / 255, 239 / 255, 125 / 255)
+        ]
+        // theme.addGeoGeometry = true;
+        theme.textColor = Cesium.Color.GREEN
+        theme.textHeightOffset = 10000
+        // theme.width = 1000;
+        theme.addByGeoJson(currentResult, 'HorizontalColumn')
+      }
+
+      // 添加垂直柱状专题图
+      function addVerticalColumn() {
+        //清空专题图
+        clearTheme()
+        isPicking = false
+        theme.addGeoGeometry = false
+        theme.attributeName = ['GDP_2007', 'GDP_2008']
+        theme.attributeColor = [
+          new Cesium.Color(234 / 255, 175 / 255, 200 / 255),
+          new Cesium.Color(56 / 255, 239 / 255, 125 / 255)
+        ]
+        theme.addByGeoJson(currentResult, 'VerticalColumn')
+      }
+
+      // 添加饼状不带高程专题图
+      function addPieWithoutHeight() {
+        //清空专题图
+        clearTheme()
+        isPicking = false
+        theme.addGeoGeometry = false
+        theme.addExtrudedHeight = false
+        theme.attributeName = ['GDP_2007', 'GDP_2008']
+        theme.attributeColor = [
+          new Cesium.Color(109 / 255, 213 / 255, 250 / 255),
+          new Cesium.Color(245 / 255, 175 / 255, 25 / 255)
+        ]
+        theme.addByGeoJson(currentResult, 'Pie')
+      }
+
+      // 添加饼状带高程专题图
+      function addPie() {
+        //清空专题图
+        clearTheme()
+        isPicking = false
+        theme.addGeoGeometry = false
+        theme.addExtrudedHeight = true
+        theme.attributeName = ['GDP_2007', 'GDP_2008']
+        theme.attributeColor = [
+          new Cesium.Color(109 / 255, 213 / 255, 250 / 255),
+          new Cesium.Color(245 / 255, 175 / 255, 25 / 255)
+        ]
+        theme.addByGeoJson(currentResult, 'Pie')
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form layui-form-pane" action="">
+        <div class="sample-button-panel">
+          <button
+            type="button"
+            onclick="addHorizontalColumn()"
+            class="layui-btn layui-btn-primary layui-btn-fluid"
+          >
+            添加水平柱状专题图
+          </button>
+          <button
+            type="button"
+            onclick="addVerticalColumn()"
+            class="layui-btn layui-btn-primary layui-btn-fluid"
+          >
+            添加垂直柱状专题图
+          </button>
+          <button
+            type="button"
+            onclick="addPieWithoutHeight()"
+            class="layui-btn layui-btn-primary layui-btn-fluid"
+          >
+            添加饼状不带高程专题图
+          </button>
+          <button
+            type="button"
+            onclick="addPie()"
+            class="layui-btn layui-btn-primary layui-btn-fluid"
+            style="margin-bottom: 0 !important"
+          >
+            添加饼状带高程专题图
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

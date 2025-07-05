@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>键盘漫游</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, options, roamingTool
+      //取得jquery对象
+      let $ = layui.$
+      // 移动步长slider滑块
+      let moveStepSlider
+
+      // 实例化工具
+      function initKeyboardCameraController() {
+        // 实例化工具对象
+        roamingTool = new zondy.cesium.KeyboardCameraController(viewer, {
+          // 是否开启鼠标控制模式，开启后将进入全屏模式，此时相机视角可通过鼠标移动进行操作
+          // 由于浏览器限制，不允许自动全屏，需通过用户操作切换全屏，所以这里初始化设置为false
+          enableMouseLook: false,
+          // 鼠标灵敏度，该参数仅在鼠标控制模式下有效
+          mouseSensitivity: 6,
+          // 是否开启动态移动步长，开启后将根据视角距离地面高度动态计算移动步长，moveStep参数将不再生效
+          enableDynamicMoveStep: false,
+          // 移动步长，单位为米
+          moveStep: 0.3,
+          // 旋转步长，单位为度
+          rotateStep: 1,
+          // 是否开启碰撞检测
+          enableCollisionDetection: false,
+          // 初始视角，开始漫游时视角将重置到该视角，若不设置则默认从当前视角开始漫游
+          initView: initViewOfIndoor
+        })
+      }
+
+      // 室内初始视角
+      const initViewOfIndoor = {
+        destination: Cesium.Cartesian3.fromDegrees(
+          113.00009,
+          33.00062,
+          3.50697
+        ),
+        orientation: {
+          heading: Cesium.Math.toRadians(179.81637),
+          pitch: Cesium.Math.toRadians(2.63183),
+          roll: 0
+        }
+      }
+
+      // 室外初始视角
+      const initViewOfOutdoor = {
+        destination: Cesium.Cartesian3.fromDegrees(
+          113.00634,
+          32.99989,
+          118.40999
+        ),
+        orientation: {
+          heading: Cesium.Math.toRadians(271.74483),
+          pitch: Cesium.Math.toRadians(-8.16429),
+          roll: 0
+        }
+      }
+
+      // 开始漫游
+      // enableMouseLookValue传true：全屏漫游；传false：非全屏漫游
+      function startRoaming(enableMouseLookValue) {
+        // 全屏漫游或非全屏漫游
+        roamingTool.enableMouseLook = enableMouseLookValue
+        // 开始漫游
+        roamingTool.start()
+      }
+
+      // 停止漫游
+      function stopRoaming() {
+        roamingTool.stop()
+      }
+
+      // 初始化室内漫游参数
+      function initIndoor() {
+        // 设置UI滑块的值，UI滑块不支持小数，所以放大10倍处理
+        moveStepSlider.setValue(0.3 * 10)
+        // 移动步长，单位为米
+        roamingTool.moveStep = 0.3
+        // 初始视角，开始漫游时视角将重置到该视角，若不设置则默认从当前视角开始漫游
+        roamingTool.initView = initViewOfIndoor
+      }
+
+      // 初始化室外漫游参数
+      function initOutdoor() {
+        // 设置UI滑块的值，UI滑块不支持小数，所以放大10倍处理
+        moveStepSlider.setValue(30 * 10)
+        // 移动步长，单位为米
+        roamingTool.moveStep = 30
+        // 初始视角，开始漫游时视角将重置到该视角，若不设置则默认从当前视角开始漫游
+        roamingTool.initView = initViewOfOutdoor
+      }
+
+      // 监听键盘按键，实现面板的tips高亮
+      function initKeyboardListen() {
+        // 操作按键对应的ASCII码
+        const keyCodeArr = {
+          81: 'Q',
+          87: 'W',
+          69: 'E',
+          65: 'A',
+          83: 'S',
+          68: 'D',
+          85: 'U',
+          73: 'I',
+          79: 'O',
+          74: 'J',
+          75: 'K',
+          76: 'L',
+          38: 'UP',
+          39: 'RIGHT',
+          40: 'DOWN',
+          37: 'LEFT'
+        }
+        document.addEventListener('keydown', function (event) {
+          // 非全屏漫游时，改变面板按键高亮
+          if (roamingTool && !roamingTool.enableMouseLook) {
+            if (
+              Object.prototype.hasOwnProperty.call(keyCodeArr, event.keyCode)
+            ) {
+              $(`.keyboard-${keyCodeArr[event.keyCode]}`).addClass(
+                'keyboard-active'
+              )
+            }
+          }
+        })
+        document.addEventListener('keyup', function (event) {
+          // 非全屏漫游时，改变面板按键高亮
+          if (roamingTool && !roamingTool.enableMouseLook) {
+            if (
+              Object.prototype.hasOwnProperty.call(keyCodeArr, event.keyCode)
+            ) {
+              $(`.keyboard-${keyCodeArr[event.keyCode]}`).removeClass(
+                'keyboard-active'
+              )
+            }
+          }
+        })
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          //监听场景切换radio
+          layui.form.on('radio(viewType)', function (data) {
+            // 切换室内、室外场景，设置对应参数
+            if (data.value === 'indoor') {
+              initIndoor()
+            } else {
+              initOutdoor()
+            }
+            // 开始漫游
+            startRoaming(false)
+          })
+
+          // 碰撞检测
+          layui.form.on('switch(enableCollisionDetection)', function (data) {
+            roamingTool.enableCollisionDetection = data.elem.checked
+          })
+
+          // 移动步长
+          // slider滑块组件不支持小数，所以先放大10倍，使用的时候再缩小10倍
+          moveStepSlider = layui.slider.render({
+            elem: '#moveStep',
+            value: 3,
+            min: 0,
+            max: 1000,
+            step: 1,
+            theme: 'rgb(21, 134, 238)',
+            //自定义提示文本
+            setTips: function (value) {
+              return value / 10 + '米'
+            },
+            change: function (value) {
+              roamingTool.moveStep = value / 10
+            }
+          })
+        })
+      }
+
+      //添加学校模型
+      function addM3DModelCacheLayer() {
+        let url =
+          'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D/1.0/school-all-new/school-all-new.mcj'
+        let M3DLayer = new zondy.layer.M3DModelCacheLayer({
+          url: url,
+          extensionOptions: {
+            // 开启自动跳转
+            autoReset: false
+          }
+        })
+        map.add(M3DLayer)
+      }
+
+      //加载天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/cia_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      // 地图初始化函数
+      function init() {
+        // 初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // 加载天地图
+        addTDT()
+        // 添加学校模型
+        addM3DModelCacheLayer()
+        // 初始化漫游工具
+        initKeyboardCameraController()
+        // 开始漫游
+        startRoaming(false)
+        // 初始化示例UI操作
+        initUI()
+        // 初始化键盘监听事件
+        initKeyboardListen()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label" style="width: 85px">演示场景</label>
+          <div class="layui-input-block layui-input-block-select">
+            <input
+              type="radio"
+              name="viewType"
+              lay-filter="viewType"
+              value="indoor"
+              title="室内"
+              checked
+            />
+            <input
+              type="radio"
+              name="viewType"
+              lay-filter="viewType"
+              value="outdoor"
+              title="室外"
+            />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">碰撞检测</label>
+          <div class="layui-input-block">
+            <input
+              type="checkbox"
+              lay-filter="enableCollisionDetection"
+              lay-skin="switch"
+              lay-text="开启|关闭"
+            />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">移动步长</label>
+          <div class="layui-input-block sample-slider">
+            <div id="moveStep"></div>
+          </div>
+        </div>
+        <div class="line"></div>
+        <div class="layui-form-item">
+          <button type="button" class="layui-btn" onclick="startRoaming(true)">
+            全屏漫游
+          </button>
+          <button type="button" class="layui-btn" onclick="startRoaming(false)">
+            非全屏漫游
+          </button>
+          <button type="button" class="layui-btn" onclick="stopRoaming()">
+            停止漫游
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="operate-tips-area">
+      <div class="style1-tips keyboard-Q">Q</div>
+      <div class="style1-tips keyboard-W">W</div>
+      <div class="style1-tips keyboard-E">E</div>
+      <div class="style1-tips keyboard-A">A</div>
+      <div class="style1-tips keyboard-S">S</div>
+      <div class="style1-tips keyboard-D">D</div>
+      <div class="style1-tips keyboard-U">U</div>
+      <div class="style1-tips keyboard-I">I</div>
+      <div class="style1-tips keyboard-O">O</div>
+      <div class="style1-tips keyboard-J">J</div>
+      <div class="style1-tips keyboard-K">K</div>
+      <div class="style1-tips keyboard-L">L</div>
+      <div class="style2-tips keyboard-UP">￪</div>
+      <div class="style2-tips keyboard-RIGHT">￫</div>
+      <div class="style2-tips keyboard-DOWN">￬</div>
+      <div class="style2-tips keyboard-LEFT">￩</div>
+    </div>
+    <style type="text/css">
+      .layui-panel-right {
+        width: auto;
+      }
+
+      .layui-form-item {
+        margin-bottom: 10px;
+      }
+
+      .layui-form-item:last-child {
+        margin-bottom: 0px;
+      }
+
+      .layui-form-radio:hover *,
+      .layui-form-radioed,
+      .layui-form-radioed > i {
+        color: #1586ee;
+      }
+
+      .layui-form-switch {
+        margin-top: 6px;
+      }
+
+      .line {
+        width: calc(100% + 32px);
+        margin-left: -16px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #444444;
+      }
+
+      .operate-tips-area {
+        width: 452px;
+        height: 190px;
+        position: absolute;
+        top: 230px;
+        right: 10px;
+        background: url('/static/assets/example/keyboard-bg.png') no-repeat;
+      }
+
+      .style1-tips,
+      .style2-tips {
+        text-align: center;
+        color: #fff;
+        position: absolute;
+        background-repeat: no-repeat;
+      }
+
+      .style1-tips {
+        width: 26px;
+        height: 25px;
+        line-height: 25px;
+        background-image: url('/static/assets/example/keyboard-style1.png');
+      }
+
+      .style2-tips {
+        width: 26px;
+        height: 13px;
+        line-height: 13px;
+        background-image: url('/static/assets/example/keyboard-style2.png');
+      }
+
+      .style1-tips.keyboard-active {
+        background-image: url('/static/assets/example/keyboard-style1-active.png');
+      }
+
+      .style2-tips.keyboard-active {
+        background-image: url('/static/assets/example/keyboard-style2-active.png');
+      }
+
+      .keyboard-Q {
+        top: 62px;
+        left: 54px;
+      }
+
+      .keyboard-W {
+        top: 62px;
+        left: 82px;
+      }
+
+      .keyboard-E {
+        top: 62px;
+        left: 110px;
+      }
+
+      .keyboard-A {
+        top: 91px;
+        left: 62px;
+      }
+
+      .keyboard-S {
+        top: 91px;
+        left: 90px;
+      }
+
+      .keyboard-D {
+        top: 91px;
+        left: 118px;
+      }
+
+      .keyboard-U {
+        top: 62px;
+        left: 222px;
+      }
+
+      .keyboard-I {
+        top: 62px;
+        left: 250px;
+      }
+
+      .keyboard-O {
+        top: 62px;
+        left: 278px;
+      }
+
+      .keyboard-J {
+        top: 91px;
+        left: 230px;
+      }
+
+      .keyboard-K {
+        top: 91px;
+        left: 258px;
+      }
+
+      .keyboard-L {
+        top: 91px;
+        left: 286px;
+      }
+
+      .keyboard-UP {
+        top: 148px;
+        left: 378px;
+      }
+
+      .keyboard-RIGHT {
+        top: 163px;
+        left: 406px;
+      }
+
+      .keyboard-DOWN {
+        top: 163px;
+        left: 378px;
+      }
+
+      .keyboard-LEFT {
+        top: 163px;
+        left: 350px;
+      }
+    </style>
+  </body>
+</html>

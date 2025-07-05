@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>WFS(MapGIS)-设置高度模式</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义三维视图的主要类
+      let map, sceneView, wfsLayerPoint, wfsLayerLine, wfsLayerPolygon
+      // 获取构造函数
+      const {
+        Map,
+        layer,
+        Feature,
+        Color,
+        renderer,
+        ElevationInfo
+      } = zondy
+      const { WFSLayer, IGSTileLayer } = layer
+      const { SimpleLineSymbol, SimpleMarkerSymbol, SimpleFillSymbol } = zondy.symbol
+      const { SimpleRenderer } = renderer
+      const { ElevationMode } = zondy.enum
+      const { SceneView } = zondy.cesium
+
+      // 添加WFS点图层
+      function addWFSLayerPoint() {
+        // 创建wfs的点图层
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/WFSLayer.html
+        wfsLayerPoint = new WFSLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/WFSServer',
+          // 指定图层id
+          sublayerId: 'Map_湖北省4326:t70',
+          // 透明度
+          opacity: 0.8,
+          // 设置高度模式为贴地模式
+          elevationInfo: new ElevationInfo({
+            mode: ElevationMode.OnTheGround
+          }),
+          // 设置渲染样式-统一专题图
+          renderer: new SimpleRenderer({
+            // 因为该数据的几何类型为区，因此设置区样式
+            symbol: new SimpleMarkerSymbol({
+              // 半径
+              size: 20,
+              // 填充颜色
+              color: new Color(0, 0, 255),
+              // 外边线样式
+              outline: new SimpleLineSymbol({
+                // 外边线颜色
+                color: new Color(255, 102, 25),
+                // 外边线宽度
+                width: 2
+              })
+            })
+          })
+        })
+        // 添加wfs图层
+        map.add(wfsLayerPoint)
+      }
+
+      // 添加WFS线图层
+      function addWFSLayerLine() {
+        // 创建wfs的线图层
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/WFSLayer.html
+        wfsLayerLine = new WFSLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/WFSServer',
+          // 指定图层id
+          sublayerId: 'Map_湖北省4326:t20',
+          // 透明度
+          opacity: 0.8,
+          // 设置高度模式为贴地模式
+          elevationInfo: new ElevationInfo({
+            mode: ElevationMode.OnTheGround
+          }),
+          // 设置渲染样式-统一专题图
+          renderer: new SimpleRenderer({
+            // 线样式
+            symbol: new SimpleLineSymbol({
+              // 外边线颜色
+              color: new Color(1, 212, 255),
+              // 外边线宽度
+              width: 2
+            })
+          })
+        })
+        // 添加wfs图层
+        map.add(wfsLayerLine)
+      }
+
+      // 添加WFS区图层
+      function addWFSLayerPolygon() {
+        // 创建wfs的区图层
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/WFSLayer.html
+        wfsLayerPolygon = new WFSLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/WFSServer',
+          // 指定图层id
+          sublayerId: 'Map_湖北省4326:t3',
+          // 透明度
+          opacity: 0.8,
+          // 设置高度模式为贴地模式
+          elevationInfo: new ElevationInfo({
+            mode: ElevationMode.OnTheGround
+          }),
+          // 设置渲染样式-统一专题图
+          renderer: new SimpleRenderer({
+            // 区填充样式
+            symbol: new SimpleFillSymbol({
+              // 填充颜色
+              color: new Color(78, 131, 46),
+              // 外边线样式
+              outline: new SimpleLineSymbol({
+                // 外边线颜色
+                color: new Color(37, 120, 180),
+                // 外边线宽度
+                width: 2
+              })
+            })
+          })
+        })
+        // 添加wfs图层
+        map.add(wfsLayerPolygon)
+      }
+
+      // 添加瓦片图层
+      function addIGSTileLayer() {
+        // 创建IGSTile图层
+        let igsTileLayer = new IGSTileLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        })
+        // 添加到地图容器
+        map.add(igsTileLayer)
+
+        // 图层加载完毕
+        igsTileLayer.on('layerview-created', function (result) {
+          sceneView.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      // 初始化示例UI
+      function initUI() {
+        // 图层隐藏或显示
+        layui.form.on('checkbox(point)', function (data) {
+          // 如果图层不存在则添加
+          if (!wfsLayerPoint) {
+            addWFSLayerPoint()
+          } else {
+            // 图层显示或隐藏
+            wfsLayerPoint.visible = data.elem.checked
+          }
+        })
+        layui.form.on('checkbox(line)', function (data) {
+          // 如果图层不存在则添加
+          if (!wfsLayerLine) {
+            addWFSLayerLine()
+          } else {
+            // 图层显示或隐藏
+            wfsLayerLine.visible = data.elem.checked
+          }
+        })
+        layui.form.on('checkbox(polygon)', function (data) {
+          // 如果图层不存在则添加
+          if (!wfsLayerPolygon) {
+            addWFSLayerPolygon()
+          } else {
+            // 图层显示或隐藏
+            wfsLayerPolygon.visible = data.elem.checked
+          }
+        })
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        sceneView = new SceneView({
+          // 视图id
+          viewId: 'mapgis-3d-viewer',
+          // 图层管理容器
+          map: map
+        })
+      }
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // 添加瓦片图层
+        addIGSTileLayer()
+        // 添加点图层
+        addWFSLayerPoint()
+        // 初始化示例UI
+        initUI()
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div
+          class="layui-form-item sample-main-panel"
+          style="border-bottom: none"
+        >
+          <label class="layui-form-label">展示图层</label>
+          <div class="layui-input-block">
+            <input
+              type="checkbox"
+              name=""
+              lay-filter="point"
+              title="点图层"
+              lay-skin="primary"
+              checked
+            />
+            <input
+              type="checkbox"
+              name=""
+              lay-filter="line"
+              title="线图层"
+              lay-skin="primary"
+            />
+            <input
+              type="checkbox"
+              name=""
+              lay-filter="polygon"
+              title="区图层"
+              lay-skin="primary"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+    <style>
+      .layui-panel-right {
+        width: 390px;
+      }
+
+      .layui-form-checkbox[lay-skin='primary'] span {
+        color: #e1e1e1;
+      }
+
+      .layui-form-checked[lay-skin='primary'] i {
+        border-color: #1890ff !important;
+        background-color: #1890ff;
+      }
+
+      .layui-form-checkbox[lay-skin='primary']:hover i {
+        border-color: #1890ff;
+      }
+    </style>
+  </body>
+</html>

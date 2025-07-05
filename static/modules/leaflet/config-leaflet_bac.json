@@ -1,0 +1,644 @@
+{
+  "name": "leaflet",
+  "title": "MapGIS WebClinet-Leaflet演示网站",
+  "mapmode": "leaflet",
+  "childs": [
+    {
+      "name": "数据图层",
+      "iconfont": "iconserver1",
+      "folder": "layer",
+      "leaffolder": false,
+      "childs": [
+        {
+          "name": "互联网图层",
+          "iconfont": "iconmap",
+          "folder": "internet",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "天地图-4326",
+              "file": "tdt-layer-4326",
+              "diffcult": "1",
+              "icon": "tdt-layer-4326.png"
+            },
+            {
+              "name": "天地图-3857",
+              "file": "tdt-layer-3857",
+              "diffcult": "1",
+              "icon": "tdt-layer-3857.png"
+            }
+          ]
+        },
+        {
+          "name": "OGC",
+          "iconfont": "iconmap",
+          "folder": "ogc",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "WMS(MapGIS)-4326",
+              "file": "mapgis-wms-layer-4326",
+              "diffcult": "1",
+              "icon": "mapgis-wms-layer-4326.jpg"
+            },
+            {
+              "name": "WMS(MapGIS)-3857",
+              "file": "mapgis-wms-layer-3857",
+              "diffcult": "1",
+              "icon": "mapgis-wms-layer-3857.jpg"
+            },
+            {
+              "name": "WMS(MapGIS)-自定义坐标系",
+              "file": "mapgis-wms-layer-custom",
+              "diffcult": "1",
+              "icon": "mapgis-wms-layer-custom.jpg"
+            },
+            {
+              "name": "WMTS(MapGIS)-4326",
+              "file": "mapgis-wmts-layer-4326",
+              "diffcult": "1",
+              "icon": "mapgis-wmts-layer-4326.png"
+            },
+            {
+              "name": "WMTS(MapGIS)-3857",
+              "file": "mapgis-wmts-layer-3857",
+              "diffcult": "1",
+              "icon": "mapgis-wmts-layer-3857.png"
+            },
+            {
+              "name": "WMTS(MapGIS)-自定义坐标系",
+              "file": "mapgis-wmts-layer-custom",
+              "diffcult": "1",
+              "icon": "mapgis-wmts-layer-custom.png"
+            },
+            {
+              "name": "WFS(MapGIS)-4326",
+              "file": "mapgis-wfs-layer-4326",
+              "diffcult": "1",
+              "icon": "mapgis-wfs-layer-4326.png"
+            },
+            {
+              "name": "WFS(MapGIS)-3857",
+              "file": "mapgis-wfs-layer-3857",
+              "diffcult": "1",
+              "icon": "mapgis-wfs-layer-3857.png"
+            },
+            {
+              "name": "WFS(MapGIS)-自定义坐标系",
+              "file": "mapgis-wfs-layer-custom",
+              "diffcult": "1",
+              "icon": "mapgis-wfs-layer-custom.png"
+            },
+            {
+              "name": "WMTS(ArcGIS)",
+              "file": "arcgis-wmts-layer",
+              "diffcult": "1",
+              "icon": "arcgis-wmts-layer.png"
+            }
+          ]
+        },
+        {
+          "name": "瓦片图层",
+          "iconfont": "iconmap",
+          "folder": "tileLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "MapGIS瓦片服务-4326",
+              "file": "mapgis-tile-layer-4326",
+              "diffcult": "1",
+              "icon": "mapgis-tile-layer-4326.jpg"
+            },
+            {
+              "name": "MapGIS瓦片服务-3857",
+              "file": "mapgis-tile-layer-3857",
+              "diffcult": "1",
+              "icon": "mapgis-tile-layer-3857.jpg"
+            },
+            {
+              "name": "MapGIS瓦片服务-自定义坐标系",
+              "file": "mapgis-tile-layer-custom",
+              "diffcult": "1",
+              "icon": "mapgis-tile-layer-custom.jpg"
+            },
+            {
+              "name": "ArcGIS瓦片服务",
+              "file": "arcgis-tile-layer",
+              "diffcult": "1",
+              "icon": "arcgis-tile-layer.jpg"
+            }
+          ]
+        },
+        {
+          "name": "地图图片图层",
+          "folder": "mapPictureLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "MapGIS地图服务-4326",
+              "file": "mapgis-map-image-layer-4326",
+              "icon": "mapgis-map-image-layer-4326.jpg",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS地图服务-3857",
+              "file": "mapgis-map-image-layer-3857",
+              "icon": "mapgis-map-image-layer-3857.jpg",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS地图服务-自定义坐标系",
+              "file": "mapgis-map-image-layer-custom",
+              "icon": "mapgis-map-image-layer-custom.jpg",
+              "diffcult": "1"
+            },
+            {
+              "name": "ArcGIS地图服务",
+              "file": "arcgis-map-image-layer",
+              "icon": "arcgis-map-image-layer.jpg",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "要素图层",
+          "folder": "feature",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "MapGIS要素服务-4326",
+              "file": "mapgis-feature-layer-4326",
+              "icon": "mapgis-feature-layer-4326.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS要素服务-3857",
+              "file": "mapgis-feature-layer-3857",
+              "icon": "mapgis-feature-layer-3857.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS要素服务-自定义坐标系",
+              "file": "mapgis-feature-layer-custom",
+              "icon": "mapgis-feature-layer-custom.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "GeoJson图层",
+          "folder": "geoJsonLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "GeoJson",
+              "file": "geojson-layer",
+              "icon": "geojson-layer.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "矢量瓦片图层",
+          "folder": "vectorTile",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "MapGIS矢量瓦片-4326",
+              "file": "mapgis-vector-tile-layer-4326",
+              "icon": "mapgis-vector-tile-layer-4326.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS矢量瓦片-3857",
+              "file": "mapgis-vector-tile-layer-3857",
+              "icon": "mapgis-vector-tile-layer-3857.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "MapGIS矢量瓦片-4547",
+              "file": "mapgis-vector-tile-layer-4547",
+              "icon": "mapgis-vector-tile-layer-4547.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "图形图层",
+          "folder": "graphicLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "图形图层-4326",
+              "file": "graphic-layer-4326",
+              "icon": "graphic-layer-4326.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "图形图层-3857",
+              "file": "graphic-layer-3857",
+              "icon": "graphic-layer-3857.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "图形图层-自定义坐标系",
+              "file": "graphic-layer-custom",
+              "icon": "graphic-layer-custom.png",
+              "diffcult": "1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "数据查询",
+      "iconfont": "iconinternet",
+      "folder": "query",
+      "leaffolder": false,
+      "childs": [
+        {
+          "name": "服务端查询",
+          "iconfont": "iconinternet",
+          "folder": "serverQuery",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "属性查询",
+              "file": "attribute-query",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "attribute-query.png"
+            },
+            {
+              "name": "空间查询",
+              "file": "spatial-query",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "spatial-query.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "标绘",
+      "iconfont": "iconinternet",
+      "folder": "plotting",
+      "leaffolder": false,
+      "childs": [
+        {
+          "name": "行业标绘",
+          "iconfont": "iconinternet",
+          "folder": "plotProfess",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "符号库使用",
+              "file": "plot-symbol",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "plot-symbol.png"
+            },
+            {
+              "name": "符号库查询",
+              "file": "plot-symbol-search",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "plot-symbol-search.png"
+            },
+            {
+              "name": "标绘使用",
+              "file": "plot2d",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "plot2d.png"
+            },
+            {
+              "name": "属性编辑",
+              "file": "plot2d-edit",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "plot2d-edit.png"
+            },
+            {
+              "name": "图层控制",
+              "file": "plot2d-layer-control",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "plot2d-layer-control.png"
+            },
+            {
+              "name": "图层使用",
+              "file": "plot2d-layer-use",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "plot2d-layer-use.png"
+            },
+            {
+              "name": "动效设置",
+              "file": "plot-add-animation",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "plot-add-animation.png"
+            },
+            {
+              "name": "态势图管理",
+              "file": "plot-load-animation",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "plot-load-animation.png"
+            },
+            {
+              "name": "二维态势推演",
+              "file": "plot2d-animation",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "plot2d-animation.png"
+            },
+            {
+              "name": "算法注册",
+              "file": "plot-register",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "plot-register.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "分析",
+      "iconfont": "iconinternet",
+      "folder": "analyse",
+      "leaffolder": false,
+      "childs": [
+        {
+          "name": "服务端分析",
+          "iconfont": "iconinternet",
+          "folder": "server",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "面积计算",
+              "file": "area",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "area.png"
+            },
+            {
+              "name": "长度计算",
+              "file": "length",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "length.png"
+            },
+            {
+              "name": "缓冲分析",
+              "file": "buffer",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "buffer.png"
+            },
+            {
+              "name": "求差",
+              "file": "difference",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "difference.png"
+            },
+            {
+              "name": "求距离",
+              "file": "distance",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "distance.png"
+            },
+            {
+              "name": "求交",
+              "file": "intersect",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "intersect.png"
+            },
+            {
+              "name": "求label点",
+              "file": "labelPoints",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "labelPoints.png"
+            },
+            {
+              "name": "拓扑分析",
+              "file": "relation",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "relation.png"
+            },
+            {
+              "name": "求并",
+              "file": "union",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "union.png"
+            }
+          ]
+        },
+        {
+          "name": "客户端分析",
+          "iconfont": "iconinternet",
+          "folder": "clientAnalysis",
+          "leaffolder": true,
+          "childs": []
+        }
+      ]
+    },
+    {
+      "name": "可视化",
+      "iconfont": "iconinternet",
+      "folder": "visualization",
+      "leaffolder": false,
+      "childs": [
+        {
+          "name": "客户端专题图",
+          "iconfont": "iconmap",
+          "folder": "clientThemeMap",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "统一专题图",
+              "file": "simple",
+              "diffcult": "1",
+              "icon": "simple.png"
+            },
+            {
+              "name": "单值专题图",
+              "file": "unique",
+              "diffcult": "1",
+              "icon": "unique.png"
+            },
+            {
+              "name": "分段专题图",
+              "file": "breaks",
+              "diffcult": "1",
+              "icon": "breaks.png"
+            }
+          ]
+        },
+        {
+          "name": "EChart",
+          "iconfont": "iconmap",
+          "folder": "echart",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "热力图-空气质量",
+              "file": "echart-heater",
+              "diffcult": "1",
+              "icon": "echart-heater.png"
+            },
+            {
+              "name": "散点图-微博签到",
+              "file": "echart-weibo",
+              "diffcult": "1",
+              "icon": "echart-weibo.png"
+            },
+            {
+              "name": "散点图-空气质量",
+              "file": "echart-air",
+              "diffcult": "1",
+              "icon": "echart-air.png"
+            },
+            {
+              "name": "散点图-纽约热力",
+              "file": "echart-big-point",
+              "diffcult": "1",
+              "icon": "echart-big-point.png"
+            },
+            {
+              "name": "散点图-世界GPS",
+              "file": "echart-gps",
+              "diffcult": "1",
+              "icon": "echart-gps.png"
+            },
+            {
+              "name": "路径图-模拟迁徙",
+              "file": "echart-migrate",
+              "diffcult": "1",
+              "icon": "echart-migrate.png"
+            },
+            {
+              "name": "路径图-渐进绘制",
+              "file": "echart-line",
+              "diffcult": "1",
+              "icon": "echart-line.png"
+            },
+            {
+              "name": "路径图-公交路线",
+              "file": "echart-line-animate",
+              "diffcult": "1",
+              "icon": "echart-line-animate.png"
+            },
+            {
+              "name": "路径图-中国主干",
+              "file": "echart-big-road",
+              "diffcult": "1",
+              "icon": "echart-big-road.png"
+            },
+            {
+              "name": "渐进线-纽约街道",
+              "file": "echart-big-line",
+              "diffcult": "1",
+              "icon": "echart-big-line.png"
+            },
+            {
+              "name": "自定义-网格专题",
+              "file": "echart-grid",
+              "diffcult": "1",
+              "icon": "echart-grid.png"
+            }
+          ]
+        },
+        {
+          "name": "MapV",
+          "iconfont": "iconmap",
+          "folder": "mapV",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "轨迹汇聚",
+              "file": "mapv-path-converge",
+              "diffcult": "1",
+              "icon": "mapv-path-converge.png"
+            },
+            {
+              "name": "热力图",
+              "file": "mapv-heater",
+              "diffcult": "1",
+              "icon": "mapv-heater.png"
+            },
+            {
+              "name": "迁移图",
+              "file": "mapv-migrate",
+              "diffcult": "1",
+              "icon": "mapv-migrate.png"
+            },
+            {
+              "name": "区数据渲染",
+              "file": "mapv-polygon-render",
+              "diffcult": "1",
+              "icon": "mapv-polygon-render.png"
+            },
+            {
+              "name": "点数据渲染",
+              "file": "mapv-point-animate",
+              "diffcult": "1",
+              "icon": "mapv-point-animate.png"
+            },
+            {
+              "name": "密度图（方形网格）",
+              "file": "mapv-grid",
+              "diffcult": "1",
+              "icon": "mapv-grid.png"
+            },
+            {
+              "name": "密度图（蜂窝形）",
+              "file": "mapv-honey-comb",
+              "diffcult": "1",
+              "icon": "mapv-honey-comb.png"
+            },
+            {
+              "name": "点重叠播放",
+              "file": "mapv-point-multi-animate",
+              "diffcult": "1",
+              "icon": "mapv-point-multi-animate.png"
+            },
+            {
+              "name": "点微博数据",
+              "file": "mapv-point-weibo",
+              "diffcult": "1",
+              "icon": "mapv-point-weibo.png"
+            },
+            {
+              "name": "单一迁移轨迹",
+              "file": "mapv-simple-migrate",
+              "diffcult": "1",
+              "icon": "mapv-simple-migrate.png"
+            },
+            {
+              "name": "动态轨迹",
+              "file": "mapv-tracker",
+              "diffcult": "1",
+              "icon": "mapv-tracker.png"
+            },
+            {
+              "name": "交通轨迹",
+              "file": "mapv-tracker-line",
+              "diffcult": "1",
+              "icon": "mapv-tracker-line.png"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1858 @@
+
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+                    <script src="scripts/prettify/prettify.js"></script>
+                    <script src="scripts/prettify/lang-css.js"></script>
+                    <title> MapGIS Client for JavaScript API </title>
+                <script type="text/javascript">
+
+                </script>
+                    <!--[if lt IE 9]>
+                    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+                    <![endif]-->
+                        <script src="scripts/jquery.min.js"></script>
+                    <script src="scripts/adminlte/app.min.js"></script>
+                    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/adminlte/AdminLTE.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/adminlte/skin-blue.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+                    <link type="text/css" rel="stylesheet" href="styles/common.css">
+                    <link type="text/css" rel="stylesheet" href="styles/header.css">
+                    <link type="text/css" rel="stylesheet" href="styles/examples.css">
+                    <link type="text/css" rel="stylesheet" href="styles/style.customize.css">
+                    <link type="text/css" rel="stylesheet" href="styles/font-awesome.css">
+                    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+                    <script src="scripts/bootstrap.min.js"></script>
+                </head>
+                <body class='sidebar-mini'>
+
+                <div id="wrap" class="clearfix">
+                    <header class="header-wrapper main-header mapgis-header">
+                        <nav class="navbar navbar-static-top lite">
+                            <div class="nav-header">
+                                <div class="navbar-header">
+                                    <div class="navbar-title">
+                                        <a class="navbar-brand">
+                                            <span class="mapgis-webclient-text"> MapGIS Client for JavaScript API </span>
+                                        </a>
+                                        <div id="suffix-title">for MapboxGL</div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="navbar-toggle collapsed"
+                                        data-toggle="collapse"
+                                        data-target="#navbar-collapse"
+                                        aria-expanded="false"
+                                    >
+                                        <i class="fa fa-bars"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </nav>
+                    </header>
+                    <div class="navigationDiv">
+                    </div>
+                    <div class="main content-wrapper examples-container">
+                        <h1 class="page-title" data-filename="expressions.md">expressions.md</h1>
+                            <section>
+                        <article class="readme">
+                        <h1 id="expressions" tabindex="-1">Expressions</h1>
+<p>The value for any <code>layout</code> property, <code>paint</code> property, or <code>filter</code> property may be specified as an <em>expression</em>. An expression defines a formula for computing the value of the property using the <em>operators</em> described below. The set of expression operators provided by MapGIS Mapbox includes:</p>
+<ul>
+<li>Mathematical operators for performing arithmetic and other operations on numeric values</li>
+<li>Logical operators for manipulating boolean values and making conditional decisions</li>
+<li>String operators for manipulating strings</li>
+<li>Data operators, providing access to the properties of source features</li>
+<li>Camera operators, providing access to the parameters defining the current map view</li>
+</ul>
+<p>Expressions are represented as JSON arrays. The first element of an expression array is a string naming the expression operator, e.g. <code>&quot;*&quot;</code> or <a href="#case"><code>&quot;case&quot;</code></a>. Elements that follow (if any) are the <em>arguments</em> to the expression. Each argument is either a literal value (a string, number, boolean, or <code>null</code>), or another expression array.</p>
+<pre><code class="language-json">[expression_name, argument_0, argument_1, ...]
+</code></pre>
+<h2 id="data-expressions" tabindex="-1">Data expressions</h2>
+<p>A <em>data expression</em> is any expression that access feature data -- that is, any expression that uses one of the data operators: <a href="#get"><code>get</code></a>, <a href="#has"><code>has</code></a>, <a href="#id"><code>id</code></a>, <a href="#geometry-type"><code>geometry-type</code></a>, <a href="#properties"><code>properties</code></a>, or <a href="#feature-state"><code>feature-state</code></a>. Data expressions allow a feature's properties or state to determine its appearance. They can be used to differentiate features within the same layer and to create data visualizations.</p>
+<pre><code class="language-json">{
+    &quot;circle-color&quot;: [
+        &quot;rgb&quot;,
+        // red is higher when feature.properties.temperature is higher
+        [&quot;get&quot;, &quot;temperature&quot;],
+        // green is always zero
+        0,
+        // blue is higher when feature.properties.temperature is lower
+        [&quot;-&quot;, 100, [&quot;get&quot;, &quot;temperature&quot;]]
+    ]
+}
+</code></pre>
+<p>This example uses the <a href="#get"><code>get</code></a> operator to get the <code>temperature</code> value of each feature. That value is used to compute arguments to the <a href="#rgb"><code>rgb</code></a> operator, defining a color in terms of its red, green, and blue components.</p>
+<p>Data expressions are allowed as the value of the <code>filter</code> property, and as values for most paint and layout properties. However, some paint and layout properties do not yet support data expressions. The level of support is indicated by the &quot;data-driven styling&quot; row of the &quot;SDK Support&quot; table for each property. Data expressions with the <a href="#feature-state"><code>feature-state</code></a> operator are allowed only on paint properties.</p>
+<h2 id="camera-expressions" tabindex="-1">Camera expressions</h2>
+<p>A <em>camera expression</em> is any expression that uses the <a href="#zoom"><code>zoom</code></a> operator. Such expressions allow the appearance of a layer to change with the map's zoom level. Camera expressions can be used to create the appearance of depth and to control data density.</p>
+<pre><code class="language-json">{
+    &quot;circle-radius&quot;: [
+        &quot;interpolate&quot;, [&quot;linear&quot;], [&quot;zoom&quot;],
+        // zoom is 5 (or less) -&gt; circle radius will be 1px
+        5, 1,
+        // zoom is 10 (or greater) -&gt; circle radius will be 5px
+        10, 5
+    ]
+}
+</code></pre>
+<p>This example uses the <a href="#interpolate"><code>interpolate</code></a> operator to define a linear relationship between zoom level and circle size using a set of input-output pairs. In this case, the expression indicates that the circle radius should be 1 pixel when the zoom level is 5 or below, and 5 pixels when the zoom is 10 or above. Between the two zoom levels, the circle radius will be linearly interpolated between 1 and 5 pixels</p>
+<p>Camera expressions are allowed anywhere an expression may be used. When a camera expression used as the value of a layout or paint property, it must be in one of the following forms:</p>
+<pre><code class="language-json">[ &quot;interpolate&quot;, interpolation, [&quot;zoom&quot;], ... ]
+</code></pre>
+<p>Or:</p>
+<pre><code class="language-json">[ &quot;step&quot;, [&quot;zoom&quot;], ... ]
+</code></pre>
+<p>Or:</p>
+<pre><code class="language-json">[
+    &quot;let&quot;,
+    ... variable bindings...,
+    [ &quot;interpolate&quot;, interpolation, [&quot;zoom&quot;], ... ]
+]
+</code></pre>
+<p>Or:</p>
+<pre><code class="language-json">[
+    &quot;let&quot;,
+    ... variable bindings...,
+    [ &quot;step&quot;, [&quot;zoom&quot;], ... ]
+]
+</code></pre>
+<p>That is, in layout or paint properties, <code>[&quot;zoom&quot;]</code> may appear only as the input to an outer <a href="#interpolate"><code>interpolate</code></a> or <a href="#step"><code>step</code></a> expression, or such an expression within a <a href="#let"><code>let</code></a> expression.</p>
+<p>There is an important difference between layout and paint properties in the timing of camera expression evaluation. Paint property camera expressions are re-evaluated whenever the zoom level changes, even fractionally. For example, a paint property camera expression will be re-evaluated continuously as the map moves between zoom levels 4.1 and 4.6. A <em>layout property</em> camera expression is evaluated only at integer zoom levels. It will <em>not</em> be re-evaluated as the zoom changes from 4.1 to 4.6 -- only if it goes above 5 or below 4.</p>
+<h2 id="composition" tabindex="-1">Composition</h2>
+<p>A single expression may use a mix of data operators, camera operators, and other operators. Such composite expressions allows a layer's appearance to be determined by a combination of the zoom level <em>and</em> individual feature properties.</p>
+<pre><code class="language-json">{
+    &quot;circle-radius&quot;: [
+        &quot;interpolate&quot;, [&quot;linear&quot;], [&quot;zoom&quot;],
+        // when zoom is 0, set each feature's circle radius to the value of its &quot;rating&quot; property
+        0, [&quot;get&quot;, &quot;rating&quot;],
+        // when zoom is 10, set each feature's circle radius to four times the value of its &quot;rating&quot; property
+        10, [&quot;*&quot;, 4, [&quot;get&quot;, &quot;rating&quot;]]
+    ]
+}
+</code></pre>
+<p>An expression that uses both data and camera operators is considered both a data expression and a camera expression, and must adhere to the restrictions described above for both.</p>
+<h2 id="type-system" tabindex="-1">Type system</h2>
+<p>The input arguments to expressions, and their result values, use the same set of <a href="types.html">types</a> as the rest of the style specification: boolean, string, number, color, and arrays of these types. Furthermore, expressions are <em>type safe</em>: each use of an expression has a known result type and required argument types, and the SDKs verify that the result type of an expression is appropriate for the context in which it is used. For example, the result type of an expression in the <code>filter</code> property must be <a href="types.html#boolean">boolean</a>, and the arguments to the <code>&quot;+&quot;</code> operator must be <a href="types.html#number">numbers</a>.</p>
+<p>When working with feature data, the type of a feature property value is typically not known ahead of time by the SDK. To preserve type safety, when evaluating a data expression, the SDK will check that the property value is appropriate for the context. For example, if you use the expression <code>[&quot;get&quot;, &quot;feature-color&quot;]</code> for the <a href="layers.html#circle-color"><code>circle-color</code></a> property, the SDK will verify that the <code>feature-color</code> value of each feature is a string identifying a valid <a href="types.html#color">color</a>. If this check fails, an error will be indicated in an SDK-specific way (typically a log message), and the default value for the property will be used instead.</p>
+<p>In most cases, this verification will occur automatically wherever it is needed. However, in certain situations, the SDK may be unable to automatically determine the expected result type of a data expression from surrounding context. For example, it is not clear whether the expression <code>[&quot;&lt;&quot;, [&quot;get&quot;, &quot;a&quot;], [&quot;get&quot;, &quot;b&quot;]]</code> is attempting to compare strings or numbers. In situations like this, you can use one of the <em>type assertion</em> expression operators to indicate the expected type of a data expression: <code>[&quot;&lt;&quot;, [&quot;number&quot;, [&quot;get&quot;, &quot;a&quot;]], [&quot;number&quot;, [&quot;get&quot;, &quot;b&quot;]]]</code>. A type assertion checks that the feature data matches the expected type of the data expression. If this check fails, it produces an error and causes the whole expression to fall back to the default value for the property being defined. The assertion operators are <a href="types.html#array"><code>array</code></a>, <a href="types.html#boolean"><code>boolean</code></a>, <a href="types.html#number"><code>number</code></a>, and <a href="types.html#string"><code>string</code></a>.</p>
+<p>Expressions perform only one kind of implicit type conversion: a data expression used in a context where a <a href="types.html#color">color</a> is expected will convert a string representation of a color to a color value. In all other cases, if you want to convert between types, you must use one of the <em>type conversion</em> expression operators: <a href="#to-boolean"><code>to-boolean</code></a>, <a href="#to-number"><code>to-number</code></a>, <a href="#to-string"><code>to-string</code></a>, or <a href="#to-color"><code>to-color</code></a>. For example, if you have a feature property that stores numeric values in string format, and you want to use those values as numbers rather than strings, you can use an expression such as <code>[&quot;to-number&quot;, [&quot;get&quot;, &quot;property-name&quot;]]</code>.</p>
+<p>If an expression accepts an array argument and the user supplies an array literal, that array <em>must</em> be wrapped in a <code>literal</code> expression (see the examples below). When GL-JS encounters an array in a style-spec property value, it will assume that the array is an expression and try to parse it; the library has no way to distinguish between an expression which failed validation and an array literal unless the developer makes this distinction explicit with the <code>literal</code> operator. The <code>literal</code> operator is not necessary if the array is returned from a sub-expression, e.g. <code>[&quot;in&quot;, 1, [&quot;get&quot;, &quot;myArrayProp&quot;]]</code>.</p>
+<pre><code class="language-json">// will throw an error
+{
+    &quot;circle-color&quot;: [&quot;in&quot;, 1, [1, 2, 3]]
+}
+
+// will work as expected
+{
+    &quot;circle-color&quot;: [&quot;in&quot;, 1, [&quot;literal&quot;, [1, 2, 3]]]
+}
+</code></pre>
+<h2 id="variable-binding" tabindex="-1">Variable binding</h2>
+<h3 id="let" tabindex="-1">let</h3>
+<p>Binds expressions to named variables, which can then be referenced in the result expression using [&quot;var&quot;, &quot;variable_name&quot;].</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="var" tabindex="-1">var</h3>
+<p>References variable bound using &quot;let&quot;.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="types" tabindex="-1">Types</h2>
+<h3 id="literal" tabindex="-1">literal</h3>
+<p>Provides a literal array or object value.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="array" tabindex="-1">array</h3>
+<p>Asserts that the input is an array (optionally with a specific item type and length).  If, when the input expression is evaluated, it is not of the asserted type, then this assertion will cause the whole expression to be aborted.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="typeof" tabindex="-1">typeof</h3>
+<p>Returns a string describing the type of the given value.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="string" tabindex="-1">string</h3>
+<p>Asserts that the input value is a string. If multiple values are provided, each one is evaluated in order until a string is obtained. If none of the inputs are strings, the expression is an error.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="number" tabindex="-1">number</h3>
+<p>Asserts that the input value is a number. If multiple values are provided, each one is evaluated in order until a number is obtained. If none of the inputs are numbers, the expression is an error.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="boolean" tabindex="-1">boolean</h3>
+<p>Asserts that the input value is a boolean. If multiple values are provided, each one is evaluated in order until a boolean is obtained. If none of the inputs are booleans, the expression is an error.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="object" tabindex="-1">object</h3>
+<p>Asserts that the input value is an object. If multiple values are provided, each one is evaluated in order until an object is obtained. If none of the inputs are objects, the expression is an error.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="collator" tabindex="-1">collator</h3>
+<p>Returns a <code>collator</code> for use in locale-dependent comparison operations. The <code>case-sensitive</code> and <code>diacritic-sensitive</code> options default to <code>false</code>. The <code>locale</code> argument specifies the IETF language tag of the locale to use. If none is provided, the default locale is used. If the requested locale is not available, the <code>collator</code> will use a system-defined fallback locale. Use <code>resolved-locale</code> to test the results of locale fallback behavior.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.45.0</td>
+<td>6.5.0</td>
+<td>4.2.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="format" tabindex="-1">format</h3>
+<p>Returns <code>formatted</code> text containing annotations for use in mixed-format <code>text-field</code> entries. For a <code>text-field</code> entries of a string type, following option object's properties are supported: If set, the <code>text-font</code> value overrides the font specified by the root layout properties. If set, the <code>font-scale</code> value specifies a scaling factor relative to the <code>text-size</code> specified in the root layout properties. If set, the <code>text-color</code> value overrides the color specified by the root paint properties for this layer.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.48.0</td>
+<td>6.7.0</td>
+<td>4.6.0</td>
+</tr>
+<tr>
+<td>text-font</td>
+<td>0.48.0</td>
+<td>6.7.0</td>
+<td>4.6.0</td>
+</tr>
+<tr>
+<td>font-scale</td>
+<td>0.48.0</td>
+<td>6.7.0</td>
+<td>4.6.0</td>
+</tr>
+<tr>
+<td>text-color</td>
+<td>1.3.0</td>
+<td>7.3.0</td>
+<td>4.10.0</td>
+</tr>
+<tr>
+<td>image</td>
+<td>1.6.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="image" tabindex="-1">image</h3>
+<p>Returns an <code>image</code> type for use in <code>icon-image</code>, <code>*-pattern</code> entries and as a section in the <code>format</code> expression. If set, the <code>image</code> argument will check that the requested image exists in the style and will return either the resolved image name or <code>null</code>, depending on whether or not the image is currently in the style. This validation process is synchronous and requires the image to have been added to the style before requesting it in the <code>image</code> argument.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>1.4.0</td>
+<td>8.6.0</td>
+<td>5.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="number-format" tabindex="-1">number-format</h3>
+<p>Converts the input number into a string representation using the providing formatting rules. If set, the <code>locale</code> argument specifies the locale to use, as a BCP 47 language tag. If set, the <code>currency</code> argument specifies an ISO 4217 code to use for currency-style formatting. If set, the <code>min-fraction-digits</code> and <code>max-fraction-digits</code> arguments specify the minimum and maximum number of fractional digits to include.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.54.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="to-string" tabindex="-1">to-string</h3>
+<p>Converts the input value to a string. If the input is <code>null</code>, the result is <code>&quot;&quot;</code>. If the input is a boolean, the result is <code>&quot;true&quot;</code> or <code>&quot;false&quot;</code>. If the input is a number, it is converted to a string as specified by the <a href="https://tc39.github.io/ecma262/#sec-tostring-applied-to-the-number-type">&quot;NumberToString&quot; algorithm</a> of the ECMAScript Language Specification. If the input is a color, it is converted to a string of the form <code>&quot;rgba(r,g,b,a)&quot;</code>, where <code>r</code>, <code>g</code>, and <code>b</code> are numerals ranging from 0 to 255, and <code>a</code> ranges from 0 to 1. Otherwise, the input is converted to a string in the format specified by the <a href="https://tc39.github.io/ecma262/#sec-json.stringify"><code>JSON.stringify</code></a> function of the ECMAScript Language Specification.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="to-number" tabindex="-1">to-number</h3>
+<p>Converts the input value to a number, if possible. If the input is <code>null</code> or <code>false</code>, the result is 0. If the input is <code>true</code>, the result is 1. If the input is a string, it is converted to a number as specified by the <a href="https://tc39.github.io/ecma262/#sec-tonumber-applied-to-the-string-type">&quot;ToNumber Applied to the String Type&quot; algorithm</a> of the ECMAScript Language Specification. If multiple values are provided, each one is evaluated in order until the first successful conversion is obtained. If none of the inputs can be converted, the expression is an error.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="to-boolean" tabindex="-1">to-boolean</h3>
+<p>Converts the input value to a boolean. The result is <code>false</code> when then input is an empty string, 0, <code>false</code>, <code>null</code>, or <code>NaN</code>; otherwise it is <code>true</code>.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="to-color" tabindex="-1">to-color</h3>
+<p>Converts the input value to a color. If multiple values are provided, each one is evaluated in order until the first successful conversion is obtained. If none of the inputs can be converted, the expression is an error.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="lookup" tabindex="-1">Lookup</h2>
+<h3 id="at" tabindex="-1">at</h3>
+<p>Retrieves an item from an array.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="in" tabindex="-1">in</h3>
+<p>Determines whether an item exists in an array or a substring exists in a string.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>1.6.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="get" tabindex="-1">get</h3>
+<p>Retrieves a property value from the current feature's properties, or from another object if a second argument is provided. Returns null if the requested property is missing.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="has" tabindex="-1">has</h3>
+<p>Tests for the presence of an property value in the current feature's properties, or from another object if a second argument is provided.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="length" tabindex="-1">length</h3>
+<p>Gets the length of an array or string.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="decision" tabindex="-1">Decision</h2>
+<h3 id="case" tabindex="-1">case</h3>
+<p>Selects the first output whose corresponding test condition evaluates to true, or the fallback value otherwise.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="match" tabindex="-1">match</h3>
+<p>Selects the output whose label value matches the input value, or the fallback value if no match is found. The input can be any expression (e.g. <code>[&quot;get&quot;, &quot;building_type&quot;]</code>). Each label must be either:</p>
+<ul>
+<li>a single literal value; or</li>
+<li>an array of literal values, whose values must be all strings or all numbers (e.g. <code>[100, 101]</code> or <code>[&quot;c&quot;, &quot;b&quot;]</code>). The input matches if any of the values in the array matches, similar to the <code>&quot;in&quot;</code> operator.</li>
+</ul>
+<p>Each label must be unique. If the input type does not match the type of the labels, the result will be the fallback value.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="coalesce" tabindex="-1">coalesce</h3>
+<p>Evaluates each expression in turn until the first non-null value is obtained, and returns that value.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%3D%3D" tabindex="-1">==</h3>
+<p>Returns <code>true</code> if the input values are equal, <code>false</code> otherwise. The comparison is strictly typed: values of different runtime types are always considered unequal. Cases where the types are known to be different at parse time are considered invalid and will produce a parse error. Accepts an optional <code>collator</code> argument to control locale-dependent string comparisons.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+<tr>
+<td>collator</td>
+<td>0.45.0</td>
+<td>6.5.0</td>
+<td>4.2.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="!%3D" tabindex="-1">!=</h3>
+<p>Returns <code>true</code> if the input values are not equal, <code>false</code> otherwise. The comparison is strictly typed: values of different runtime types are always considered unequal. Cases where the types are known to be different at parse time are considered invalid and will produce a parse error. Accepts an optional <code>collator</code> argument to control locale-dependent string comparisons.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+<tr>
+<td>collator</td>
+<td>0.45.0</td>
+<td>6.5.0</td>
+<td>4.2.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%3E" tabindex="-1">&gt;</h3>
+<p>Returns <code>true</code> if the first input is strictly greater than the second, <code>false</code> otherwise. The arguments are required to be either both strings or both numbers; if during evaluation they are not, expression evaluation produces an error. Cases where this constraint is known not to hold at parse time are considered in valid and will produce a parse error. Accepts an optional <code>collator</code> argument to control locale-dependent string comparisons.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+<tr>
+<td>collator</td>
+<td>0.45.0</td>
+<td>6.5.0</td>
+<td>4.2.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%3C" tabindex="-1">&lt;</h3>
+<p>Returns <code>true</code> if the first input is strictly less than the second, <code>false</code> otherwise. The arguments are required to be either both strings or both numbers; if during evaluation they are not, expression evaluation produces an error. Cases where this constraint is known not to hold at parse time are considered in valid and will produce a parse error. Accepts an optional <code>collator</code> argument to control locale-dependent string comparisons.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+<tr>
+<td>collator</td>
+<td>0.45.0</td>
+<td>6.5.0</td>
+<td>4.2.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%3E%3D" tabindex="-1">&gt;=</h3>
+<p>Returns <code>true</code> if the first input is greater than or equal to the second, <code>false</code> otherwise. The arguments are required to be either both strings or both numbers; if during evaluation they are not, expression evaluation produces an error. Cases where this constraint is known not to hold at parse time are considered in valid and will produce a parse error. Accepts an optional <code>collator</code> argument to control locale-dependent string comparisons.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+<tr>
+<td>collator</td>
+<td>0.45.0</td>
+<td>6.5.0</td>
+<td>4.2.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%3C%3D" tabindex="-1">&lt;=</h3>
+<p>Returns <code>true</code> if the first input is less than or equal to the second, <code>false</code> otherwise. The arguments are required to be either both strings or both numbers; if during evaluation they are not, expression evaluation produces an error. Cases where this constraint is known not to hold at parse time are considered in valid and will produce a parse error. Accepts an optional <code>collator</code> argument to control locale-dependent string comparisons.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+<tr>
+<td>collator</td>
+<td>0.45.0</td>
+<td>6.5.0</td>
+<td>4.2.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="all" tabindex="-1">all</h3>
+<p>Returns <code>true</code> if all the inputs are <code>true</code>, <code>false</code> otherwise. The inputs are evaluated in order, and evaluation is short-circuiting: once an input expression evaluates to <code>false</code>, the result is <code>false</code> and no further input expressions are evaluated.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="any" tabindex="-1">any</h3>
+<p>Returns <code>true</code> if any of the inputs are <code>true</code>, <code>false</code> otherwise. The inputs are evaluated in order, and evaluation is short-circuiting: once an input expression evaluates to <code>true</code>, the result is <code>true</code> and no further input expressions are evaluated.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="!" tabindex="-1">!</h3>
+<p>Logical negation. Returns <code>true</code> if the input is <code>false</code>, and <code>false</code> if the input is <code>true</code>.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="within" tabindex="-1">within</h3>
+<p>Returns <code>true</code> if the feature being evaluated is inside the pre-defined geometry boundary, <code>false</code> otherwise. The expression has one argument which must be a valid GeoJSON Polygon/Multi-Polygon object. The expression only evaluates on <code>Point</code> or <code>LineString</code> feature. For <code>Point</code> feature, The expression will return false if any point of the feature is on the boundary or outside the boundary. For <code>LineString</code> feature, the expression will return false if the line is fully outside the boundary, or the line is partially intersecting the boundary, which means either part of the line is outside of the boundary, or end point of the line lies on the boundary.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>1.9.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ramps%2C-scales%2C-curves" tabindex="-1">Ramps, scales, curves</h2>
+<h3 id="step" tabindex="-1">step</h3>
+<p>Produces discrete, stepped results by evaluating a piecewise-constant function defined by pairs of input and output values (&quot;stops&quot;). The <code>input</code> may be any numeric expression (e.g., <code>[&quot;get&quot;, &quot;population&quot;]</code>). Stop inputs must be numeric literals in strictly ascending order. Returns the output value of the stop just less than the input, or the first output if the input is less than the first stop.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.42.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interpolate" tabindex="-1">interpolate</h3>
+<p>Produces continuous, smooth results by interpolating between pairs of input and output values (&quot;stops&quot;). The <code>input</code> may be any numeric expression (e.g., <code>[&quot;get&quot;, &quot;population&quot;]</code>). Stop inputs must be numeric literals in strictly ascending order. The output type must be <code>number</code>, <code>array&lt;number&gt;</code>, or <code>color</code>.</p>
+<p>Interpolation types:</p>
+<ul>
+<li><code>[&quot;linear&quot;]</code>: interpolates linearly between the pair of stops just less than and just greater than the input.</li>
+<li><code>[&quot;exponential&quot;, base]</code>: interpolates exponentially between the stops just less than and just greater than the input. <code>base</code> controls the rate at which the output increases: higher values make the output increase more towards the high end of the range. With values close to 1 the output increases linearly.</li>
+<li><code>[&quot;cubic-bezier&quot;, x1, y1, x2, y2]</code>: interpolates using the cubic bezier curve defined by the given control points.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.42.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interpolate-hcl" tabindex="-1">interpolate-hcl</h3>
+<p>Produces continuous, smooth results by interpolating between pairs of input and output values (&quot;stops&quot;). Works like <code>interpolate</code>, but the output type must be <code>color</code>, and the interpolation is performed in the Hue-Chroma-Luminance color space.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.49.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interpolate-lab" tabindex="-1">interpolate-lab</h3>
+<p>Produces continuous, smooth results by interpolating between pairs of input and output values (&quot;stops&quot;). Works like <code>interpolate</code>, but the output type must be <code>color</code>, and the interpolation is performed in the CIELAB color space.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.49.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h2 id="math" tabindex="-1">Math</h2>
+<h3 id="ln2" tabindex="-1">ln2</h3>
+<p>Returns mathematical constant ln(2).</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pi" tabindex="-1">pi</h3>
+<p>Returns the mathematical constant pi.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="e" tabindex="-1">e</h3>
+<p>Returns the mathematical constant e.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%2B" tabindex="-1">+</h3>
+<p>Returns the sum of the inputs.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="*" tabindex="-1">*</h3>
+<p>Returns the product of the inputs.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-" tabindex="-1">-</h3>
+<p>For two inputs, returns the result of subtracting the second input from the first. For a single input, returns the result of subtracting it from 0.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%2F" tabindex="-1">/</h3>
+<p>Returns the result of floating point division of the first input by the second.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%25" tabindex="-1">%</h3>
+<p>Returns the remainder after integer division of the first input by the second.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%5E" tabindex="-1">^</h3>
+<p>Returns the result of raising the first input to the power specified by the second.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sqrt" tabindex="-1">sqrt</h3>
+<p>Returns the square root of the input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.42.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="log10" tabindex="-1">log10</h3>
+<p>Returns the base-ten logarithm of the input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ln" tabindex="-1">ln</h3>
+<p>Returns the natural logarithm of the input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="log2" tabindex="-1">log2</h3>
+<p>Returns the base-two logarithm of the input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sin" tabindex="-1">sin</h3>
+<p>Returns the sine of the input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cos" tabindex="-1">cos</h3>
+<p>Returns the cosine of the input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tan" tabindex="-1">tan</h3>
+<p>Returns the tangent of the input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="asin" tabindex="-1">asin</h3>
+<p>Returns the arcsine of the input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acos" tabindex="-1">acos</h3>
+<p>Returns the arccosine of the input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="atan" tabindex="-1">atan</h3>
+<p>Returns the arctangent of the input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="min" tabindex="-1">min</h3>
+<p>Returns the minimum value of the inputs.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="max" tabindex="-1">max</h3>
+<p>Returns the maximum value of the inputs.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="round" tabindex="-1">round</h3>
+<p>Rounds the input to the nearest integer. Halfway values are rounded away from zero. For example, <code>[&quot;round&quot;, -1.5]</code> evaluates to -2.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.45.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="abs" tabindex="-1">abs</h3>
+<p>Returns the absolute value of the input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.45.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ceil" tabindex="-1">ceil</h3>
+<p>Returns the smallest integer that is greater than or equal to the input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.45.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="floor" tabindex="-1">floor</h3>
+<p>Returns the largest integer that is less than or equal to the input.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.45.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="color" tabindex="-1">Color</h2>
+<h3 id="to-rgba" tabindex="-1">to-rgba</h3>
+<p>Returns a four-element array containing the input color's red, green, blue, and alpha components, in that order.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rgb" tabindex="-1">rgb</h3>
+<p>Creates a color value from red, green, and blue components, which must range between 0 and 255, and an alpha component of 1. If any component is out of range, the expression is an error.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rgba" tabindex="-1">rgba</h3>
+<p>Creates a color value from red, green, blue components, which must range between 0 and 255, and an alpha component which must range between 0 and 1. If any component is out of range, the expression is an error.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="feature-data" tabindex="-1">Feature data</h2>
+<h3 id="properties" tabindex="-1">properties</h3>
+<p>Gets the feature properties object.  Note that in some cases, it may be more efficient to use [&quot;get&quot;, &quot;property_name&quot;] directly.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="feature-state" tabindex="-1">feature-state</h3>
+<p>Retrieves a property value from the current feature's state. Returns null if the requested property is not present on the feature's state. A feature's state is not part of the GeoJSON or vector tile data, and must be set programmatically on each feature. Features are identified by their <code>id</code> attribute, which must be an integer or a string that can be cast to an integer. Note that [&quot;feature-state&quot;] can only be used with paint properties that support data-driven styling.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.46.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="geometry-type" tabindex="-1">geometry-type</h3>
+<p>Gets the feature's geometry type: Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="id" tabindex="-1">id</h3>
+<p>Gets the feature's id, if it has one.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-progress" tabindex="-1">line-progress</h3>
+<p>Gets the progress along a gradient line. Can only be used in the <code>line-gradient</code> property.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.45.0</td>
+<td>6.5.0</td>
+<td>4.6.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="accumulated" tabindex="-1">accumulated</h3>
+<p>Gets the value of a cluster property accumulated so far. Can only be used in the <code>clusterProperties</code> option of a clustered GeoJSON source.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.53.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h2 id="zoom" tabindex="-1">Zoom</h2>
+<h3 id="zoom-1" tabindex="-1">zoom</h3>
+<p>Gets the current zoom level.  Note that in style layout and paint properties, [&quot;zoom&quot;] may only appear as the input to a top-level &quot;step&quot; or &quot;interpolate&quot; expression.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="heatmap" tabindex="-1">Heatmap</h2>
+<h3 id="heatmap-density" tabindex="-1">heatmap-density</h3>
+<p>Gets the kernel density estimation of a pixel in a heatmap layer, which is a relative measure of how many data points are crowded around a particular pixel. Can only be used in the <code>heatmap-color</code> property.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="string-1" tabindex="-1">String</h2>
+<h3 id="is-supported-script" tabindex="-1">is-supported-script</h3>
+<p>Returns <code>true</code> if the input string is expected to render legibly. Returns <code>false</code> if the input string contains sections that cannot be rendered without potential loss of meaning (e.g. Indic scripts that require complex text shaping, or right-to-left scripts if the the <code>mapbox-gl-rtl-text</code> plugin is not in use in Mapbox GL JS).</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.45.0</td>
+<td>6.6.0</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="upcase" tabindex="-1">upcase</h3>
+<p>Returns the input string converted to uppercase. Follows the Unicode Default Case Conversion algorithm and the locale-insensitive case mappings in the Unicode Character Database.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="downcase" tabindex="-1">downcase</h3>
+<p>Returns the input string converted to lowercase. Follows the Unicode Default Case Conversion algorithm and the locale-insensitive case mappings in the Unicode Character Database.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="concat" tabindex="-1">concat</h3>
+<p>Returns a <code>string</code> consisting of the concatenation of the inputs. Each input is converted to a string as if by <code>to-string</code>.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.41.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="resolved-locale" tabindex="-1">resolved-locale</h3>
+<p>Returns the IETF language tag of the locale being used by the provided <code>collator</code>. This can be used to determine the default system locale, or to determine if a requested locale was successfully loaded.</p>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.45.0</td>
+<td>6.5.0</td>
+<td>4.2.0</td>
+</tr>
+</tbody>
+</table>
+
+                        </article>
+                    </section>
+    
+                        <footer>
+                            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> on <span id="generated-date"></span>
+                        <script>
+                        // 获取当前日期并插入到页面中
+                        setInterval(function(){
+                            document.getElementById('generated-date').textContent = new Date().toLocaleString();
+                        }, 1000);
+
+                        </script>
+                        </footer>
+                    </div>
+                </div>
+
+                <script>prettyPrint();</script>
+                <script src="scripts/linenumber.js"></script>
+                <script src="scripts/main.js"></script>
+                </body>
+                </html>
+            

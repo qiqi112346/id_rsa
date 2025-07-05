@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>符号库查询</title>
+    <!--引入行业标绘脚本库-->
+    <!-- jquery -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/jquery/jquery-3.7.1.min.js"></script>
+    <!-- cesium -->
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!-- plot -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-plot.min.js"></script>
+    <!-- panel -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotPanel/index.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotPanel/index.css"/>
+    <!-- menu -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotMenu/index.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/exampleThirdParty/plot-profess/PlotMenu/index.css"
+    />
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha384-SOnAn/m2fVJCwnbEYgD4xzrPtvsXdElhOVvR8ND1YjB5nhGNwwf7nBQlhfAwHAZC" crossorigin="anonymous"/>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/plot/symbol-search.css"
+    />
+    <script>
+      'use strict'
+
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加天地图
+        addTDT()
+        //初始化标绘符号管理器，资源加载完毕后初始化示例UI
+        initPlotManager()
+        //视点跳转
+        flyTo()
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //显示鼠标位置
+        viewer.showPosition()
+        //抗锯齿处理
+        viewer.scene.fxaa = true
+        viewer.scene.postProcessStages.fxaa.enabled = true
+      }
+
+      //加载天地图底图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //初始化标绘符号管理器
+      function initPlotManager() {
+        //标绘工具绑定在window.Zondy上
+        const zondy = window.zondy
+        // 获取标绘类
+        const plot= zondy.plot
+        const {
+          // 符号管理器
+          SymbolManager
+        } = plot
+        // 符号库路径
+        const symbolUrl = `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/symbolLib.json`
+        const symbolOptions = {
+          // 符号库字体路径
+          fontURL: `http://webclient.smaryun.com:8200/Plot/plot-sample/fonts/`,
+          // 静态资源路径
+          baseUrl: `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/`
+        }
+
+        // 创建符号管理器
+        // 1.可传入符号库url链接
+        let manager = new SymbolManager(symbolUrl, symbolOptions)
+        // 2.可传入json对象
+        //let manager = new SymbolManager(symbolObject, symbolOptions);
+        // 请求获取符号库
+        manager.getSymbols().then(() => {
+          //初始化示例UI
+          initUI(manager)
+        })
+      }
+
+      /**
+       * 初始化UI
+       * @param manager 符号管理器对象
+       * */
+      function initUI(manager) {
+        // ui 插件
+        const { PlotMenu, PlotPanel } = window.webclientPlot
+        //初始化示例UI
+        //创建右侧符号显示面板
+        let panel = new PlotPanel('plot-show-table', {})
+        let listValue = []
+        if (panel) {
+          const body = panel.getBody()
+          for (let i = 0; i < 4; i++) {
+            let div = document.createElement('div')
+            div.setAttribute('class', 'list')
+            if (i === 3) {
+              let img = document.createElement('img')
+              div.appendChild(img)
+            } else {
+              let div1 = document.createElement('div')
+              div1.setAttribute('class', 'key')
+              let div2 = document.createElement('div')
+              div2.setAttribute('class', 'key')
+              div.appendChild(div1)
+              div.appendChild(div2)
+            }
+            listValue.push(div)
+            body.appendChild(div)
+          }
+        }
+        // 创建左侧符号目录树
+        new PlotMenu(manager, (id) => {
+          // 获取符号库节点
+          const node = manager.getLeafByID(id)
+          listValue.forEach((list, i) => {
+            if (i === 0) {
+              Array.from(list.children)[0].innerText = '符号id'
+              Array.from(list.children)[1].innerText = node.id
+            }
+            if (i === 1) {
+              Array.from(list.children)[0].innerText = '符号名称'
+              Array.from(list.children)[1].innerText = node.name
+            }
+            if (i === 2) {
+              Array.from(list.children)[0].innerText = '符号类型'
+              Array.from(list.children)[1].innerText = node.type
+            }
+            if (i === 3) {
+              Array.from(list.children)[0].parentNode.removeChild(
+                list.children[0]
+              )
+              const img = manager.getImageByID(id)
+              list.appendChild(img)
+            }
+          })
+        })
+      }
+      //视点跳转
+      function flyTo() {
+        //飞到指定视角
+        sceneView.flyTo({
+          center: [114, 29.83, 18000],
+          duration: 2,
+          orientation: {
+            heading: Cesium.Math.toRadians(0), //方位角
+            pitch: Cesium.Math.toRadians(-40.0), //俯仰角
+            roll: 0.0 //翻滚角
+          }
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer">
+      <div id="side"></div>
+      <div id="content">
+        <div id="plot-show-table"></div>
+      </div>
+    </div>
+  </body>
+</html>

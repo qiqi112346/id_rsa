@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>符号库使用</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha384-SOnAn/m2fVJCwnbEYgD4xzrPtvsXdElhOVvR8ND1YjB5nhGNwwf7nBQlhfAwHAZC"
+      crossorigin="anonymous"
+    />
+    <!--引入行业标绘脚本库-->
+    <script
+      include="menu,panel,2D"
+      src="./static/libs/include-plot-local.js"
+    ></script>
+    <script>
+      'use strict'
+
+      //地图初始化函数
+      function init() {
+        /**
+         * ***********************地图框架部分***************************
+         */
+
+        const view = window.initView('content')
+
+        /**
+         * ***********************行业标绘库部分***************************
+         */
+
+        const zondy = window.zondy
+        const Plot = zondy.plot
+        const {
+          SymbolManager,
+          FabricLayer,
+          PlotLayer2DGroup,
+          PlotLayer2D,
+          DrawTool
+        } = Plot
+
+
+        const symbolUrl = `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/symbolLib.json`
+        const symbolOptions = {
+          fontURL: `http://webclient.smaryun.com:8200/Plot/plot-sample/fonts/`,
+          baseUrl: `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/`
+        }
+
+        // #创建符号管理器
+        // 1.可传入符号库url链接
+        let manager = new SymbolManager(symbolUrl, symbolOptions)
+        let drawTool, layer1, plotLayer2DGroup, listValue =[]
+        console.log('manager: ', manager)
+        // 2.可传入json对象
+        //let manager = new SymbolManager(symbolObject, symbolOptions);
+        // 获取overlay图层
+        const canvas = new FabricLayer(view, PlotLayer2DGroup)
+        // #请求获取符号库
+        manager.getSymbols().then(() => {
+          // 创建二维图层组
+          plotLayer2DGroup = canvas.getFabricCanvas()
+          // 创建二维图层
+          layer1 = new PlotLayer2D()
+          // 设置图层标绘元素缩放比，默认为1
+          layer1.setPlotSize(1)
+          // 添加图层
+          plotLayer2DGroup.addLayer(layer1)
+
+          // 创建绘制工具
+          drawTool = new DrawTool(layer1, {
+            // 新增标绘对象回调
+            addedPlot: function (plot) {}
+          })
+          // 创建左侧符号目录树，并绑定绘制方法
+          function drawFunc(id) {
+            // 开始绘制
+            drawTool.stopDraw()
+            // 查询当前绘制符号参数
+            const node = manager.getLeafByID(id)
+            drawTool.drawPlot(node)
+            listValue.forEach((list, i) => {
+              if (i === 0) {
+                Array.from(list.children)[0].innerText = '符号id'
+                Array.from(list.children)[1].innerText = node.id
+              }
+              if (i === 1) {
+                Array.from(list.children)[0].innerText = '符号名称'
+                Array.from(list.children)[1].innerText = node.name
+              }
+              if (i === 2) {
+                Array.from(list.children)[0].innerText = '符号类型'
+                Array.from(list.children)[1].innerText = node.type
+              }
+              if (i === 3) {
+                Array.from(list.children)[0].parentNode.removeChild(
+                  list.children[0]
+                )
+                const img = manager.getImageByID(id)
+                const imgShow = document.createElement('div')
+                imgShow.style.width = '100px'
+                imgShow.style.height = '100px'
+                imgShow.style.backgroundImage = `url(${img.src})`
+                imgShow.style.backgroundSize = `cover`
+                list.appendChild(imgShow)
+              }
+            })
+          }
+
+        /**
+         * ***********************ui部分***************************
+         */
+          const { PlotMenu,PlotPanel } = window.webclientPlot
+
+          // 创建左侧符号目录树，并绑定绘制方法
+          new PlotMenu(manager, drawFunc)
+
+          //初始化ui
+          const showTabel = document.createElement('div')
+          showTabel.id = 'plot-show-table'
+          document.querySelector('.sidebar-menu').appendChild(showTabel)
+          const panel = new PlotPanel('plot-show-table')
+          if (panel) {
+            const body = panel.getBody()
+            for (let i = 0; i < 4; i++) {
+              let div = document.createElement('div')
+              div.setAttribute('class', 'list')
+              if (i === 3) {
+                let img = document.createElement('img')
+                div.appendChild(img)
+              } else {
+                let div1 = document.createElement('div')
+                div1.setAttribute('class', 'key')
+                let div2 = document.createElement('div')
+                div2.setAttribute('class', 'key')
+                div.appendChild(div1)
+                div.appendChild(div2)
+              }
+              listValue.push(div)
+              body.appendChild(div)
+            }
+          }
+        })
+
+        // #符号库结构
+        // 1.manager._leaves 符号库节点扁平化数组
+        // 2.manager._symbols 符号库节点（有目录结构）
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-viewer">
+      <div id="side">
+      </div>
+      <div id="content" style="position: relative"></div>
+    </div>
+  </body>
+  <style>
+    #mapgis-viewer {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      position: relative;
+    }
+    #side {
+      flex: 1;
+      height: 100%;
+    }
+    #content {
+      height: 100%;
+      flex: 6.5;
+      position: relative;
+    }
+    #plot-show-table {
+      position: absolute;
+      bottom: 40px;
+      display: block;
+    }
+
+    #plot-show-table .list {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      border-left: 1px solid #ccc;
+      border-top: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+    }
+    #plot-show-table .list:last-child {
+      border-bottom: 1px solid #ccc;
+    }
+    #plot-show-table .list .key {
+      flex: 1;
+      padding: 5px 5px;
+      border-right: 1px solid #ccc;
+    }
+    #plot-show-table .list .value {
+      flex: 1;
+      padding: 5px 5px;
+    }
+  </style>
+</html>

@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> MapvBaseLayer</title>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+                <h1> MapGIS Client for JavaScript API</h1>
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/common/api/common-mapgis/index.html"
+                        >
+                            Common
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/cesium/api/cesium-mapgis/index.html"
+                        >
+                            Cesium-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/mapboxgl/api/mapboxgl-mapgis/index.html"
+                        >
+                            MapboxGL-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/leaflet/api/leaflet-mapgis/index.html"
+                        >
+                            Leaflet-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/openlayers/api/openLayers-mapgis/index.html"
+                        >
+                            OpenLayers-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/video/api/video-mapgis/index.html"
+                        >
+                            Video-Plugin
+                        </a>
+                    
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            <div>
+                <span class="mapgis-api-document-span"><a href="index.html">API文档</a></span>
+            </div>
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="搜索文档..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <div class="category"><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">扩展模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISMapImageLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISMapImageLayer.html">ArcGISMapImageLayer</a><span style="display: none;"><p>ArcGIS地图图片图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISTileLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISTileLayer.html">ArcGISTileLayer</a><span style="display: none;"><p>ArcGIS瓦片图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="EchartsLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="EchartsLayer.html">EchartsLayer</a><span style="display: none;"><p>Echarts图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="FeatureLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FeatureLayer.html">FeatureLayer</a><span style="display: none;"><p>要素图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="IGSMapImageLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="IGSMapImageLayer.html">IGSMapImageLayer</a><span style="display: none;"><p>地图图片图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="IGSTileLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="IGSTileLayer.html">IGSTileLayer</a><span style="display: none;"><p>IGS瓦片图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapLayer.html">MapLayer</a><span style="display: none;"><p>屏幕出一张图图层基类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapVLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapVLayer.html">MapVLayer</a><span style="display: none;"><p>MapV图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TileLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TileLayer.html">TileLayer</a><span style="display: none;"><p>带裁剪功能的瓦片图层基类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TileLayerWMS"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TileLayerWMS.html">TileLayerWMS</a><span style="display: none;"><p>WMS图层基类(相比于原生的L.TileLayer.WMS, 此图层支持空间裁剪功能)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="VectorTileLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="VectorTileLayer.html">VectorTileLayer</a><span style="display: none;"><p>矢量瓦片图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebMapServiceLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapServiceLayer.html">WebMapServiceLayer</a><span style="display: none;"><p>WMS图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebMapTileServiceLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapTileServiceLayer.html">WebMapTileServiceLayer</a><span style="display: none;"><p>WMTS图层(Leaflet)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebTileLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebTileLayer.html">WebTileLayer</a><span style="display: none;"><p>网络瓦片图层(Leaflet)</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">工具类模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="FeatureLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FeatureLayerUtil.html">FeatureLayerUtil</a><span style="display: none;"><p>要素图层工具类(Leaflet)</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">视图模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapView"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapView.html">MapView</a><span style="display: none;"><p>二维场景视图(leaflet引擎)，对地图引擎进行管理，如果要对地图图层进行管理请参考<code>Map</code>，<br/>
+参考示例：
+<a href='#MapView'>[初始化二维场景视图]</a>
+<br>[ES5引入方式]：<br/>
+zondy.leaflet.MapView() <br/>
+[ES6引入方式]：<br/>
+import { MapView } from '@mapgis/webclient-leaflet-plugin' <br/></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Popup"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Popup.html">Popup</a><span style="display: none;"><p>二维场景信息弹窗(leaflet引擎)
+参考示例：
+<a href='#MapView'>[初始化二维场景视图]</a>
+[ES6引入方式]：<br/>
+import { Popup } from '@mapgis/webclient-leaflet-plugin' <br/>
+自定义样式说明：<br/>
+zondy-popup__content 弹窗容器样式<br/>
+zondy-popup__tip 弹窗对话框箭头样式<br/>
+zondy-popup__header 弹窗头部样式<br/>
+zondy-popup__content 弹窗主体样式<br/>
+zondy-popup__footer 弹窗底部样式<br/></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Screenshot"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Screenshot.html">Screenshot</a><span style="display: none;"><p>屏幕打印工具</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">草图编辑模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SketchEditorLeaflet"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SketchEditorLeaflet.html">SketchEditorLeaflet</a><span style="display: none;"><p>二维Leaflet引擎草图编辑类<br/>
+<br>[ES5引入方式]：<br/>
+const { SketchEditor } = zondy.leaflet.tool.sketch <br/>
+[ES6引入方式]：<br/>
+import { SketchEditor } from &quot;@mapgis/webclient-leaflet-plugin&quot; <br/></p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">渲染器模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="zondy.themelayer.GraphThemeLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="zondy.themelayer.GraphThemeLayer.html">GraphThemeLayer</a><span style="display: none;"><p>统计专题图通过为每个要素绘制统计图表来反映其对应的专题值的大小。它可同时表示多个字段属性信息，在区域本身与各区域之间形成横向和纵向的对比。<br>统计专题图多用于具有相关数量特征的地图上，比如表示不同地区多年的粮食产量、GDP、人口等，不同时段客运量、地铁流量等。目前提供的统计图类型有：柱状图（Bar），折线图（Line），饼图（Pie），三维柱状图（Bar3D），点状图（Point），环状图（Ring）。</p></span></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header id="page-title" class="page-title">
+                    <span class="page-title-main">类名</span>
+                    <span class="page-title-sub">MapvBaseLayer</span>
+                </header>
+                
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="MapvBaseLayer">
+        <a class="href-link" href="#MapvBaseLayer">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                new MapvBaseLayer<span class="signature">(map, dataSet, options, leafletLayer)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>map</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>传入的leaflet的地图对象</p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>dataSet</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">MapvDataSet</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>传入的mapv的属性。 <br></p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">MapvOption</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>可选参数。<br></p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>leafletLayer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>传入的leaflet的实际渲染图层。<br></p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+    
+        <pre class="prettyprint"><code>options = {
+    zIndex: 1, // 层级
+    size: 5, // 大小值
+    unit: 'px', // 'px': 以像素为单位绘制,默认值。'm': 以米制为单位绘制，会跟随地图比例放大缩小
+    mixBlendMode: 'normal', // 不同图层之间的叠加模式，参考[https://developer.mozilla.org/en-US/docs/Web/CSS/mix-blend-mode](https://developer.mozilla.org/en-US/docs/Web/CSS/mix-blend-mode)
+    fillStyle: 'rgba(200, 200, 50, 1)', // 填充颜色
+    strokeStyle: 'rgba(0, 0, 255, 1)', // 描边颜色
+    lineWidth: 4, // 描边宽度
+    globalAlpha: 1, // 透明度
+    globalCompositeOperation: 'lighter', // 颜色叠加方式
+    coordType: 'bd09ll', // 可选百度墨卡托坐标类型bd09mc和百度经纬度坐标类型bd09ll(默认)
+    shadowColor: 'rgba(255, 255, 255, 1)', // 投影颜色
+    shadowBlur: 35,  // 投影模糊级数
+    updateCallback: function (time) { // 重绘回调函数，如果是时间动画、返回当前帧的时间
+    },
+    shadowOffsetX: 0,
+    shadowOffsetY: 0,
+    context: '2d', // 可选2d和webgl，webgl目前只支持画simple模式的点和线
+    lineCap: 'butt',
+    lineJoin: 'miter',
+    miterLimit: 10,
+    methods: { // 一些事件回调函数
+        click: function (item) { // 点击事件，返回对应点击元素的对象值
+            console.log(item);
+        },
+        mousemove: function(item) { // 鼠标移动事件，对应鼠标经过的元素对象值
+            console.log(item);
+        }
+    },
+    animation: {
+        type: 'time', // 按时间展示动画
+        stepsRange: { // 动画时间范围,time字段中值
+            start: 0,
+            end: 100
+        },
+        trails: 10, // 时间动画的拖尾大小
+        duration: 5, // 单个动画的时间，单位秒
+    }
+}</code></pre>
+    
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='function'>方法</h3>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="clickEvent">
+        <a class="href-link" href="#clickEvent">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                clickEvent<span class="signature">(e)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>百度mapv原本的事件只有clickEvent和mousemoveEvent</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>e</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>点击事件对象 {latlng, layerPoint, containerPoint, originalEvent}</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+    
+        <pre class="prettyprint"><code>//mapv.map.Layer.clickEvent
+clickEvent(pixel, e) {
+   var dataItem = this.isPointInPath(this.getContext(), pixel);
+   if (dataItem) {
+      this.options.methods.click(dataItem, e);
+   } else {
+      this.options.methods.click(null, e);
+   }
+ }</code></pre>
+    
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="initDevicePixelRatio">
+        <a class="href-link" href="#initDevicePixelRatio">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                initDevicePixelRatio<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>window.devicePixelRatio是设备上物理像素和设备独立像素(device-independent pixels (dips))的比例。
+公式表示就是：window.devicePixelRatio = 物理像素 / dips,该函数主要应用与移动设备</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="mousemoveEvent">
+        <a class="href-link" href="#mousemoveEvent">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                mousemoveEvent<span class="signature">(e)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>百度mapv原本的事件只有clickEvent和mousemoveEvent</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>e</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  <td class="description last"><p>点击事件对象 {latlng, layerPoint, containerPoint, originalEvent}</p></td>
+</tr>
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+    
+        <pre class="prettyprint"><code>//mapv.map.Layer.mousemoveEvent
+mousemoveEvent(pixel, e) {
+  var dataItem = this.isPointInPath(this.getContext(), pixel);
+  if (dataItem) {
+      this.options.methods.mousemove(dataItem, e);
+  } else {
+      this.options.methods.mousemove(null, e);
+  }
+}</code></pre>
+    
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>文档生成<a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="http://www.smaryun.com" target="_blank">司马云</a> <span>© 2023 云生态圈</span>
+                        <a href="http://webclient.smaryun.com:8086/#/index" target="_blank">MapGIS Client for JavaScript</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#page-title">构造函数</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#member">成员变量</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#function">方法</a>
+            </div>
+            <div>
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#event">事件</a>
+            </div>
+        </div>
+    </div>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

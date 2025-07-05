@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>隧道开挖模拟</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/tool.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer
+      // 几何体裁剪类
+      let excavation
+      // 裁剪的几何体
+      let geo
+      // 裁剪的工具
+      let cutTool = null
+      // 要裁剪的M3D列表
+      let layerList = []
+      // 漫游工具类
+      let animation
+      // 模型漫游当前分段的索引
+      let routePointIndex = null
+      // 取得jquery对象
+      let $ = layui.$
+      // 隧道半径
+      const tunnelRadius = 3
+      // 隧道深度
+      const tunnelHeight = -343
+      // 动画持续时间
+      let animationDuration = 60
+      let timer = null
+
+      // 漫游路线坐标点
+      const defaultPositions = [
+        [120.601, 30.0128],
+        [120.606, 30.0128],
+        [120.606, 30.0091],
+        [120.601, 30.0091]
+      ]
+
+      // 动态剖切的坐标
+      let cutPositions = JSON.parse(JSON.stringify(defaultPositions))
+
+      // 跟随视角漫游的方向角、俯仰角数组，不同路线分段中需要更新
+      const headingAndPitchOfType1 = [
+        { heading: 6.27176, pitch: -0.71053 },
+        { heading: 1.54585, pitch: -0.48452 },
+        { heading: 3.11466, pitch: -0.67442 }
+      ]
+
+      // 第一人称视角漫游的方向角、俯仰角数组
+      const headingAndPitchOfType2 = [{ heading: 1.57078, pitch: 0 }]
+
+      // 开始开挖
+      function startAddClipGeometry() {
+        if (geo && geo.stopAnimation) {
+          geo.stopAnimation()
+        }
+        // 带顶点动画的圆管体积线几何体
+        let geometry = {
+          type: Cesium.ClippingGeometryType.POLYLINEVOLUMEANIMATION,
+          radius: tunnelRadius,
+          animationDuration: animationDuration,
+          positions: getPositions(tunnelHeight)
+        }
+        geo = excavation.addClipGeometry({
+          geometry: geometry
+        })
+        // 回调
+        geo.animationUpdateEvent.addEventListener((centerPos, time) => {
+          // 开挖过程中的回调
+        })
+        geo.animationStopEvent.addEventListener((centerPos, time) => {
+          // 开挖结束时的回调
+          $('.pause-btn').text('暂停开挖')
+        })
+      }
+
+      // 创建带顶点动画的圆管
+      function computeCircle() {
+        let radius = tunnelRadius
+        let positions = []
+        for (let i = 0; i < 360; i++) {
+          let radians = Cesium.Math.toRadians(i)
+          positions.push(
+            new Cesium.Cartesian2(
+              radius * Math.cos(radians),
+              radius * Math.sin(radians)
+            )
+          )
+        }
+        return positions
+      }
+
+      // 根据默认路径的经纬度和高度生成坐标数组
+      function getPositions(height) {
+        let positions = []
+        for (let item of defaultPositions) {
+          positions.push(
+            Cesium.Cartesian3.fromDegrees(item[0], item[1], height)
+          )
+        }
+        return positions
+      }
+
+      // 开始
+      function restart() {
+        if (geo.playAnimation) {
+          geo.playAnimation()
+        }
+        if (animation.animationType === 1) {
+          doCutting()
+        } else {
+          removeCutting()
+        }
+        $('.start-or-pause-btn').addClass('beginning')
+        animation.start()
+        setRemainder()
+      }
+
+      // 停止/继续动画
+      function pauseOrContinue() {
+        if (routePointIndex === null) {
+          // 如果动画没开始，则先restart
+          restart()
+        } else {
+          if (!$('.start-or-pause-btn').hasClass('beginning')) {
+            // 开始
+            geo.continueAnimation()
+            animation.pause = false
+            $('.start-or-pause-btn').addClass('beginning')
+          } else {
+            // 暂停
+            geo.pauseAnimation()
+            animation.pause = true
+            $('.start-or-pause-btn').removeClass('beginning')
+          }
+        }
+      }
+
+      //添加一个剖切工具
+      function addCuttingTool() {
+        if (layerList.length > 0) {
+          //代表模型都添加完了
+          cutTool = new zondy.cesium.CuttingTool(viewer, layerList, {
+            onErrorCallback: function (type, msg) {
+              console.log('错误信息：' + type + ':' + msg)
+            }
+          })
+        }
+      }
+
+      // 构建裁剪体
+      function doCutting() {
+        let pArr = []
+        for (let item of cutPositions) {
+          let position = Cesium.Cartesian3.fromDegrees(
+            item[0],
+            item[1],
+            -100,
+            Cesium.Ellipsoid.WGS84,
+            new Cesium.Cartesian3()
+          )
+          let c1 = Cesium.Cartographic.fromCartesian(position)
+          let p1 = new Cesium.Cartesian3(
+            Cesium.Math.toDegrees(c1.longitude),
+            Cesium.Math.toDegrees(c1.latitude),
+            c1.height
+          )
+          pArr.push(p1)
+        }
+        cutTool.createModelCuttingVolume(pArr, -500, 100, {
+          unionClippingRegions: true,
+          distance: 0,
+          showCuttingPlane: false
+        })
+      }
+
+      // 移除剪裁体
+      function removeCutting() {
+        if (cutTool) {
+          cutTool.removeAll()
+        }
+      }
+
+      //初始化漫游工具
+      function initAnimationTool() {
+        // 行走路线坐标数组
+        let height = tunnelHeight + tunnelRadius
+        let pathPositions = getPositions(height)
+        // 定义动画漫游对象
+        animation = new zondy.cesium.AnimationTool(viewer, {
+          // 漫游的方向角
+          heading: headingAndPitchOfType1[0].heading,
+          // 漫游的俯仰角
+          pitch: headingAndPitchOfType1[0].pitch,
+          // 相机距离模型的距离（米）
+          range: 100,
+          // 设置漫游的视角类型。0：正常，不移动相机；1：跟随；2：锁定第一视角；3：上帝视角
+          animationType: 1,
+          // 是否循环漫游动画
+          isLoop: false,
+          // 是否显示漫游路径
+          showPath: false,
+          // 漫游路径(世界坐标点数组)
+          positions: pathPositions,
+          // 漫游速度(m/s)，通过回调函数callback里拿到总路程totalDistance，再除以动画时间得到速度
+          speed: 22.914,
+          // 倍速
+          speedupFactor: 1,
+          // 附加高程
+          exHeight: 0,
+          // 是否显示用时和距离提示信息
+          showInfo: false,
+          // 漫游的模型对象的url，为空表示不显示
+          modelUrl:
+            'http://webclient.smaryun.com:8200/3DData/Model/glb/TunnelBoringMachine.glb',
+          // 模型参数
+          model: {
+            //放大比例
+            scale: 1,
+            //模型像素最小值
+            minimumPixelSize: 1
+          },
+          // 路径插值算法。可选：拉格朗日算法Cesium.LagrangePolynomialApproximation、线性插值 Cesium.LinearApproximation、埃尔米特插值插值Cesium.HermitePolynomialApproximation
+          interpolationAlgorithm: Cesium.LinearApproximation,
+          //是否需要将较大转弯点处理为圆弧
+          // isProcessCorner: true,
+          //设置判断为转弯点的角度的最大值，不超过150的转角会被执行插值，处理为圆弧
+          // maxAngle: 180.0,
+          //转弯处往圆弧曲线上插值点的步长，点个数=1/curveStep
+          // curveStep: 0.01,
+          // 是否挂载动态扫描特效
+          isAddScanEffect: false,
+          // 是否获取路径点的真实高程
+          isGetRealHeight: false,
+          // 模型方位角
+          modelHeading: 0,
+          // 模型的倾斜角
+          modelRoll: 0,
+          // 设置模型偏移
+          modelOffset: { offsetX: -17, offsetY: 0, offsetZ: 0 },
+          // 第一人称视角下，相机焦点的偏移值
+          firstPersonCameraFocusOffset: { offsetX: 0, offsetY: 0, offsetZ: 0 },
+          // 每帧动画的回调
+          callback: function (result) {
+            // console.log('动画信息：', result);
+            if (result.remainDistance === 0) {
+              // 运动结束
+              routePointIndex = null
+              $('.start-or-pause-btn').removeClass('beginning')
+            } else {
+              geo.animationProgress =
+                1 - result.remainDistance / result.totalDistance
+              routePointIndex = result.routePointIndex
+              // 不同的视角类型，设置不同的参数
+              if (animation.animationType === 2) {
+                // 第一人称视角时，方向角和俯仰角变化
+                animation.heading = headingAndPitchOfType2[0].heading
+                animation.pitch = headingAndPitchOfType2[0].pitch
+              } else if (animation.animationType === 1) {
+                // 当跟随视角时，漫游到不同分段，方向角和俯仰角需要动态变化
+                if (
+                  result.routePointIndex === 0 &&
+                  result.currenPositionStatus === 1
+                ) {
+                  // 进入第一段时修改视角
+                  animation.heading = headingAndPitchOfType1[0].heading
+                  animation.pitch = headingAndPitchOfType1[0].pitch
+                } else if (
+                  result.remainDistance >= 891 &&
+                  result.remainDistance < 893
+                ) {
+                  // 通过剩余距离判断进入第二段时修改视角
+                  animation.heading = headingAndPitchOfType1[1].heading
+                  animation.pitch = headingAndPitchOfType1[1].pitch
+                } else if (
+                  result.remainDistance >= 476 &&
+                  result.remainDistance < 478
+                ) {
+                  // 通过剩余距离判断进入第三段时修改视角
+                  animation.heading = headingAndPitchOfType1[2].heading
+                  animation.pitch = headingAndPitchOfType1[2].pitch
+                }
+              }
+            }
+          }
+        })
+      }
+
+      // 修改漫游模型偏移
+      function changeModelOffset(type, value) {
+        value = parseInt(value)
+        switch (type) {
+          case 'x':
+            animation.modelOffset.offsetX = value
+            break
+          case 'y':
+            animation.modelOffset.offsetY = value
+            break
+          case 'z':
+            animation.modelOffset.offsetZ = value
+            break
+          default:
+            break
+        }
+      }
+
+      // 播放时间倒计时
+      function setRemainder() {
+        let remainder = animationDuration
+        if (timer) {
+          clearInterval(timer)
+        }
+        timer = setInterval(
+          (function setTime() {
+            if (remainder === 0) {
+              clearInterval(timer)
+              return
+            }
+            if ($('.start-or-pause-btn').hasClass('beginning')) {
+              remainder -= 1 * animation.speedupFactor
+              if (remainder < 0) {
+                remainder = 0
+              }
+              $('.remainder').text(secondToTime(remainder))
+            }
+            return setTime
+          })(),
+          1000
+        )
+      }
+
+      // 秒换成时间格式显示
+      function secondToTime(second) {
+        let timeS = Math.floor(second % 60)
+        let minuteAll = Math.floor(second / 60)
+        let timeM = minuteAll % 60
+        let timeH = Math.floor(minuteAll / 60)
+        return (
+          timeH.toString().padStart(2, '0') +
+          ':' +
+          timeM.toString().padStart(2, '0') +
+          ':' +
+          timeS.toString().padStart(2, '0')
+        )
+      }
+
+      // 修改动态刨切偏移量后，重新生成剖切坐标点
+      function changeOffset(offsetDistance) {
+        cutPositions = []
+        for (let index in defaultPositions) {
+          // 根据偏移量获取新的坐标点
+          let res = getNewOffsetPosition(index, offsetDistance)
+          cutPositions[index] = res
+        }
+        // 进行剖切
+        doCutting()
+      }
+
+      // 获取偏移后的新坐标点
+      // 分别向相邻两个坐标点进行向量偏移
+      function getNewOffsetPosition(index, offsetDistance) {
+        // 通过index，分别拿到当前偏移点和相邻两点坐标
+        index = Number(index)
+        let end1Index = index === 0 ? defaultPositions.length - 1 : index - 1
+        let end2Index = index === defaultPositions.length - 1 ? 0 : index + 1
+        let start = defaultPositions[index]
+        let end1 = defaultPositions[end1Index]
+        let end2 = defaultPositions[end2Index]
+        let startCartesian = new Cesium.Cartographic.toCartesian(
+          Cesium.Cartographic.fromDegrees(start[0], start[1])
+        )
+        let end1Cartesian = new Cesium.Cartographic.toCartesian(
+          Cesium.Cartographic.fromDegrees(end1[0], end1[1])
+        )
+        let end2Cartesian = new Cesium.Cartographic.toCartesian(
+          Cesium.Cartographic.fromDegrees(end2[0], end2[1])
+        )
+        // 获取两个方向的偏移向量
+        let offsetVector1 = getOffsetVector(
+          startCartesian,
+          end1Cartesian,
+          offsetDistance
+        )
+        let offsetVector2 = getOffsetVector(
+          startCartesian,
+          end2Cartesian,
+          offsetDistance
+        )
+        // 分别加上偏移向量后得到新的坐标
+        let offsetCartographic = Cesium.Cartographic.fromCartesian(
+          Cesium.Cartesian3.add(
+            Cesium.Cartesian3.add(
+              startCartesian,
+              offsetVector1,
+              new Cesium.Cartesian3()
+            ),
+            offsetVector2,
+            new Cesium.Cartesian3()
+          )
+        )
+        let result = [
+          Cesium.Math.toDegrees(offsetCartographic.longitude),
+          Cesium.Math.toDegrees(offsetCartographic.latitude)
+        ]
+        return result
+      }
+
+      // 根据两点计算偏移向量
+      function getOffsetVector(startCartesian, endCartesian, offsetDistance) {
+        let sub = Cesium.Cartesian3.subtract(
+          endCartesian,
+          startCartesian,
+          new Cesium.Cartesian3()
+        )
+        // 单位向量
+        let direction = Cesium.Cartesian3.normalize(
+          sub,
+          new Cesium.Cartesian3()
+        )
+        // 根据偏移值求偏移量
+        let offsetVector = Cesium.Cartesian3.multiplyByScalar(
+          direction,
+          offsetDistance,
+          new Cesium.Cartesian3()
+        )
+        return offsetVector
+      }
+
+      // 添加地质体模型
+      function addModel() {
+        let url =
+          'http://webclient.smaryun.com:8089/igs/rest/services/Scene/吴江地质体_新/SceneServer'
+        let igsSceneLayer = new zondy.layer.IGSSceneLayer({
+          url: url,
+          scenes: [
+            {
+              // 设置子图层初始化参数
+              sublayers: [
+                {
+                  // 子图层id
+                  id: '0',
+                  // 子图层初始化参数
+                  extensionOptions: {
+                    // 开启自动跳转
+                    autoReset: true,
+                    // 开启剖切封边
+                    fillClip: true
+                  }
+                }
+              ]
+            }
+          ]
+        })
+        map.add(igsSceneLayer)
+        // 图层加载完毕
+        igsSceneLayer.on('layerview-created', function (result) {
+          let layer = sceneView.getInnerLayer(result.layer)[0]
+          layerList.push(layer)
+          // 裁剪工具
+          addCuttingTool()
+          startAddClipGeometry()
+          layer.clippingGeometries = excavation
+        })
+      }
+
+      // 添加隧道
+      function addModelOfTunnel() {
+        let url =
+          'http://webclient.smaryun.com:8089/igs/rest/services/Scene/吴江地址体剖面/SceneServer'
+        let igsSceneLayer = new zondy.layer.IGSSceneLayer({
+          url: url,
+          scenes: [
+            {
+              // 设置子图层初始化参数
+              sublayers: [
+                {
+                  // 子图层id
+                  id: '0',
+                  // 子图层初始化参数
+                  extensionOptions: {
+                    // 开启自动跳转
+                    autoReset: false,
+                    // 开启剖切封边
+                    fillClip: false
+                  }
+                }
+              ]
+            }
+          ]
+        })
+        map.add(igsSceneLayer)
+        // 图层加载完毕
+        igsSceneLayer.on('layerview-created', function (result) {
+          let layer = sceneView.getInnerLayer(result.layer)[0]
+          layerList.push(layer)
+        })
+      }
+
+      //初始化UI
+      function initUI() {
+        layui.use(function () {
+          //监听选择的内容
+          layui.form.on('select(content)', function (data) {
+            let type = data.value
+            // 漫游视角切换
+            animation.animationType = Number(type)
+            // 没有值，代表漫游工具没开始，无需设置
+            if (routePointIndex !== null) {
+              // 1：跟随视角2：第一视角；
+              if (type === '1') {
+                // 跟随视角
+                animation.heading =
+                  headingAndPitchOfType1[routePointIndex].heading
+                animation.pitch = headingAndPitchOfType1[routePointIndex].pitch
+                doCutting()
+              } else {
+                // 第一人称视角
+                animation.heading = headingAndPitchOfType2[0].heading
+                animation.pitch = headingAndPitchOfType2[0].pitch
+                removeCutting()
+              }
+            }
+          })
+          // 动态剖切偏移
+          layui.slider.render({
+            elem: '#offset',
+            value: 0,
+            min: -10,
+            max: 10,
+            input: false,
+            theme: 'rgb(102, 147, 251)',
+            setTips: function (value) {
+              return value + 'm'
+            },
+            change: function (value) {
+              changeOffset(Number(value))
+            }
+          })
+
+          layui.dropdown.render({
+            elem: '.times',
+            trigger: 'hover',
+            className: 'timesDropdown',
+            data: [
+              {
+                title: '0.5x',
+                id: 1
+              },
+              {
+                title: '1.0x',
+                id: 1
+              },
+              {
+                title: '1.5x',
+                id: 1
+              },
+              {
+                title: '2.0x',
+                id: 1
+              },
+              {
+                title: '5.0x',
+                id: 1
+              }
+            ],
+            click: function (obj) {
+              animation.speedupFactor = parseFloat(obj.title)
+              if (obj.title === '1.0x') {
+                this.elem.text('倍数')
+              } else {
+                this.elem.text(obj.title)
+              }
+            }
+          })
+        })
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        //参数设置
+        viewer.scene.globe.show = false
+        // 针对cesium10.7.4.10版本隐藏大气环境光
+        if (viewer.scene.skyAtmosphere) {
+          viewer.scene.skyAtmosphere.show = false;
+        }
+        if (viewer.scene.sun.show) {
+          viewer.scene.sun.show = false;
+        }
+        if (viewer.scene.moon.show) {
+          viewer.scene.moon.show = false;
+        }
+        if (viewer.scene.globe.showGroundAtmosphere) {
+          viewer.scene.globe.showGroundAtmosphere = false;
+        }
+        viewer.scene.globe.depthTestAgainstTerrain = true
+        //开启抗锯齿
+        viewer.scene.fxaa = true
+        viewer.scene.postProcessStages.fxaa.enabled = true
+        excavation = new Cesium.ClippingGeometry(viewer)
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加地质体模型
+        addModel()
+        //添加隧道模型
+        addModelOfTunnel()
+        //盾构机模型漫游
+        initAnimationTool()
+        //初始化UI
+        initUI()
+        //初始化倒计时
+        $('.remainder').text(secondToTime(animationDuration))
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" id="layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label">模拟视角</label>
+          <div class="layui-input-block">
+            <select lay-filter="content" id="romaing-content">
+              <option value="1">跟随视角</option>
+              <option value="2">第一人称视角</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">模型偏移</label>
+          <div class="layui-input-block" style="width: calc(100% - 100px)">
+            <div class="layui-row">
+              <div class="layui-input-wrap">
+                <div class="layui-input-prefix">X：</div>
+                <input
+                  type="number"
+                  value="-17"
+                  placeholder="0"
+                  class="layui-input"
+                  oninput="changeModelOffset('x', this.value)"
+                />
+              </div>
+              <div class="layui-input-wrap">
+                <div class="layui-input-prefix">Y：</div>
+                <input
+                  type="number"
+                  value="0"
+                  placeholder="0"
+                  class="layui-input"
+                  oninput="changeModelOffset('y', this.value)"
+                />
+              </div>
+              <div class="layui-input-wrap">
+                <div class="layui-input-prefix">Z：</div>
+                <input
+                  type="number"
+                  value="0"
+                  placeholder="0"
+                  class="layui-input"
+                  oninput="changeModelOffset('z', this.value)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">动态剖切偏移</label>
+          <div class="layui-input-block sample-slider">
+            <div id="offset"></div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="control-area">
+      <div class="start-or-pause-btn" onclick="pauseOrContinue()">
+        <i class="layui-icon layui-icon-play" title="开始"></i>
+        <i class="layui-icon layui-icon-pause" title="暂停"></i>
+      </div>
+      <div class="remainder"></div>
+      <div class="times">倍数</div>
+    </div>
+    <style type="text/css">
+      .layui-panel-right {
+        width: 350px;
+      }
+
+      .layui-form-label {
+        width: 85px;
+      }
+
+      .layui-form-item {
+        margin-bottom: 8px;
+      }
+
+      .layui-form-item:last-child {
+        margin-bottom: 0px;
+      }
+
+      .layui-row {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .layui-input {
+        height: 34px;
+      }
+
+      .layui-input-wrap {
+        width: 30%;
+        line-height: 34px;
+      }
+
+      .layui-input-wrap .layui-input {
+        padding-right: 5px;
+      }
+
+      .control-area {
+        width: 150px;
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translate(-50%, 0);
+        color: #7b7b7b;
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .start-or-pause-btn i {
+        display: none;
+      }
+
+      .start-or-pause-btn.beginning i.layui-icon-pause {
+        display: inline-block;
+      }
+
+      .start-or-pause-btn:not(.beginning) i.layui-icon-play {
+        display: inline-block;
+      }
+
+      .start-or-pause-btn i {
+        color: #7b7b7b;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .start-or-pause-btn i:hover {
+        color: #1890ff;
+      }
+
+      .play-multiple {
+        cursor: pointer;
+      }
+
+      .play-multiple:hover {
+        color: #1890ff;
+      }
+
+      .times {
+        width: 30px;
+        cursor: pointer;
+      }
+
+      .times:hover {
+        color: #1890ff;
+      }
+
+      .layui-panel.timesDropdown {
+        padding: 0px;
+      }
+
+      .timesDropdown .layui-menu li,
+      .timesDropdown .layui-menu-body-title {
+        padding-top: 0px;
+        padding-bottom: 0px;
+      }
+
+      .timesDropdown .layui-menu li {
+        line-height: 28px;
+      }
+
+      .timesDropdown .layui-menu-body-title {
+        margin: 0px;
+        color: #7b7b7b;
+      }
+
+      .timesDropdown .layui-menu li:hover .layui-menu-body-title {
+        color: #1890ff;
+      }
+    </style>
+  </body>
+</html>

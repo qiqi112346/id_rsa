@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>分段专题图</title>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <script>
+      'use strict'
+      // 定义三维视图的主要类
+      let map, view
+      // 点、线、区要素图层
+      let layerOfPoint, layerOfLine, layerOfRegion
+      // 样式颜色是否随机的标识
+      let isRandom = false
+      // 当前加载图层的类型
+      let currentLayerType = 'IGSFeature'
+      // 获取构造函数
+      const { renderer, Map, Color, layer } = zondy
+      const { ClassBreakRenderer } = renderer
+      const {
+        SimpleMarkerSymbol,
+        SimpleLineSymbol,
+        SimpleFillSymbol,
+        PictureFillSymbol
+      } = zondy.symbol
+      const { GeoJSONLayer, IGSFeatureLayer, WFSLayer, IGSVectorTileLayer } =
+        layer
+
+      //获取点renderer
+      function getRendererOfPoint() {
+        return new ClassBreakRenderer({
+          //字段名
+          field: 'population',
+          //默认样式
+          defaultSymbol: new SimpleMarkerSymbol({
+            //填充颜色
+            color: isRandom ? randomColor() : new Color(178, 223, 138, 0.6),
+            //点半径
+            size: 25,
+            //外边线样式
+            outline: {
+              //线颜色
+              color: isRandom ? randomColor() : new Color(178, 223, 138, 1),
+              //线宽
+              width: 1
+            }
+          }),
+          //分段专题图字段样式
+          classBreakInfos: [
+            {
+              //分段最小值
+              minValue: 0,
+              //分段最大值
+              maxValue: 4000000,
+              //匹配到该值后的样式，更多样式详见：《SimpleMarkerSymbol》
+              symbol: new SimpleMarkerSymbol({
+                //填充颜色
+                color: isRandom ? randomColor() : new Color(76, 161, 46, 0.6),
+                //点半径
+                size: 25,
+                //外边线样式
+                outline: new SimpleLineSymbol({
+                  //线颜色
+                  color: isRandom ? randomColor() : new Color(76, 161, 46, 1),
+                  //线宽
+                  width: 1
+                })
+              })
+            },
+            {
+              //分段最小值
+              minValue: 4000000,
+              //分段最大值
+              maxValue: 8000000,
+              //匹配到该值后的样式，更多样式详见：《SimpleMarkerSymbol》
+              symbol: new SimpleMarkerSymbol({
+                //填充颜色
+                color: isRandom ? randomColor() : new Color(228, 67, 45, 0.6),
+                //点半径
+                size: 25,
+                //外边线样式
+                outline: new SimpleLineSymbol({
+                  //线颜色
+                  color: isRandom ? randomColor() : new Color(228, 67, 45, 1),
+                  //线宽
+                  width: 1
+                })
+              })
+            }
+          ]
+        })
+      }
+
+      //获取线renderer
+      function getRendererOfLine() {
+        return new ClassBreakRenderer({
+          field: 'osm_id',
+          //匹配到该值后的样式
+          defaultSymbol: new SimpleLineSymbol({
+            // 填充符号颜色
+            color: isRandom ? randomColor() : new Color(37, 120, 180, 1),
+            //线宽
+            width: 2
+          }),
+          //分段专题图字段样式
+          classBreakInfos: [
+            {
+              // 分段最大值
+              minValue: 100000000,
+              // 分段最大值
+              maxValue: 200000000,
+              //匹配到该值后的样式，更多样式详见：《SimpleLineSymbol》
+              symbol: new SimpleLineSymbol({
+                // 填充符号颜色
+                color: isRandom ? randomColor() : new Color(228, 67, 45, 1),
+                //线宽
+                width: 2
+              })
+            },
+            {
+              // 分段最小值
+              minValue: 200000000,
+              // 分段最大值
+              maxValue: 300000000,
+              //匹配到该值后的样式，更多样式详见：《SimpleLineSymbol》
+              symbol: new SimpleLineSymbol({
+                // 填充符号颜色
+                color: isRandom ? randomColor() : new Color(178, 223, 138, 1),
+                //线宽
+                width: 2
+              })
+            }
+          ]
+        })
+      }
+
+      //获取区renderer
+      function getRendererOfRegion() {
+        return new ClassBreakRenderer({
+          field: 'GDP2016',
+          //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+          defaultSymbol: new PictureFillSymbol({
+            // 设置图片数据
+            url: 'data:image/png;base64,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',
+            // 简单填充符号宽度，默认为12，单位像素
+            width: 12,
+            // 简单填充符号高度，默认为12，单位像素
+            height: 12,
+            // x方向偏移，默认为0，单位像素
+            xoffset: 0,
+            // y方向偏移，默认为0，单位像素
+            yoffset: 0,
+            // x方向拉伸，取值在0-1之间
+            xscale: 1,
+            // y方向拉伸，取值在0-1之间
+            yscale: 1
+          }),
+          //分段专题图字段样式
+          classBreakInfos: [
+            {
+              // 分段最大值
+              minValue: 0,
+              // 分段最大值
+              maxValue: 100,
+              //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+              symbol: new PictureFillSymbol({
+                // 设置图片数据
+                url: 'data:image/png;base64,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',
+                // 简单填充符号宽度，默认为12，单位像素
+                width: 12,
+                // 简单填充符号高度，默认为12，单位像素
+                height: 12,
+                // x方向偏移，默认为0，单位像素
+                xoffset: 0,
+                // y方向偏移，默认为0，单位像素
+                yoffset: 0,
+                // x方向拉伸，取值在0-1之间
+                xscale: 1,
+                // y方向拉伸，取值在0-1之间
+                yscale: 1
+              })
+            },
+            {
+              // 分段最小值
+              minValue: 100,
+              // 分段最大值
+              maxValue: 200,
+              //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+              symbol: new SimpleFillSymbol({
+                // 填充符号颜色
+                color: isRandom ? randomColor() : new Color(130, 247, 254, 0.6),
+                // 外边线样式
+                outline: new SimpleLineSymbol({
+                  // 线符号颜色
+                  color: isRandom ? randomColor() : new Color(130, 247, 254, 1),
+                  // 线宽
+                  width: 1
+                })
+              })
+            },
+            {
+              // 分段最小值
+              minValue: 200,
+              // 分段最大值
+              maxValue: 500,
+              //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+              symbol: new SimpleFillSymbol({
+                // 填充符号颜色
+                color: isRandom ? randomColor() : new Color(231, 147, 146, 0.6),
+                // 外边线样式
+                outline: new SimpleLineSymbol({
+                  // 线符号颜色
+                  color: isRandom ? randomColor() : new Color(231, 147, 146, 1),
+                  // 线宽
+                  width: 1
+                })
+              })
+            }
+          ]
+        })
+      }
+
+      // GeoJSONLayer点要素
+      function addGeoJSONLayerOfPoint() {
+        const renderer = getRendererOfPoint()
+        layerOfPoint = new GeoJSONLayer({
+          url: 'http://webclient.smaryun.com:8200/Vector/json/地级市.json',
+          renderer: renderer
+        })
+        //加载图层
+        map.add(layerOfPoint)
+        // 图层加载完毕
+        layerOfPoint.on('layerview-created', function (result) {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+          console.log('点加载完毕:', result.layer)
+        })
+      }
+
+      // GeoJSONLayer线要素
+      function addGeoJSONLayerOfLine() {
+        const renderer = getRendererOfLine()
+        layerOfLine = new GeoJSONLayer({
+          url: 'http://webclient.smaryun.com:8200/Vector/json/高速公路.json',
+          renderer: renderer
+        })
+        //加载图层
+        map.add(layerOfLine)
+      }
+
+      // GeoJSONLayer区要素
+      function addGeoJSONLayerOfRegion() {
+        const renderer = getRendererOfRegion()
+        layerOfRegion = new GeoJSONLayer({
+          url: 'http://webclient.smaryun.com:8200/Vector/json/湖北省市级区划.json',
+          renderer: renderer
+        })
+        //加载图层
+        map.add(layerOfRegion)
+      }
+
+      // IGSFeature点要素
+      function addIGSFeatureLayerOfPoint() {
+        const renderer = getRendererOfPoint()
+        layerOfPoint = new IGSFeatureLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer',
+          sublayerId: '5',
+          renderer: renderer
+        })
+        //加载图层
+        map.add(layerOfPoint)
+        // 图层加载完毕
+        layerOfPoint.on('layerview-created', function (result) {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+          console.log('点加载完毕:', result.layer)
+        })
+      }
+
+      // IGSFeature线要素
+      function addIGSFeatureLayerOfLine() {
+        const renderer = getRendererOfLine()
+        layerOfLine = new IGSFeatureLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer',
+          sublayerId: '2-23',
+          renderer: renderer
+        })
+        //加载图层
+        map.add(layerOfLine)
+      }
+
+      // IGSFeature区要素
+      function addIGSFeatureLayerOfRegion() {
+        const renderer = getRendererOfRegion()
+        layerOfRegion = new IGSFeatureLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer',
+          sublayerId: '0',
+          renderer: renderer
+        })
+        //加载图层
+        map.add(layerOfRegion)
+      }
+
+      // WFS点要素
+      function addWFSLayerOfPoint() {
+        const renderer = getRendererOfPoint()
+        layerOfPoint = new WFSLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/WFSServer',
+          sublayerId: 'Map_湖北省4326:t70',
+          opacity: 1,
+          renderer: renderer
+        })
+        //加载图层
+        map.add(layerOfPoint)
+        // 图层加载完毕
+        layerOfPoint.on('layerview-created', function (result) {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+          console.log('点加载完毕:', result.layer)
+        })
+      }
+
+      // WFS线要素
+      function addWFSLayerOfLine() {
+        const renderer = getRendererOfLine()
+        layerOfLine = new WFSLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/WFSServer',
+          sublayerId: 'Map_湖北省4326:t36',
+          opacity: 1,
+          renderer: renderer
+        })
+        //加载图层
+        map.add(layerOfLine)
+      }
+
+      // WFS区要素
+      function addWFSLayerOfRegion() {
+        const renderer = getRendererOfRegion()
+        layerOfRegion = new WFSLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/WFSServer',
+          sublayerId: 'Map_湖北省4326:t0',
+          opacity: 1,
+          renderer: renderer
+        })
+        //加载图层
+        map.add(layerOfRegion)
+      }
+
+      // GeoJSON点、线、区要素
+      function addGeoJSONLayer(featureType = 'all') {
+        switch (featureType) {
+          case 'region':
+            addGeoJSONLayerOfRegion()
+            break
+          case 'line':
+            addGeoJSONLayerOfLine()
+            break
+          case 'point':
+            addGeoJSONLayerOfPoint()
+            break
+          case 'all':
+          default:
+            addGeoJSONLayerOfLine()
+            addGeoJSONLayerOfRegion()
+            addGeoJSONLayerOfPoint()
+            break
+        }
+      }
+
+      // IGSFeature点、线、区要素
+      function addIGSFeatureLayer(featureType = 'all') {
+        switch (featureType) {
+          case 'region':
+            addIGSFeatureLayerOfRegion()
+            break
+          case 'line':
+            addIGSFeatureLayerOfLine()
+            break
+          case 'point':
+            addIGSFeatureLayerOfPoint()
+            break
+          case 'all':
+          default:
+            addIGSFeatureLayerOfRegion()
+            addIGSFeatureLayerOfLine()
+            addIGSFeatureLayerOfPoint()
+            break
+        }
+      }
+
+      // WFS点、线、区要素
+      function addWFSLayer(featureType = 'all') {
+        switch (featureType) {
+          case 'region':
+            addWFSLayerOfRegion()
+            break
+          case 'line':
+            addWFSLayerOfLine()
+            break
+          case 'point':
+            addWFSLayerOfPoint()
+            break
+          case 'all':
+          default:
+            addWFSLayerOfRegion()
+            addWFSLayerOfLine()
+            addWFSLayerOfPoint()
+            break
+        }
+      }
+
+      // 通过type加载图层
+      function addLayer(featureType = 'all') {
+        switch (currentLayerType) {
+          case 'IGSFeature':
+            addIGSFeatureLayer(featureType)
+            break
+          case 'WFS':
+            addWFSLayer(featureType)
+            break
+          case 'GeoJSON':
+            addGeoJSONLayer(featureType)
+            break
+          default:
+            break
+        }
+      }
+
+      // 切换点要素专题图样式
+      function changeStyleOfPoint() {
+        layerOfPoint.renderer.classBreakInfos = [
+          {
+            //分段最小值
+            minValue: 0,
+            //分段最大值
+            maxValue: 4000000,
+            //匹配到该值后的样式，更多样式详见：《SimpleMarkerSymbol》
+            symbol: new SimpleMarkerSymbol({
+              //填充颜色
+              color: randomColor(),
+              //点半径
+              size: 25,
+              //外边线样式
+              outline: new SimpleLineSymbol({
+                //线颜色
+                color: isRandom ? randomColor() : new Color(76, 161, 46, 1),
+                //线宽
+                width: 1
+              })
+            })
+          },
+          {
+            //分段最小值
+            minValue: 4000000,
+            //分段最大值
+            maxValue: 8000000,
+            //匹配到该值后的样式，更多样式详见：《SimpleMarkerSymbol》
+            symbol: new SimpleMarkerSymbol({
+              //填充颜色
+              color: randomColor(),
+              //点半径
+              size: 25,
+              //外边线样式
+              outline: new SimpleLineSymbol({
+                //线颜色
+                color: randomColor(),
+                //线宽
+                width: 1
+              })
+            })
+          }
+        ]
+      }
+
+      // 切换线要素专题图样式
+      function changeStyleOfLine() {
+        layerOfLine.renderer.classBreakInfos = [
+          {
+            // 分段最大值
+            minValue: 100000000,
+            // 分段最大值
+            maxValue: 200000000,
+            //匹配到该值后的样式，更多样式详见：《SimpleLineSymbol》
+            symbol: new SimpleLineSymbol({
+              // 填充符号颜色
+              color: randomColor(),
+              //线宽
+              width: 2
+            })
+          },
+          {
+            // 分段最小值
+            minValue: 200000000,
+            // 分段最大值
+            maxValue: 300000000,
+            //匹配到该值后的样式，更多样式详见：《SimpleLineSymbol》
+            symbol: new SimpleLineSymbol({
+              // 填充符号颜色
+              color: randomColor(),
+              //线宽
+              width: 2
+            })
+          }
+        ]
+      }
+
+      // 切换区要素专题图样式
+      function changeStyleOfRegion() {
+        layerOfRegion.renderer.classBreakInfos = [
+          {
+            // 分段最大值
+            minValue: 0,
+            // 分段最大值
+            maxValue: 100,
+            //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+            symbol: new SimpleFillSymbol({
+              // 填充符号颜色
+              color: randomColor(),
+              // 外边线样式
+              outline: new SimpleLineSymbol({
+                //线符号颜色
+                color: randomColor(),
+                //线宽
+                width: 1
+              })
+            })
+          },
+          {
+            // 分段最小值
+            minValue: 100,
+            // 分段最大值
+            maxValue: 200,
+            //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+            symbol: new SimpleFillSymbol({
+              // 填充符号颜色
+              color: randomColor(),
+              // 外边线样式
+              outline: new SimpleLineSymbol({
+                // 线符号颜色
+                color: randomColor(),
+                // 线宽
+                width: 1
+              })
+            })
+          },
+          {
+            // 分段最小值
+            minValue: 200,
+            // 分段最大值
+            maxValue: 500,
+            //匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+            symbol: new SimpleFillSymbol({
+              // 填充符号颜色
+              color: randomColor(),
+              // 外边线样式
+              outline: new SimpleLineSymbol({
+                // 线符号颜色
+                color: randomColor(),
+                // 线宽
+                width: 1
+              })
+            })
+          }
+        ]
+      }
+
+      // 销毁多个图层
+      function removeAllLayer() {
+        map.removeMany([layerOfPoint, layerOfLine, layerOfRegion])
+      }
+
+      // 随机颜色值
+      function randomColor() {
+        return new Color(
+          parseInt(Math.random() * 255),
+          parseInt(Math.random() * 255),
+          parseInt(Math.random() * 255),
+          0.6
+        )
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          var layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form
+
+          //切换加载类型
+          form.on('select(layerType)', function (data) {
+            isRandom = false
+            currentLayerType = data.value
+            // 矢量瓦片图层没有点切换样式
+            if (currentLayerType === 'IGSVectorTile') {
+              document.getElementById('button-point').style.display = 'none'
+            } else {
+              document.getElementById('button-point').style.display =
+                'inline-block'
+            }
+            // 销毁多个图层
+            removeAllLayer()
+            // 加载图层
+            addLayer()
+          })
+        })
+      }
+
+      //地图初始化函数
+      function init() {
+        // 初始化UI操作
+        initUI()
+        //初始化三维球体
+        initViewer()
+        //添加专题图
+        addIGSFeatureLayer()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label">加载方式</label>
+          <div class="layui-input-block layui-input-block-select">
+            <select id="layerType" name="layerType" lay-filter="layerType">
+              <option value="IGSFeature">IGSFeature</option>
+              <option value="WFS">WFS</option>
+              <option value="GeoJSON">GeoJSON</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-form-item change-feature-item">
+          <label class="layui-form-label">切换要素样式</label>
+          <div class="layui-input-block">
+            <button
+              type="button"
+              class="layui-btn layui-btn-normal"
+              id="button-point"
+              onclick="changeStyleOfPoint()"
+            >
+              点
+            </button>
+            <button
+              type="button"
+              class="layui-btn layui-btn-normal"
+              onclick="changeStyleOfLine()"
+            >
+              线
+            </button>
+            <button
+              type="button"
+              class="layui-btn layui-btn-normal"
+              onclick="changeStyleOfRegion()"
+            >
+              区
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <style type="text/css">
+      .layui-panel-right {
+        width: 345px;
+        z-index: 999;
+      }
+
+      .change-feature-item {
+        margin-top: 10px;
+      }
+
+      .layui-form-label {
+        width: 86px;
+      }
+    </style>
+  </body>
+</html>

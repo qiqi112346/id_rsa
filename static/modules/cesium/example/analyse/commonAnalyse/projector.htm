@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>场景投放</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/tool.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, scenePro, graphicsLayer
+      //取得jquery对象
+      let $ = layui.$
+      //form对象
+      let form = layui.form
+      //滑动条管理器对象
+      let slider = layui.slider
+      let sliderHeading,
+        sliderPitch,
+        sliderRoll,
+        sliderHorizontAngle,
+        sliderVerticalAngle
+
+      // 添加场景投放
+      function addSceneProjector(source, pass) {
+        // 观察点
+        let targetPosition = new Cesium.Cartesian3(
+          6378136.9853110155,
+          57.44336164359742,
+          47.44624606256441
+        )
+        // 目标点计算
+        let targetGeo = Cesium.Cartographic.fromCartesian(targetPosition)
+        targetGeo.height = 15
+        let viewPosition = Cesium.Cartesian3.fromRadians(
+          targetGeo.longitude,
+          targetGeo.latitude,
+          targetGeo.height
+        )
+        // 新建场景投放对象
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/SceneProjectorEx.html
+        scenePro = new Cesium.SceneProjectorEx({
+          // 场景对象，启用自定义渲染通道功能必须传入场景对象
+          scene: viewer.scene,
+          // pass，渲染通道，自定义渲染通道只可设置 Pass.AFTER_GLOBE，Pass.AFTER_TILE，Pass.AFTER_TILE_CLASSIFICATION，Pass.ANALYSIS 四个通道
+          // AFTER_GLOBE  地球渲染后通道,只对视频投放有效(调整视频投放不遮挡贴地的覆盖物)
+          // AFTER_TILE 瓦片渲染后通道,只对视频投放有效(调整视频投放不遮挡贴模型的覆盖物)
+          // AFTER_TILE_CLASSIFICATION  瓦片覆盖物渲染后通道,只对视频投放有效(调整视频投放在瓦片及覆盖物之后绘制)
+          // ANALYSIS 可视化分析通道,只对视频投放有效(视频投放自定义渲染功能默认的绘制通道)
+          pass: pass,
+          // 场景投放的内容，颜色: COLOR、图片: IMAGE、MP4视频: VIDEO、HLS视频: HLS
+          source: source // 投影内容,
+        })
+        // 是否显示视锥的锥体线
+        scenePro.showLine = true
+        // 设置观察点
+        scenePro.viewPosition = viewPosition
+        // 方位角
+        scenePro.heading = Cesium.Math.toRadians(41)
+        // 俯仰角
+        scenePro.pitch = Cesium.Math.toRadians(-43)
+        // 翻滚角
+        scenePro.roll = Cesium.Math.toRadians(6)
+        // 水平广角
+        scenePro.horizontAngle = Cesium.Math.toRadians(25)
+        // 竖直广角
+        scenePro.verticalAngle = Cesium.Math.toRadians(25)
+        // 添加场景投放
+        viewer.scene.primitives.add(scenePro)
+      }
+
+      // 不同内容的场景投放
+      function addSceneProjectorBySourceAndPass() {
+        // 当前select选中的source
+        let source = getSource($('#projector-source').val())
+        // 当前select选中的pass
+        let pass = getPass($('#projector-pass').val())
+        // 销毁场景投放
+        destroy()
+        // 添加场景投放
+        addSceneProjector(source, pass)
+        // 更新参数面板
+        updatePanel()
+      }
+
+      // 获取source
+      function getSource(value) {
+        let source
+        switch (value) {
+          case 'COLOR':
+            source = new Cesium.Color(1, 0, 0, 1)
+            break
+          case 'IMAGE':
+            source =
+              'http://webclient.smaryun.com:8200/NoneSpatialData/image/scenePro.png'
+            break
+          case 'HLS':
+            source =
+              'http://webclient.smaryun.com:8200/NoneSpatialData/video/scenePro.m3u8'
+            break
+          case 'VIDEO':
+          default:
+            source =
+              'http://webclient.smaryun.com:8200/NoneSpatialData/video/scenePro.mp4'
+            break
+        }
+        return source
+      }
+
+      // 获取pass
+      function getPass(value) {
+        let pass
+        switch (value) {
+          case 'ANALYSIS':
+            pass = Cesium.Pass.ANALYSIS
+            break
+          case 'AFTER_GLOBE':
+            pass = Cesium.Pass.AFTER_GLOBE
+            break
+          case 'AFTER_TILE':
+            pass = Cesium.Pass.AFTER_TILE
+            break
+          case 'AFTER_TILE_CLASSIFICATION':
+            pass = Cesium.Pass.AFTER_TILE_CLASSIFICATION
+            break
+          default:
+            pass = Cesium.Pass.ANALYSIS
+            break
+        }
+        return pass
+      }
+
+      // 切换投放内容，面板参数也更新
+      function updatePanel() {
+        if (scenePro) {
+          sliderHeading.setValue(
+            parseInt(Cesium.Math.toDegrees(scenePro.heading))
+          )
+          // pitch值是负数的话，滑块UI需要特殊处理
+          if (parseInt(Cesium.Math.toDegrees(scenePro.pitch)) < 0) {
+            sliderPitch.setValue(
+              parseInt(Cesium.Math.toDegrees(scenePro.pitch)) + 90
+            )
+          } else {
+            sliderPitch.setValue(
+              parseInt(Cesium.Math.toDegrees(scenePro.pitch))
+            )
+          }
+          sliderRoll.setValue(parseInt(Cesium.Math.toDegrees(scenePro.roll)))
+          sliderHorizontAngle.setValue(
+            parseInt(Cesium.Math.toDegrees(scenePro.horizontAngle))
+          )
+          sliderVerticalAngle.setValue(
+            parseInt(Cesium.Math.toDegrees(scenePro.verticalAngle))
+          )
+        }
+      }
+
+      // 移除
+      function destroy() {
+        // 移除场景投放结果
+        if (scenePro) {
+          viewer.scene.primitives.remove(scenePro)
+          scenePro = null
+        }
+      }
+
+      //初始化标绘图层
+      function addGraphicLayer() {
+        graphicsLayer = new zondy.cesium.GraphicsLayer(viewer, {})
+      }
+
+      // 增加圆，体现场景投放pass属性
+      function addCircle() {
+        let circleGraphic = new zondy.cesium.Graphic({
+          //类型
+          type: 'circle',
+          //位置
+          positions: [Cesium.Cartesian3.fromDegrees(0.000478, 0.00041, 0)],
+          //样式
+          style: {
+            //颜色
+            color: '#2578B499',
+            //离地高度
+            offsetHeight: 0,
+            //半径
+            radius: 3
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(circleGraphic)
+      }
+
+      //初始化示例UI
+      function initUI() {
+        layui.use(function () {
+          //监听选择的场景投放的内容
+          form.on('select(source)', function (data) {
+            // 场景投放资源
+            addSceneProjectorBySourceAndPass()
+          })
+
+          //监听选择的场景投放的通道
+          form.on('select(pass)', function (data) {
+            // 场景投放资源
+            addSceneProjectorBySourceAndPass()
+          })
+        })
+
+        // 方位角
+        sliderHeading = slider.render({
+          elem: '#heading',
+          value: 41,
+          min: 0.0,
+          max: 360.0,
+          step: 1,
+          theme: 'rgb(102 147 251)',
+          input: true,
+          change: function (value) {
+            console.log('value: ', value)
+            if (scenePro) {
+              scenePro.heading = Cesium.Math.toRadians(Number(value))
+            }
+          }
+        })
+        // 俯仰角
+        sliderPitch = slider.render({
+          elem: '#pitch',
+          value: -43,
+          min: -90.0,
+          max: 90.0,
+          step: 1,
+          theme: 'rgb(102 147 251)',
+          input: true,
+          change: function (value) {
+            if (scenePro) {
+              scenePro.pitch = Cesium.Math.toRadians(Number(value))
+            }
+          }
+        })
+        // 翻滚角
+        sliderRoll = slider.render({
+          elem: '#roll',
+          value: 6,
+          min: 0.0,
+          max: 360.0,
+          step: 1,
+          theme: 'rgb(102 147 251)',
+          input: true,
+          change: function (value) {
+            if (scenePro) {
+              scenePro.roll = Cesium.Math.toRadians(Number(value))
+            }
+          }
+        })
+        // 水平广角
+        sliderHorizontAngle = slider.render({
+          elem: '#horizontAngle',
+          value: 25,
+          min: 10.0,
+          max: 180.0,
+          step: 1,
+          theme: 'rgb(102 147 251)',
+          input: true,
+          change: function (value) {
+            if (scenePro) {
+              scenePro.horizontAngle = Cesium.Math.toRadians(Number(value))
+            }
+          }
+        })
+        // 竖直广角
+        sliderVerticalAngle = slider.render({
+          elem: '#verticalAngle',
+          value: 25,
+          min: 10.0,
+          max: 180.0,
+          step: 1,
+          theme: 'rgb(102 147 251)',
+          input: true,
+          change: function (value) {
+            if (scenePro) {
+              scenePro.verticalAngle = Cesium.Math.toRadians(Number(value))
+            }
+          }
+        })
+      }
+
+      //添加M3D模型
+      function addModel() {
+        let M3DModelCacheLayer = new zondy.layer.M3DModelCacheLayer({
+          url: 'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D/1.0/景观示例/景观_建筑模型_1.mcj',
+          // 初始化参数
+          extensionOptions: {
+            // 开启自动跳转
+            autoReset: true
+          }
+        })
+        map.add(M3DModelCacheLayer)
+        // 图层加载完毕
+        M3DModelCacheLayer.on('layerview-created', function (result) {
+          //默认进行MP4视频场景投放
+          addSceneProjectorBySourceAndPass()
+        })
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        // 开启地形检测
+        viewer.scene.globe.depthTestAgainstTerrain = true
+        // 修改相机视锥体远平面与近平面的比
+        viewer.scene.farToNearRatio = 10000000
+      }
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // 添加M3D模型
+        addModel()
+        // 添加标绘图层
+        addGraphicLayer()
+        // 添加圆
+        addCircle()
+        //初始化示例UI
+        initUI()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right" style="width: 352px">
+      <form class="layui-form" action="">
+        <div class="sample-main-panel">
+          <div class="layui-form-item">
+            <label class="layui-form-label">投放内容</label>
+            <div class="layui-input-block">
+              <select lay-filter="source" id="projector-source">
+                <option value="COLOR">颜色</option>
+                <option value="IMAGE">图片</option>
+                <option value="VIDEO" selected>MP4视频</option>
+                <option value="HLS">HLS视频</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">渲染通道</label>
+            <div class="layui-input-block">
+              <select lay-filter="pass" id="projector-pass">
+                <option value="ANALYSIS" selected>默认通道</option>
+                <option value="AFTER_GLOBE">地球渲染后</option>
+                <option value="AFTER_TILE">瓦片渲染后</option>
+                <option value="AFTER_TILE_CLASSIFICATION">
+                  瓦片覆盖物渲染后
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="slideBarDiv">
+              方位角(heading)
+              <div id="heading" class="demo-slider"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="slideBarDiv">
+              俯仰角(pitch)
+              <div id="pitch" class="demo-slider"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="slideBarDiv">
+              翻滚角(roll)
+              <div id="roll" class="demo-slider"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="slideBarDiv">
+              水平广角
+              <div id="horizontAngle" class="demo-slider"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="slideBarDiv">
+              竖直广角
+              <div id="verticalAngle" class="demo-slider"></div>
+            </div>
+          </div>
+        </div>
+        <div class="sample-button-panel">
+          <div class="layui-form-item">
+            <button type="button" class="layui-btn" onclick="destroy()">
+              移除场景投放
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <style type="text/css">
+      .layui-form-item {
+        margin-bottom: 8px;
+      }
+
+      .sample-main-panel {
+        height: auto;
+        line-height: 37px;
+        margin-bottom: 8px;
+      }
+
+      .layui-slider {
+        top: -20px;
+        width: 115px;
+        left: 114px;
+      }
+
+      .layui-slider-input {
+        top: -34px;
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>热力图</title>
+    <!--引入mapv-->
+    <script type="text/javascript" src="http://webclient.smaryun.com/static/libs/cdn/mapv/mapv.min.js"></script>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view, geometryServer, featureServer, graphicsLayer
+      const {
+        WMTSLayer
+      } = zondy.layer
+      const { Map, SpatialReference } = zondy
+      const { Projection, Point } = zondy.geometry
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加WMTS图层
+        addWMTSLayer()
+        // 初始化MapV数据
+        initMapVData()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      function initMapVData() {
+        let randomCount = 1000;
+        let data = [];
+        let citys = ["北京", "天津", "上海", "重庆", "石家庄", "太原", "呼和浩特", "哈尔滨", "长春", "沈阳", "济南",
+          "南京", "合肥", "杭州", "南昌", "福州", "郑州", "武汉", "长沙", "广州", "南宁", "西安", "银川", "兰州", "西宁",
+          "乌鲁木齐", "成都", "贵阳", "昆明", "拉萨", "海口"];
+        // 构造数据 将数据处理成对应的geojson格式
+        while (randomCount--) {
+          let cityCenter = mapv.utilCityCenter.getCenterByCityName(
+            citys[parseInt(Math.random() * citys.length)]
+          );
+          data.push({
+            geometry: {
+              type: "Point",
+              coordinates: [
+                cityCenter.lng - 2 + Math.random() * 4,
+                cityCenter.lat - 2 + Math.random() * 4,
+              ],
+            },
+            count: 30 * Math.random(),
+            time: 100 * Math.random(),
+          });
+        }
+
+        // 构建对应的dataset
+        let dataSet = new mapv.DataSet(data);
+
+        // 设置对应的参数
+        // https://github.com/huiyan-fe/mapv/blob/master/API.md
+        let options = {
+          context: "2d", //cesium必须设置画布为2d
+          cesium: {
+            postRender: true,
+            postRenderFrame: 10,
+          },
+          size: 13,
+          gradient: {
+            0.25: "rgb(0,0,255)",
+            0.55: "rgb(0,255,0)",
+            0.85: "yellow",
+            1.0: "rgb(255,0,0)",
+          },
+          max: 60,
+          animation: {
+            type: "time",
+            stepsRange: {
+              start: 0,
+              end: 100,
+            },
+            trails: 10,
+            duration: 4,
+          },
+          draw: "heatmap", // 绘制热力图
+        };
+        // 声明cesium的mapv图层并将其显示到三维球上
+        let layer = new zondy.layer.MapVLayer({
+          data: dataSet,
+          mapVOptions: options
+        });
+
+        map.add(layer);
+      }
+
+      // 添加WMTS图层
+      function addWMTSLayer() {
+        const wmtsLayer = new WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(wmtsLayer)
+        // 图层加载完毕
+        wmtsLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          view.flyTo({
+            center: new Point({
+              coordinates: [12520996.73, 3637179.55, 4000000],
+              spatialReference: new SpatialReference({
+                wkid: 3857
+              })
+            }),
+            zoom: 5
+          })
+        })
+      }
+    </script>
+</head>
+
+<body onload="init();">
+<!--  视图容器div  -->
+<div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+</body>
+</html>

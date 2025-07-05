@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>图层叠加-混合开发</title>
+  <!--引入Mapboxgl库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.js"></script>
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.css" />
+  <!--plugin脚本库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+  <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-mapboxgl-plugin.min.js"></script>
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+  <script>
+    'use strict'
+    let view
+    const {
+      ArcGISTileLayer,
+      WebTileLayer,
+      IGSVectorTileLayer,
+      IGSTileLayer
+    } = zondy.layer
+    const { SpatialReference } = zondy
+    const { initializeOptions, initializeCRS } = zondy.mapboxgl.util
+
+    // 初始地图视图
+    function initViewer() {
+      // 创建底图
+      const baseLayer = createBaseLayer()
+      // 加载底图
+      baseLayer.load().then(() => {
+        // 通过图层构建CRS
+        const crs = initializeCRS(baseLayer)
+        // 构造mapboxgl地图视图对象
+        view = new mapboxgl.Map({
+          container: 'mapgis-viewer',
+          center: [114.45, 30.59],
+          zoom: 7,
+          crs: crs,
+          style: {
+            version: 8,
+            sources: {},
+            layers: [],
+            glyphs: 'http://webclient.smaryun.com:8089/igs/rest/services/VectorTile/wuhan_3857_256_custom_mvt/VectorTileServer/fonts/{fontstack}?range={range}.pbf&f=pbf',
+            sprite: "http://webclient.smaryun.com:8089/igs/rest/services/VectorTile/wuhan_3857_256_custom_mvt/VectorTileServer/sprites/sprite"
+          }
+        })
+        view.on('style.load', () => {
+          // 必须要求添加的图层处于同一空间参考系下
+          // 构建mapboxgl引擎需要的样式
+          const style = initializeOptions(baseLayer)
+          // 添加到mapboxgl地图对象中
+          addStyleToMapboxglMap(style, view)
+          // 添加自定义图层
+          addCustomIGSVectorTileLayer()
+          addCustomIGSTileLayer()
+        })
+      })
+    }
+
+    // 底图构建
+    function createBaseLayer() {
+      // 添加网络瓦片图层
+      const webTileLayer = new WebTileLayer({
+        // 加载经纬度的影像地图
+        url: "http://t1.tianditu.com/DataServer?T=img_w&x={col}&y={row}&l={level}",
+        // 天地图必须加token，且token名为tk
+        tokenKey: "tk",
+        // token请在天地图官网申请
+        tokenValue: "63c5c4f101d68229494bb45d3bf60277",
+        // 指定坐标系
+        spatialReference: new SpatialReference({ wkid: 3857 }),
+      });
+      return webTileLayer
+    }
+    // 创建自定义矢量瓦片图层
+    function addCustomIGSVectorTileLayer() {
+      const wuhan_3857_256_custom_mvt = new IGSVectorTileLayer({
+        url: "http://webclient.smaryun.com:8089/igs/rest/services/VectorTile/wuhan_3857_256_custom_mvt/VectorTileServer",
+        title: "自定义原点分辨率矢量瓦片",
+        // 显示或隐藏
+        visible: true,
+        opacity: 0.3
+      })
+      wuhan_3857_256_custom_mvt.load().then(() => {
+        // 构建mapboxgl引擎需要的样式
+        const style = initializeOptions(wuhan_3857_256_custom_mvt)
+        // 添加到mapboxgl地图对象中
+        addStyleToMapboxglMap(style, view)
+      })
+    }
+    // 创建自定义瓦片图层
+    function addCustomIGSTileLayer() {
+      const layer = new IGSTileLayer({
+        url: "http://webclient.smaryun.com:8089/igs/rest/services/Tile/wuhan_3857_512_custom/TileServer",
+      });
+      // 加载图层元数据
+      layer.load().then(() => {
+        // 构建mapboxgl引擎需要的样式
+        const style = initializeOptions(layer)
+        // 添加到mapboxgl地图对象中
+        addStyleToMapboxglMap(style, view)
+      })
+    }
+
+    // 添加到mapboxgl地图对象中
+    function addStyleToMapboxglMap(style) {
+      const { sources, layers } = style
+      const sourcesArr = Object.entries(sources)
+      for (let i = 0; i < sourcesArr.length; i++) {
+        const sourceArr = sourcesArr[i]
+        view.addSource(sourceArr[0], sourceArr[1])
+      }
+      for (let j = 0; j < layers.length; j++) {
+        view.addLayer(layers[j])
+      }
+      return true
+    }
+
+    // 地图初始化函数
+    function init() {
+      // 初始地图视图
+      initViewer()
+    }
+  </script>
+</head>
+
+<body onload="init()">
+  <div id="mapgis-viewer"></div>
+</body>
+
+</html>

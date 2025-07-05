@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>MapGIS要素服务-原生接口</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+      let map, sceneView, pointPrimitiveCollection, polylinePrimitiveCollection, polygonPrimitiveCollection
+      // 获取构造函数
+      const { FeatureServer } = zondy.service
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // 添加蓝黑版深色底图
+        addBlueImage()
+        // 添加要素图层
+        addIGSFeatureLayer()
+        // 初始化示例UI
+        initUI()
+        // 飞到指定视角
+        flyTo()
+      }
+
+      // 添加要素图层
+      function addIGSFeatureLayer() {
+        // 添点区要素图层
+        addPointLayer()
+      }
+
+      // 添加点要素图层
+      function addPointLayer() {
+        // 初始化一个要素服务，来查询要素
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/FeatureServer.html
+        const server = new FeatureServer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer'
+        })
+        // 指定子图层的要素查询
+        server.queryFeatures({
+          // 要查询的子图层ID
+          layerId: '5',
+          // 一次查询指定的数目
+          resultRecordCount: 10000
+        }).then(function (result) {
+          console.log("点要素查询成功:", result)
+          // 获取所有点要素集合
+          const { features } = result.data
+          // 初始化一个Cesium的点集合对象
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/PointPrimitiveCollection.html
+          pointPrimitiveCollection = sceneView.scene.primitives.add(new Cesium.PointPrimitiveCollection());
+          // 循环添加点对象
+          features.forEach(function (feature) {
+            // 构造点的初始化参数
+            const pointOptions = {
+              // 几何坐标
+              position: Cesium.Cartesian3.fromDegrees(
+                feature.geometry.coordinates[0],
+                feature.geometry.coordinates[1],
+                feature.geometry.coordinates[2] || 0
+              ),
+              // 填充颜色
+              color: Cesium.Color.RED,
+              // 外边线颜色
+              outlineColor: Cesium.Color.BLUE,
+              // 外边线宽度
+              outlineWidth: 4,
+              // 点的半径
+              pixelSize: 20,
+              // Cesium的高程模式
+              heightReference: Cesium.HeightReference.NONE
+            }
+            // 添加点Primitive
+            pointPrimitiveCollection.add(pointOptions)
+          })
+        })
+      }
+
+      // 删除点要素图层
+      function removePointLayer() {
+        pointPrimitiveCollection.removeAll()
+      }
+
+      // 添加线要素图层
+      function addPolylineLayer() {
+        // 初始化一个要素服务，来查询要素
+        const server = new FeatureServer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer'
+        })
+        // 指定子图层的要素查询
+        server.queryFeatures({
+          // 要查询的子图层ID
+          layerId: '2-5',
+          // 一次查询指定的数目
+          resultRecordCount: 10000
+        }).then(function (result) {
+          console.log("线要素查询成功:", result)
+          // 获取所有线要素集合
+          const { features } = result.data
+          // 初始化一个Cesium的线集合对象
+          // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/PrimitiveCollection.html
+          polylinePrimitiveCollection = sceneView.scene.primitives.add(new Cesium.PrimitiveCollection());
+          // 循环添线点对象
+          features.forEach(function (feature) {
+            // 将线的经纬度点坐标转为笛卡尔坐标
+            const cartesian3Array = []
+            feature.geometry.coordinates.forEach(function (coordinate) {
+              cartesian3Array.push(
+                Cesium.Cartesian3.fromDegrees(
+                  coordinate[0],
+                  coordinate[1],
+                  coordinate[2] || 0
+                )
+              )
+            })
+            // 创建一个线Primitive对象
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Primitive.html
+            const polylinePrimitive = new Cesium.Primitive({
+              // 线几何实例对象
+              // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/GeometryInstance.html
+              geometryInstances: new Cesium.GeometryInstance({
+                // 设置线几何
+                // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/PolylineGeometry.html
+                geometry: new Cesium.PolylineGeometry({
+                  // 线的笛卡尔点坐标
+                  positions: cartesian3Array,
+                  // 线宽
+                  width: 4,
+                  // 线的地理类型
+                  arcType: Cesium.ArcType.NONE
+                }),
+                // 在这里设置线颜色
+                attributes: {
+                  // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/ColorGeometryInstanceAttribute.html
+                  color: Cesium.ColorGeometryInstanceAttribute.fromColor(new Cesium.Color(Math.random(), Math.random(), Math.random(), 1))
+                }
+              }),
+              // 是否显示线
+              show: true,
+              // 设置线外观，纯色线仅需要传入一个空的PolylineColorAppearance即可
+              // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/PolylineColorAppearance.html
+              appearance: new Cesium.PolylineColorAppearance(),
+              // 是否是同步绘制，这里关闭，否则绘制会闪烁
+              asynchronous: false
+            })
+            polylinePrimitiveCollection.add(polylinePrimitive)
+          })
+        })
+      }
+
+      // 删除线图层
+      function removePolylineLayer() {
+        polylinePrimitiveCollection.removeAll()
+      }
+
+      // 添加区要素图层
+      function addPolygonLayer() {
+        // 初始化一个要素服务，来查询要素
+        const server = new FeatureServer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/FeatureServer'
+        })
+        // 指定子图层的要素查询
+        server.queryFeatures({
+          // 要查询的子图层ID
+          layerId: '0',
+          // 一次查询指定的数目
+          resultRecordCount: 10000
+        }).then(function (result) {
+          console.log("区要素查询成功:", result)
+          // 初始化一个Cesium的线集合对象
+          polygonPrimitiveCollection = sceneView.scene.primitives.add(new Cesium.PrimitiveCollection());
+          // 根据要素查询的结果，绘制几何
+          // 有可能是其他类型的几何，这里只演示如何绘制多边形
+          result.data.features.forEach(function (feature) {
+            // 要绘制的笛卡尔坐标数组
+            const cartesian3Array = []
+            // 获取要素的几何坐标
+            const { coordinates } = feature.geometry
+            // 将几何点从经纬度坐标转为笛卡尔坐标
+            // 几何点数组中，第一个数组是外圈，其余的是内圈
+            for (let i = 0; i < coordinates.length; i++) {
+              cartesian3Array.push([])
+              for (let j = 0; j < coordinates[i].length; j++) {
+                cartesian3Array[i].push(
+                  Cesium.Cartesian3.fromDegrees(coordinates[i][j][0], coordinates[i][j][1], coordinates[i][j][2] || 0)
+                )
+              }
+            }
+            // 如果多边形有内圈，则构造Cesium的内圈对象
+            const holes = []
+            for (let i = 1; i < cartesian3Array.length; i++) {
+              // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/PolygonHierarchy.html
+              holes.push(new Cesium.PolygonHierarchy(cartesian3Array[i]))
+            }
+            // 构造Cesium的多边形几何对象
+            const polygonGeometry = new Cesium.PolygonGeometry({
+              // 多边形几何结构
+              polygonHierarchy: new Cesium.PolygonHierarchy(cartesian3Array[0], holes),
+              // 是否使用单个点的高度
+              perPositionHeight: true
+            })
+            // 构造多边形的材质对象
+            const color = new Cesium.Color(Math.random(), Math.random(), Math.random(), 1)
+            const material = Cesium.Material.fromType('Color', {
+              color: color
+            })
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/MaterialAppearance.html
+            const appearance = new Cesium.MaterialAppearance({
+              // 几何材质
+              material: material
+            })
+            // 构造Primitive对象
+            const polygonPrimitive = new Cesium.Primitive({
+              // 几何实例
+              // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/GeometryInstance.html
+              geometryInstances: new Cesium.GeometryInstance({
+                geometry: polygonGeometry,
+                attributes: {
+                  // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/ColorGeometryInstanceAttribute.html
+                  color: Cesium.ColorGeometryInstanceAttribute.fromColor(color)
+                }
+              }),
+              // 几何外观
+              appearance: appearance,
+              asynchronous: false
+            })
+            // 将primitive对象添加到Cesium中
+            polygonPrimitiveCollection.add(polygonPrimitive)
+          })
+        })
+      }
+
+      // 删除区图层
+      function removePolygonLayer() {
+        polygonPrimitiveCollection.removeAll()
+      }
+
+      // 初始三维地图
+      function initView() {
+        sceneView = new Cesium.Viewer('mapgis-3d-viewer')
+        // 判断是否支持图像渲染像素化处理
+        if(Cesium.FeatureDetection.supportsImageRenderingPixelated()){
+          // 使得该值和浏览器保持一致，文字或者图形的渲染结果会更加平滑
+          sceneView.resolutionScale = window.devicePixelRatio
+        }
+        // 开启抗锯齿，文字或者图形的渲染结果会更加平滑
+        sceneView.scene.fxaa = true
+        sceneView.scene.postProcessStages.fxaa.enabled = true
+      }
+
+      //蓝黑版深色地图
+      function addBlueImage() {
+        let blueImage = new zondy.cesium.UrlTemplateImageryProvider({
+          url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
+          tilingScheme: new Cesium.WebMercatorTilingScheme(),
+          maximumLevel: 18
+        })
+        sceneView.imageryLayers.addImageryProvider(blueImage)
+      }
+
+      //飞到指定视角
+      function flyTo() {
+        sceneView.camera.flyTo({
+          destination: Cesium.Cartesian3.fromDegrees(113, 30.585234, 1145000),
+          duration: 1
+        });
+      }
+
+      // 初始化示例UI
+      function initUI() {
+        // 图层隐藏或显示
+        layui.form.on('checkbox(point)', function (data) {
+          // 如果图层不存在则添加
+          if (data.elem.checked) {
+            addPointLayer()
+          } else {
+            removePointLayer()
+          }
+        })
+        layui.form.on('checkbox(line)', function (data) {
+          // 如果图层不存在则添加
+          if (data.elem.checked) {
+            addPolylineLayer()
+          } else {
+            removePolylineLayer()
+          }
+        })
+        layui.form.on('checkbox(polygon)', function (data) {
+          // 如果图层不存在则添加
+          if (data.elem.checked) {
+            addPolygonLayer()
+          } else {
+            removePolygonLayer()
+          }
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <div id="mapgis-3d-viewer" style="width: 100%; height: 100%"></div>
+    <div class="layui-panel layui-panel-right">
+        <form class="layui-form" action="">
+            <div
+                    class="layui-form-item sample-main-panel"
+                    style="border-bottom: none"
+            >
+                <label class="layui-form-label">展示图层</label>
+                <div class="layui-input-block">
+                    <input
+                            type="checkbox"
+                            name=""
+                            lay-filter="point"
+                            title="点图层"
+                            lay-skin="primary"
+                            checked
+                    />
+                    <input
+                            type="checkbox"
+                            name=""
+                            lay-filter="line"
+                            title="线图层"
+                            lay-skin="primary"
+                    />
+                    <input
+                            type="checkbox"
+                            name=""
+                            lay-filter="polygon"
+                            title="区图层"
+                            lay-skin="primary"
+                    />
+                </div>
+            </div>
+        </form>
+    </div>
+    <style>
+        .layui-panel-right {
+            width: 390px;
+        }
+
+        .layui-form-checkbox[lay-skin='primary'] span {
+            color: #e1e1e1;
+        }
+
+        .layui-form-checked[lay-skin='primary'] i {
+            border-color: #1890ff !important;
+            background-color: #1890ff;
+        }
+
+        .layui-form-checkbox[lay-skin='primary']:hover i {
+            border-color: #1890ff;
+        }
+    </style>
+  </body>
+</html>

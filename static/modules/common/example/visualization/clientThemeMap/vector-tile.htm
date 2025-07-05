@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>矢量瓦片图层 - 4326</title>
+    <!--mapboxgl库，矢量瓦片需要依赖该库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.css"/>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+      let map, view, layer, layerOpacity = 1, initType = 'VectorTileServer',
+        igsVersion = '2.0', themeType = 'SimpleRenderer', subLayerId = '湖北省市级区划_simplerender'
+      const {
+        IGSVectorTileLayer
+      } = zondy.layer
+      const { Map, SpatialReference, Color } = zondy
+      const { FetchRequest } = zondy.service
+      const { SimpleRenderer, UniqueValueRenderer, ClassBreakRenderer } = zondy.renderer
+      const { SimpleMarkerSymbol,SimpleFillSymbol,SimpleLineSymbol} = zondy.symbol
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 初始化示例UI
+        initUI()
+        // 添加瓦片图层
+        addLayer()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 根据类型获取专题图参数
+      function getRendererByType(type) {
+        switch (type) {
+          case 'SimpleRenderer':
+          default:
+            return new SimpleRenderer({
+              symbol: new SimpleFillSymbol({
+                // 填充颜色
+                color: new Color(244, 255, 0, 1),
+                // 边线样式
+                outline: new SimpleLineSymbol({
+                  color: new Color(0, 0, 0, 0),
+                })
+              })
+            })
+          case 'UniqueValueRenderer':
+            return new UniqueValueRenderer({
+              //专题图过滤字段名
+              field: 'NAME',
+              // 默认样式,当没有匹配到指定值时,会使用默认样式
+              defaultSymbol: new SimpleFillSymbol({
+                // 填充颜色
+                color: new Color(1, 255, 0, 1),
+                // 边线样式
+                outline: new SimpleLineSymbol({
+                  color: new Color(0, 0, 0, 0),
+                })
+              }),
+              //单值专题图过滤调条件数组
+              uniqueValueInfos: [{
+                //指定字段值
+                value: "襄阳市",
+                //匹配到该值后的样式
+                symbol: new SimpleFillSymbol({
+                  // 填充颜色
+                  color: new Color(244, 255, 0, 1),
+                  // 边线样式
+                  outline: new SimpleLineSymbol({
+                    color: new Color(0, 0, 0, 0),
+                  })
+                })
+              },{
+                //指定字段值
+                value: "宜昌市",
+                //匹配到该值后的样式
+                symbol: new SimpleFillSymbol({
+                  // 填充颜色
+                  color: new Color(244, 1, 123, 1),
+                  // 边线样式
+                  outline: new SimpleLineSymbol({
+                    color: new Color(0, 0, 0, 0),
+                  })
+                })
+              }]
+            })
+          case 'ClassBreakRenderer':
+            return new ClassBreakRenderer({
+              // 专题图过滤字段名
+              field: 'GDP2016',
+              // 默认样式,当没有匹配到指定值时,会使用默认样式
+              defaultSymbol: new SimpleFillSymbol({
+                // 填充颜色
+                color: new Color(255, 255, 0, 1),
+                // 边线样式
+                outline: new SimpleLineSymbol({
+                  color: new Color(0, 0, 0, 0),
+                })
+              }),
+              //分段专题图过滤条件数组
+              classBreakInfos: [{
+                // 最大过滤范围,field对应的值小于maxValue
+                maxValue: 100,
+                // 最小过滤范围,field对应的值大于等于minValue
+                minValue: 0,
+                // 匹配到该值后的样式
+                symbol: new SimpleFillSymbol({
+                  // 填充颜色
+                  color: new Color(255, 122, 0, 1),
+                // 边线样式
+                outline: new SimpleLineSymbol({
+                  color: new Color(0, 0, 0, 0),
+                })
+                })
+              },{
+                // 最大过滤范围,field对应的值小于maxValue
+                maxValue: 200,
+                // 最小过滤范围,field对应的值大于等于minValue
+                minValue: 100,
+                // 匹配到该值后的样式
+                symbol: new SimpleFillSymbol({
+                  // 填充颜色
+                  color: new Color(255, 166, 0, 1),
+                  // 边线样式
+                  outline: new SimpleLineSymbol({
+                    color: new Color(0, 0, 0, 0),
+                  })
+                })
+              },{
+                // 最大过滤范围,field对应的值小于maxValue
+                maxValue: 30000,
+                // 最小过滤范围,field对应的值大于等于minValue
+                minValue: 200,
+                // 匹配到该值后的样式
+                symbol: new SimpleFillSymbol({
+                  // 填充颜色
+                  color: new Color(255, 233, 0, 1),
+                  // 边线样式
+                  outline: new SimpleLineSymbol({
+                    color: new Color(0, 0, 0, 0),
+                  })
+                })
+              }]
+            })
+        }
+      }
+
+      // 添加矢量瓦片图层
+      function addLayer(type, igsVersion) {
+        // 如果layer存在，先删除图层
+        if (layer) {
+          deleteLayer()
+        }
+        // 根据类型创建矢量瓦片图层
+        switch (type) {
+          case 'VectorTileServer':
+          default:
+            if (igsVersion === '1.0') {
+              layer = new IGSVectorTileLayer({
+                // 基地址
+                url: 'http://webclient.smaryun.com:6163/igs/rest/mrcs/vtiles/湖北省4326矢量瓦片',
+                // IGS1.0版本的服务必须知道坐标系
+                spatialReference: new SpatialReference({
+                  wkid: 4326
+                })
+              })
+            } else {
+              layer = new IGSVectorTileLayer({
+                // 基地址
+                url: 'http://webclient.smaryun.com:8089/igs/rest/services/VectorTile/湖北省4326矢量瓦片/VectorTileServer'
+              })
+            }
+            break
+          case 'JSON':
+            if (igsVersion === '1.0') {
+              layer = new IGSVectorTileLayer({
+                // 矢量瓦片样式文件地址
+                url: 'http://webclient.smaryun.com:8200/VectorTile/湖北省4326矢量瓦片/湖北省4326矢量瓦片_style_192.168.82.91_6163.json',
+                // IGS1.0版本的服务必须知道坐标系
+                spatialReference: new SpatialReference({
+                  wkid: 4326
+                })
+              })
+            } else {
+              layer = new IGSVectorTileLayer({
+                // 基地址
+                url: 'http://webclient.smaryun.com:8200/VectorTile/湖北省4326矢量瓦片/湖北省4326矢量瓦片_style_192.168.82.91_8089.json'
+              })
+            }
+            break
+          case 'Style':
+            if (igsVersion === '1.0') {
+              FetchRequest.commit('get', 'http://webclient.smaryun.com:8200/VectorTile/湖北省4326矢量瓦片/湖北省4326矢量瓦片_style_192.168.82.91_6163.json', {}).then((result) => {
+                return result.json().then((styleJSON) => {
+                  console.log('样式对象请求完毕:', styleJSON)
+                  layer = new IGSVectorTileLayer({
+                    // 矢量瓦片样式对象
+                    style: styleJSON,
+                    // IGS1.0版本的服务必须知道坐标系
+                    spatialReference: new SpatialReference({
+                      wkid: 4326
+                    })
+                  })
+                })
+              })
+            } else {
+              FetchRequest.commit('get', 'http://webclient.smaryun.com:8200/VectorTile/湖北省4326矢量瓦片/湖北省4326矢量瓦片_style_192.168.82.91_8089.json', {}).then((result) => {
+                return result.json().then((styleJSON) => {
+                  console.log('样式对象请求完毕:', styleJSON)
+                  layer = new IGSVectorTileLayer({
+                    // 矢量瓦片样式对象
+                    style: styleJSON
+                  })
+                })
+              })
+            }
+            break
+        }
+        // 添加图层
+        map.add(layer)
+        // 图层添加完毕后，跳转到图层范围内
+        layer.on('layerview-created', (result) => {
+          // 根据子图层id获取子图层，也可以在初始化时指定专题图，此时仅显示指定的子图层
+          const sublayer = layer.findSublayerById(subLayerId)
+          // 设置专题图
+          sublayer.renderer = getRendererByType(themeType)
+          // 跳转到指定范围
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      // 删除图层
+      function deleteLayer() {
+        map.remove(layer)
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          //切换加载类型
+          layui.form.on('select(igsVersion)', function (data) {
+            // 线删除图层
+            deleteLayer()
+            // 重新加载图层
+            igsVersion = data.value
+            addLayer(initType, igsVersion)
+          })
+          //切换加载类型
+          layui.form.on('select(layerType)', function (data) {
+            // 线删除图层
+            deleteLayer()
+            // 重新加载图层
+            initType = data.value
+            addLayer(initType, igsVersion)
+          })
+          // 切换专题图
+          layui.form.on('select(themeType)', function (data) {
+            // 根据子图层ID来获取子图层对象
+            const sublayer = layer.findSublayerById(subLayerId)
+            // 设置专题图参数
+            themeType = data.value
+            sublayer.renderer = getRendererByType(data.value)
+          })
+        })
+      }
+    </script>
+</head>
+
+<body onload="init();">
+<!--  视图容器div  -->
+<div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+<!--  示例UI  -->
+<div class="layui-panel layui-panel-right" style="width: 487px;z-index: 99999">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">IGS版本</label>
+            <div class="layui-input-block layui-input-block-select">
+                <select id="igsVersion" name="igsVersion" lay-filter="igsVersion">
+                    <option value="2.0">IGS2.0版本</option>
+                    <option value="1.0">IGS1.0版本</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">加载方式</label>
+            <div class="layui-input-block layui-input-block-select">
+                <select id="layerType" name="layerType" lay-filter="layerType">
+                    <option value="VectorTileServer">矢量瓦片服务</option>
+                    <option value="JSON">加载样式文件</option>
+                    <option value="Style">样式对象</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">切换专题图</label>
+            <div class="layui-input-block layui-input-block-select">
+                <select id="themeType" name="themeType" lay-filter="themeType">
+                    <option value="SimpleRenderer">统一专题图</option>
+                    <option value="UniqueValueRenderer">单值专题图</option>
+                    <option value="ClassBreakRenderer">分段专题图</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

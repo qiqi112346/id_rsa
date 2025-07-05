@@ -1,0 +1,1033 @@
+{
+  "name": "common",
+  "title": "MapGIS WebClient-common",
+  "mapmode": "common",
+  "childs": [
+    {
+      "name": "基础对象",
+      "folder": "baseObject",
+      "childs": [
+        {
+          "name": "几何类型",
+          "folder": "geometry",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "点",
+              "file": "point",
+              "icon": "point.png",
+              "diffcult": "1",
+              "tags": ["点几何", "point", "dianjihe", "Point"]
+            },
+            {
+              "name": "线",
+              "file": "line-string",
+              "icon": "line-string.png",
+              "diffcult": "1",
+              "tags": ["线几何", "line-string", "xianjihe", "LineString"]
+            },
+            {
+              "name": "区",
+              "file": "polygon",
+              "icon": "polygon.png",
+              "diffcult": "1",
+              "tags": ["区几何", "polygon", "qujihe", "Polygon"]
+            },
+            {
+              "name": "多点",
+              "file": "multi-point",
+              "icon": "multi-point.png",
+              "diffcult": "1",
+              "tags": ["多点几何", "multi-point", "duodianjihe", "MultiPoint"]
+            },
+            {
+              "name": "多线",
+              "file": "multi-line-string",
+              "icon": "multi-line-string.png",
+              "diffcult": "1",
+              "tags": [
+                "多线几何",
+                "multi-line-string",
+                "duoxianjihe",
+                "MultiLineString"
+              ]
+            },
+            {
+              "name": "多区",
+              "file": "multi-polygon",
+              "icon": "multi-polygon.png",
+              "diffcult": "1",
+              "tags": ["多区几何", "multi-polygon", "duoqujihe", "MultiPolygon"]
+            },
+            {
+              "name": "圆",
+              "file": "circle",
+              "icon": "circle.png",
+              "diffcult": "1",
+              "tags": ["圆几何", "circle", "yuanjihe", "Circle"]
+            },
+            {
+              "name": "矩形",
+              "file": "extent",
+              "icon": "extent.png",
+              "diffcult": "1",
+              "tags": ["矩形几何", "extent", "juxingjihe", "Extent"]
+            }
+          ]
+        },
+        {
+          "name": "空间参照系",
+          "folder": "spatialReference",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "设置几何空间参考系",
+              "file": "spatial-reference",
+              "icon": "spatial-reference.png",
+              "diffcult": "1",
+              "tags": [
+                "设置几何空间参考系",
+                "spatial-reference",
+                "kongjiancankaoxi",
+                "SpatialReference"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "地图引擎原生对象",
+          "folder": "mapOriginObject",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "获取图层对象",
+              "file": "map-layer-object",
+              "icon": "map-layer-object.png",
+              "diffcult": "1",
+              "tags": [
+                "获取图层对象",
+                "spatial-reference",
+                "kongjiancankaoxi",
+                "SpatialReference"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "几何编辑",
+          "folder": "geometryEdit",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "区查询点",
+              "file": "polygon-getpoint",
+              "icon": "polygon-getpoint.png",
+              "diffcult": "1",
+              "tags": ["区查询点"]
+            },
+            {
+              "name": "区删除点",
+              "file": "polygon-removepoint",
+              "icon": "polygon-removepoint.png",
+              "diffcult": "1",
+              "tags": ["区删除点"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "地理要素",
+      "folder": "geographicFeature",
+      "leaffolder": true,
+      "childs": [
+        {
+          "name": "要素",
+          "file": "feature",
+          "icon": "feature.png",
+          "diffcult": "1",
+          "tags": ["要素", "feature", "Feature", "yaosu"]
+        },
+        {
+          "name": "要素集合",
+          "file": "feature-set",
+          "icon": "feature-set.png",
+          "diffcult": "1",
+          "tags": ["要素集合", "feature-set", "FeatureSet", "yaosujihe"]
+        }
+      ]
+    },
+    {
+      "name": "数据图层及管理",
+      "folder": "layers",
+      "childs": [
+        {
+          "name": "瓦片图层",
+          "folder": "tileLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "瓦片图层 - 4326",
+              "file": "igs-tile-layer-4326",
+              "icon": "igs-tile-layer-4326.png",
+              "diffcult": "1",
+              "tags": [
+                "igs-tile-layer-4326",
+                "IGSTileLayer",
+                "瓦片图层 - 4326",
+                "wapiantuceng",
+                "tile",
+                "4326",
+                "经纬度坐标系",
+                "jingweiduzuobiaoxi"
+              ]
+            },
+            {
+              "name": "瓦片图层 - 3857",
+              "file": "igs-tile-layer-3857",
+              "icon": "igs-tile-layer-3857.png",
+              "diffcult": "1",
+              "tags": [
+                "igs-tile-layer-3857",
+                "IGSTileLayer",
+                "瓦片图层 - 3857",
+                "wapiantuceng",
+                "tile",
+                "3857",
+                "墨卡托坐标系",
+                "mokatuozuobiaoxi"
+              ]
+            },
+            {
+              "name": "瓦片图层 - 自定义坐标系",
+              "file": "igs-tile-layer-custom",
+              "icon": "igs-tile-layer-custom.png",
+              "diffcult": "1",
+              "tags": [
+                "igs-tile-layer-custom",
+                "IGSTileLayer",
+                "瓦片图层 - 自定义坐标系",
+                "wapiantuceng",
+                "tile",
+                "custom",
+                "自定义坐标系",
+                "zidingyizuobiaoxi"
+              ]
+            },
+            {
+              "name": "瓦片图层 - 特殊切片规则",
+              "file": "igs-tile-layer-unconventianal",
+              "icon": "igs-tile-layer-unconventianal.png",
+              "diffcult": "1",
+              "tags": [
+                "web-tile-layer",
+                "WebTileLayer",
+                "网络瓦片图层",
+                "wangluowapiantuceng",
+                "tile",
+                "custom",
+                "自定义坐标系",
+                "zidingyizuobiaoxi",
+                "tianditu",
+                "DataServer"
+              ]
+            },
+            {
+              "name": "网络瓦片图层",
+              "file": "web-tile-layer",
+              "icon": "web-tile-layer.png",
+              "diffcult": "1",
+              "tags": [
+                "web-tile-layer",
+                "WebTileLayer",
+                "网络瓦片图层",
+                "wangluowapiantuceng",
+                "tile",
+                "custom",
+                "自定义坐标系",
+                "zidingyizuobiaoxi",
+                "tianditu",
+                "DataServer"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "矢量瓦片图层",
+          "folder": "vectorTileLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "矢量瓦片图层 - 4326",
+              "file": "igs-vector-tile-layer-4326",
+              "icon": "igs-vector-tile-layer-4326.png",
+              "diffcult": "1",
+              "tags": [
+                "igs-vector-tile-layer-4326",
+                "IGSVectorTileLayer",
+                "矢量瓦片图层 - 4326",
+                "shiliangwapiantuceng",
+                "vectortile",
+                "4326",
+                "经纬度坐标系",
+                "jingweiduzuobiaoxi"
+              ]
+            },
+            {
+              "name": "矢量瓦片图层 - 3857",
+              "file": "igs-vector-tile-layer-3857",
+              "icon": "igs-vector-tile-layer-3857.png",
+              "diffcult": "1",
+              "tags": [
+                "igs-vector-tile-layer-3857",
+                "IGSVectorTileLayer",
+                "矢量瓦片图层 - 3857",
+                "shiliangwapiantuceng",
+                "vectortile",
+                "3857",
+                "墨卡托坐标系",
+                "mokatuozuobiaoxi"
+              ]
+            },
+            {
+              "name": "矢量瓦片图层 - 自定义坐标系",
+              "file": "igs-vector-tile-layer-custom",
+              "icon": "igs-vector-tile-layer-custom.png",
+              "diffcult": "1",
+              "tags": [
+                "igs-vector-tile-layer-custom",
+                "IGSVectorTileLayer",
+                "矢量瓦片图层 - 自定义坐标系",
+                "shiliangwapiantuceng",
+                "vectortile",
+                "custom",
+                "自定义坐标系",
+                "zidingyizuobiaoxi"
+              ]
+            },
+            {
+              "name": "ArcGIS矢量瓦片图层",
+              "file": "arcgis-vector-tile-layer",
+              "icon": "arcgis-vector-tile-layer.png",
+              "diffcult": "1",
+              "tags": [
+                "arcgis-vector-tile-layer",
+                "ArcGISVectorTileLayer",
+                "ArcGIS矢量瓦片图层",
+                "arcgisshiliangwapiantuceng",
+                "vectortile",
+                "arcgis"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "地图图片图层",
+          "folder": "mapPictureLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "地图图片图层 - 4326",
+              "file": "igs-map-image-layer-4326",
+              "icon": "igs-map-image-layer-4326.png",
+              "diffcult": "1",
+              "tags": [
+                "igs-map-image-layer-4326",
+                "IGSMapImageLayer",
+                "地图图片图层 - 4326",
+                "ditutupiantuceng",
+                "mapimage",
+                "4326",
+                "经纬度坐标系",
+                "jingweiduzuobiaoxi"
+              ]
+            },
+            {
+              "name": "矢量瓦片图层 - 3857",
+              "file": "igs-map-image-layer-3857",
+              "icon": "igs-map-image-layer-3857.png",
+              "diffcult": "1",
+              "tags": [
+                "igs-map-image-layer-3857",
+                "IGSMapImageLayer",
+                "地图图片图层 - 3857",
+                "ditutupiantuceng",
+                "mapimage",
+                "3857",
+                "墨卡托坐标系",
+                "mokatuozuobiaoxi"
+              ]
+            },
+            {
+              "name": "矢量瓦片图层 - 自定义坐标系",
+              "file": "igs-map-image-layer-custom",
+              "icon": "igs-map-image-layer-custom.png",
+              "diffcult": "1",
+              "tags": [
+                "igs-map-image-layer-custom",
+                "IGSMapImageLayer",
+                "地图图片图层 - 自定义坐标系",
+                "ditutupiantuceng",
+                "mapimage",
+                "custom",
+                "自定义坐标系",
+                "zidingyizuobiaoxi"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "OGC图层",
+          "folder": "ogcLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "WMTS图层 - 4326",
+              "file": "wmts-layer-4326",
+              "icon": "wmts-layer-4326.png",
+              "diffcult": "1",
+              "tags": [
+                "wmts-layer-4326",
+                "WMTSLayer",
+                "WMTS图层 - 4326",
+                "wmtstuceng",
+                "wmtslayer",
+                "4326",
+                "经纬度坐标系",
+                "jingweiduzuobiaoxi"
+              ]
+            },
+            {
+              "name": "WMTS图层 - 3857",
+              "file": "wmts-layer-3857",
+              "icon": "wmts-layer-3857.png",
+              "diffcult": "1",
+              "tags": [
+                "wmts-layer-3857",
+                "WMTSLayer",
+                "WMTS图层 - 3857",
+                "wmtstuceng",
+                "wmtslayer",
+                "3857",
+                "墨卡托坐标系",
+                "mokatuozuobiaoxi"
+              ]
+            },
+            {
+              "name": "WMTS图层 - 自定义坐标系",
+              "file": "wmts-layer-custom",
+              "icon": "wmts-layer-custom.png",
+              "diffcult": "1",
+              "tags": [
+                "wmts-layer-custom",
+                "WMTSLayer",
+                "WMTS图层 - 自定义坐标系",
+                "wmtstuceng",
+                "wmtslayer",
+                "custom",
+                "自定义坐标系",
+                "zidingyizuobiaoxi"
+              ]
+            },
+            {
+              "name": "WMS图层 - 4326",
+              "file": "wms-layer-4326",
+              "icon": "wms-layer-4326.png",
+              "diffcult": "1",
+              "tags": [
+                "wms-layer-4326",
+                "WMSLayer",
+                "WMS图层 - 4326",
+                "wmstuceng",
+                "wmslayer",
+                "4326",
+                "经纬度坐标系",
+                "jingweiduzuobiaoxi"
+              ]
+            },
+            {
+              "name": "WMS图层 - 3857",
+              "file": "wms-layer-3857",
+              "icon": "wms-layer-3857.png",
+              "diffcult": "1",
+              "tags": [
+                "wms-layer-3857",
+                "WMSLayer",
+                "WMS图层 - 3857",
+                "wmstuceng",
+                "wmslayer",
+                "3857",
+                "墨卡托坐标系",
+                "mokatuozuobiaoxi"
+              ]
+            },
+            {
+              "name": "WMS图层 - 自定义坐标系",
+              "file": "wms-layer-custom",
+              "icon": "wms-layer-custom.png",
+              "diffcult": "1",
+              "tags": [
+                "wms-layer-custom",
+                "WMSLayer",
+                "WMS图层 - 自定义坐标系",
+                "wmstuceng",
+                "wmslayer",
+                "custom",
+                "自定义坐标系",
+                "zidingyizuobiaoxi"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "要素图层",
+          "folder": "featureLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "IGS要素图层 - 4326",
+              "file": "igs-feature-layer-4326",
+              "icon": "igs-feature-layer-4326.png",
+              "diffcult": "1",
+              "tags": [
+                "igs-feature-layer-4326",
+                "IGSFeatureLayer",
+                "要素图层 - 4326",
+                "yaosutuceng",
+                "featurelayer",
+                "4326",
+                "经纬度坐标系",
+                "jingweiduzuobiaoxi"
+              ]
+            },
+            {
+              "name": "IGS要素图层 - 3857",
+              "file": "igs-feature-layer-3857",
+              "icon": "igs-feature-layer-3857.png",
+              "diffcult": "1",
+              "tags": [
+                "igs-feature-layer-3857",
+                "IGSFeatureLayer",
+                "要素图层 - 3857",
+                "yaosutuceng",
+                "featurelayer",
+                "3857",
+                "墨卡托坐标系",
+                "mokatuozuobiaoxi"
+              ]
+            },
+            {
+              "name": "IGS要素图层 - 自定义坐标系",
+              "file": "igs-feature-layer-custom",
+              "icon": "igs-feature-layer-custom.png",
+              "diffcult": "1",
+              "tags": [
+                "igs-feature-layer-custom",
+                "IGSFeatureLayer",
+                "要素图层 - 自定义坐标系",
+                "yaosutuceng",
+                "featurelayer",
+                "custom",
+                "自定义坐标系",
+                "zidingyizuobiaoxi"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "图形图层",
+          "folder": "graphicsLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "图形图层 - 4326",
+              "file": "graphics-layer-4326",
+              "icon": "graphics-layer-4326.png",
+              "diffcult": "1",
+              "tags": [
+                "graphics-layer-4326",
+                "GraphicsLayer",
+                "图形图层 - 4326",
+                "jihetuceng",
+                "graphicslayer",
+                "4326",
+                "经纬度坐标系",
+                "jingweiduzuobiaoxi"
+              ]
+            },
+            {
+              "name": "图形图层 - 3857",
+              "file": "graphics-layer-3857",
+              "icon": "graphics-layer-3857.png",
+              "diffcult": "1",
+              "tags": [
+                "graphics-layer-3857",
+                "GraphicsLayer",
+                "图形图层 - 3857",
+                "jihetuceng",
+                "graphicslayer",
+                "3857",
+                "墨卡托坐标系",
+                "mokatuozuobiaoxi"
+              ]
+            },
+            {
+              "name": "图形图层 - 自定义坐标系",
+              "file": "graphics-layer-custom",
+              "icon": "graphics-layer-custom.png",
+              "diffcult": "1",
+              "tags": [
+                "graphics-layer-custom",
+                "GraphicsLayer",
+                "图形图层 - 自定义坐标系",
+                "jihetuceng",
+                "graphicslayer",
+                "custom",
+                "自定义坐标系",
+                "zidingyizuobiaoxi"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "GeoJSON图层",
+          "folder": "geojsonLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "GeoJSON图层 - 4326",
+              "file": "geojson-layer-4326",
+              "icon": "geojson-layer-4326.png",
+              "diffcult": "1",
+              "tags": [
+                "geojson-layer-4326",
+                "GeoJSONLayer",
+                "GeoJSON图层 - 4326",
+                "geojsontuceng",
+                "geojsonlayer",
+                "4326",
+                "经纬度坐标系",
+                "jingweiduzuobiaoxi"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "视图",
+      "folder": "view",
+      "childs": [
+        {
+          "name": "视图信息",
+          "folder": "view-info",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "视图信息",
+              "file": "view-info",
+              "diffcult": "1",
+              "icon": "view-info.png",
+              "tags": ["视图信息", "view-info", "shituxinxi"]
+            }
+          ]
+        },
+        {
+          "name": "视图方法",
+          "folder": "view-methods",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "坐标互转",
+              "file": "coordinate-reversal",
+              "diffcult": "1",
+              "icon": "coordinate-reversal.png",
+              "tags": ["坐标互转", "coordinate-reversal", "zuobiaohuzhuan"]
+            },
+            {
+              "name": "视图跳转",
+              "file": "view-jump",
+              "diffcult": "1",
+              "icon": "view-jump.png",
+              "tags": ["视图跳转", "view-jump", "shitutiaozhuan"]
+            },
+            {
+              "name": "屏幕快照",
+              "file": "take-screenshot",
+              "diffcult": "1",
+              "icon": "take-screenshot.png",
+              "tags": ["屏幕快照", "take-screenshot", "pingmukuaizhao"]
+            },
+            {
+              "name": "要素拾取",
+              "file": "hit-test",
+              "diffcult": "1",
+              "icon": "hit-test.png",
+              "tags": ["要素拾取", "hit-test", "yaosushiqu"]
+            },
+            {
+              "name": "popup弹窗",
+              "file": "popup",
+              "diffcult": "1",
+              "icon": "popup.png",
+              "tags": ["视图弹窗", "popup弹窗", "popup", "shitutanchuang"]
+            },
+            {
+              "name": "平滑过渡",
+              "file": "smooth-transition",
+              "diffcult": "1",
+              "icon": "smooth-transition.png",
+              "tags": [
+                "平滑过渡",
+                "smooth-transition",
+                "pinghuaguodu",
+                "renderMode"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "视图事件",
+          "folder": "MapView-event",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "鼠标事件",
+              "file": "mouse-event",
+              "diffcult": "1",
+              "icon": "mouse-event.png",
+              "tags": ["鼠标事件", "mouse-event", "shubiaoshijian"]
+            },
+            {
+              "name": "键盘事件",
+              "file": "key-event",
+              "diffcult": "1",
+              "icon": "key-event.png",
+              "tags": ["键盘事件", "key-event", "jianpanshijian"]
+            },
+            {
+              "name": "视图事件",
+              "file": "view-event",
+              "diffcult": "1",
+              "icon": "view-event.png",
+              "tags": ["视图事件", "view-event", "shitushijian"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "可视化",
+      "folder": "visualization",
+      "childs": [
+        {
+          "name": "客户端专题图",
+          "folder": "clientThemeMap",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "单值专题图",
+              "file": "unique",
+              "diffcult": "1",
+              "icon": "unique.png",
+              "tags": [
+                "ThemeLayer",
+                "专题图",
+                "单值专题图",
+                "danzhizhuantitu",
+                "UniqueValueRenderer",
+                "SimpleMarkerSymbol",
+                "SimpleLineSymbol",
+                "SimpleFillSymbol",
+                "PictureMarkerSymbol",
+                "PictureFillSymbol"
+              ]
+            },
+            {
+              "name": "分段专题图",
+              "file": "breaks",
+              "diffcult": "1",
+              "icon": "breaks.png",
+              "tags": [
+                "ThemeLayer",
+                "专题图",
+                "分段专题图",
+                "fenduanzhuantitu",
+                "ClassBreakRenderer",
+                "SimpleMarkerSymbol",
+                "SimpleLineSymbol",
+                "SimpleFillSymbol",
+                "PictureFillSymbol"
+              ]
+            },
+            {
+              "name": "统一专题图",
+              "file": "simple",
+              "diffcult": "1",
+              "icon": "simple.png",
+              "tags": [
+                "ThemeLayer",
+                "专题图",
+                "统一专题图",
+                "tongyizhuantitu",
+                "SimpleRenderer",
+                "SimpleLineSymbol",
+                "SimpleFillSymbol",
+                "PictureMarkerSymbol"
+              ]
+            },
+            {
+              "name": "随机专题图",
+              "file": "random",
+              "diffcult": "1",
+              "icon": "random.png",
+              "tags": [
+                "ThemeLayer",
+                "专题图",
+                "随机专题图",
+                "random",
+                "suijizhuantitu",
+                "RandomRenderer"
+              ]
+            },
+            {
+              "name": "等级专题图",
+              "file": "rank",
+              "diffcult": "1",
+              "icon": "rank.png",
+              "tags": [
+                "ThemeLayer",
+                "专题图",
+                "等级专题图",
+                "RankRenderer",
+                "dengjizhuantitu",
+                "SimpleRenderer",
+                "RankRenderer",
+                "SimpleMarkerSymbol",
+                "SimpleLineSymbol",
+                "SimpleFillSymbol"
+              ]
+            },
+            {
+              "name": "聚合专题图",
+              "file": "cluster",
+              "diffcult": "1",
+              "icon": "cluster.png",
+              "tags": [
+                "ThemeLayer",
+                "专题图",
+                "聚合专题图",
+                "ClusterRenderer",
+                "juhezhuantitu",
+                "SimpleRenderer",
+                "ClusterRenderer",
+                "SimpleMarkerSymbol",
+                "SimpleLineSymbol",
+                "SimpleFillSymbol",
+                "TextSymbol"
+              ]
+            },
+            {
+              "name": "专题图显隐",
+              "file": "renderer-visible",
+              "diffcult": "1",
+              "icon": "renderer-visible.png",
+              "tags": [
+                "ThemeLayer",
+                "专题图显隐",
+                "renderer-visible",
+                "zhuantituxianyin",
+                "ClassBreakRenderer",
+                "SimpleMarkerSymbol",
+                "SimpleLineSymbol",
+                "SimpleFillSymbol"
+              ]
+            },
+            {
+              "name": "字段表达式",
+              "file": "renderer-value-expression",
+              "diffcult": "1",
+              "icon": "renderer-value-expression.png",
+              "tags": [
+                "ThemeLayer",
+                "字段表达式",
+                "renderer-value-expression",
+                "ziduanbiaodashi",
+                "ClassBreakRenderer",
+                "SimpleMarkerSymbol",
+                "SimpleLineSymbol",
+                "SimpleFillSymbol"
+              ]
+            },
+            {
+              "name": "视觉变量",
+              "file": "visualVariables",
+              "diffcult": "1",
+              "icon": "visualVariables.png",
+              "tags": [
+                "ThemeLayer",
+                "视觉变量",
+                "visualVariables",
+                "shijuebianliang",
+                "ThemeLayer",
+                "专题图",
+                "统一专题图",
+                "SimpleRenderer",
+                "SimpleMarkerSymbol",
+                "SimpleLineSymbol",
+                "SimpleFillSymbol"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "服务端专题图",
+          "folder": "serverThemeMap",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "单值专题图",
+              "file": "unique",
+              "diffcult": "1",
+              "icon": "unique.png",
+              "tags": [
+                "ThemeLayer",
+                "专题图",
+                "专题图显隐",
+                "服务端专题图",
+                "单值专题图",
+                "danzhizhuantitu",
+                "UniqueValueRenderer",
+                "SimpleMarkerSymbol",
+                "SimpleLineSymbol",
+                "SimpleFillSymbol",
+                "PictureMarkerSymbol",
+                "PictureFillSymbol"
+              ]
+            },
+            {
+              "name": "分段专题图",
+              "file": "breaks",
+              "diffcult": "1",
+              "icon": "breaks.png",
+              "tags": [
+                "ThemeLayer",
+                "专题图",
+                "专题图显隐",
+                "服务端专题图",
+                "分段专题图",
+                "fenduanzhuantitu",
+                "ClassBreakRenderer",
+                "SimpleMarkerSymbol",
+                "SimpleLineSymbol",
+                "SimpleFillSymbol",
+                "PictureFillSymbol"
+              ]
+            },
+            {
+              "name": "统一专题图",
+              "file": "simple",
+              "diffcult": "1",
+              "icon": "simple.png",
+              "tags": [
+                "ThemeLayer",
+                "专题图",
+                "专题图显隐",
+                "服务端专题图",
+                "统一专题图",
+                "tongyizhuantitu",
+                "SimpleRenderer",
+                "SimpleLineSymbol",
+                "SimpleFillSymbol",
+                "PictureMarkerSymbol"
+              ]
+            },
+            {
+              "name": "专题图显隐",
+              "file": "renderer-visible",
+              "diffcult": "1",
+              "icon": "renderer-visible.png",
+              "tags": [
+                "ThemeLayer",
+                "专题图显隐",
+                "renderer-visible",
+                "zhuantituxianyin",
+                "ClassBreakRenderer",
+                "SimpleMarkerSymbol",
+                "SimpleLineSymbol",
+                "SimpleFillSymbol"
+              ]
+            },
+            {
+              "name": "字段表达式",
+              "file": "value-expression",
+              "diffcult": "1",
+              "icon": "value-expression.png",
+              "tags": [
+                "ThemeLayer",
+                "专题图",
+                "服务端专题图",
+                "字段表达式",
+                "ziduanbiaodashi",
+                "valueExpression",
+                "ClassBreakRenderer",
+                "SimpleMarkerSymbol",
+                "SimpleLineSymbol",
+                "SimpleFillSymbol"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "符号",
+      "folder": "symbols",
+      "leaffolder": true,
+      "childs": [
+        {
+          "name": "图片填充符号",
+          "file": "pictureFillSymbol",
+          "icon": "pictureFillSymbol.png",
+          "diffcult": "1",
+          "tags": ["要素集合", "feature-set", "FeatureSet", "yaosujihe"]
+        },
+        {
+          "name": "图片Marker符号",
+          "file": "pictureMarkerSymbol",
+          "icon": "pictureMarkerSymbol.png",
+          "diffcult": "1",
+          "tags": ["要素集合", "feature-set", "FeatureSet", "yaosujihe"]
+        },
+        {
+          "name": "简单填充符号",
+          "file": "simpleFillSymbol",
+          "icon": "simpleFillSymbol.png",
+          "diffcult": "1",
+          "tags": ["要素集合", "feature-set", "FeatureSet", "yaosujihe"]
+        },
+        {
+          "name": "简单线符号",
+          "file": "simpleLineSymbol",
+          "icon": "simpleLineSymbol.png",
+          "diffcult": "1",
+          "tags": ["要素集合", "feature-set", "FeatureSet", "yaosujihe"]
+        },
+        {
+          "name": "简单Marker符号",
+          "file": "simpleMarkerSymbol",
+          "icon": "simpleMarkerSymbol.png",
+          "diffcult": "1",
+          "tags": ["要素集合", "feature-set", "FeatureSet", "yaosujihe"]
+        },
+        {
+          "name": "文字符号",
+          "file": "textSymbol",
+          "icon": "textSymbol.png",
+          "diffcult": "1",
+          "tags": ["要素集合", "feature-set", "FeatureSet", "yaosujihe"]
+        }
+      ]
+    }
+  ]
+}

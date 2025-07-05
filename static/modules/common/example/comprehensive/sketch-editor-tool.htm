@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>草图编辑工具</title>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!-- 获取天地图token -->
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+      let map, view, wmtsLayer, sketchStyle, snapOption, referGeometries
+
+      //取得jquery对象
+      let $ = layui.$
+
+      let selectedSketch, sketchEditor, graphicsLayer
+
+      // 是否开启编辑
+      let isPickable = false
+      // 已选择的要素
+      let pickFeatures = []
+      // 服务端
+      let geometryServer
+      // 数据
+      let geoJSON
+      // 鼠标样式
+      let defaultCursor
+
+      // ES5引入方式
+      const {Polygon, Point, LineString, GeometryEngine} = zondy.geometry
+      const {GeometryServer} = zondy.service
+      const {FetchMethod, SketchDataType, SketchEditorEventType, SketchEditorState, GeometryType} = zondy.enum
+      const {WMTSLayer, GraphicsLayer} = zondy.layer
+      const {
+        Map,
+        Color,
+        Feature,
+        SpatialReference
+      } = zondy
+      const { SketchStyle } = zondy.tool.sketch
+      const {SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, PictureFillSymbol} =
+        zondy.symbol
+
+      // 初始化地图
+      function init() {
+        // 初始化球体
+        initViewer()
+        // 添加参考几何图形
+        // addReferGeometries()
+        // 初始化示例UI操作
+        initUI()
+      }
+
+      // 初始二维地图
+      function initViewer() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+        // 加载天地图
+        addTDTLayer()
+        // 初始化图形图层对象
+        graphicsLayer = new GraphicsLayer()
+        map.add(graphicsLayer)
+        // 初始化草图编辑对象
+        initSketchEditor()
+        // 设置抗锯齿，使得三维显示更加平滑
+        setFXAA()
+        geometryServer = new GeometryServer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/system/GeometryServer'
+        })
+        //
+        defaultCursor = view.cursor
+
+        // 按下键盘的ctrl键，开启多选模式
+        view.on('key-down', function (event) {
+          const keyCode = window.event ? event.native.keyCode : event.native.which;
+          if (keyCode === KeyEnum.Ctrl) {
+            isPickable = true
+            if (sketchEditor) {
+              sketchEditor._editable = false
+            }
+          }
+          // 移除选中草图
+          if (keyCode === KeyEnum.Delete) {
+            if (sketchEditor) {
+              sketchEditor.remove()
+            }
+          }
+          if (keyCode === KeyEnum.Z) {
+            if (sketchEditor) {
+              sketchEditor.undo()
+            }
+          }
+          if (keyCode === KeyEnum.D) {
+            if (sketchEditor) {
+              sketchEditor.redo()
+            }
+          }
+        })
+        // 抬起键盘的ctrl键，关闭多选模式
+        view.on('key-up', function (event) {
+          const keyCode = window.event ? event.native.keyCode : event.native.which;
+          if (keyCode === KeyEnum.Ctrl) {
+            isPickable = false
+            if (sketchEditor) {
+              sketchEditor._editable = true
+            }
+          }
+        })
+        view.on('click', function (event) {
+          if (isPickable) {
+            const feature = view.hitTest({
+              x: event.x,
+              y: event.y
+            })
+            feature[0].graphic._defaultSymbol = feature[0].graphic.symbol.clone()
+            pickFeatures.push(feature[0].graphic)
+            console.log("pickFeatures:", pickFeatures)
+            switch (feature[0].graphic.geometry.type) {
+              case GeometryType.polygon:
+              default:
+                feature[0].graphic.symbol.color = 'rgba(167,76,255,0.68)'
+                feature[0].graphic.symbol.outline.color = 'rgb(255,255,255)'
+                feature[0].graphic.symbol.outline.width = 3
+                feature[0].graphic.symbol.outline.style = 'dash'
+                break
+              case GeometryType.lineString:
+                feature[0].graphic.symbol.color = 'rgba(167,76,255,1)'
+                feature[0].graphic.symbol.style = 'dash'
+                feature[0].graphic.symbol.width = 3
+                break
+            }
+          } else {
+            // 不是选取模式，则取消选取
+            if (pickFeatures.length > 0) {
+              for (let i = 0; i < pickFeatures.length; i++) {
+                pickFeatures[i].symbol = pickFeatures[i]._defaultSymbol.clone()
+              }
+              clearPickFeatures()
+            }
+          }
+        })
+      }
+
+      // 初始化草图编辑对象
+      function initSketchEditor() {
+        // 获取引擎类型
+        const type = localStorage.getItem('engine-type')
+        snapOption = {
+          isSnapVertexCoincident: false,
+          isSnapVertexInLine: false,
+          isSnapParallel: false,
+          isSnapPerpendicular: false,
+          snapSketchGeometry: false,
+        }
+        // 根据不同类型，初始化草图编辑对象
+        switch (type) {
+          case 'leaflet':
+          default:
+            sketchEditor = new zondy.leaflet.tool.sketch.SketchEditor({
+              view: view,
+              layer: graphicsLayer,
+              snapOption: snapOption
+            })
+            break
+          case 'cesium':
+            sketchEditor = new zondy.cesium.tool.sketch.SketchEditor({
+              view: view,
+              layer: graphicsLayer,
+              snapOption: snapOption
+            })
+            break
+          case 'mapboxgl':
+            sketchEditor = new zondy.mapboxgl.tool.sketch.SketchEditor({
+              view: view,
+              layer: graphicsLayer,
+              snapOption: snapOption
+            })
+            break
+        }
+        // 初始化草图编辑器事件
+        initSketchEvent()
+      }
+
+      // 初始化草图编辑器事件
+      function initSketchEvent() {
+        // 注册草图编辑器 创建时事件
+        sketchEditor.on(SketchEditorEventType.create, (event) => {
+          // 鼠标开始绘制
+          if (event.state === SketchEditorState.start) {
+            console.log('鼠标开始绘制')
+            view.cursor = "crosshair"
+          }
+          // 鼠标绘制完毕
+          if (event.state === SketchEditorState.complete) {
+            console.log('鼠标绘制完毕')
+            view.cursor = defaultCursor
+          }
+        })
+      }
+
+      // 设置抗锯齿，使得三维显示更加平滑
+      function setFXAA() {
+        // 设置抗锯齿
+        // 获取引擎类型
+        const type = localStorage.getItem('engine-type')
+        // 仅在三维场景下需要开启抗锯齿
+        if (type === 'cesium') {
+          // 获取真实的场景视图对象
+          const innerView = view.getInnerView()
+          // 开启抗锯齿
+          innerView.scene.fxaa = true;
+          innerView.scene.postProcessStages.fxaa.enabled = true;
+          // 开启图像渲染像素化处理，使得绘制结果更平滑
+          innerView.resolutionScale = window.devicePixelRatio;
+        }
+      }
+
+      // 初始化加载天地图
+      function addTDTLayer() {
+        wmtsLayer = new WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(wmtsLayer)
+        // 图层加载完毕
+        wmtsLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          view.flyTo({
+            center: [114.4016, 30.4667, 1000],
+            zoom: 17
+          })
+        })
+      }
+
+      //初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          var layer = layui.layer,
+            tips
+          const form = layui.form
+
+          form.on('select(drawOperation)', function (data) {
+            switch (data.value) {
+              case 'addPoint':
+              default:
+                addPoint()
+                break
+              case 'addPolyline':
+                addPolyline()
+                break
+              case 'addPolygon':
+                addPolygon()
+                break
+              case 'addCircle':
+                addCircle()
+                break
+              case 'addRectangle':
+                addRectangle()
+                break
+              case 'stop':
+                stop()
+                break
+              case 'setSketchStyle':
+                setSketchStyle()
+                break
+              case 'removeSelectedSketch':
+                removeSelectedSketch()
+                break
+              case 'undo':
+                undo()
+                break
+              case 'redo':
+                redo()
+                break
+              case 'enableCapture':
+                enableCapture()
+                break
+              case 'clearGraphics':
+                clearGraphics()
+                break
+              case 'changeStyle':
+                changeStyle()
+                break
+            }
+          })
+
+          form.on('select(spatialOperation)', function (data) {
+            switch (data.value) {
+              case 'unionGraphic':
+              default:
+                unionGraphic()
+                break
+              case 'addPolylineToPolygon':
+                addPolylineToPolygon()
+                break
+              case 'deletePolygon':
+                deletePolygon()
+                break
+              case 'buffer':
+                buffer()
+                break
+              case 'simplify':
+                simplify()
+                break
+              case 'intersects':
+                intersects()
+                break
+              case 'rotate':
+                rotate()
+                break
+            }
+          })
+
+          form.on('select(calculate)', function (data) {
+            switch (data.value) {
+              case 'area':
+              default:
+                area()
+                break
+              case 'addPolylineToPolygon':
+                lengthTool()
+                break
+              case 'deletePolygon':
+                lengthTool()
+                break
+              case 'distanceTool':
+                distanceTool()
+                break
+            }
+          })
+
+          form.on('select(spatialRelation)', function (data) {
+            switch (data.value) {
+              case 'isIntersect':
+              default:
+                isIntersect()
+                break
+            }
+          })
+
+          form.on('select(dataSource)', function (data) {
+            switch (data.value) {
+              case 'addEditPolygon':
+              default:
+                addEditPolygon()
+                break
+              case 'addZondy':
+                addZondy()
+                break
+              case 'addNew':
+                addNew()
+                break
+              case 'addNew2':
+                addNew2()
+                break
+              case 'addEditPolygon2':
+                addEditPolygon2()
+                break
+              case 'exportGraphic':
+                exportGraphic()
+                break
+              case 'importGraphic':
+                importGraphic()
+                break
+            }
+          })
+
+          $('#stop').on({
+            mouseenter: function () {
+              var that = this
+              tips = layer.tips(
+                "<span style='font-size:14px'>结束本次绘制并移除当前绘制内容</span>",
+                that,
+                {
+                  tips: [3, '#2C2C2C'],
+                  time: 0,
+                  area: 'auto',
+                  maxWidth: 200
+                }
+              )
+            },
+            mouseleave: function () {
+              layer.close(tips)
+            }
+          })
+          $('#remove').on({
+            mouseenter: function () {
+              var that = this
+              tips = layer.tips(
+                "<span style='font-size:14px'>移除选中的草图</span>",
+                that,
+                {
+                  tips: [3, '#2C2C2C'],
+                  time: 0,
+                  area: 'auto',
+                  maxWidth: 200
+                }
+              )
+            },
+            mouseleave: function () {
+              layer.close(tips)
+            }
+          })
+          $('#undo').on({
+            mouseenter: function () {
+              var that = this
+              tips = layer.tips(
+                "<span style='font-size:14px'>撤销当前编辑操作</span>",
+                that,
+                {
+                  tips: [3, '#2C2C2C'],
+                  time: 0,
+                  area: 'auto',
+                  maxWidth: 200
+                }
+              )
+            },
+            mouseleave: function () {
+              layer.close(tips)
+            }
+          }),
+            $('#redo').on({
+              mouseenter: function () {
+                var that = this
+                tips = layer.tips(
+                  "<span style='font-size:14px'>恢复被撤销的内容，撤销操作后使用</span>",
+                  that,
+                  {
+                    tips: [3, '#2C2C2C'],
+                    time: 0,
+                    area: 'auto',
+                    maxWidth: 200
+                  }
+                )
+              },
+              mouseleave: function () {
+                layer.close(tips)
+              }
+            })
+          $('#setSketchStyle').on({
+            mouseenter: function () {
+              var that = this
+              tips = layer.tips(
+                "<span style='font-size:14px'>点击后，再绘制草图，样式更新</span>",
+                that,
+                {
+                  tips: [3, '#2C2C2C'],
+                  time: 0,
+                  area: 'auto',
+                  maxWidth: 200
+                }
+              )
+            },
+            mouseleave: function () {
+              layer.close(tips)
+            }
+          })
+          $('#instructions').on({
+            mouseenter: function () {
+              var that = this
+              tips = layer.tips(
+                "<p style='font-size:14px'><span style='font-weight:bold'>开始绘制：</span>点击要绘制图形按钮，不同图形绘制操作如下：</p><p style='font-size:14px;text-indent:2em'>绘制线、区：左键点击开始绘制，继续点击左键绘制下一顶点；</p><p style='font-size:14px;text-indent:2em'>绘制圆形：左键点击绘制圆心，不要松开左键，拖拽鼠标添加半径，松开左键圆形绘制完成；</p><p style='font-size:14px;text-indent:2em'>绘制矩形：按下左键绘制矩形左上角顶点，不要松开左键，拖拽鼠标添加矩形，松开左键矩形绘制完成。</p><p style='font-size:14px'><span style='font-weight:bold'>结束绘制：</span>双击左键完成绘制。</p><p style='font-size:14px'><span style='font-weight:bold'>图形整体编辑：</span>左键点击选中图形，可进行图形整体编辑操作，如移动、缩放；</p><p style='font-size:14px;text-indent:2em'>移动草图：图形整体编辑状态下，左键长按拖动草图；</p><p style='font-size:14px;text-indent:2em'>缩放草图：图形整体编辑状态下，拉伸图形选择框顶点实现草图缩放。</p><p style='font-size:14px'><span style='font-weight:bold'>顶点编辑：</span>图形整体编辑状态下，再次左键点击草图，进入顶点编辑状态；</p><p style='font-size:14px;text-indent:2em'>移动图形顶点：顶点编辑状态下，左键拖动图形顶点，改变图形顶点位置；</p><p style='font-size:14px;text-indent:2em'>增加图形顶点：顶点编辑状态下，左键拖动图形中点，增加图形顶点。</p>",
+                that,
+                {
+                  tips: [3, '#2C2C2C'],
+                  time: 0,
+                  area: 'auto',
+                  maxWidth: 550
+                }
+              )
+            },
+            mouseleave: function () {
+              layer.close(tips)
+            }
+          })
+        })
+      }
+
+      // 绘制点
+      function addPoint() {
+        sketchEditor.start(SketchDataType.POINT)
+      }
+
+      // 绘制线
+      function addPolyline() {
+        sketchEditor.start(SketchDataType.POLYLINE)
+      }
+
+      // 绘制区
+      function addPolygon() {
+        sketchEditor.start(SketchDataType.POLYGON)
+      }
+
+      // 绘制圆
+      function addCircle() {
+        sketchEditor.start(SketchDataType.CIRCLE)
+      }
+
+      // 绘制矩形
+      function addRectangle() {
+        sketchEditor.start(SketchDataType.RECTANGLE)
+      }
+
+      // 撤销
+      function undo() {
+        sketchEditor.undo()
+      }
+
+      // 恢复，恢复撤销的内容
+      function redo() {
+        sketchEditor.redo()
+      }
+
+      // 停止绘制
+      function stop() {
+        sketchEditor.stop()
+      }
+
+      // 移除选中草图
+      function removeSelectedSketch() {
+        if (sketchEditor) {
+          sketchEditor.remove()
+        }
+      }
+
+      // 设置草图初始绘制时样式
+      function setSketchStyle() {
+        sketchStyle = new SketchStyle({
+          // 草图点样式
+          vertexStyle: new SimpleMarkerSymbol({
+            color: new Color(102, 142, 141, 1),
+            size: 10,
+            outline: new SimpleLineSymbol({
+              color: new Color(255, 255, 255, 1),
+              width: 3
+            })
+          }),
+          // 草图线样式
+          lineStyle: new SimpleLineSymbol({
+            color: new Color(102, 142, 141, 1),
+            width: 5
+          }),
+          // 草图区样式
+          fillStyle: new SimpleFillSymbol({
+            color: "#0ae8bf",
+            style: "cross",
+            outline: new SimpleLineSymbol({
+              color: "#faf500",
+              width: 2,
+              style: "dash",
+            })
+          }),
+          // 草图选中时，选中框样式
+          selectBoxStyle: new SimpleFillSymbol({
+            color: new Color(255, 127, 0, 0.03),
+            outline: new SimpleLineSymbol({
+              color: new Color(252, 91, 59, 1),
+              width: 1
+            })
+          }),
+          // 草图选中时，选中框顶点样式
+          selectBoxVertexStyle: new SimpleMarkerSymbol({
+            color: new Color(255, 255, 255, 1),
+            size: 9,
+            outline: new SimpleLineSymbol({
+              color: new Color(251, 91, 59, 1),
+              width: 3
+            })
+          }),
+          // 草图选中时，被编辑顶点样式
+          selectVertexStyle: new SimpleMarkerSymbol({
+            color: new Color(251, 91, 59, 1),
+            size: 9,
+            outline: new SimpleLineSymbol({
+              color: new Color(251, 255, 255, 1),
+              width: 3
+            })
+          }),
+          // 草图选中时，被编辑中点样式
+          selectMidVertexStyle: new SimpleMarkerSymbol({
+            color: new Color(255, 255, 255, 1),
+            size: 7,
+            outline: new SimpleLineSymbol({
+              color: new Color(251, 91, 59, 1),
+              width: 1
+            })
+          })
+        })
+        sketchEditor.setSketchStyle(sketchStyle)
+      }
+
+      // 拓扑线造区
+      function addPolylineToPolygon() {
+        sketchEditor.drawPolylineToPolygon([pickFeatures[0].geometry])
+        clearPickFeatures()
+      }
+
+      // 合并区
+      function unionGraphic() {
+        const unions = []
+        for (let i = 0; i < pickFeatures.length; i++) {
+          pickFeatures[i].geometry.spatialReference.wkid = 4490
+          unions.push(pickFeatures[i].geometry)
+        }
+        sketchEditor.union(unions)
+        for (let i = 0; i < pickFeatures.length; i++) {
+          sketchEditor.layer.remove(pickFeatures[i])
+        }
+        clearPickFeatures()
+      }
+
+      // 清空绘制区域
+      function clearGraphics() {
+        sketchEditor.layer.removeAll()
+      }
+
+      function changeStyle() {
+        console.log("pickFeatures[0].symbol:", pickFeatures[0].symbol)
+        pickFeatures[0].symbol = new PictureFillSymbol({
+          // 设置图片数据，必须是base64格式的图片
+          url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAAAXNSR0IArs4c6QAADC1JREFUeF7tnV12EzkQhaU25LCIIeM8kawCspIhKwlZSWAlmFUEnmgMi+CYmdYgu3PG8bjd+ldV6fqFOYN+b90PqdWSWiv8oAAUmFRAQxsoAAWmFQAgcAcUOKEAAIE9oAAAgQegQJgCGEHCdEOuRhQAII0EGt0MUwCAhOmGXI0oAEAaCTS6GaYAAAnTDbkaUQCANBJodDNMAQASphtyNaIAAGkk0OhmmAIAJEw35GpEAQBCPNAPL5+/7bT+Uym1NMYsldbLvSbv//fj/+63/2HM9k+ttf2zH4bhk3r2rL/qf+7+Hj8nBQCIk0xlEo0wvDZKvRlrPAZAbGN6C4/WegVo5qUEIPMaZU1hodBa39oRImtFpwo3ZmWMucMI83+RAEgFV5KAYqrfFpbF4gZTsZ1AAKQQIKShOKbBOKpc/fh7VUgiktUAkMxh+XJ+dm+Uepu5mnzFNz6iAJAM1nr449mbruv+Yg3GgS7GmJur77/eZ5CLdJEAJGF4ttMopf5SWj+uQiUsvX5Rv83y7tV6c1e/JeVaAEASaG1HjO1KlFAw9iVqDRIAEgFIS2C0CgkACQDkYfliqf/5576FEWNyNbjrLlpYCgYgnoCwX5Xy7O9U8lamWgDE0TDje4x7x+Tykxmzuvz+61p6RwHITIRZP2cYsxo3K9pe9oMx3x43Mc4aW+vluElSGWN2q3L/bZS0GyebWPYFICecwmk6pZWy7yh2ECwWqxaeD2YhT5AAgBwRcTtqdJ2dTtXbQOgQXAvFYMwnAOEgVmASAHIg3OeXzz+SX53CPqlAu/tnAyCjZlxGjVbm/v5WzpMDgCilWDxrNLJqlMfm4aU2DQibF36AI9zhkTmbBWScUn2M1C97dvsg/mq9ucleESo4qkCTgLB4EN+dZgMclcFtChA2UyrAURmL/6pvBhAuU6rtC2uMHACkpAKc4FB4IC9pjdm6xI8gX87Pbo1S72aVoJGgv1xvLmg0Ba0YR3O5QnB5GH+MgBmG69ZvEaHmRrEjCDc4WjlfQQ2AufaIBIQbHHjumLNpvb8XBwg7OOw9040cX61n8/CaRQHCEQ5MrcLNWyKnGEA4wmEPOGHVqoTNw+sQAQhTOOwLweYuYgu3ap2c7AFhsVV9IraX6w17/evYtlytrAPE7CXgYVQxvSrn8+Ca2ALC/RoenAwM9mzRjCwBYbW36ng4MXoUtXl4ZewA2W5ZH4av4V0mkBMbEgkEwa0JrADhdJ7jlPxYvXIzJ4VUrADhupx7GGhsSqRgfbc2sAGE+YrVk2hgedfNnBRSsQBEwEM5AKHg9oA2kAdExEP508BgBSvAqLWykAdE0tRqG2SsYNXyelC95AH5fH72+8SsoB8AYRVM0oAInF5hBGGFx/aGGbo/aQ/nmGLR9dpUywBI6ZhhilVa8aj6AEiUfEGZsYoVJFudTACkgu44g15B9MAqAUigcDHZAEiMemXz0gZEws7dI/HEWZCyJo+pDYDEqBeaFw/qocoVzwdAiku+qxDTrErCe1ZLGhBx20z2goNplqdTKyUnDYiU8x9HY4tpViXL+1VbDBC7beSq/9m7No/7pQwu/cQo4qJS3TTZAXkyChizMovFzRwookeO/Xg76lHXIm3XnhWQCaP3puuuDyGxI0an9Wuj1Bul1LKVsOB8Ou1IZwNkZhTolTG76ZbWFoZmgDhmB6xo0YUkCyDNTJESxRUf7UwkZIZikgMCOMKihKlWmG65cyUFBHDEhQtTrTj9cuROBgjgSBKeowsYSUpGIUEKJAEEcARpP5UJkCSVM66waEAAR1wAjuW2zyND132Ye1+UvmaUeKhAFCCAI5+h8NCeT1ufkoMBARw+MoelBSRhuqXMFQQIaziMWWmt7UvKfjDm2xMxjem7rnttjLFv80m8xAQkKe3uX5Y3IOzgsPudlPqgFotVyJzeXj20hUapt7Xe+GNTo7+xU+XwAoQVHBk2Ao47jG9rgAJIUlnerxxnQDjBkXNaYrftd8NwO44ofmpHpp6CxIK7LTpwlIxslujsToAwg+P9q/XmJnfUxtOOxaddj2/bt7dOan2rtN49L40/u69r6Lq7kOlkbs04lj8LCCc47IP35XpzUSoQ49Wo98WnXMasDsE4WGxwOndTSifO9ZwEhNuZ8JxTq6kgjxdsfywOyZzrMjyDzVUp8e9PAsLs0wNFR49DM3w5P7uv8Vxy0pSAJJrZOUDs55ZZHGaqMXoAkmj/kS9AzBSLypdjSU5LMZIEgzj7kE4y4Ee6S+nLsUQ1wy7hAExmAbFlEg3404WbrrugtLRJVDNA4gmJEyBMICEXfEDi6UaCyZ0BASRh0QMkYbpRyeUFCCAJCxsgCdONQi5vQABJWNgASZhutXMFAcICEoKXQwOS2nb3rz8YEA6QULxGB5D4m7RmjihAqENC6d3IfpABSU3L+9UdDQhZSAhOsQCJnzkppE4CCDlIiMNBTq+nTiT3PqkmKMkAIRN0BnCMW+TtRlCqP0AyRiYpINUhYQCH1YjJITRAYi+2yfFPWJWHUCZwMBg99i3RPCRZACk+kjCBo7guaf71axqSbIAUMwMjOIppkgYMjCS5pljFljOZwWF1GS96sGfYuf2aHEmyjiCPDsjyTMIQjkc9Pp+fsTnKfEBxc5AUAST51IIxHNtRZPliqYeB3k0obmNaU5AUAyQZJMzhePQgIHGjsXaqooBEQyIEDkBS2/bu9RcHJBgSYXAAEneT1kxZBRBvSITCAUhqWt+t7mqAOEMiHA5A4mbUWqmqAjILSSNwAJJa9p+vtzogk5A0BgcgmTdrjRQkANmDZPu9DfuNixLf+KghuEudWAJ2UalMGjKAlOkun1oACY1YARAacTjaCkBSPzgApH4MTrYAkNQNEACpq79T7YDESaYsiQBIFlnTFwpI0mvqUiIAcVGJSBpAUj4QAKS85lE1ModEUbzt8lRAAEiUXetkBiTldAcg5bROWhMgSSrnZGEApIzOWWoBJFlkfVIoAMmvcdYa2ENizM3V91/vs4oUUTgAiRCPSlZAki8SACSftkVLBiR55AYgeXStUiogSS87AEmvadUSuUPy25DvXq03d1VF3KscgFCJRMJ2AJJ0YgKQdFqSKgmQpAkHAEmjI8lSAEl8WABIvIakSwAkceEBIHH6scgtAZKh6z5c9T/70oIDkNKKV6oPkIQJD0DCdGOZC5D4hw2A+GvGOgd3SJQxK7NY3JSabgEQ1nYPazwgcdcNgLhrJSrl+Cm4e3tRH8uOFRpJAAhLd6RpNHtIlMr+tSsAksZrbEsBJKdDB0DYWjtdwwHJtJYAJJ3PWJcESI6HD4CwtnXaxguAJPm1QgAkrcfYlzZ+0377GQqunTHDcH314+9VivYDkBQqCitDBCSJLoMAIMLMnao7gGSnJABJ5SiB5UiAJPYILwARaOyUXRoheZeyzNJlxUACQEpHi2F9LUMCQBgatkaTpUDie/AKgNRwG9M6hUDyfui6O9ft8gCEqVlrNVsCJD5nSgBILacxrlcEJI47gQEIY6PWbHorkACQmi5jXveX87N7o5TdlsL3Z8zq8vuv66kOABC+oSXRcgmQXK43kxwAEBI2490I5pD0l+vNBUYQ3h4k3/rP52dfOe4Antv5ixGEvPX4NJAbJHNwWOUBCB//sWgpF0hc4AAgLCzHq5Ec7txyhQOA8PIem9ZShsQHDgDCxnL8GkoREl84AAg/37FqMSVIQuAAIKzsxrOxFCAJhQOA8PQcu1bXvE4oBg4Aws5qfBv88PL5W631bcmXibFwABC+fmPZ8pKXQKSAA4CwtBnvRpfYJp8KDgDC22tsW58TkpRwABC2FuPf8ByQpIYDgPD3GesepIQkBxwAhLW9ZDQ+BSS54AAgMjzGvhcxB65ywgFA2FtLTgdCtsnnhgOAyPGXiJ74QFICDgAiwlZyOuG6b6sUHABEjrfE9GQOkpJwABAxtpLVkSlISsMBQGT5SlRvDnYA92YYblJ9d9BHKFza4KMW0hZXwI4mrjex52gcAMmhKsoUowAAERNKdCSHAgAkh6ooU4wCAERMKNGRHAoAkByqokwxCgAQMaFER3IoAEByqIoyxSgAQMSEEh3JoQAAyaEqyhSjAAARE0p0JIcCACSHqihTjAIAREwo0ZEcCgCQHKqiTDEK/AszsLgjSfC8EwAAAABJRU5ErkJggg==',
+          // 简单填充符号宽度，默认为12，单位像素
+          width: 12,
+          // 简单填充符号高度，默认为12，单位像素
+          height: 12,
+          // x方向偏移，默认为0，单位像素
+          xoffset: 0,
+          // y方向偏移，默认为0，单位像素
+          yoffset: 0,
+          // x方向拉伸，取值在0-1之间
+          xscale: 1,
+          // y方向拉伸，取值在0-1之间
+          yscale: 1,
+          outline: new SimpleLineSymbol({
+            width: 3,
+            color: "rgba(255,255,255,1)"
+          })
+        })
+      }
+
+      function addEditPolygon() {
+        view.flyTo({
+          center: [112.615, 31.14, 100000],
+          zoom: 13
+        })
+        sketchEditor.start(
+          new Polygon({
+            // 几何点坐标
+            coordinates: [
+              [[112.642899999999997, 31.1229900000000015], [112.641450000000006, 31.1219080000000012], [112.640619999999998, 31.1217560000000013], [112.639790000000005, 31.1213249999999988], [112.638949999999994, 31.1211829999999985], [112.638120000000001, 31.1211759999999984], [112.637289999999993, 31.1213209999999982], [112.63646, 31.1213130000000007], [112.635800000000003, 31.1205999999999996], [112.635630000000006, 31.1198809999999995], [112.635639999999995, 31.1191689999999994], [112.635959999999997, 31.1184520000000013], [112.636300000000006, 31.1178799999999995], [112.636300000000006, 31.1175919999999984], [112.63597, 31.1173080000000013], [112.624669999999995, 31.1168900000000015], [112.624669999999995, 31.1168900000000015], [112.623149999999995, 31.1168289999999992], [112.620800000000003, 31.1261289999999988], [112.620559999999998, 31.1265280000000004], [112.620559999999998, 31.1265280000000004], [112.618290000000002, 31.1302810000000001], [112.617789999999999, 31.1309910000000016], [112.617289999999997, 31.1317100000000018], [112.616950000000003, 31.1324180000000013], [112.616460000000004, 31.1331349999999993], [112.616119999999995, 31.133852000000001], [112.615780000000001, 31.1345689999999991], [112.615279999999998, 31.1352790000000006], [112.614779999999996, 31.1359980000000007], [112.614279999999994, 31.1367070000000012], [112.613439999999997, 31.1371329999999986], [112.612610000000004, 31.1375579999999985], [112.611779999999996, 31.1381259999999997], [112.610950000000003, 31.1384159999999994], [112.610110000000006, 31.1385539999999992], [112.609279999999998, 31.1382660000000016], [112.609279999999998, 31.1375449999999994], [112.610119999999995, 31.1368410000000004], [112.610950000000003, 31.1361260000000009], [112.611279999999994, 31.1354100000000003], [112.611620000000002, 31.1346929999999986], [112.611289999999997, 31.1339760000000005], [112.611289999999997, 31.1339760000000005], [112.610950000000003, 31.1332589999999989], [112.610119999999995, 31.1328279999999999], [112.609290000000001, 31.1326849999999986], [112.608469999999997, 31.1325320000000012], [112.60763, 31.1325339999999997], [112.606800000000007, 31.1326689999999999], [112.605959999999996, 31.1329519999999995], [112.605130000000003, 31.1333850000000005], [112.604129999999998, 31.1339469999999992], [112.603129999999993, 31.1336629999999985], [112.603290000000001, 31.1345179999999999], [112.603800000000007, 31.1349529999999994], [112.604619999999997, 31.1356740000000016], [112.604619999999997, 31.1363850000000006], [112.604290000000006, 31.1371019999999987], [112.603620000000006, 31.1378139999999988], [112.603610000000003, 31.138535000000001], [112.603610000000003, 31.1392479999999985], [112.603449999999995, 31.1408200000000015], [112.599940000000004, 31.1436770000000003], [112.599109999999996, 31.1443900000000014], [112.598280000000003, 31.1446879999999986], [112.597930000000005, 31.1447010000000013], [112.597930000000005, 31.1447010000000013], [112.5976, 31.1453820000000015], [112.597769999999997, 31.1459580000000003], [112.598269999999999, 31.1459599999999988], [112.598929999999996, 31.145817000000001], [112.600099999999998, 31.1452519999999993], [112.600939999999994, 31.1451069999999994], [112.601770000000002, 31.1448250000000009], [112.602599999999995, 31.1445450000000008], [112.603430000000003, 31.144400000000001], [112.604259999999996, 31.1442620000000012], [112.604770000000002, 31.1444089999999996], [112.605090000000004, 31.144838], [112.604759999999999, 31.1459790000000005], [112.603589999999997, 31.147120000000001], [112.603260000000006, 31.1478369999999991], [112.602919999999997, 31.1485540000000007], [112.602580000000003, 31.1492709999999988], [112.601920000000007, 31.1498370000000016], [112.601590000000002, 31.1498409999999986], [112.601590000000002, 31.1495530000000009], [112.602090000000004, 31.1481229999999982], [112.602090000000004, 31.1475450000000009], [112.601590000000002, 31.1466850000000015], [112.600759999999994, 31.1463989999999988], [112.599760000000003, 31.1466810000000009], [112.599100000000007, 31.1471039999999988], [112.598590000000002, 31.1483920000000012], [112.597920000000002, 31.1509689999999999], [112.597409999999996, 31.1521110000000014], [112.597579999999994, 31.1526870000000002], [112.597920000000002, 31.1526910000000008], [112.598920000000007, 31.1524089999999987], [112.598910000000004, 31.1529769999999999], [112.596969999999999, 31.1554450000000003], [112.596969999999999, 31.1554450000000003], [112.596360000000004, 31.1562190000000001], [112.596360000000004, 31.1562190000000001], [112.593059999999994, 31.1604080000000003], [112.59272, 31.1616919999999986], [112.593220000000002, 31.1622640000000004], [112.594059999999999, 31.1622710000000005], [112.594719999999995, 31.1618390000000005], [112.596549999999993, 31.1614189999999986], [112.599720000000005, 31.1608580000000011], [112.600719999999995, 31.1608620000000016], [112.601879999999994, 31.1608659999999986], [112.603880000000004, 31.1610130000000005], [112.604709999999997, 31.1613079999999982], [112.605549999999994, 31.1617409999999992], [112.606380000000001, 31.1618840000000006], [112.607209999999995, 31.1623149999999995], [112.608040000000003, 31.1624659999999984], [112.608869999999996, 31.1624659999999984], [112.609700000000004, 31.1624739999999996], [112.610529999999997, 31.1627599999999987], [112.611369999999994, 31.1627599999999987], [112.612200000000001, 31.1629100000000001], [112.613029999999995, 31.1629089999999991], [112.613870000000006, 31.1629159999999992], [112.614699999999999, 31.1627709999999993], [112.615530000000007, 31.1627790000000005], [112.61636, 31.1624890000000008], [112.617199999999997, 31.1624969999999983], [112.618030000000005, 31.1623519999999985], [112.618870000000001, 31.1620689999999989], [112.619699999999995, 31.1619339999999987], [112.620530000000002, 31.161643999999999], [112.621359999999996, 31.1616500000000016], [112.622190000000003, 31.1616500000000016], [112.62303, 31.1612240000000007], [112.623699999999999, 31.1605130000000017], [112.624030000000005, 31.159796], [112.624200000000002, 31.1590810000000005], [112.623869999999997, 31.1583630000000014], [112.623040000000003, 31.157786999999999], [112.622380000000007, 31.157076], [112.622209999999995, 31.1563550000000014], [112.622219999999999, 31.1556339999999992], [112.622219999999999, 31.1549219999999991], [112.622219999999999, 31.1542090000000016], [112.622219999999999, 31.1534879999999994], [112.622389999999996, 31.1527729999999998], [112.622559999999993, 31.1520599999999988], [112.622730000000004, 31.1513440000000017], [112.622889999999998, 31.1506289999999986], [112.623059999999995, 31.149916000000001], [112.623400000000004, 31.1491989999999994], [112.623729999999995, 31.1484810000000003], [112.624570000000006, 31.1479129999999991], [112.625399999999999, 31.1476310000000005], [112.626230000000007, 31.1474860000000007], [112.62706, 31.1473480000000009], [112.627899999999997, 31.1473480000000009], [112.628730000000004, 31.147354], [112.629559999999998, 31.1474970000000013], [112.630390000000006, 31.1475049999999989], [112.631230000000002, 31.1476480000000002], [112.632059999999996, 31.1475110000000015], [112.632059999999996, 31.1475110000000015], [112.632390000000001, 31.1467950000000009], [112.632390000000001, 31.1460720000000002], [112.632400000000004, 31.1453610000000012], [112.632400000000004, 31.1446480000000001], [112.632570000000001, 31.1439340000000016], [112.632900000000006, 31.1432169999999999], [112.633740000000003, 31.1429270000000002], [112.634569999999997, 31.1426470000000002], [112.635400000000004, 31.1422209999999993], [112.635900000000007, 31.1415019999999991], [112.636240000000001, 31.1407950000000007], [112.63691, 31.1400739999999985], [112.637739999999994, 31.1402239999999999], [112.638570000000001, 31.1409449999999985], [112.639399999999995, 31.1413760000000011], [112.640230000000003, 31.1415199999999999], [112.641069999999999, 31.141527], [112.641900000000007, 31.1415250000000015], [112.64273, 31.141532999999999], [112.643559999999994, 31.1415310000000005], [112.644390000000001, 31.1416739999999983], [112.645229999999998, 31.1416800000000009], [112.646060000000006, 31.1416800000000009], [112.646889999999999, 31.1413970000000013], [112.647729999999996, 31.1409720000000014], [112.647900000000007, 31.1402569999999983], [112.647570000000002, 31.1386830000000003], [112.647229999999993, 31.1375330000000012], [112.648570000000007, 31.1369669999999985], [112.649230000000003, 31.1362549999999985], [112.649569999999997, 31.1353930000000005], [112.649739999999994, 31.1342469999999985], [112.649249999999995, 31.1332440000000013], [112.648409999999998, 31.1325229999999991], [112.647919999999999, 31.1318069999999985], [112.647580000000005, 31.1310900000000004], [112.647419999999997, 31.1303710000000002], [112.64725, 31.1296520000000001], [112.646929999999998, 31.1289349999999985], [112.64676, 31.1282250000000005], [112.646100000000004, 31.1275019999999998], [112.645600000000002, 31.1267870000000002], [112.644769999999994, 31.1263560000000012], [112.643940000000001, 31.1260699999999986], [112.643270000000001, 31.1257799999999989], [112.642769999999999, 31.1251999999999995], [112.643609999999995, 31.1246319999999983], [112.643940000000001, 31.1242030000000014], [112.643940000000001, 31.1237700000000004], [112.642899999999997, 31.1229900000000015]]
+            ],
+            spatialReference: new SpatialReference({wkid: 4490})
+          })
+        )
+      }
+
+      function addZondy() {
+        const polygon2 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          coordinates: [
+            [
+              [
+                114.4008647724749,
+                30.467287302017183
+              ],
+              [
+                114.4008647724749,
+                30.467072725295992
+              ],
+              [
+                114.40137410841778,
+                30.467078089714025
+              ],
+              [
+                114.40137410841778,
+                30.46695813981706
+              ],
+              [
+                114.4008647724749,
+                30.466943979263277
+              ],
+              [
+                114.4008647724749,
+                30.466825962066626
+              ],
+              [
+                114.40131547072451,
+                30.466838492375732
+              ],
+              [
+                114.40131547072451,
+                30.466660944211487
+              ],
+              [
+                114.4008647724749,
+                30.46664893627164
+              ],
+              [
+                114.4008647724749,
+                30.466525554656958
+              ],
+              [
+                114.40124556523986,
+                30.46652956523505
+              ],
+              [
+                114.40124556523986,
+                30.466367938935196
+              ],
+              [
+                114.40086477279662,
+                30.466357352058875
+              ],
+              [
+                114.4008647724749,
+                30.466209053993197
+              ],
+              [
+                114.40118112449692,
+                30.46621238586976
+              ],
+              [
+                114.40118112449692,
+                30.46613622664445
+              ],
+              [
+                114.40137410841778,
+                30.46608567237851
+              ],
+              [
+                114.40158820291394,
+                30.46708034459588
+              ],
+              [
+                114.40206046494464,
+                30.467085318544783
+              ],
+              [
+                114.40206046494464,
+                30.467330447932387
+              ],
+              [
+                114.4008647724749,
+                30.467287302017183
+              ]
+            ]
+          ]
+        })
+        sketchEditor.start(
+          polygon2
+        )
+      }
+
+      function addNew() {
+        const polygon2 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          coordinates: [
+            [
+              [
+                114.40135821529617,
+                30.468290448188753
+              ],
+              [
+                114.40136357672714,
+                30.467727184295626
+              ],
+              [
+                114.40161556398311,
+                30.467721819877593
+              ],
+              [
+                114.40161556398311,
+                30.46765744686124
+              ],
+              [
+                114.40174423832656,
+                30.46765744686124
+              ],
+              [
+                114.40173887689559,
+                30.46760916709897
+              ],
+              [
+                114.40245194721564,
+                30.467614531517
+              ],
+              [
+                114.40243050149172,
+                30.467496514320345
+              ],
+              [
+                114.40231791144123,
+                30.46763598918912
+              ],
+              [
+                114.40234471859611,
+                30.46829581260678
+              ],
+              [
+                114.40135821529617,
+                30.468290448188753
+              ]
+            ]
+          ]
+        })
+        sketchEditor.start(
+          polygon2
+        )
+      }
+
+      function addNew2() {
+        const polygon2 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          coordinates: [
+            [
+              [
+                114.39678288201054,
+                30.467281937599157
+              ],
+              [
+                114.39680433597914,
+                30.467045903205843
+              ],
+              [
+                114.39723877884353,
+                30.46708345413205
+              ],
+              [
+                114.39723341535137,
+                30.46729803085324
+              ],
+              [
+                114.39678288201054,
+                30.467281937599157
+              ]
+            ]
+          ]
+        })
+        sketchEditor.start(
+          polygon2
+        )
+
+        const polygon3 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          coordinates: [
+            [
+              [
+                114.39739968360813,
+                30.4673087596893
+              ],
+              [
+                114.39741041059244,
+                30.46708345413205
+              ],
+              [
+                114.39783412647252,
+                30.46710491180417
+              ],
+              [
+                114.39782876298034,
+                30.467324852943392
+              ],
+              [
+                114.39739968360813,
+                30.4673087596893
+              ]
+            ]
+          ]
+        })
+        sketchEditor.start(
+          polygon3
+        )
+
+        const polygon4 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          coordinates: [
+            [
+              [
+                114.3968526074085,
+                30.466809868812533
+              ],
+              [
+                114.39686333439285,
+                30.46658992767331
+              ],
+              [
+                114.39732459471799,
+                30.46660065650937
+              ],
+              [
+                114.39731386773371,
+                30.466702580451937
+              ],
+              [
+                114.39745331852964,
+                30.466702580451937
+              ],
+              [
+                114.39745331852964,
+                30.46662747859952
+              ],
+              [
+                114.39789848837836,
+                30.466643571853606
+              ],
+              [
+                114.39788239790187,
+                30.466868877410864
+              ],
+              [
+                114.3968526074085,
+                30.466809868812533
+              ]
+            ]
+          ]
+        })
+        sketchEditor.start(
+          polygon4
+        )
+
+        const polygon5 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          coordinates: [
+            [
+              [
+                114.39678288201054,
+                30.466332435607885
+              ],
+              [
+                114.3968311534399,
+                30.4653990268707
+              ],
+              [
+                114.39707787407895,
+                30.46540975570676
+              ],
+              [
+                114.39701351217309,
+                30.466353893280004
+              ],
+              [
+                114.39678288201054,
+                30.466332435607885
+              ]
+            ]
+          ]
+        })
+        sketchEditor.start(
+          polygon5
+        )
+
+        const polygon6 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          coordinates: [
+            [
+              [
+                114.39678288201054,
+                30.466332435607885
+              ],
+              [
+                114.3968311534399,
+                30.4653990268707
+              ],
+              [
+                114.39707787407895,
+                30.46540975570676
+              ],
+              [
+                114.39701351217309,
+                30.466353893280004
+              ],
+              [
+                114.39678288201054,
+                30.466332435607885
+              ]
+            ]
+          ]
+        })
+        sketchEditor.start(
+          polygon6
+        )
+
+        const polygon7 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          coordinates: [
+            [
+              [
+                114.39721732487487,
+                30.46635925769803
+              ],
+              [
+                114.39729777725722,
+                30.46540975570676
+              ],
+              [
+                114.39756595186486,
+                30.465431213378878
+              ],
+              [
+                114.39753913440411,
+                30.465517044067358
+              ],
+              [
+                114.39771076615295,
+                30.465474128723116
+              ],
+              [
+                114.39806475663505,
+                30.465479493141146
+              ],
+              [
+                114.39804330266645,
+                30.465726256370516
+              ],
+              [
+                114.39754986138837,
+                30.465726256370516
+              ],
+              [
+                114.39750695345117,
+                30.46636998653409
+              ],
+              [
+                114.39721732487487,
+                30.46635925769803
+              ]
+            ]
+          ]
+        })
+        sketchEditor.start(
+          polygon7
+        )
+
+        const polygon8 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          coordinates: [
+            [
+              [
+                114.39820420743104,
+                30.467330217361425
+              ],
+              [
+                114.39820420743104,
+                30.467206835746737
+              ],
+              [
+                114.39873519315421,
+                30.467222929000826
+              ],
+              [
+                114.3987512836307,
+                30.467051267623873
+              ],
+              [
+                114.398939005856,
+                30.4670566320419
+              ],
+              [
+                114.39890682490312,
+                30.467389225959746
+              ],
+              [
+                114.39820420743104,
+                30.467330217361425
+              ]
+            ]
+          ]
+        })
+        sketchEditor.start(
+          polygon8
+        )
+
+        const polygon9 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          coordinates: [
+            [
+              [
+                114.39846701854657,
+                30.46687960624692
+              ],
+              [
+                114.398483109023,
+                30.466665029525732
+              ],
+              [
+                114.3985421074367,
+                30.466681122779818
+              ],
+              [
+                114.3985421074367,
+                30.46662747859952
+              ],
+              [
+                114.39893364236389,
+                30.46663284301755
+              ],
+              [
+                114.39892291537956,
+                30.466906428337072
+              ],
+              [
+                114.39846701854657,
+                30.46687960624692
+              ]
+            ]
+          ]
+        })
+        sketchEditor.start(
+          polygon9
+        )
+
+        const polygon10 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          coordinates: [
+            [
+              [
+                114.39821493441536,
+                30.46574771404263
+              ],
+              [
+                114.3982310248918,
+                30.46544730663297
+              ],
+              [
+                114.39856892489746,
+                30.46546876430509
+              ],
+              [
+                114.39855283442103,
+                30.4657584428787
+              ],
+              [
+                114.39821493441536,
+                30.46574771404263
+              ]
+            ]
+          ]
+        })
+        sketchEditor.start(
+          polygon10
+        )
+
+        const polygon11 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          coordinates: [
+            [
+              [
+                114.39868692172485,
+                30.46641826629636
+              ],
+              [
+                114.39871373918561,
+                30.466042757034277
+              ],
+              [
+                114.39878346458357,
+                30.466032028198217
+              ],
+              [
+                114.39878882807574,
+                30.465935468673678
+              ],
+              [
+                114.39872982966205,
+                30.465919375419592
+              ],
+              [
+                114.3987673741071,
+                30.465527772903418
+              ],
+              [
+                114.39898727728536,
+                30.465522408485384
+              ],
+              [
+                114.39895509633249,
+                30.46568870544431
+              ],
+              [
+                114.39885318998154,
+                30.46569943428037
+              ],
+              [
+                114.39884246299728,
+                30.465779900550817
+              ],
+              [
+                114.398939005856,
+                30.465790629386877
+              ],
+              [
+                114.39893364236389,
+                30.465946197509737
+              ],
+              [
+                114.3988585534737,
+                30.465967655181856
+              ],
+              [
+                114.3988370995051,
+                30.46611785888669
+              ],
+              [
+                114.3989175518874,
+                30.46611785888669
+              ],
+              [
+                114.39892291537956,
+                30.46621441841123
+              ],
+              [
+                114.39880491855219,
+                30.466230511665312
+              ],
+              [
+                114.39880491855219,
+                30.466289520263643
+              ],
+              [
+                114.39891218839523,
+                30.46631097793576
+              ],
+              [
+                114.39893364236389,
+                30.466450452804537
+              ],
+              [
+                114.39868692172485,
+                30.46641826629636
+              ]
+            ]
+          ]
+        })
+        sketchEditor.start(
+          polygon11
+        )
+      }
+
+      function addEditPolygon2() {
+        view.flyTo({
+          center: [114.333, 30.673, 100000],
+          zoom: 11
+        })
+        const polygon2 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          // 几何点坐标
+          coordinates: [[[114.303674,30.573439],[114.311622,30.584988],[114.316336,30.591747],[114.325174,30.603179],[114.340878,30.623476],[114.343763,30.627291],[114.35144,30.633303],[114.357217,30.637767],[114.360994,30.644544],[114.362754,30.648634],[114.366229,30.65734],[114.368721,30.661137],[114.371349,30.664966],[114.374831,30.666701],[114.383241,30.674228],[114.388454,30.677584],[114.394602,30.680768],[114.402797,30.683256],[114.401677,30.683454],[114.40054,30.684567],[114.39949,30.686177],[114.399143,30.68708],[114.397814,30.689507],[114.396644,30.691368],[114.39482,30.693513],[114.392832,30.694942],[114.392051,30.695544],[114.391183,30.695678],[114.390123,30.695495],[114.388576,30.694988],[114.386668,30.69483],[114.383714,30.695019],[114.3832,30.695178],[114.381611,30.6955],[114.371265,30.698808],[114.370039,30.698695],[114.369161,30.698412],[114.368893,30.69809],[114.365545,30.693395],[114.364902,30.69278],[114.363842,30.692047],[114.362945,30.691833],[114.361824,30.691642],[114.359686,30.691079],[114.357539,30.689709],[114.355557,30.688865],[114.352409,30.688024],[114.347872,30.685439],[114.343958,30.682854],[114.340803,30.680122],[114.339889,30.677777],[114.338619,30.675404],[114.336524,30.674386],[114.333968,30.673618],[114.331221,30.673726],[114.329464,30.67492],[114.327413,30.677618],[114.327239,30.678047],[114.323762,30.68246],[114.321449,30.683524],[114.318868,30.683605],[114.315303,30.682444],[114.311434,30.679434],[114.308739,30.677496],[114.307305,30.676651],[114.304254,30.675145],[114.301073,30.674578],[114.297883,30.674899],[114.296155,30.676495],[114.29346,30.680683],[114.292635,30.681701],[114.289509,30.684167],[114.28936,30.683109],[114.28956,30.681968],[114.292435,30.67555],[114.293113,30.673054],[114.292949,30.670046],[114.292532,30.669284],[114.28843,30.664018],[114.282107,30.659873],[114.279952,30.658302],[114.278788,30.657204],[114.276538,30.655343],[114.273822,30.653295],[114.272616,30.652288],[114.270244,30.64979],[114.268535,30.648278],[114.267675,30.647659],[114.265661,30.64666],[114.264124,30.645835],[114.262658,30.644971],[114.261287,30.644202],[114.256993,30.64163],[114.257731,30.640708],[114.257934,30.640784],[114.258106,30.640187],[114.258301,30.640231],[114.258318,30.639433],[114.258505,30.639235],[114.259129,30.639078],[114.259804,30.638806],[114.26051,30.638823],[114.261003,30.639193],[114.262268,30.637767],[114.263441,30.63855],[114.263722,30.638391],[114.26414,30.637904],[114.264788,30.63694],[114.264251,30.636588],[114.266699,30.633849],[114.264105,30.632288],[114.265731,30.630286],[114.26638,30.629715],[114.266227,30.629611],[114.267164,30.628588],[114.26722,30.628801],[114.267775,30.629161],[114.268013,30.629102],[114.268704,30.628432],[114.269306,30.628817],[114.270065,30.62872],[114.270865,30.626969],[114.270546,30.626785],[114.271151,30.62598],[114.271749,30.626227],[114.272097,30.625525],[114.271518,30.625297],[114.272415,30.623201],[114.273555,30.623451],[114.274978,30.620376],[114.275327,30.619727],[114.276729,30.61667],[114.276977,30.616241],[114.278317,30.614682],[114.279412,30.61327],[114.28036,30.61165],[114.280726,30.611299],[114.283108,30.60923],[114.283648,30.608677],[114.284304,30.607641],[114.285394,30.606225],[114.284654,30.605447],[114.278454,30.599737],[114.271594,30.596885],[114.272914,30.593618],[114.273816,30.591505],[114.280546,30.588565],[114.283152,30.587333],[114.284591,30.586442],[114.284829,30.586175],[114.285093,30.586203],[114.285107,30.585977],[114.285594,30.585738],[114.287851,30.583892],[114.289557,30.582446],[114.290918,30.581204],[114.294465,30.578494],[114.295232,30.578043],[114.295977,30.577318],[114.297385,30.576414],[114.297951,30.57627],[114.298862,30.575911],[114.299087,30.576266],[114.299564,30.576091],[114.299418,30.575864],[114.299656,30.575564],[114.303674,30.573439]]]
+        })
+        const polygon3 = new Polygon({
+          spatialReference: new SpatialReference({wkid: 4490}),
+          // 几何点坐标
+          coordinates: [[[114.362753,30.648635],[114.360995,30.644544],[114.357217,30.637767],[114.351438,30.633304],[114.343763,30.627291],[114.352724,30.621428],[114.354016,30.620494],[114.356799,30.618247],[114.358168,30.616848],[114.359453,30.615394],[114.360397,30.614254],[114.362215,30.611208],[114.36329,30.607686],[114.36588,30.609369],[114.366623,30.60983],[114.369881,30.604566],[114.369975,30.604587],[114.370208,30.604096],[114.373015,30.605512],[114.374966,30.606434],[114.375691,30.605178],[114.376444,30.605401],[114.376545,30.60517],[114.376328,30.605079],[114.376477,30.604669],[114.378766,30.605517],[114.378717,30.605602],[114.379736,30.605965],[114.379223,30.60692],[114.37817,30.606461],[114.377482,30.607671],[114.375157,30.606519],[114.373157,30.610042],[114.372921,30.610062],[114.372524,30.610913],[114.375818,30.612421],[114.378137,30.614061],[114.382707,30.617133],[114.384573,30.618465],[114.386051,30.619097],[114.397583,30.619015],[114.401932,30.619001],[114.40357,30.619037],[114.403884,30.619196],[114.404882,30.619179],[114.404884,30.617581],[114.404935,30.616494],[114.404994,30.616322],[114.405515,30.61617],[114.406104,30.616182],[114.406669,30.615947],[114.406512,30.615675],[114.406512,30.615225],[114.407939,30.616094],[114.40797,30.618277],[114.40804,30.618331],[114.406106,30.618324],[114.406078,30.619085],[114.408154,30.619109],[114.408147,30.619834],[114.408215,30.620145],[114.408222,30.621421],[114.406625,30.621419],[114.407839,30.623541],[114.408436,30.623528],[114.408469,30.622901],[114.411016,30.622936],[114.413453,30.622538],[114.414513,30.622622],[114.415829,30.622594],[114.417461,30.622691],[114.417886,30.622671],[114.418293,30.622128],[114.418484,30.620263],[114.418959,30.619156],[114.419375,30.617929],[114.419662,30.617459],[114.420052,30.617077],[114.420365,30.616947],[114.420973,30.617007],[114.421648,30.617378],[114.421959,30.618073],[114.42209,30.619684],[114.422325,30.620452],[114.422723,30.620958],[114.423417,30.621204],[114.424274,30.621213],[114.424847,30.620822],[114.424907,30.620244],[114.42509,30.619966],[114.426216,30.61946],[114.427431,30.619168],[114.429659,30.619086],[114.431419,30.620351],[114.431886,30.620359],[114.435979,30.61872],[114.436068,30.618539],[114.436879,30.617712],[114.436344,30.613783],[114.436533,30.612147],[114.438076,30.607729],[114.438889,30.605608],[114.439209,30.604142],[114.439171,30.602805],[114.439252,30.600814],[114.439404,30.600388],[114.439769,30.599987],[114.445518,30.598241],[114.44695,30.598055],[114.448354,30.597735],[114.449392,30.59703],[114.450101,30.596229],[114.450629,30.595321],[114.450782,30.593868],[114.450793,30.59251],[114.450642,30.591119],[114.450627,30.59028],[114.449541,30.585365],[114.449243,30.584297],[114.448542,30.584476],[114.448619,30.584639],[114.447699,30.584746],[114.447132,30.583121],[114.447491,30.5829],[114.447473,30.582344],[114.448345,30.582098],[114.447924,30.581142],[114.448691,30.581041],[114.448238,30.578537],[114.448008,30.577477],[114.447576,30.576332],[114.447274,30.575794],[114.446037,30.574541],[114.446619,30.574131],[114.446983,30.573624],[114.4472,30.572627],[114.446674,30.570048],[114.446867,30.568417],[114.448231,30.568931],[114.448231,30.568433],[114.448584,30.567534],[114.451525,30.567698],[114.452884,30.567615],[114.453329,30.568091],[114.452979,30.567955],[114.451873,30.56861],[114.451884,30.568934],[114.451612,30.568983],[114.45149,30.568791],[114.450723,30.568883],[114.450519,30.568994],[114.450732,30.569155],[114.450914,30.5696],[114.450671,30.569832],[114.451319,30.570084],[114.451803,30.569621],[114.452116,30.56967],[114.452379,30.570024],[114.452488,30.570397],[114.452208,30.570519],[114.452418,30.570771],[114.452782,30.570953],[114.453266,30.571003],[114.453561,30.570802],[114.454085,30.570953],[114.454842,30.570781],[114.455212,30.570918],[114.455307,30.570641],[114.456064,30.570649],[114.456373,30.571246],[114.456837,30.571452],[114.456997,30.571289],[114.457218,30.570701],[114.4574,30.57057],[114.458072,30.570551],[114.458826,30.570806],[114.459334,30.571139],[114.459794,30.571102],[114.459805,30.571399],[114.459082,30.572591],[114.458747,30.573284],[114.458874,30.573706],[114.459283,30.573814],[114.45925,30.574065],[114.459743,30.574183],[114.460133,30.574394],[114.46049,30.574226],[114.461127,30.572785],[114.461083,30.572355],[114.461627,30.571667],[114.462146,30.571291],[114.462533,30.571266],[114.462754,30.571501],[114.463549,30.571643],[114.463946,30.571811],[114.464427,30.571616],[114.464535,30.571452],[114.464211,30.571047],[114.464134,30.570678],[114.464979,30.570866],[114.465395,30.570787],[114.466017,30.571314],[114.466273,30.571251],[114.466484,30.571604],[114.465838,30.571989],[114.465045,30.572637],[114.46409,30.572974],[114.464081,30.57318],[114.464594,30.574723],[114.464491,30.575081],[114.464539,30.575564],[114.464942,30.575715],[114.465043,30.575362],[114.465369,30.575324],[114.465323,30.574202],[114.465704,30.57381],[114.466103,30.573836],[114.466326,30.573624],[114.466711,30.573502],[114.467053,30.574132],[114.46693,30.574828],[114.466085,30.575548],[114.465978,30.57583],[114.466254,30.576287],[114.467195,30.576511],[114.467528,30.576322],[114.468345,30.576044],[114.468437,30.575532],[114.469114,30.575602],[114.469617,30.575472],[114.469766,30.575598],[114.469911,30.576088],[114.470493,30.576577],[114.470771,30.576406],[114.471382,30.576549],[114.471424,30.576833],[114.471135,30.576885],[114.471286,30.577098],[114.471238,30.577501],[114.471623,30.578058],[114.471597,30.578782],[114.473242,30.579007],[114.473351,30.578553],[114.473141,30.57845],[114.472902,30.57779],[114.473568,30.577162],[114.473601,30.57684],[114.473441,30.57646],[114.473605,30.576421],[114.473737,30.575157],[114.474037,30.574866],[114.474505,30.575171],[114.474812,30.575614],[114.474676,30.576403],[114.474683,30.576897],[114.474882,30.577871],[114.474832,30.578124],[114.475502,30.578273],[114.475975,30.577749],[114.476244,30.57774],[114.47684,30.578164],[114.477032,30.578846],[114.477367,30.579244],[114.477615,30.579892],[114.478024,30.580357],[114.478033,30.580565],[114.478681,30.580405],[114.47846,30.579449],[114.47793,30.57844],[114.477578,30.576311],[114.4773,30.575995],[114.476995,30.575234],[114.476978,30.574794],[114.477564,30.574226],[114.478162,30.574132],[114.478324,30.574678],[114.478756,30.574997],[114.479369,30.575277],[114.479776,30.575083],[114.479774,30.574664],[114.48033,30.574352],[114.480889,30.574315],[114.481009,30.575199],[114.480924,30.577275],[114.481826,30.578442],[114.482562,30.578156],[114.482671,30.578298],[114.483116,30.578154],[114.4833,30.578213],[114.483626,30.577891],[114.483801,30.577942],[114.48409,30.578542],[114.484123,30.578792],[114.483633,30.57971],[114.483265,30.579991],[114.482974,30.580649],[114.482947,30.581113],[114.483366,30.581759],[114.483368,30.582041],[114.483157,30.582462],[114.483026,30.583108],[114.482487,30.583516],[114.482671,30.583738],[114.482684,30.584059],[114.48229,30.584138],[114.482104,30.584382],[114.482106,30.584823],[114.483081,30.585003],[114.482704,30.585209],[114.482082,30.585999],[114.482233,30.586614],[114.482923,30.58663],[114.483127,30.586167],[114.483733,30.586087],[114.484478,30.585656],[114.484535,30.585947],[114.48441,30.586473],[114.484528,30.586903],[114.485479,30.588039],[114.485455,30.5886],[114.485139,30.589243],[114.485674,30.590079],[114.486403,30.590297],[114.486613,30.590279],[114.487327,30.589846],[114.487645,30.589856],[114.488133,30.590235],[114.488256,30.591151],[114.488553,30.592033],[114.488729,30.592872],[114.489414,30.593226],[114.489237,30.593957],[114.489217,30.594521],[114.488457,30.594717],[114.488102,30.595471],[114.487931,30.59555],[114.487476,30.596224],[114.487014,30.596548],[114.486946,30.596039],[114.48715,30.595753],[114.487025,30.595321],[114.486061,30.594908],[114.48542,30.594338],[114.484633,30.594497],[114.484029,30.594431],[114.483372,30.593982],[114.482511,30.59378],[114.482001,30.593253],[114.480827,30.59283],[114.480628,30.5923],[114.480337,30.591991],[114.479308,30.591506],[114.479181,30.591613],[114.477961,30.590788],[114.47811,30.59058],[114.477144,30.589938],[114.476667,30.589893],[114.476178,30.590013],[114.475944,30.590556],[114.47534,30.591406],[114.475353,30.591604],[114.475824,30.59208],[114.475957,30.592019],[114.476638,30.592433],[114.476625,30.593392],[114.476542,30.593488],[114.477183,30.593592],[114.478024,30.593915],[114.47834,30.594279],[114.478338,30.594668],[114.479432,30.595316],[114.47991,30.595272],[114.480026,30.595106],[114.480773,30.595103],[114.481147,30.595854],[114.481614,30.596236],[114.481879,30.596574],[114.482236,30.596692],[114.483129,30.596774],[114.483304,30.596982],[114.483274,30.597366],[114.483449,30.597807],[114.483282,30.598256],[114.483501,30.59798],[114.483722,30.597998],[114.483793,30.597629],[114.484231,30.597003],[114.484877,30.59695],[114.485417,30.597394],[114.485661,30.597799],[114.48538,30.598749],[114.485958,30.599301],[114.486357,30.599426],[114.487441,30.599076],[114.487524,30.598709],[114.487936,30.598083],[114.488312,30.597824],[114.488753,30.597861],[114.48939,30.597739],[114.489596,30.597436],[114.490651,30.596806],[114.490936,30.596798],[114.491159,30.596487],[114.491435,30.595872],[114.49177,30.595719],[114.492068,30.595739],[114.492412,30.595947],[114.4932,30.595419],[114.49297,30.59504],[114.492438,30.594581],[114.492548,30.594307],[114.493019,30.594207],[114.493338,30.593935],[114.494037,30.594052],[114.494096,30.593847],[114.49389,30.593406],[114.493914,30.593191],[114.49497,30.592615],[114.494759,30.592108],[114.49493,30.591183],[114.494985,30.590054],[114.494295,30.589128],[114.493995,30.589143],[114.493529,30.589647],[114.49359,30.589837],[114.493294,30.59012],[114.493266,30.590933],[114.493562,30.59133],[114.493393,30.591697],[114.492913,30.592224],[114.492745,30.592592],[114.492011,30.592443],[114.491475,30.592076],[114.491352,30.591889],[114.491227,30.591098],[114.491453,30.591014],[114.491168,30.590378],[114.491122,30.589648],[114.490728,30.588894],[114.490553,30.588736],[114.490237,30.587586],[114.488805,30.586186],[114.488507,30.585677],[114.488297,30.58498],[114.488409,30.584644],[114.489318,30.583984],[114.489407,30.58325],[114.48911,30.583015],[114.488877,30.583079],[114.488369,30.582943],[114.488321,30.582564],[114.488023,30.581861],[114.488063,30.581538],[114.48842,30.580972],[114.488906,30.580768],[114.489933,30.580761],[114.490163,30.580424],[114.490027,30.580136],[114.490165,30.579987],[114.489839,30.579586],[114.489331,30.579581],[114.488836,30.578871],[114.489686,30.578595],[114.489867,30.578454],[114.490535,30.578369],[114.490461,30.578102],[114.489946,30.577825],[114.490034,30.577421],[114.489705,30.576983],[114.489237,30.576801],[114.488757,30.57694],[114.488358,30.576342],[114.488347,30.576103],[114.489331,30.576155],[114.489753,30.576685],[114.490095,30.576744],[114.491402,30.577604],[114.491547,30.57785],[114.491402,30.578097],[114.491553,30.578343],[114.491919,30.578582],[114.492029,30.578851],[114.492254,30.578903],[114.492784,30.579676],[114.492795,30.580212],[114.492618,30.580658],[114.491939,30.580763],[114.491836,30.58099],[114.491488,30.581121],[114.490765,30.581036],[114.490505,30.581789],[114.490645,30.5823],[114.4908,30.58243],[114.491808,30.58232],[114.49223,30.582174],[114.49287,30.581741],[114.493268,30.581782],[114.493472,30.582444],[114.493802,30.582735],[114.493982,30.5827],[114.494286,30.581823],[114.494105,30.581613],[114.494286,30.581292],[114.494742,30.581487],[114.494948,30.58145],[114.495167,30.582106],[114.495568,30.58214],[114.495789,30.582496],[114.495944,30.583148],[114.495714,30.583884],[114.496306,30.584077],[114.496765,30.58385],[114.497008,30.583578],[114.497538,30.583308],[114.497547,30.583697],[114.49795,30.583617],[114.498088,30.583284],[114.498502,30.582992],[114.498706,30.583116],[114.498565,30.583286],[114.499001,30.583503],[114.499229,30.583378],[114.499538,30.584083],[114.499995,30.584297],[114.500118,30.584237],[114.50081,30.583443],[114.501456,30.583787],[114.501596,30.584103],[114.501704,30.583772],[114.50205,30.583703],[114.501927,30.583363],[114.501596,30.583363],[114.501379,30.58306],[114.501373,30.582794],[114.501671,30.582777],[114.502117,30.583121],[114.502146,30.582743],[114.501966,30.5825],[114.501395,30.582231],[114.500738,30.582251],[114.500407,30.582679],[114.499921,30.582508],[114.499531,30.581843],[114.49959,30.581413],[114.500392,30.581423],[114.501274,30.581285],[114.501642,30.581376],[114.50272,30.582452],[114.504382,30.583303],[114.505144,30.583922],[114.505507,30.583982],[114.505161,30.584932],[114.50487,30.585415],[114.504752,30.585802],[114.504984,30.58603],[114.50547,30.586252],[114.505895,30.586314],[114.506296,30.586948],[114.506123,30.586983],[114.506226,30.587425],[114.506158,30.587724],[114.50676,30.587652],[114.506935,30.587033],[114.506828,30.586736],[114.506778,30.585809],[114.506324,30.585363],[114.506661,30.585012],[114.507283,30.584795],[114.507419,30.584839],[114.507719,30.584513],[114.507997,30.584663],[114.508284,30.585242],[114.508451,30.585283],[114.508551,30.585618],[114.508446,30.585782],[114.508727,30.586859],[114.509132,30.587638],[114.509259,30.588291],[114.509158,30.588577],[114.50849,30.589288],[114.508385,30.58964],[114.507704,30.590068],[114.507229,30.589783],[114.507183,30.590285],[114.50704,30.590413],[114.505186,30.591034],[114.505104,30.591698],[114.505212,30.591962],[114.506193,30.591962],[114.506815,30.592281],[114.507351,30.592913],[114.507899,30.593088],[114.509136,30.594244],[114.509414,30.594425],[114.510279,30.594645],[114.510426,30.594754],[114.510422,30.595283],[114.510316,30.595604],[114.510032,30.5958],[114.509532,30.595922],[114.509666,30.596644],[114.510065,30.596887],[114.510956,30.596739],[114.5113,30.596599],[114.51197,30.596586],[114.512471,30.59699],[114.513483,30.597135],[114.514422,30.596817],[114.51442,30.596418],[114.514587,30.595474],[114.514961,30.59536],[114.515717,30.595556],[114.515673,30.595918],[114.516012,30.596772],[114.516247,30.596974],[114.516597,30.596981],[114.517184,30.597398],[114.517331,30.597011],[114.516888,30.596341],[114.517015,30.596066],[114.517753,30.595858],[114.518614,30.596335],[114.51887,30.596212],[114.518528,30.595541],[114.518458,30.594799],[114.518673,30.594445],[114.518982,30.594281],[114.519569,30.594471],[114.519873,30.59423],[114.520828,30.592744],[114.521018,30.592694],[114.521292,30.592941],[114.521918,30.592969],[114.522486,30.591875],[114.522674,30.591622],[114.523088,30.591402],[114.523357,30.591554],[114.524084,30.591726],[114.524211,30.591599],[114.524075,30.591319],[114.523464,30.590999],[114.523202,30.590981],[114.522783,30.590651],[114.523088,30.590572],[114.522952,30.590086],[114.522503,30.589583],[114.522547,30.589307],[114.522915,30.588805],[114.522972,30.588582],[114.523261,30.588472],[114.523719,30.587297],[114.523824,30.58667],[114.523662,30.58644],[114.524693,30.585875],[114.52514,30.585801],[114.525365,30.586403],[114.526145,30.586232],[114.526771,30.586181],[114.527119,30.585601],[114.527995,30.585609],[114.528008,30.58544],[114.528578,30.585062],[114.528298,30.584569],[114.528948,30.584288],[114.52934,30.584577],[114.531655,30.584284],[114.533853,30.583659],[114.538242,30.584109],[114.53935,30.583153],[114.54018,30.582024],[114.540797,30.582584],[114.541043,30.583146],[114.540543,30.583855],[114.540495,30.58423],[114.540808,30.584516],[114.541422,30.584512],[114.542164,30.584399],[114.543357,30.584955],[114.543916,30.585049],[114.544903,30.584681],[114.545162,30.58382],[114.545593,30.583063],[114.546491,30.582021],[114.547242,30.581608],[114.548727,30.581424],[114.549191,30.581181],[114.549132,30.580372],[114.550093,30.580131],[114.550041,30.580921],[114.54962,30.581742],[114.550297,30.583027],[114.550591,30.582689],[114.552533,30.581152],[114.55229,30.580702],[114.552623,30.580507],[114.553575,30.581259],[114.55453,30.580382],[114.555227,30.580673],[114.557038,30.579023],[114.55797,30.579744],[114.55919,30.578388],[114.562749,30.58019],[114.562254,30.581204],[114.561522,30.583353],[114.561212,30.584123],[114.560487,30.590386],[114.560265,30.590468],[114.556678,30.590308],[114.556343,30.590163],[114.555111,30.589867],[114.553343,30.589131],[114.553083,30.589261],[114.552277,30.590907],[114.551668,30.591854],[114.55026,30.591047],[114.549207,30.590581],[114.549242,30.590033],[114.548335,30.590761],[114.546241,30.589484],[114.544844,30.588443],[114.543651,30.587803],[114.542258,30.5889],[114.542184,30.589089],[114.542083,30.591214],[114.54198,30.591688],[114.538654,30.597593],[114.537432,30.598854],[114.536389,30.599773],[114.528497,30.606277],[114.531845,30.608805],[114.53225,30.607953],[114.532715,30.606188],[114.533551,30.604686],[114.534773,30.605275],[114.53525,30.605647],[114.537053,30.606652],[114.534342,30.610311],[114.534077,30.610504],[114.532984,30.611993],[114.533306,30.612138],[114.529373,30.617068],[114.52542,30.621703],[114.522135,30.619535],[114.519251,30.617384],[114.516621,30.614921],[114.509697,30.620867],[114.505164,30.616823],[114.4943,30.625216],[114.486736,30.630384],[114.484811,30.631509],[114.483295,30.632601],[114.482006,30.633885],[114.479358,30.636063],[114.477781,30.636678],[114.477501,30.636955],[114.476413,30.6394],[114.475548,30.64013],[114.475583,30.64079],[114.475445,30.641129],[114.474374,30.64125],[114.473058,30.641306],[114.473066,30.641567],[114.46718,30.640902],[114.464158,30.640675],[114.460637,30.640247],[114.460494,30.64018],[114.460453,30.636128],[114.461486,30.636546],[114.465614,30.636927],[114.466383,30.636226],[114.465189,30.634838],[114.465115,30.634442],[114.465207,30.633834],[114.465179,30.63338],[114.465312,30.633166],[114.464881,30.632712],[114.464497,30.63145],[114.464416,30.630816],[114.464622,30.630166],[114.465006,30.629991],[114.464914,30.629238],[114.460175,30.633228],[114.459616,30.634705],[114.458848,30.636927],[114.45811,30.638424],[114.457696,30.639838],[114.458042,30.640686],[114.460328,30.64146],[114.460691,30.64201],[114.460941,30.642962],[114.460908,30.644384],[114.460536,30.645356],[114.459141,30.646791],[114.458996,30.648576],[114.4589,30.651774],[114.458736,30.654173],[114.458199,30.655202],[114.458162,30.657769],[114.457985,30.659182],[114.457897,30.660407],[114.45726,30.660876],[114.456553,30.660877],[114.456228,30.661387],[114.456824,30.661824],[114.455913,30.662886],[114.456031,30.662939],[114.455983,30.663377],[114.456772,30.663603],[114.456507,30.664111],[114.457549,30.664141],[114.458068,30.664002],[114.458318,30.664048],[114.459187,30.663781],[114.464099,30.664528],[114.46492,30.664596],[114.466473,30.664065],[114.466466,30.664861],[114.46755,30.664795],[114.468608,30.664831],[114.467977,30.666662],[114.470042,30.667224],[114.470049,30.668231],[114.469431,30.669397],[114.469131,30.670269],[114.469,30.671118],[114.468761,30.671504],[114.468455,30.672583],[114.467156,30.676852],[114.459695,30.674396],[114.440273,30.667617],[114.425717,30.662911],[114.412148,30.658999],[114.412251,30.658684],[114.399552,30.656156],[114.385307,30.653908],[114.371392,30.651943],[114.362753,30.648635]]]
+        })
+        sketchEditor.start(
+          polygon2
+        )
+        sketchEditor.start(
+          polygon3
+        )
+      }
+
+      function enableChoose() {
+        isPickable = !isPickable
+        sketchEditor._editable = !sketchEditor._editable
+      }
+
+      function deletePolygon() {
+        const differenceGeometry = GeometryEngine.difference(
+          // 求差几何
+          pickFeatures[0].geometry,
+          // 被求差几何
+          pickFeatures[1].geometry
+        )
+        sketchEditor.layer.add(
+          new Feature({
+            geometry: differenceGeometry,
+            symbol: pickFeatures[0]._defaultSymbol.clone()
+          })
+        )
+        sketchEditor.layer.remove(pickFeatures[0])
+        sketchEditor.layer.remove(pickFeatures[1])
+        clearPickFeatures()
+      }
+
+      function buffer() {
+        const bufferGeometry = GeometryEngine.buffer(
+          // 要缓冲的几何
+          pickFeatures[0].geometry,
+          // 缓冲半径，单位米，可自行设置单位
+          3,
+          // 缓冲半径单位
+          'meters'
+        )
+        clearPickFeatures()
+        sketchEditor.layer.add(
+          new Feature({
+            geometry: bufferGeometry,
+            symbol: new SimpleFillSymbol({
+              color: "#0ae8bf",
+              style: "cross",
+              outline: new SimpleLineSymbol({
+                color: "#faf500",
+                width: 2,
+                style: "dash",
+              })
+            })
+          })
+        )
+      }
+
+      function simplify() {
+        let simplifyGeometry = GeometryEngine.simplify(pickFeatures[0].geometry)
+        simplifyGeometry = simplifyGeometry.toPolygonArray()
+        sketchEditor.layer.remove(pickFeatures[0])
+        clearPickFeatures()
+        for (let i = 0; i < simplifyGeometry.length; i++) {
+          sketchEditor.layer.add(
+            new Feature({
+              geometry: simplifyGeometry[i],
+              symbol: new SimpleFillSymbol({
+                color: "#0ae8bf",
+                style: "cross",
+                outline: new SimpleLineSymbol({
+                  color: "#faf500",
+                  width: 2,
+                  style: "dash",
+                })
+              })
+            })
+          )
+        }
+      }
+
+      function intersects() {
+        sketchEditor.layer.graphics.forEach(function (feature) {
+          pickFeatures[0].geometry.spatialReference.wkid = 4490
+          feature.geometry.spatialReference.wkid = 4490
+          const isIntersects = GeometryEngine.intersects(pickFeatures[0].geometry, feature.geometry)
+          if (isIntersects && feature.id !== pickFeatures[0].id) {
+            console.log("feature:", feature)
+            const intersectsGeometry = GeometryEngine.intersect(pickFeatures[0].geometry, feature.geometry)
+            sketchEditor.layer.add(
+              new Feature({
+                geometry: intersectsGeometry,
+                symbol: new SimpleFillSymbol({
+                  color: "#0ae8bf",
+                  style: "cross",
+                  outline: new SimpleLineSymbol({
+                    color: "#faf500",
+                    width: 2,
+                    style: "dash",
+                  })
+                })
+              })
+            )
+          }
+        })
+        sketchEditor.layer.remove(pickFeatures[0])
+        clearPickFeatures()
+      }
+
+      function isIntersect() {
+        pickFeatures[0].geometry.spatialReference.wkid = 4490
+        pickFeatures[1].geometry.spatialReference.wkid = 4490
+        const isIntersects = GeometryEngine.intersects(pickFeatures[0].geometry, pickFeatures[1].geometry)
+        if (isIntersects) {
+          layui.layer.msg('相交')
+        } else {
+          layui.layer.msg('不相交')
+        }
+        clearPickFeatures()
+      }
+
+      function rotate() {
+        const rotateGeometry = GeometryEngine.rotate(
+          // 要旋转的几何
+          pickFeatures[0].geometry,
+          // 旋转角度，单位度
+          -3
+        )
+        sketchEditor.layer.remove(pickFeatures[0])
+        clearPickFeatures()
+        sketchEditor.layer.add(
+          new Feature({
+            geometry: rotateGeometry,
+            symbol: new SimpleFillSymbol({
+              color: "#0ae8bf",
+              style: "cross",
+              outline: new SimpleLineSymbol({
+                color: "#faf500",
+                width: 2,
+                style: "dash",
+              })
+            })
+          })
+        )
+      }
+
+      function area() {
+        geometryServer.calculateAreasAndLengths({
+          polygons: pickFeatures[0].geometry
+        }).then(function (result) {
+          layui.layer.msg('面积:' + result.data.areas[0].toFixed(2) + '平方米')
+        })
+      }
+
+      function lengthTool() {
+        geometryServer.calculateLengths({
+          polylines: pickFeatures[0].geometry
+        }).then(function (result) {
+          layui.layer.msg('长度:' + result.data.lengths[0].toFixed(2) + '米')
+        })
+      }
+
+      function distanceTool() {
+        geometryServer.calculateDistance({
+          // 第一个几何
+          geometry1: pickFeatures[0].geometry,
+          // 第二个几何
+          geometry2: new LineString({
+            coordinates: pickFeatures[1].geometry.coordinates[0]
+          }),
+          // 坐标系
+          srs: "EPSG:4490"
+        }).then(function (result) {
+          layui.layer.msg('距离:' + result.data.distance.toFixed(2) + '米')
+        })
+      }
+
+      function enableCapture() {
+        const snapOption = {
+          isSnapVertexCoincident: true,
+          isSnapVertexInLine: true,
+          isSnapParallel: true,
+          isSnapPerpendicular: true,
+          snapSketchGeometry: true,
+        }
+        sketchEditor.setSnapOption(snapOption)
+      }
+
+      function clearPickFeatures() {
+        for (let i = 0; i < pickFeatures.length; i++) {
+          pickFeatures[i].symbol = pickFeatures[i]._defaultSymbol.clone()
+        }
+        pickFeatures = []
+      }
+
+      function exportGraphic() {
+        geoJSON = sketchEditor.layer.toJSON()
+        console.log('geoJSON', geoJSON)
+      }
+
+      function importGraphic() {
+        const features = []
+        for (let i = 0; i < geoJSON.graphics.length; i++) {
+          features.push(Feature.fromJSON(geoJSON.graphics[i]))
+        }
+        sketchEditor.layer.addMany(features)
+      }
+
+      // 增加参考几何
+      function addReferGeometries() {
+        referGeometries = [
+          new Polygon({
+            coordinates: [
+              [
+                [114.0, 29.0],
+                [116.0, 32.0],
+                [117.0, 37.0],
+                [115.0, 35.0],
+                [114.0, 29.0]
+              ]
+            ]
+          })
+        ]
+        const referFeatures = [
+          new Feature({
+            geometry: referGeometries[0],
+            symbol: new SimpleFillSymbol({
+              color: new Color(0, 255, 255, 0.5),
+              outline: new SimpleLineSymbol({
+                color: new Color(0, 255, 255, 0.8),
+                width: 2
+              })
+            })
+          })
+        ]
+        const referGraphicLayer = new GraphicsLayer({
+          graphics: referFeatures
+        })
+        map.add(referGraphicLayer)
+      }
+      const KeyEnum = {
+        Delete: 46,
+        Ctrl: 17,
+        Z: 90,
+        D: 68
+      }
+    </script>
+</head>
+
+<body onload="init();">
+<div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+<div class="layui-panel layui-panel-right" style="width: 698px;height: 110px">
+    <div class="layui-form-item" style="position: absolute;top: 10px;left: 10px">
+        <form class="layui-form" action="">
+            <label class="layui-form-label" style="width: 33px">绘制: </label>
+            <div class="layui-input-block layui-input-block-select">
+                <select id="drawOperation" name="drawOperation" lay-filter="drawOperation">
+                    <option value="addPoint">绘制点</option>
+                    <option value="addPolyline">绘制线</option>
+                    <option value="addPolygon">绘制区</option>
+                    <option value="addCircle">绘制圆</option>
+                    <option value="addRectangle">绘制矩形</option>
+                    <option value="stop">停止绘制</option>
+                    <option value="setSketchStyle">设置初始草图样式</option>
+                    <option value="changeStyle">修改样式</option>
+                    <option value="remove">移除选中草图</option>
+                    <option value="undo">撤销</option>
+                    <option value="redo">恢复</option>
+                    <option value="enableCapture">开启捕获功能</option>
+                    <option value="clearGraphics">清空绘制</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="layui-form-item" style="position: absolute;top: 10px;left: 228px">
+        <form class="layui-form" action="">
+            <label class="layui-form-label" style="width: 64px">空间运算: </label>
+            <div class="layui-input-block layui-input-block-select">
+                <select id="spatialOperation" name="spatialOperation" lay-filter="spatialOperation">
+                    <option value="unionGraphic">合并区</option>
+                    <option value="addPolylineToPolygon">拓扑线造区</option>
+                    <option value="deletePolygon">区域删除</option>
+                    <option value="buffer">缓冲分析</option>
+                    <option value="simplify">拓扑矫正</option>
+                    <option value="intersects">几何求交</option>
+                    <option value="rotate">旋转</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="layui-form-item" style="position: absolute;top: 60px;left: 10px">
+        <form class="layui-form" action="">
+            <label class="layui-form-label" style="width: 33px">量算: </label>
+            <div class="layui-input-block layui-input-block-select">
+                <select id="calculate" name="calculate" lay-filter="calculate">
+                    <option value="area">计算面积</option>
+                    <option value="lengthTool">计算长度</option>
+                    <option value="distanceTool">计算距离</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="layui-form-item" style="position: absolute;top: 60px;left: 228px">
+        <form class="layui-form" action="">
+            <label class="layui-form-label" style="width: 64px">空间关系: </label>
+            <div class="layui-input-block layui-input-block-select">
+                <select id="spatialRelation" name="spatialRelation" lay-filter="spatialRelation">
+                    <option value="isIntersect">是否相交</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="layui-form-item" style="position: absolute;top: 10px;left: 480px">
+        <form class="layui-form" action="">
+            <label class="layui-form-label" style="width: 33px">数据: </label>
+            <div class="layui-input-block layui-input-block-select">
+                <select id="dataSource" name="dataSource" lay-filter="dataSource">
+                    <option value="addEditPolygon">添加湖泊</option>
+                    <option value="addZondy">添加中地大楼</option>
+                    <option value="addNew">添加建筑区域</option>
+                    <option value="addNew2">添加拆迁区域</option>
+                    <option value="addEditPolygon2">添加行政区</option>
+                    <option value="exportGraphic">导出数据</option>
+                    <option value="importGraphic">导入数据</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <button
+            type="button"
+            id="undo"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="undo()"
+            style="position: absolute;top: 53px;right: 64px"
+    >
+        撤销
+    </button>
+    <button
+            type="button"
+            id="redo"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="redo()"
+            style="position: absolute;top: 53px;right: 10px"
+    >
+        恢复
+    </button>
+</div>
+
+<style>
+    .layui-panel {
+        width: auto;
+        z-index: 999;
+    }
+
+    .layui-btn-normal {
+        margin-right: 1px !important;
+        font-size: 15px;
+        padding: 0px 7px;
+        margin-top: 10px!important;
+    }
+    .layui-form-label {
+        line-height: 28px;
+    }
+</style>
+</body>
+</html>

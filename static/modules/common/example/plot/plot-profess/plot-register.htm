@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>符号库使用</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha384-SOnAn/m2fVJCwnbEYgD4xzrPtvsXdElhOVvR8ND1YjB5nhGNwwf7nBQlhfAwHAZC"
+      crossorigin="anonymous"
+    />
+    <!--引入行业标绘脚本库-->
+    <script
+      include="panel,2D"
+      src="./static/libs/include-plot-local.js"
+    ></script>
+
+    <script>
+      'use strict'
+      //地图初始化函数
+      function init() {
+        /**
+         * ***********************地图框架部分***************************
+         */
+
+        const view = window.initView('content')
+
+        /**
+         * ***********************行业标绘库部分***************************
+         */
+
+        const zondy = window.zondy
+        const Plot = zondy.plot
+        const {
+          PlotLayer2D,
+          PlotLayer2DGroup,
+          SymbolManager,
+          TimeLine,
+          DrawTool,
+          PlotRegister,
+          PlotUtilBase,
+          FabricLayer
+        } = Plot
+
+        const symbolUrl = `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/symbolLib.json`
+        const symbolOptions = {
+          fontURL: `http://webclient.smaryun.com:8200/Plot/plot-sample/fonts/`,
+          baseUrl: `http://webclient.smaryun.com:8200/Plot/plot-sample/symbolLibs/标号库a/`
+        }
+        let layer1,
+          layer2,
+          plotLayer2DGroup,
+          timeline,
+          drawTool,
+          plotEditor,
+          currentPlot
+        // 获取overlay图层
+        const canvas = new FabricLayer(view, PlotLayer2DGroup)
+        // 创建符号管理器
+        const manager = new SymbolManager(symbolUrl, symbolOptions)
+        // 请求获取符号库
+        manager.getSymbols().then(() => {
+          // 算法注册
+          const plotRegister = new PlotRegister(manager)
+          // 以kidney算法为基础,改写生成带空隙的区域方法
+          const rewriteSymbolId = plotRegister.rewrite(
+            'kidney',
+            'kidney1',
+            (proto) => {
+              return {
+                constructor(node) {
+                  proto(node)
+                },
+                applyFuncToStorkeGeometry(coords) {
+                  let v = coords.map((t) =>
+                    t.map((s) => new PlotUtilBase.Point(s.x, s.y))
+                  )
+                  let s = []
+                  for (let i = 0; i < coords.length; i = i + 2) {
+                    const vt = coords[i].map(
+                      (t) => new PlotUtilBase.Point(t.x, t.y)
+                    )
+                    delete v[i]
+                    const v1 = vt.slice(0, 20)
+                    const v2 = vt.slice(25, 45)
+                    const v3 = vt.slice(50)
+                    s.unshift(v3, v2, v1)
+                  }
+                  s = s.filter((t) => t.length !== 0)
+                  v = v.filter((t) => t)
+                  s = s.concat(v)
+                  return s
+                }
+              }
+            },
+            {
+              path: '常用符号库/算法符号/区域.svg'
+            }
+          )
+          // 注册符号类型为newclass的算法
+          let registerSymbolId = plotRegister.register(
+            'newclass',
+            (proto) => {
+              return {
+                _insertGeometry(points) {
+                  return [points]
+                }
+              }
+            },
+            {
+              path: '常用符号库/算法符号/区域.svg'
+            }
+          )
+          console.log('rewriteSymbolId: ', rewriteSymbolId)
+          console.log('registerSymbolId: ', registerSymbolId)
+          console.log('registerSymbolId: ', manager)
+
+          // 创建二维图层组
+          plotLayer2DGroup = canvas.getFabricCanvas()
+          // 创建二维图层
+          layer1 = new PlotLayer2D()
+          // 添加图层
+          plotLayer2DGroup.addLayer(layer1)
+          // 设置图层标绘元素缩放比，默认为1
+          layer1.setPlotSize(0.5)
+          // 将三维图层添加到图层组内
+          plotLayer2DGroup.addLayer(layer1)
+          layer1.addGeoJSONObject({
+            type: 'Feature',
+            properties: {
+              show: true,
+              symbolId: rewriteSymbolId,
+              symbolName: '区域'
+            },
+            geometry: {
+              type: 'MultiPoint',
+              coordinates: [
+                [117.3701360274617, 34.15566255198262],
+                [117.26718426641384, 34.103216223599446],
+                [117.1508839238758, 34.08738778399195],
+                [117.1508839238758, 34.09738778399195]
+              ]
+            }
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-viewer">
+      <div id="content" style="position: relative"></div>
+    </div>
+  </body>
+  <style>
+    #mapgis-viewer {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      position: relative;
+    }
+    #content {
+      height: 100%;
+      flex: 6.5;
+      position: relative;
+    }
+    #plot-show-table {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      z-index: 999;
+    }
+    #plot-show-table .listdom {
+      font-family: Arial;
+      margin-bottom: 5px;
+      width: 100%;
+      border-color: #1970fc;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #plot-show-table .listdom .btn,
+    .span {
+      display: block;
+      padding: 5px 12px;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.53846154;
+      text-align: center;
+      white-space: nowrap;
+      cursor: pointer;
+      color: #fff;
+      background-color: #3a85c6;
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #plot-show-table .listdom .input {
+      opacity: 0;
+      display: block;
+      padding: 5px 12px;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.53846154;
+      text-align: center;
+      white-space: nowrap;
+      cursor: pointer;
+      color: #fff;
+      background-color: #3a85c6;
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #plot-show-table .listdom .list-item {
+      flex: 1;
+      height: 100%;
+      padding: 5px 12px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background-color: #3a85c6;
+      cursor: pointer;
+      color: #fff;
+      box-sizing: border-box;
+      margin: 1px;
+      text-align: center;
+    }
+  </style>
+</html>

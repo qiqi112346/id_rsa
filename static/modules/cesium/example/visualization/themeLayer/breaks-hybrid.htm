@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>分段专题图-混合接口</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--cesium样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/cesium/Widgets/widgets.css" />
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/cesium/MapGIS/css/mapgis.css" />
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/visual.css" />
+    <script>
+      'use strict'
+      // 定义三维视图的主要类
+      let viewer
+
+      // 获取构造函数
+      const { renderer, layer, Color, util } = zondy
+      const { ClassBreakRenderer } = renderer
+      const { getIGSDynamicLayer } = util
+      const { SimpleFillSymbol, SimpleLineSymbol } = zondy.symbol
+      const { IGSMapImageLayer } = layer
+      const { MapGISMapServerImageryProvider } = zondy.cesium
+
+      // 获取区renderer
+      function getRendererOfRegion() {
+        // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/ClassBreakRenderer.html
+        return new ClassBreakRenderer({
+          field: 'GDP2016',
+          // 匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+          // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SimpleFillSymbol.html
+          defaultSymbol: new SimpleFillSymbol({
+            // 填充符号颜色
+            color: new Color(130, 135, 247, 0.6),
+            // 外边线样式
+            // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/SimpleLineSymbol.html
+            outline: new SimpleLineSymbol({
+              // 线符号颜色
+              // 参考API: http://webclient.smaryun.com/static/modules/common/api/common-mapgis/Color.html
+              color: new Color(130, 135, 247, 1),
+              // 线宽
+              width: 1
+            })
+          }),
+          // 分段专题图字段样式
+          classBreakInfos: [
+            {
+              // 分段最大值
+              minValue: 0,
+              // 分段最大值
+              maxValue: 100,
+              // 匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+              symbol: new SimpleFillSymbol({
+                // 填充符号颜色
+                color: new Color(248, 191, 111, 0.6),
+                // 外边线样式
+                outline: new SimpleLineSymbol({
+                  // 线符号颜色
+                  color: new Color(248, 191, 111, 1),
+                  // 线宽
+                  width: 1
+                })
+              })
+            },
+            {
+              // 分段最小值
+              minValue: 100,
+              // 分段最大值
+              maxValue: 200,
+              // 匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+              symbol: new SimpleFillSymbol({
+                // 填充符号颜色
+                color: new Color(130, 247, 254, 0.6),
+                // 外边线样式
+                outline: new SimpleLineSymbol({
+                  // 线符号颜色
+                  color: new Color(130, 247, 254, 1),
+                  // 线宽
+                  width: 1
+                })
+              })
+            },
+            {
+              // 分段最小值
+              minValue: 200,
+              // 分段最大值
+              maxValue: 500,
+              // 匹配到该值后的样式，更多样式详见：《SimpleFillSymbol》
+              symbol: new SimpleFillSymbol({
+                // 填充符号颜色
+                color: new Color(231, 147, 146, 0.6),
+                // 外边线样式
+                outline: new SimpleLineSymbol({
+                  // 线符号颜色
+                  color: new Color(231, 147, 146, 1),
+                  // 线宽
+                  width: 1
+                })
+              })
+            }
+          ]
+        })
+      }
+
+      // 初始化三维球体
+      function initViewer() {
+        viewer = new Cesium.Viewer('mapgis-3d-viewer', {
+          animation: false,
+          timeline: false
+        })
+      }
+
+      // 添加专题图
+      function addThemeMap() {
+        const url = 'http://webclient.smaryun.com:8089/igs/rest/services/Map/湖北省4326/MapServer'
+
+        const igsMapImageLayer = new IGSMapImageLayer({
+          url
+        })
+
+        igsMapImageLayer.load().then(async () => {
+          // 设置区图层的专题图
+          const layerOfRegion = igsMapImageLayer.findSublayerById(0)
+          layerOfRegion.renderer = getRendererOfRegion()
+
+          const options = {}
+
+          // 构建动态图层参数
+          const dynamicLayers = getIGSDynamicLayer(igsMapImageLayer)
+          if (dynamicLayers.length > 0) {
+            options.dynamicLayers = JSON.stringify(dynamicLayers)
+          }
+
+          // 通过fromUrl静态方法传入url返回对应的imageryProvider对象
+          const imageryProvider = await MapGISMapServerImageryProvider.fromUrl(url, options)
+          viewer.imageryLayers.addImageryProvider(imageryProvider)
+
+          flyTo()
+        })
+      }
+
+      // 飞到指定视角
+      function flyTo() {
+        viewer.camera.flyTo({
+          destination: Cesium.Rectangle.fromDegrees(108.34522, 29.03001, 116.13094, 33.27322),
+          duration: 2
+        })
+      }
+
+      // 地图初始化函数
+      function init() {
+        // 初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        // 添加专题图
+        addThemeMap()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

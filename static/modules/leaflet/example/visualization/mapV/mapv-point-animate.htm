@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>点数据渲染</title>
+    <!--引入mapv-->
+    <script type="text/javascript" src="http://webclient.smaryun.com/static/libs/cdn/mapv/mapv.min.js"></script>
+    <!--该库集成了leaflet与MapGIS IGServer for JavaScript脚本库-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/leaflet/leaflet.css"/>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/leaflet/leaflet.js"></script>
+    <!--plugin库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-leaflet-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <!--css-->
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      const { WebTileLayer } = zondy.layer
+      const { initializeCRS, initializeOptions } = zondy.leaflet.util
+      // 初始化示例
+      function init() {
+        // 添加图层
+        addLayer()
+      }
+
+      // 添加图层
+      function addLayer() {
+        // 构造一个网路瓦片图层对象
+        const layer = new WebTileLayer({
+          // 服务基地址
+          url: 'http://t1.tianditu.com/DataServer?T=img_c&x={col}&y={row}&l={level}',
+          // token名
+          tokenKey: 'tk',
+          // token值
+          tokenValue: getTDTToken()
+        })
+        // 加载元数据
+        layer.load().then(function () {
+          // 构造Leaflet地图视图的初始化参数
+          const crs = initializeCRS(layer)
+          const mapViewOptions = {
+            crs: crs,
+            center: [31.147781205532336,112.21905099757561],
+            zoom: 4
+          }
+          // 构造Leaflet地图视图对象
+          const map = L.map('mapgis-viewer', mapViewOptions)
+          // 构造Leaflet瓦片图层的初始化参数
+          const layerOptions = initializeOptions(layer)
+          // 添加Leaflet瓦片图层到地图视图中
+          new zondy.leaflet.layer.WebTileLayer(layer.url, layerOptions).addTo(map)
+          // 添加MapV图层
+          addMapVLayer(map)
+        })
+
+        // 添加MapV图层
+        function addMapVLayer(map) {
+          // 构造数据
+          httpGetPromise(
+            'http://webclient.smaryun.com:8200/Vector/json/pointAnimate/china-point.json'
+          ).then((rs) => {
+            // 构建对应的dataset
+            let data = []
+            for (var i = 0; i < rs[0].length; i++) {
+              let geoCoord = rs[0][i].geoCoord
+              data.push({
+                geometry: {
+                  type: 'Point',
+                  coordinates: geoCoord
+                },
+                time: Math.random() * 10
+              })
+            }
+            // 构建对应的dataset
+            let dataSet = new mapv.DataSet(data)
+
+            // 设置对应的参数
+            let options = {
+              fillStyle: 'rgba(255, 250, 50, 0.6)',
+              //shadowColor: 'rgba(255, 250, 50, 0.5)',
+              //shadowBlur: 3,
+              updateCallback: function (time) {},
+              size: 3,
+              draw: 'simple',
+              animation: {
+                type: 'time',
+                stepsRange: {
+                  start: 0,
+                  end: 10
+                },
+                trails: 1,
+                duration: 6
+              }
+            }
+            // 添加MapV图层
+            new zondy.leaflet.layer.MapVLayer(map, dataSet, options).addTo(
+              map
+            );
+          })
+        }
+      }
+
+      // 发送请求获取数据
+      function httpGetPromise(url) {
+        return new Promise(function (resolve, reject) {
+          const handler = function () {
+            if (this.readyState !== 4) {
+              return
+            }
+            if (this.status === 200) {
+              resolve(this.response)
+            } else {
+              reject(new Error(this.statusText))
+            }
+          }
+          const client = new XMLHttpRequest()
+          client.open('GET', url)
+          client.onreadystatechange = handler
+          client.responseType = 'json'
+          client.setRequestHeader('Accept', 'application/json')
+          client.send()
+        })
+      }
+    </script>
+</head>
+
+<body onload="init();">
+<div
+        id="mapgis-viewer"
+        style="position: absolute; display: flex; width: 100%; height: 100%"
+></div>
+</body>
+</html>

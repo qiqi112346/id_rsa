@@ -1,0 +1,188 @@
+
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+                    <script src="scripts/prettify/prettify.js"></script>
+                    <script src="scripts/prettify/lang-css.js"></script>
+                    <title> MapGIS Client for JavaScript API </title>
+                <script type="text/javascript">
+
+                </script>
+                    <!--[if lt IE 9]>
+                    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+                    <![endif]-->
+                        <script src="scripts/jquery.min.js"></script>
+                    <script src="scripts/adminlte/app.min.js"></script>
+                    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/adminlte/AdminLTE.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/adminlte/skin-blue.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+                    <link type="text/css" rel="stylesheet" href="styles/common.css">
+                    <link type="text/css" rel="stylesheet" href="styles/header.css">
+                    <link type="text/css" rel="stylesheet" href="styles/examples.css">
+                    <link type="text/css" rel="stylesheet" href="styles/style.customize.css">
+                    <link type="text/css" rel="stylesheet" href="styles/font-awesome.css">
+                    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+                    <script src="scripts/bootstrap.min.js"></script>
+                </head>
+                <body class='sidebar-mini'>
+
+                <div id="wrap" class="clearfix">
+                    <header class="header-wrapper main-header mapgis-header">
+                        <nav class="navbar navbar-static-top lite">
+                            <div class="nav-header">
+                                <div class="navbar-header">
+                                    <div class="navbar-title">
+                                        <a class="navbar-brand">
+                                            <span class="mapgis-webclient-text"> MapGIS Client for JavaScript API </span>
+                                        </a>
+                                        <div id="suffix-title">for MapboxGL</div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="navbar-toggle collapsed"
+                                        data-toggle="collapse"
+                                        data-target="#navbar-collapse"
+                                        aria-expanded="false"
+                                    >
+                                        <i class="fa fa-bars"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </nav>
+                    </header>
+                    <div class="navigationDiv">
+                    </div>
+                    <div class="main content-wrapper examples-container">
+                        <h1 class="page-title" data-filename="sprite.md">sprite.md</h1>
+                            <section>
+                        <article class="readme">
+                        <h1 id="sprite" tabindex="-1">Sprite</h1>
+<p>Loading a <a href="https://en.wikipedia.org/wiki/Sprite_(computer_graphics)">sprite</a> can be done using the optional <code>sprite</code> property at the root level of a MapGIS Mapbox style sheet.</p>
+<p>The images contained in the sprite can be referenced in other style properties (<code>background-pattern</code>, <code>fill-pattern</code>, <code>line-pattern</code>,<code>fill-extrusion-pattern</code> and <code>icon-image</code>).</p>
+<h2 id="usage" tabindex="-1">Usage</h2>
+<p>You need to pass an URL where the sprite can be loaded from.</p>
+<pre><code class="language-json">&quot;sprite&quot;: &quot;https://a.example.org/styles/osm-bright-gl-style/sprite&quot;
+</code></pre>
+<p>This will load both an image by appending <code>.png</code> and the metadata about the sprite needed for loading by appending <code>.json</code>. See for yourself:</p>
+<ul>
+<li><a href="https://a.example.org/styles/osm-bright-gl-style/sprite.png">https://a.example.org/styles/osm-bright-gl-style/sprite.png</a></li>
+<li><a href="https://a.example.org/styles/osm-bright-gl-style/sprite.json">https://a.example.org/styles/osm-bright-gl-style/sprite.json</a></li>
+</ul>
+<p>More details about the exact requirements on the format of these files is provided in the next section.</p>
+<p>When a sprite is provided, you can refer to the images in the sprite in other parts of the style sheet. For example, when creating a symbol layer with the layout property <code>&quot;icon-image&quot;: &quot;poi&quot;</code>. Or with the tokenized value  <code>&quot;icon-image&quot;: &quot;{icon}&quot;</code> and vector tile features with an <code>icon</code> property with the value <code>poi</code>.</p>
+<h3 id="multiple-sprite-sources" tabindex="-1">Multiple Sprite Sources</h3>
+<p>You can also supply an array of <code>{ id: ..., url: ... }</code> pairs to load multiple sprites:</p>
+<pre><code class="language-json">&quot;sprite&quot;: [
+  {
+    id: 'roadsigns',
+    url: 'https://example.com/myroadsigns'
+  },
+  {
+    id: 'shops',
+    url: 'https://example2.com/someurl'
+  },
+  {
+    id: 'default',
+    url: 'https://example2.com/anotherurl'
+  }
+]
+</code></pre>
+<p>As you can see, each sprite has an id. All images contained within a sprite also have an id. When using multiple sprites, you need to prefix the id of the image with the id of the sprite it is contained within, followed by a colon. For example, to reference the <code>stop_sign</code> image on the <code>roadsigns</code> sprite, you would need to use <code>roadsigns:stop_sign</code>.</p>
+<p>The sprite with id <code>default</code> is special in that you do not need to prefix the images contained within it. For example, to reference the image with id <code>airport</code> in the default sprite above, you can simply use <code>airport</code>.</p>
+<h2 id="sprite-source-format" tabindex="-1">Sprite Source Format</h2>
+<p>A valid sprite source must supply two types of files:</p>
+<ul>
+<li>
+<p><em>An image file</em>, which is a PNG image containing the sprite data.</p>
+</li>
+<li>
+<p>An <em>index file</em>, which is a JSON document containing a description of each image contained in the sprite. The content of this file must be a JSON object whose keys form identifiers to be used as the values of the above style properties, and whose values are objects describing the dimensions (<code>width</code> and <code>height</code> properties) and pixel ratio (<code>pixelRatio</code>) of the image and its location within the sprite (<code>x</code> and <code>y</code>). For example, a sprite containing a single image might have the following index file contents:</p>
+<pre><code class="language-json">{
+    &quot;poi&quot;: {
+        &quot;width&quot;: 32,
+        &quot;height&quot;: 32,
+        &quot;x&quot;: 0,
+        &quot;y&quot;: 0,
+        &quot;pixelRatio&quot;: 1
+    }
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="optional-properties" tabindex="-1">Optional Properties</h3>
+<p>Apart from these required properties, the following optional properties are supported:</p>
+<ul>
+<li><code>content</code>: An array of four numbers, with the first two specifying the left, top corner, and the last two specifying the right, bottom corner. If present, and if the icon uses <a href="layers.html#icon-text-fit"><code>icon-text-fit</code></a>, the symbol's text will be fit inside the content box.</li>
+<li><code>stretchX</code>: An array of two-element arrays, consisting of two numbers that represent the <em>from</em> position and the <em>to</em> position of areas that can be stretched.</li>
+<li><code>stretchY</code>: Same as <code>stretchX</code>, but for the vertical dimension.</li>
+<li><code>sdf</code>: Boolean. If <code>true</code> then the image is handled as a signed-distance field (SDF) and its color can be set at runtime using the <a href="layers.html#icon-color"><code>icon-color</code></a> and <a href="layers.html#icon-halo-color"><code>icon-halo-color</code></a> properties. Defaults to <code>false</code>.</li>
+<li><code>textFitWidth</code>: TextFit enum of the value stretchOrShrink (or undefined), stretchOnly, proportional describing the behavior, horizontally, when scaling a sprite due to 'icon-text-fit': 'both'.</li>
+<li><code>textFitHeight</code>: Same as <code>textFitWidth</code> except vertically.</li>
+</ul>
+<h4 id="stretch-properties" tabindex="-1">Stretch Properties</h4>
+<p>The following image gives a bit more infomation regarding the stretch properties:</p>
+<pre><code class="language-json">{
+    &quot;shield&quot;: {
+        &quot;width&quot;: 25,
+        &quot;height&quot;: 30,
+        &quot;x&quot;: 0,
+        &quot;y&quot;: 0,
+        &quot;stretchX&quot;: [[5, 10], [15, 20]],
+        &quot;stretchY&quot;: [[5, 20]],
+        &quot;pixelRatio&quot;: 1
+    }
+}
+</code></pre>
+<p>The red highlighted part is where the stretch will occur over the Y axis and the blue highlight is for the X axis.</p>
+<h4 id="text-fit-properties" tabindex="-1">Text Fit Properties</h4>
+<p>The properties <code>textFitWidth</code> and <code>textFitHeight</code> alter how a sprite's content rectangle maps to its contents when scaling a sprite.  These properties are defined with the enum TextFit which may have the following values:</p>
+<ul>
+<li><code>stretchOrShrink</code> (or omitted)</li>
+<li><code>stretchOnly</code></li>
+<li><code>proportional</code></li>
+</ul>
+<p>The primary use cases of interest are:</p>
+<ol>
+<li>
+<p>Both properties are undefined or stretchOrShrink</p>
+<p>The content rectangle scales precisely to contain its contents.</p>
+</li>
+<li>
+<p>textFitWidth = stretchOnly and textFitHeight = proportional</p>
+<p>The content rectangle scales to precisely contain the height of its contents but the width will not shrink smaller than the aspect ratio of the original content rectangle. This is primarily useful for shields that shouldn't become too narrow if their contents are narrow (like the number &quot;1&quot;).</p>
+</li>
+<li>
+<p>textFitWidth = proportional and textFitHeight = stretchOnly</p>
+<p>The content rectangle scales to precisely contain the width of its contents but the height will not shrink smaller than the aspect ratio of the original content rectangle. This may be useful scenarios like no. 2 except with vertically written scripts (using <code>&quot;text-writing-mode&quot;: [&quot;vertical&quot;]</code>).</p>
+</li>
+</ol>
+<h2 id="high-dpi-devices" tabindex="-1">High-DPI Devices</h2>
+<p>On high-DPI devices, <code>@2x</code> is appended to  the URLs described above. For example, if you specified <code>&quot;sprite&quot;: &quot;https://example.com/sprite&quot;</code>, renderers would load <code>https://example.com/sprite.json</code> and <code>https://example.com/sprite.png</code>, or <code>https://example.com/sprite@2x.json</code> and <code>https://example.com/sprite@2x.png</code>.</p>
+<h2 id="generating-sprites" tabindex="-1">Generating Sprites</h2>
+<p>There are tools that can generate sprites from SVG files, such as <a href="https://github.com/flother/spreet">spreet</a> and <a href="https://www.npmjs.com/package/@elastic/spritezero">spritezero</a>.</p>
+
+                        </article>
+                    </section>
+    
+                        <footer>
+                            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> on <span id="generated-date"></span>
+                        <script>
+                        // 获取当前日期并插入到页面中
+                        setInterval(function(){
+                            document.getElementById('generated-date').textContent = new Date().toLocaleString();
+                        }, 1000);
+
+                        </script>
+                        </footer>
+                    </div>
+                </div>
+
+                <script>prettyPrint();</script>
+                <script src="scripts/linenumber.js"></script>
+                <script src="scripts/main.js"></script>
+                </body>
+                </html>
+            

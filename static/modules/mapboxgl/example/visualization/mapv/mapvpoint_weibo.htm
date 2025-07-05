@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>点微博数据</title>
+    <!--引入Echarts-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/mapv/mapv.js"></script>
+    <!--引入Mapboxgl库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.css"/>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-mapboxgl-plugin.min.js"></script>
+    <!--引入jquery-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/jquery/jquery-3.7.1.min.js"></script>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      const { SpatialReference } = zondy
+      const { WebTileLayer, MapVLayer } = zondy.layer
+      const { initializeOptions } = zondy.mapboxgl.util
+
+      // 初始地图视图
+      function initViewer() {
+        view = new mapboxgl.Map({
+          // 容器ID
+          container: 'mapgis-viewer',
+          // 地图视图坐标系ID
+          crs: 'EPSG:3857',
+          // 初始化中心点
+          center: [112.45, 31.09],
+          // 初始化级数
+          zoom: 3
+        })
+      }
+
+      // 添加MapV图层
+      function addMapV() {
+        $.get('http://webclient.smaryun.com:8200/Vector/json/pointWeibo/weibo.json', function (data) {
+          if (typeof data === 'string') {
+            data = JSON.parse(data);
+          }
+          var data1 = [];
+          var data2 = [];
+          var data3 = [];
+          var data4 = [];
+          for (var i = 0; i < data[0].length; i++) {
+            var geoCoord = data[0][i].geoCoord;
+            data1.push({
+              geometry: {
+                type: 'Point',
+                coordinates: geoCoord
+              }
+            });
+          }
+
+          for (var i = 0; i < data[1].length; i++) {
+            var geoCoord = data[1][i].geoCoord;
+            data2.push({
+              geometry: {
+                type: 'Point',
+                coordinates: geoCoord
+              },
+              time: Math.random() * 10
+            });
+          }
+
+          for (var i = 0; i < data[2].length; i++) {
+            var geoCoord = data[2][i].geoCoord;
+            data3.push({
+              geometry: {
+                type: 'Point',
+                coordinates: geoCoord
+              }
+            });
+          }
+
+          var dataSet1 = new mapv.DataSet(data1);
+          var options1 = {
+            context: '2d',
+            fillStyle: 'rgba(200, 200, 0, 0.8)',
+            bigData: 'Point',
+            size: 0.7,
+            draw: 'simple'
+          };
+          // 构造MapV图层
+          const mapVLayer1 = new zondy.layer.MapVLayer({
+            data: dataSet1,
+            mapVOptions: options1
+          });
+          // 添加mapV图层
+          new zondy.mapboxgl.layer.MapVLayer(view, mapVLayer1.data, mapVLayer1.mapVOptions)
+
+          var dataSet2 = new mapv.DataSet(data2);
+          var options2 = {
+            context: '2d',
+            fillStyle: 'rgba(255, 250, 0, 0.8)',
+            size: 0.7,
+            bigData: 'Point',
+            draw: 'simple'
+          };
+          // 构造MapV图层
+          const mapVLayer2 = new zondy.layer.MapVLayer({
+            data: dataSet2,
+            mapVOptions: options2
+          });
+          // 添加mapV图层
+          new zondy.mapboxgl.layer.MapVLayer(view, mapVLayer2.data, mapVLayer2.mapVOptions)
+
+          var dataSet3 = new mapv.DataSet(data3);
+          var options3 = {
+            context: '2d',
+            fillStyle: 'rgba(255, 250, 250, 0.6)',
+            size: 0.7,
+            bigData: 'Point',
+            draw: 'simple'
+          };
+          // 构造MapV图层
+          const mapVLayer3 = new zondy.layer.MapVLayer({
+            data: dataSet3,
+            mapVOptions: options3
+          });
+          // 添加mapV图层
+          new zondy.mapboxgl.layer.MapVLayer(view, mapVLayer3.data, mapVLayer3.mapVOptions)
+
+          var dataSet4 = new mapv.DataSet(data2);
+          var options4 = {
+            context: '2d',
+            fillStyle: 'rgba(255, 250, 250, 0.9)',
+            size: 1.1,
+            draw: 'simple',
+            bigData: 'Point',
+            animation: {
+              stepsRange: {
+                start: 0,
+                end: 10
+              },
+              trails: 1,
+              duration: 6
+            }
+          };
+          // 构造MapV图层
+          const mapVLayer4 = new zondy.layer.MapVLayer({
+            data: dataSet4,
+            mapVOptions: options4
+          });
+          // 添加mapV图层
+          new zondy.mapboxgl.layer.MapVLayer(view, mapVLayer4.data, mapVLayer4.mapVOptions)
+        });
+      }
+
+      // 添加瓦片图层
+      function addLayer() {
+        const layer = new WebTileLayer({
+          // 加载经纬度的影像地图
+          url: "http://t1.tianditu.com/DataServer?T=img_w&x={col}&y={row}&l={level}",
+          // 天地图必须加token，且token名为tk
+          tokenKey: "tk",
+          // token请在天地图官网申请
+          tokenValue: "63c5c4f101d68229494bb45d3bf60277",
+          // 指定坐标系
+          spatialReference: new SpatialReference({ wkid: 3857 })
+        })
+        // 加载图层元数据
+        layer.load().then(() => {
+          // 构建mapboxgl引擎需要的样式
+          const style = initializeOptions(layer)
+          // 添加到mapboxgl地图对象中
+          addStyleToMapboxglMap(style)
+        })
+      }
+
+      // 添加到mapboxgl地图对象中
+      function addStyleToMapboxglMap(style) {
+        const { sources, layers } = style
+        const sourcesArr = Object.entries(sources)
+        for (let i = 0; i < sourcesArr.length; i++) {
+          const sourceArr = sourcesArr[i]
+          view.addSource(sourceArr[0], sourceArr[1])
+        }
+        for (let j = 0; j < layers.length; j++) {
+          view.addLayer(layers[j])
+        }
+        return true
+      }
+
+      // 地图初始化函数
+      function init() {
+        // 初始地图视图
+        initViewer()
+        // 添加地图图片图层
+        addLayer()
+        // 添加MapV图层
+        addMapV()
+      }
+    </script>
+</head>
+<body onload="init()">
+<div id="mapgis-viewer">
+    <div id="mouse-position">
+    </div>
+</div>
+</body>
+</html>

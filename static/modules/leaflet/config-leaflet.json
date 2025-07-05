@@ -1,0 +1,383 @@
+{
+  "name": "leaflet",
+  "title": "MapGIS WebClinet-Leaflet演示网站",
+  "mapmode": "leaflet",
+  "childs": [
+    {
+      "name": "数据图层",
+      "iconfont": "iconserver1",
+      "folder": "layer",
+      "leaffolder": false,
+      "childs": [
+        {
+          "name": "OGC",
+          "iconfont": "iconmap",
+          "folder": "ogc",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "WMS图层-混合开发",
+              "file": "wms-layer-hybrid",
+              "diffcult": "1",
+              "icon": "wms-layer-hybrid.png",
+              "tags": [
+                "wms-layer-hybrid",
+                "WMS图层-混合开发",
+                "hunhekaifa",
+                "WMS",
+                "wms",
+                "hybrid"
+              ]
+            },
+            {
+              "name": "WMS图层-原生开发",
+              "file": "wms-layer-native",
+              "diffcult": "1",
+              "icon": "wms-layer-native.png",
+              "tags": [
+                "wms-layer-native",
+                "WMS图层-原生开发",
+                "yuanshengkaifa",
+                "WMS",
+                "wms",
+                "native"
+              ]
+            },
+            {
+              "name": "WMTS图层-混合开发",
+              "file": "wmts-layer-hybrid",
+              "diffcult": "1",
+              "icon": "wmts-layer-hybrid.png"
+            },
+            {
+              "name": "WFS图层-混合开发",
+              "file": "wfs-layer-hybrid",
+              "diffcult": "1",
+              "icon": "wfs-layer-hybrid.png"
+            }
+          ]
+        },
+        {
+          "name": "地图图片图层",
+          "folder": "mapPictureLayer",
+          "leaffolder": true,
+          "hideleaf": true,
+          "childs": [
+            {
+              "name": "MapGIS地图图片图层-混合开发",
+              "file": "mapgis-map-image-layer-hybrid",
+              "diffcult": "1",
+              "icon": "mapgis-map-image-layer-hybrid.png",
+              "tags": [
+                "mapgis-map-image-layer-hybrid",
+                "MapGIS地图图片图层-混合开发",
+                "yuangshengkaifa",
+                "ditutupiantuceng",
+                "MapGIS地图服务",
+                "hybrid"
+              ]
+            },
+            {
+              "name": "MapGIS地图图片图层-原生开发",
+              "file": "mapgis-map-image-layer-native",
+              "diffcult": "1",
+              "icon": "mapgis-map-image-layer-native.png",
+              "tags": [
+                "mapgis-map-image-layer-native",
+                "MapGIS地图图片图层-原生开发",
+                "yuangshengkaifa",
+                "ditutupiantuceng",
+                "MapGIS地图服务",
+                "native"
+              ]
+            },
+            {
+              "name": "ArcGIS地图图片图层-混合开发",
+              "file": "arcgis-map-image-layer-hybrid",
+              "diffcult": "1",
+              "icon": "arcgis-map-image-layer-hybrid.png"
+            }
+          ]
+        },
+        {
+          "name": "瓦片图层",
+          "iconfont": "iconmap",
+          "folder": "tileLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "MapGIS瓦片图层-混合开发",
+              "file": "mapgis-tile-layer-hybrid",
+              "diffcult": "1",
+              "icon": "mapgis-tile-layer-hybrid.jpg",
+              "tags": [
+                "mapgis-tile-layer-hybrid",
+                "MapGIS瓦片图层-混合开发",
+                "hunhekaifa",
+                "wapiantuceng",
+                "MapGIS瓦片服务",
+                "hybrid"
+              ]
+            },
+            {
+              "name": "MapGIS瓦片图层-原生开发",
+              "file": "mapgis-tile-layer-native",
+              "diffcult": "1",
+              "icon": "mapgis-tile-layer-native.jpg",
+              "tags": [
+                "mapgis-tile-layer-native",
+                "MapGIS瓦片图层-原生开发",
+                "yuanshengkaifa",
+                "wapiantuceng",
+                "MapGIS瓦片服务",
+                "native"
+              ]
+            },
+            {
+              "name": "ArcGIS瓦片图层-混合开发",
+              "file": "arcgis-tile-layer-hybrid",
+              "diffcult": "1",
+              "icon": "arcgis-tile-layer-hybrid.png"
+            },
+            {
+              "name": "网络瓦片图层-混合开发",
+              "file": "web-tile-layer-hybrid",
+              "diffcult": "1",
+              "icon": "web-tile-layer-hybrid.png",
+              "tags": [
+                "web-tile-layer-hybrid",
+                "网络瓦片图层-混合开发",
+                "hunhekaifa",
+                "wangluowapiantuceng",
+                "hybrid"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "要素图层",
+          "folder": "feature",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "MapGIS要素图层-混合开发",
+              "file": "mapgis-feature-layer-hybrid",
+              "icon": "mapgis-feature-layer-hybrid.png",
+              "diffcult": "1",
+              "tags": ["IGSFeatureLayer"]
+            }
+          ]
+        },
+        {
+          "name": "GeoJson图层",
+          "folder": "geoJsonLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "GeoJSON图层-混合开发",
+              "file": "geojson-layer-hybrid",
+              "icon": "geojson-layer-hybrid.png",
+              "diffcult": "1",
+              "tags": ["GeoJSONLayer"]
+            }
+          ]
+        },
+        {
+          "name": "矢量瓦片图层",
+          "folder": "vectorTile",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "MapGIS矢量瓦片-混合开发",
+              "file": "mapgis-vector-tile-layer-hybrid",
+              "icon": "mapgis-vector-tile-layer-hybrid.png",
+              "diffcult": "1"
+            },
+            {
+              "name": "ArcGIS矢量瓦片-混合开发",
+              "file": "arcgis-vector-tile-layer-hybrid",
+              "icon": "arcgis-vector-tile-layer-hybrid.png",
+              "diffcult": "1"
+            }
+          ]
+        },
+        {
+          "name": "几何图层",
+          "folder": "graphicsLayer",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "几何图层-混合开发",
+              "file": "graphics-layer-hybrid",
+              "icon": "graphics-layer-hybrid.png",
+              "diffcult": "1",
+              "tags": ["GraphicsLayer"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "可视化",
+      "iconfont": "iconinternet",
+      "folder": "visualization",
+      "leaffolder": false,
+      "childs": [
+        {
+          "name": "通用可视化",
+          "iconfont": "iconmap",
+          "folder": "common-visualization",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "泛光线",
+              "file": "floodlightLine",
+              "diffcult": "1",
+              "icon": "floodlightLine.png",
+              "tags": ["可视化", "泛光", "泛光线"]
+            }
+          ]
+        },
+        {
+          "name": "客户端专题图",
+          "iconfont": "iconmap",
+          "folder": "clientThemeMap",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "统计专题图(旧版)",
+              "file": "graph",
+              "diffcult": "1",
+              "icon": "graph.png",
+              "tags": ["ThemeLayer", "专题图", "统计专题图"]
+            }
+          ]
+        },
+        {
+          "name": "EChart",
+          "iconfont": "iconmap",
+          "folder": "echart",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "热力图-空气质量",
+              "file": "echart-heater",
+              "diffcult": "1",
+              "icon": "echart-heater.png"
+            },
+            {
+              "name": "散点图-微博签到",
+              "file": "echart-weibo",
+              "diffcult": "1",
+              "icon": "echart-weibo.png"
+            },
+            {
+              "name": "散点图-空气质量",
+              "file": "echart-air",
+              "diffcult": "1",
+              "icon": "echart-air.png"
+            },
+            {
+              "name": "路径图-模拟迁徙",
+              "file": "echart-migrate",
+              "diffcult": "1",
+              "icon": "echart-migrate.png"
+            },
+            {
+              "name": "路径图-渐进绘制",
+              "file": "echart-line",
+              "diffcult": "1",
+              "icon": "echart-line.png"
+            },
+            {
+              "name": "路径图-公交路线",
+              "file": "echart-line-animate",
+              "diffcult": "1",
+              "icon": "echart-line-animate.png"
+            }
+          ]
+        },
+        {
+          "name": "MapV",
+          "iconfont": "iconmap",
+          "folder": "mapV",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "轨迹汇聚",
+              "file": "mapv-path-converge",
+              "diffcult": "1",
+              "icon": "mapv-path-converge.png"
+            },
+            {
+              "name": "热力图",
+              "file": "mapv-heater",
+              "diffcult": "1",
+              "icon": "mapv-heater.png"
+            },
+            {
+              "name": "迁移图",
+              "file": "mapv-migrate",
+              "diffcult": "1",
+              "icon": "mapv-migrate.png"
+            },
+            {
+              "name": "区数据渲染",
+              "file": "mapv-polygon-render",
+              "diffcult": "1",
+              "icon": "mapv-polygon-render.png"
+            },
+            {
+              "name": "点数据渲染",
+              "file": "mapv-point-animate",
+              "diffcult": "1",
+              "icon": "mapv-point-animate.png"
+            },
+            {
+              "name": "密度图（方形网格）",
+              "file": "mapv-grid",
+              "diffcult": "1",
+              "icon": "mapv-grid.png"
+            },
+            {
+              "name": "密度图（蜂窝形）",
+              "file": "mapv-honey-comb",
+              "diffcult": "1",
+              "icon": "mapv-honey-comb.png"
+            },
+            {
+              "name": "点重叠播放",
+              "file": "mapv-point-multi-animate",
+              "diffcult": "1",
+              "icon": "mapv-point-multi-animate.png"
+            },
+            {
+              "name": "点微博数据",
+              "file": "mapv-point-weibo",
+              "diffcult": "1",
+              "icon": "mapv-point-weibo.png"
+            },
+            {
+              "name": "单一迁移轨迹",
+              "file": "mapv-simple-migrate",
+              "diffcult": "1",
+              "icon": "mapv-simple-migrate.png"
+            },
+            {
+              "name": "动态轨迹",
+              "file": "mapv-tracker",
+              "diffcult": "1",
+              "icon": "mapv-tracker.png"
+            },
+            {
+              "name": "交通轨迹",
+              "file": "mapv-tracker-line",
+              "diffcult": "1",
+              "icon": "mapv-tracker-line.png"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

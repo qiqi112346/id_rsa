@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>GeoJson图层-原生接口</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView
+
+      // 获取构造函数
+      const { FetchRequest } = zondy.service
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //蓝黑版深色地图
+        addBlueImage()
+        // 添加GeoJSON数据;
+        addGeoJSONLayer()
+        //视角跳转
+        flyTo()
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        sceneView = new Cesium.Viewer('mapgis-3d-viewer')
+        // 判断是否支持图像渲染像素化处理
+        if(Cesium.FeatureDetection.supportsImageRenderingPixelated()){
+          // 使得该值和浏览器保持一致，文字或者图形的渲染结果会更加平滑
+          sceneView.resolutionScale = window.devicePixelRatio
+        }
+        // 开启抗锯齿，文字或者图形的渲染结果会更加平滑
+        sceneView.scene.fxaa = true
+        sceneView.scene.postProcessStages.fxaa.enabled = true
+      }
+
+      //蓝黑版深色地图
+      function addBlueImage() {
+        let blueImage = new zondy.cesium.UrlTemplateImageryProvider({
+          url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
+          tilingScheme: new Cesium.WebMercatorTilingScheme(),
+          maximumLevel: 18
+        })
+        sceneView.imageryLayers.addImageryProvider(blueImage)
+      }
+
+      //视角跳转
+      function flyTo() {
+        sceneView.camera.flyTo({
+          destination: Cesium.Cartesian3.fromDegrees(114.18944441797595, 30.5690284961602, 200000),
+          duration: 1
+        });
+      }
+
+      // 添加GeoJSON数据;
+      function addGeoJSONLayer() {
+        // 添加点类型的图层
+        addPoint()
+        // 添加线类型的图层
+        addLine()
+        // 添加区类型的图层
+        addPolygon()
+      }
+
+      // 添加点类型的图层
+      function addPoint() {
+        FetchRequest.commit('get', 'http://webclient.smaryun.com:8200/Vector/json/metroStation.json', {}).then(function (result) {
+          console.log("点数据查询成功:", result)
+          // 将数据转为JSON对象
+          result.json().then(function (json) {
+            // 获取所有点要素集合
+            const { features } = json
+            // 初始化一个Cesium的广告牌集合对象
+            // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/BillboardCollection.html
+            const billboards = sceneView.scene.primitives.add(new Cesium.BillboardCollection());
+            // 循环添加广告牌
+            features.forEach(function (feature) {
+              // 构造广告牌初始化参数
+              const billboardOptions = {
+                // 几何坐标
+                position: Cesium.Cartesian3.fromDegrees(
+                  feature.geometry.coordinates[0],
+                  feature.geometry.coordinates[1],
+                  feature.geometry.coordinates[2] || 0
+                ),
+                // billboard的image对象
+                image:
+                  'http://webclient.smaryun.com/static/libs/cdn/cesium/Assets/Textures/maki/rail.png',
+                // 设置覆盖物颜色
+                color: new Cesium.Color(1, 1, 1, 1),
+                // 图片宽度
+                width: 20,
+                // 图片高度
+                height: 20,
+                // 图片原点偏移
+                pixelOffset: new Cesium.Cartesian2(0, 0),
+                // 水平锚点设置
+                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                // Cesium的高程模式
+                heightReference: Cesium.HeightReference.NONE
+              }
+              // 添加广告牌
+              billboards.add(billboardOptions)
+            })
+          })
+        })
+      }
+
+      // 添加线类型的图层
+      function addLine() {
+        FetchRequest.commit('get', 'http://webclient.smaryun.com:8200/Vector/json/metro.json', {}).then(function (result) {
+          console.log("线数据查询成功:", result)
+          // 将数据转为JSON对象
+          result.json().then(function (json) {
+            // 获取所有线要素集合
+            const { features } = json
+            // 循环添加线
+            features.forEach(function (feature) {
+              // 将线的经纬度点坐标转为笛卡尔坐标
+              const cartesian3Array = []
+              feature.geometry.coordinates.forEach(function (coordinate) {
+                cartesian3Array.push(
+                  Cesium.Cartesian3.fromDegrees(
+                    coordinate[0],
+                    coordinate[1],
+                    coordinate[2] || 0
+                  )
+                )
+              })
+              // 创建一个线Primitive对象
+              // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Primitive.html
+              const polylinePrimitive = new Cesium.Primitive({
+                // 线几何实例对象
+                // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/GeometryInstance.html
+                geometryInstances: new Cesium.GeometryInstance({
+                  // 设置线几何
+                  // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/PolylineGeometry.html
+                  geometry: new Cesium.PolylineGeometry({
+                    // 线的笛卡尔点坐标
+                    positions: cartesian3Array,
+                    // 线宽
+                    width: 20,
+                    // 线的地理类型
+                    arcType: Cesium.ArcType.NONE
+                  }),
+                  // 在这里设置线颜色
+                  attributes: {
+                    // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/ColorGeometryInstanceAttribute.html
+                    color: Cesium.ColorGeometryInstanceAttribute.fromColor(new Cesium.Color(Math.random(), Math.random(), Math.random(), 1))
+                  }
+                }),
+                // 是否显示线
+                show: true,
+                // 设置线外观，纯色线仅需要传入一个空的PolylineColorAppearance即可
+                // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/PolylineColorAppearance.html
+                appearance: new Cesium.PolylineColorAppearance(),
+                // 是否是同步绘制，这里关闭，否则绘制会闪烁
+                asynchronous: false
+              })
+              sceneView.scene.primitives.add(polylinePrimitive)
+            })
+          })
+        })
+      }
+
+      // 添加区类型的图层
+      function addPolygon() {
+        FetchRequest.commit('get', 'http://webclient.smaryun.com:8200/Vector/json/populationSizeGeoJson_2017.json', {}).then(function (result) {
+          console.log("区数据查询成功:", result)
+          // 将数据转为JSON对象
+          result.json().then(function (json) {
+            // 获取所有区要素集合
+            const { features } = json
+            // 循环添加区
+            features.forEach(function (feature) {
+              feature.geometry.coordinates.forEach(function (polygonCoords) {
+                // 要绘制的笛卡尔坐标数组
+                const cartesian3Array = []
+                // 将几何点从经纬度坐标转为笛卡尔坐标
+                // 几何点数组中，第一个数组是外圈，其余的是内圈
+                for (let i = 0; i < polygonCoords.length; i++) {
+                  cartesian3Array.push([])
+                  for (let j = 0; j < polygonCoords[i].length; j++) {
+                    cartesian3Array[i].push(
+                      Cesium.Cartesian3.fromDegrees(polygonCoords[i][j][0], polygonCoords[i][j][1], polygonCoords[i][j][2] || 0)
+                    )
+                  }
+                }
+                // 如果多边形有内圈，则构造Cesium的内圈对象
+                const holes = []
+                for (let i = 1; i < cartesian3Array.length; i++) {
+                  // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/PolygonHierarchy.html
+                  holes.push(new Cesium.PolygonHierarchy(cartesian3Array[i]))
+                }
+                // 构造Cesium的多边形几何对象
+                // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/PolygonGeometry.html
+                const polygonGeometry = new Cesium.PolygonGeometry({
+                  // 多边形几何结构
+                  // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/PolygonHierarchy.html
+                  polygonHierarchy: new Cesium.PolygonHierarchy(cartesian3Array[0], holes),
+                  // 是否使用单个点的高度
+                  perPositionHeight: true
+                })
+                // 构造多边形的材质对象
+                const color = new Cesium.Color(Math.random(), Math.random(), Math.random(), 1)
+                // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/Material.html
+                const material = Cesium.Material.fromType('Color', {
+                  color: color
+                })
+                // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium/MaterialAppearance.html
+                const appearance = new Cesium.MaterialAppearance({
+                  // 几何材质
+                  material: material
+                })
+                // 构造Primitive对象
+                const polygonPrimitive = new Cesium.Primitive({
+                  // 几何实例
+                  geometryInstances: new Cesium.GeometryInstance({
+                    geometry: polygonGeometry,
+                    attributes: {
+                      color: Cesium.ColorGeometryInstanceAttribute.fromColor(color)
+                    }
+                  }),
+                  // 几何外观
+                  appearance: appearance,
+                  asynchronous: false
+                })
+                // 将primitive对象添加到Cesium中
+                sceneView.scene.primitives.add(polygonPrimitive)
+              })
+            })
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

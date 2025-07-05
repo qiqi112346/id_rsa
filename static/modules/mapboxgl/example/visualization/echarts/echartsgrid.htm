@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>网格专题图</title>
+    <!--引入Echarts-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/echarts/echarts.min-4.0.js"></script>
+    <!--引入Mapboxgl库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.css"/>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-mapboxgl-plugin.min.js"></script>
+    <!--引入jquery-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/jquery/jquery-3.7.1.min.js"></script>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      let view
+      const { SpatialReference } = zondy
+      const { WebTileLayer, EchartsLayer } = zondy.layer
+      const { initializeOptions } = zondy.mapboxgl.util
+
+      // 初始地图视图
+      function initViewer() {
+        view = new mapboxgl.Map({
+          // 容器ID
+          container: 'mapgis-viewer',
+          // 地图视图坐标系ID
+          crs: 'EPSG:3857',
+          // 初始化中心点
+          center: [116.3, 40],
+          // 初始化级数
+          zoom: 8
+        })
+      }
+
+      // 添加Echarts图层
+      function addEcharts() {
+        var COLORS = ["#070093", "#1c3fbf", "#1482e5", "#70b4eb", "#b4e0f3", "#ffffff"];
+        var lngExtent = [39.5, 40.6];
+        var latExtent = [115.9, 116.8];
+        var cellCount = [50, 50];
+        var cellSizeCoord = [
+          (lngExtent[1] - lngExtent[0]) / cellCount[0],
+          (latExtent[1] - latExtent[0]) / cellCount[1]
+        ];
+        var gapSize = 0;
+
+        function renderItemFunc(params, api) {
+          var context = params.context;
+          var lngIndex = api.value(0);
+          var latIndex = api.value(1);
+          var coordLeftTop = [+(latExtent[0] + lngIndex * cellSizeCoord[0]).toFixed(6), +(lngExtent[0] + latIndex *
+            cellSizeCoord[1]).toFixed(6)];
+          var pointLeftTop = getCoord(params, api, lngIndex, latIndex);
+          var pointRightBottom = getCoord(params, api, lngIndex + 1, latIndex + 1);
+
+          return {
+            type: 'rect',
+            shape: {
+              x: pointLeftTop[0],
+              y: pointLeftTop[1],
+              width: pointRightBottom[0] - pointLeftTop[0],
+              height: pointRightBottom[1] - pointLeftTop[1]
+            },
+            style: api.style({
+              stroke: 'rgba(0,0,0,0.1)'
+            }),
+            styleEmphasis: api.styleEmphasis()
+          };
+        }
+
+        function getCoord(params, api, lngIndex, latIndex) {
+          var coords = params.context.coords || (params.context.coords = []);
+          var key = lngIndex + '-' + latIndex;
+          return coords[key] || (coords[key] = api.coord([+(latExtent[0] + lngIndex * cellSizeCoord[0]).toFixed(6), +
+            (lngExtent[0] + latIndex * cellSizeCoord[1]).toFixed(6)
+          ]));
+        }
+
+        $.get('http://webclient.smaryun.com:8200/Vector/json/grid/gridData.json', function(data) {
+          var options = {
+            tooltip: {},
+            visualMap: {
+              type: 'piecewise',
+              inverse: true,
+              top: 10,
+              left: 10,
+              pieces: [{
+                value: 0,
+                color: COLORS[0]
+              }, {
+                value: 1,
+                color: COLORS[1]
+              }, {
+                value: 2,
+                color: COLORS[2]
+              }, {
+                value: 3,
+                color: COLORS[3]
+              }, {
+                value: 4,
+                color: COLORS[4]
+              }, {
+                value: 5,
+                color: COLORS[5]
+              }],
+              borderColor: '#ccc',
+              borderWidth: 1,
+              backgroundColor: '#eee',
+              dimension: 2,
+              inRange: {
+                color: COLORS,
+                opacity: 0.8
+              }
+            },
+            mapboxgl: {
+              roam: true
+            },
+            geo: {
+              geoIndex: 0
+            },
+            series: [{
+              type: 'custom',
+              coordinateSystem: 'mapboxgl',
+              data: data,
+              renderItem: renderItemFunc,
+              animation: false,
+              itemStyle: {
+                emphasis: {
+                  color: 'yellow'
+                }
+              },
+              encode: {
+                tooltip: 2
+              }
+            }]
+          };
+          // 添加Echarts图层
+          const echartsLayer = new zondy.layer.EchartsLayer({
+            echartsOptions: options
+          });
+          new zondy.mapboxgl.layer.EchartsLayer(view, echartsLayer.echartsOptions).addTo(view)
+        })
+      }
+
+      // 添加瓦片图层
+      function addLayer() {
+        const layer = new WebTileLayer({
+          // 加载经纬度的影像地图
+          url: "http://t1.tianditu.com/DataServer?T=img_w&x={col}&y={row}&l={level}",
+          // 天地图必须加token，且token名为tk
+          tokenKey: "tk",
+          // token请在天地图官网申请
+          tokenValue: "63c5c4f101d68229494bb45d3bf60277",
+          // 指定坐标系
+          spatialReference: new SpatialReference({ wkid: 3857 })
+        })
+        // 加载图层元数据
+        layer.load().then(() => {
+          // 构建mapboxgl引擎需要的样式
+          const style = initializeOptions(layer)
+          // 添加到mapboxgl地图对象中
+          addStyleToMapboxglMap(style)
+        })
+      }
+
+      // 添加到mapboxgl地图对象中
+      function addStyleToMapboxglMap(style) {
+        const { sources, layers } = style
+        const sourcesArr = Object.entries(sources)
+        for (let i = 0; i < sourcesArr.length; i++) {
+          const sourceArr = sourcesArr[i]
+          view.addSource(sourceArr[0], sourceArr[1])
+        }
+        for (let j = 0; j < layers.length; j++) {
+          view.addLayer(layers[j])
+        }
+        return true
+      }
+
+      // 地图初始化函数
+      function init() {
+        // 初始地图视图
+        initViewer()
+        // 添加地图图片图层
+        addLayer()
+        // 添加Echarts图层
+        addEcharts()
+      }
+    </script>
+</head>
+
+<body onload="init()">
+<div id="mapgis-viewer"></div>
+</body>
+</html>

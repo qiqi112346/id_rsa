@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>坐标互转</title>
+    <!-- 引入地图引擎库 -->
+    <script
+      include="leaflet,mapboxgl"
+      src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"
+    ></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/analyse.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+      let map, view, point
+      const { IGSTileLayer, GraphicsLayer } = zondy.layer
+      const { Map, Feature, Color, SpatialReference } = zondy
+      const { Point, Projection } = zondy.geometry
+      const { SimpleMarkerSymbol, SimpleLineSymbol } = zondy.symbol
+      let $ = layui.jquery
+
+      // 坐标系转换
+      function coordReverse() {
+        // 将4326坐标系的点转为3857坐标系的点
+        let point3857 = Projection.project(
+          // 要转换的几何
+          point,
+          // 目标参考系
+          new SpatialReference({
+            wkid: 3857
+          })
+        )
+        $('#EPSG3857-position-x').val(point3857.coordinates[0])
+        $('#EPSG3857-position-y').val(point3857.coordinates[1])
+      }
+
+      // 自动获取当前视图参范围
+      function getViewParams() {
+        const coordinates = point.coordinates
+        $('#EPSG4326-position-x').val(coordinates[0])
+        $('#EPSG4326-position-y').val(coordinates[1])
+      }
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加瓦片图层
+        addIGSTileLayer()
+        // 创建Point几何对象并添加到图层中
+        newPoint()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 添加瓦片图层
+      function addIGSTileLayer() {
+        const igsTileLayer = new IGSTileLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        })
+        map.add(igsTileLayer)
+        igsTileLayer.on('layerview-created', (result) => {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+          getViewParams()
+        })
+      }
+
+      // 创建Point几何对象并添加到图层中
+      function newPoint() {
+        // 创建几何对象
+        point = new Point({
+          coordinates: [113.2, 30.5]
+        })
+        // 创建Graphics图层对象
+        let graphicsLayer = new GraphicsLayer({
+          graphics: []
+        })
+        // 添加图层对象到地图文档中
+        map.add(graphicsLayer)
+        // 创建几何要素
+        let feature = new Feature({
+          // 创建几何对象
+          geometry: point,
+          // 设置几何样式
+          symbol: new SimpleMarkerSymbol({
+            // 设置填充颜色
+            color: new Color(0, 0, 255, 1),
+            // 设置半径，单位像素
+            size: 30,
+            // 设置外边线样式
+            outline: new SimpleLineSymbol({
+              // 设置外边线颜色
+              color: new Color(255, 0, 0, 1),
+              // 设置外边线宽度，单位像素
+              width: 2
+            })
+          })
+        })
+        // 添加要素
+        graphicsLayer.add(feature)
+      }
+    </script>
+    <style>
+      .layui-panel {
+        width: auto;
+        z-index: 9999;
+      }
+      .sample-main-panel {
+        border-bottom: none;
+      }
+      .layui-form-label {
+        width: 100px;
+      }
+    </style>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <div class="layui-panel layui-panel-right" style="width: 330px">
+      <form class="layui-form" action="">
+        <div class="sample-main-panel">
+          <div class="layui-form-item">
+            <label class="layui-form-label">4326坐标值：</label>
+            <div class="layui-input-block" style="margin-bottom: 6px">
+              <input
+                id="EPSG4326-position-x"
+                value="0"
+                type="text"
+                readonly
+                name="title"
+                lay-verify="title"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+            <div class="layui-input-block">
+              <input
+                id="EPSG4326-position-y"
+                value="0"
+                type="text"
+                readonly
+                name="title"
+                lay-verify="title"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">3857坐标值：</label>
+            <div class="layui-input-block" style="margin-bottom: 6px">
+              <input
+                id="EPSG3857-position-x"
+                value="0"
+                type="text"
+                readonly
+                name="title"
+                lay-verify="title"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+            <div class="layui-input-block">
+              <input
+                id="EPSG3857-position-y"
+                value="0"
+                type="text"
+                readonly
+                name="title"
+                lay-verify="title"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <button
+              type="button"
+              class="layui-btn"
+              style="float: right; width: auto; margin-right: 0 !important"
+              onclick="coordReverse()"
+            >
+              坐标系转换
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

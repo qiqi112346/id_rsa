@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>方形密度网络</title>
+    <!--引入mapv-->
+    <script type="text/javascript" src="http://webclient.smaryun.com/static/libs/cdn/mapv/mapv.min.js"></script>
+    <!--该库集成了leaflet与MapGIS IGServer for JavaScript脚本库-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/leaflet/leaflet.css"/>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/leaflet/leaflet.js"></script>
+    <!--plugin库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-leaflet-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <!--css-->
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      const { WebTileLayer } = zondy.layer
+      const { initializeCRS, initializeOptions } = zondy.leaflet.util
+      // 初始化示例
+      function init() {
+        // 添加图层
+        addLayer()
+      }
+
+      // 添加图层
+      function addLayer() {
+        // 构造一个网路瓦片图层对象
+        const layer = new WebTileLayer({
+          // 服务基地址
+          url: 'http://t1.tianditu.com/DataServer?T=img_c&x={col}&y={row}&l={level}',
+          // token名
+          tokenKey: 'tk',
+          // token值
+          tokenValue: getTDTToken()
+        })
+        // 加载元数据
+        layer.load().then(function () {
+          // 构造Leaflet地图视图的初始化参数
+          const crs = initializeCRS(layer)
+          const mapViewOptions = {
+            crs: crs,
+            center: [31.147781205532336,112.21905099757561],
+            zoom: 4
+          }
+          // 构造Leaflet地图视图对象
+          const map = L.map('mapgis-viewer', mapViewOptions)
+          // 构造Leaflet瓦片图层的初始化参数
+          const layerOptions = initializeOptions(layer)
+          // 添加Leaflet瓦片图层到地图视图中
+          new zondy.leaflet.layer.WebTileLayer(layer.url, layerOptions).addTo(map)
+          // 添加MapV图层
+          addMapVLayer(map)
+        })
+
+        // 添加MapV图层
+        function addMapVLayer(map) {
+          let randomCount = 500
+          let data = []
+          while (randomCount--) {
+            data.push({
+              geometry: {
+                type: 'Point',
+                coordinates: [75 + Math.random() * 50, 20.3 + Math.random() * 20]
+              },
+              count: 30 * Math.random()
+            })
+          }
+
+          // 构建对应的dataset
+          let dataSet = new mapv.DataSet(data)
+
+          // 设置对应的参数
+          let options = {
+            fillStyle: 'rgba(55, 50, 250, 0.8)',
+            size: 40,
+            globalAlpha: 0.5,
+            label: {
+              show: true,
+              fillStyle: 'white',
+              shadowColor: 'yellow',
+              font: '15px Arial',
+              shadowBlur: 10
+            },
+            gradient: {
+              0: 'rgba(49, 54, 149, 0)',
+              0.2: 'rgba(69,117,180, 0.7)',
+              0.3: 'rgba(116,173,209, 0.7)',
+              0.4: 'rgba(171,217,233, 0.7)',
+              0.5: 'rgba(224,243,248, 0.7)',
+              0.6: 'rgba(254,224,144,0.7)',
+              0.7: 'rgba(253,174,97,0.7)',
+              0.8: 'rgba(244,109,67,0.8)',
+              0.9: 'rgba(215,48,39,0.8)',
+              0.95: 'rgba(165, 0, 38,0.8)'
+            },
+            shadowColor: 'rgba(255, 255, 50, 1)',
+            shadowBlur: 10,
+            max: 100,
+            draw: 'grid'
+          }
+          // 添加MapV图层
+          new zondy.leaflet.layer.MapVLayer(map, dataSet, options).addTo(
+            map
+          );
+        }
+      }
+    </script>
+</head>
+
+<body onload="init();">
+<div id="mapgis-viewer" style="position: absolute; display: flex; width: 100%; height: 100%"></div>
+</body>
+</html>

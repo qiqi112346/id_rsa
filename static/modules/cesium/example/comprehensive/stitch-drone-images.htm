@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>无人机图像拼接</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/tool.css"
+    />
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map,
+        sceneView,
+        viewer,
+        animation,
+        graphicsLayer,
+        sceneProject,
+        processDroneData,
+        modelEntity
+      let isStart = false
+
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //加载天地图
+        addTDT()
+        initUI()
+        addDroneModel()
+        createStitchVideoImages()
+      }
+
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map,
+          extensionOptions: {
+            // 打开地表的阴影投射
+            terrainShadows: Cesium.ShadowMode.CAST_ONLY,
+            // 开启动画
+            shouldAnimate: true
+          }
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+      }
+
+      //加载天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/vec_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+      // 添加无人机模型
+      function addDroneModel() {
+        // 加载无人机模型
+        modelEntity = viewer.entities.add({
+          model: {
+            uri: 'http://webclient.smaryun.com:8200/3DData/Model/glb/uav.glb',
+            minimumPixelSize: 128,
+            maximumScale: 20000
+          }
+        })
+      }
+
+      // 创建视频拼接
+      function createStitchVideoImages() {
+        sceneProject = new Cesium.SceneProjectorEx({
+          scene: viewer.scene,
+          pass: Cesium.Pass.AFTER_TILE,
+          caculateProjectedData: true,
+          nearClipPlane: 10,
+          farClipPlane: 500,
+          horizontAngle: Cesium.Math.toRadians(70),
+          verticalAngle: Cesium.Math.toRadians(55),
+          biasRatio: 10,
+          heading: Cesium.Math.toRadians(180),
+          pitch: Cesium.Math.toRadians(-90),
+          roll: 0
+        })
+        viewer.scene.primitives.add(sceneProject)
+
+        processDroneData = new ProcessDroneData(
+          'http://webclient.smaryun.com:8200/NoneSpatialData/video/UAV_attitude.json',
+          sceneProject,
+          viewer.scene,
+          (sourceData) => {
+            // 数据加载完成后使用第一个数据设置初始状态
+            var data = sourceData[0].data
+            var newPosition = Cesium.Cartesian3.fromDegrees(
+              data.longitude,
+              data.latitude,
+              data.elevation
+            )
+            sceneProject.viewPosition = newPosition
+            viewer.camera.flyTo({
+              destination: Cesium.Cartesian3.fromDegrees(
+                data.longitude,
+                data.latitude,
+                1000
+              ),
+              duration: 2
+            })
+            modelEntity.position = newPosition
+            modelEntity.orientation =
+              Cesium.Transforms.headingPitchRollQuaternion(
+                newPosition,
+                new Cesium.HeadingPitchRoll(Cesium.Math.toRadians(90), 0, 0)
+              )
+          }
+        )
+        viewer.scene.primitives.add(processDroneData)
+      }
+      // 开始视频投放
+      function startStitch() {
+        if (isStart) return
+        isStart = true
+        sceneProject.onCanplay = function () {
+          processDroneData.run = true
+          sceneProject.onCanplay = null
+        }
+        sceneProject.source =
+          'http://webclient.smaryun.com:8200/NoneSpatialData/video/UAV_video.mp4'
+      }
+      // 销毁视频拼接
+      function destroyStitch() {
+        processDroneData.destroy()
+      }
+      // 实例化UI
+      function initUI() {
+        layui
+          .config({
+            //  配置 Layui 第三方扩展模块存放的基础目录
+            base: 'http://webclient.smaryun.com/static/libs/cdn/layui/modules/'
+          })
+          .extend({
+            // 扩展
+            decimalSlider: 'decimalSlider/index'
+          })
+        layui.use('decimalSlider', (decimalSlider) => {
+          let form = layui.form
+          form.on('switch(showStitch)', function (data) {
+            // 是否显示图像拼接
+            processDroneData.show = data.elem.checked
+          })
+          form.on('switch(showSceneProjection)', function (data) {
+            // 是否显示场景投放
+            sceneProject.show = data.elem.checked
+          })
+        })
+      }
+      // 处理无人机数据
+      class ProcessDroneData {
+        constructor(url, sceneProject, scene, loaded) {
+          this._sourceData = null
+          this._run = false
+          this._show = true
+          this._lastTime = 0
+          this._detailTime = 0
+          this._currentTime = 0
+          // 延迟时间 用于调整姿态数据同视频的时间差
+          this._delay = 9500
+          this._dataIndex = 0
+          this._sceneProject = sceneProject
+          this._scene = scene
+          this._GPGenerater = new Cesium.GroundPrimitiveRectangleGenerater(
+            scene
+          )
+
+          this._primitives = []
+          var resource = Cesium.Resource.createIfNeeded(url)
+          resource.fetchJson().then((json) => {
+            this._sourceData = json
+            if (loaded) {
+              loaded(json)
+            }
+          })
+        }
+        get run() {
+          return this._run
+        }
+        set run(value) {
+          this._run = value
+        }
+        get show() {
+          return this._show
+        }
+        set show(value) {
+          this._show = value
+          this._primitives.forEach((primitive) => {
+            primitive.show = value
+          })
+        }
+        sampleDate(data, time, dataIndex) {
+          if (time < 0) time = 0
+          // 数据开始的时间
+          var startPointTime = data[0].timestamp
+          // 数据结束的时间
+          var endPointTime = data[data.length - 1].timestamp
+          // 计算时间的长度
+          var timeLength = endPointTime - startPointTime
+          if (time <= timeLength) {
+            while (
+              data[dataIndex + 1] &&
+              data[dataIndex + 1].timestamp - startPointTime < time
+            ) {
+              dataIndex++
+            }
+            var previous = data[dataIndex]
+            var sampleLongitude = previous.data.longitude
+            var sampleLatitude = previous.data.latitude
+            // 使用无人机数据的相对高度
+            var sampleHeight = previous.data.elevation
+            var sampleAttitudeHead = previous.data.attitude_head
+            var sampleAttitudePitch = previous.data.attitude_pitch
+            var sampleAttitudeRoll = previous.data.attitude_roll
+            return {
+              dataIndex,
+              longitude: sampleLongitude,
+              latitude: sampleLatitude,
+              height: sampleHeight,
+              attitudeHead: sampleAttitudeHead,
+              attitudePitch: sampleAttitudePitch,
+              attitudeRoll: sampleAttitudeRoll
+            }
+          }
+        }
+        update(frameState) {
+          if (!this._sourceData) return
+          if (!this._run) return
+          if (this._lastTime !== 0) {
+            this._detailTime = new Date().getTime() - this._lastTime
+          }
+          this._lastTime = new Date().getTime()
+          this._currentTime += this._detailTime
+          if (this._currentTime > this._delay) {
+            const sampleResult = this.sampleDate(
+              this._sourceData,
+              this._currentTime - this._delay,
+              this._dataIndex
+            )
+
+            if (sampleResult && this._dataIndex !== sampleResult.dataIndex) {
+              this._dataIndex = sampleResult.dataIndex
+              // 计算新的位置和朝向
+              var newPosition = Cesium.Cartesian3.fromDegrees(
+                sampleResult.longitude,
+                sampleResult.latitude,
+                sampleResult.height
+              )
+              // 加7.8度修正数据偏差
+              var newHeading = Cesium.Math.toRadians(
+                sampleResult.attitudeHead + 7.8
+              )
+              var newPitch = Cesium.Math.toRadians(-90)
+              var newRoll = Cesium.Math.toRadians(0)
+              var newOrientation = Cesium.Transforms.headingPitchRollQuaternion(
+                newPosition,
+                new Cesium.HeadingPitchRoll(
+                  newHeading + Cesium.Math.toRadians(90),
+                  0,
+                  newRoll
+                )
+              )
+              // 更新场景投的位置和朝向
+              this._sceneProject.viewPosition = newPosition
+              this._sceneProject.heading = newHeading
+              this._sceneProject.pitch = newPitch
+              this._sceneProject.roll = newRoll
+              // 更新模型的位置和朝向
+              modelEntity.position = newPosition
+              modelEntity.orientation = newOrientation
+
+              const videoFrameData = this._sceneProject.projectedFrameData
+              const projectedFrameData = {
+                frameData: {
+                  width: videoFrameData.frameData.width,
+                  height: videoFrameData.frameData.height,
+                  data: videoFrameData.frameData.data
+                },
+                leftTopCorner: videoFrameData.leftTopCorner,
+                leftBottomCorner: videoFrameData.leftBottomCorner,
+                rightTopCorner: videoFrameData.rightTopCorner,
+                rightBottomCorner: videoFrameData.rightBottomCorner
+              }
+              // 生成GroundPrimitive
+              var groundPrimitive = this._GPGenerater.generateGroundPrimitive(
+                projectedFrameData,
+                projectedFrameData.frameData
+              )
+              this._scene.primitives.add(groundPrimitive)
+              this._primitives.push(groundPrimitive)
+            } else if (!sampleResult) {
+              this._run = false
+              this._sceneProject.videoHTML.pause()
+            }
+          }
+        }
+        isDestroyed() {
+          return true
+        }
+        destroy() {
+          this._run = false
+          this._sourceData = null
+          this._dataIndex = 0
+          this._lastTime = 0
+          this._detailTime = 0
+          this._currentTime = 0
+          this._GPGenerater.destroy()
+          this._GPGenerater = null
+          this._primitives = []
+          this._sceneProject = null
+        }
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label">图像拼接层</label>
+          <div class="layui-input-block">
+            <input
+              type="checkbox"
+              lay-filter="showStitch"
+              lay-skin="switch"
+              lay-text="显示|隐藏"
+              checked
+            />
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">场景投放</label>
+          <div class="layui-input-block">
+            <input
+              type="checkbox"
+              lay-filter="showSceneProjection"
+              lay-skin="switch"
+              lay-text="显示|隐藏"
+              checked
+            />
+          </div>
+        </div>
+      </form>
+
+      <button type="button" class="layui-btn" onclick="startStitch()">
+        开始投放
+      </button>
+      <button type="button" class="layui-btn" onclick="destroyStitch()">
+        销毁图像拼接层
+      </button>
+    </div>
+  </body>
+</html>

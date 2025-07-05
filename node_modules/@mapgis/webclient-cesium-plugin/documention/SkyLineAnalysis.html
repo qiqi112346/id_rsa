@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> SkyLineAnalysis</title>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+                <h1> MapGIS Client for JavaScript API</h1>
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/common/api/common-mapgis/index.html"
+                        >
+                            Common
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/cesium/api/cesium-mapgis/index.html"
+                        >
+                            Cesium-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/mapboxgl/api/mapboxgl-mapgis/index.html"
+                        >
+                            MapboxGL-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/leaflet/api/leaflet-mapgis/index.html"
+                        >
+                            Leaflet-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/openlayers/api/openLayers-mapgis/index.html"
+                        >
+                            OpenLayers-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/video/api/video-mapgis/index.html"
+                        >
+                            Video-Plugin
+                        </a>
+                    
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            <div>
+                <span class="mapgis-api-document-span"><a href="index.html">API文档</a></span>
+            </div>
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="搜索文档..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <div class="category"><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">扩展模块</div><ul class="mapgis-sidebar-menus"><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AngulationTool.html">AngulationTool</a><span style="display: none;"><p>角度测量工具</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AnimationTool.html">AnimationTool</a><span style="display: none;"><p>场景漫游工具</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISMapServerImageryProvider.html">ArcGISMapServerImageryProvider</a><span style="display: none;"><p>ArcGIS地图服务</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISTileServerImageryProvider.html">ArcGISTileServerImageryProvider</a><span style="display: none;"><p>ArcGIS瓦片图层</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISVectorTileImageryProvider.html">ArcGISVectorTileImageryProvider</a><span style="display: none;"><p>通过ArcGIS矢量瓦片服务的url获取VectorTileImageryProvider对象</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Cesium3DTileset.html">Cesium3DTileset</a><span style="display: none;"><p>Cesium3DTileset的封装</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CesiumHeatmap.html">CesiumHeatmap</a><span style="display: none;"><p>热力图</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CompatibleFunc.html">CompatibleFunc</a><span style="display: none;"><p>适配不同版本Cesium接口方法类</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CustomProjection.html">CustomProjection</a><span style="display: none;"><p>实现自定义投影坐标系与地理坐标系经纬度（弧度表示）之间的投影变换</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CustomTilingScheme.html">CustomTilingScheme</a><span style="display: none;"><p>自定义瓦片平铺方案，在使用时有如下限制：</p>
+<ol>
+<li>裁图原点必须在地图范围的左上角区域；</li>
+<li>仅支持如同谷歌地图的瓦片组织方式，即Y轴编号从上到下递增，X轴编号从左到右递增；</li>
+</ol></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="DrawElement.html">DrawElement</a><span style="display: none;"><p>几何绘制类</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FloodAnalysis.html">FloodAnalysis</a><span style="display: none;"><p>洪水淹没分析</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FloodAnalysisReflection.html">FloodAnalysisReflection</a><span style="display: none;"><p>创建反射水面淹没分析的实例化对象</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GlobeIndependentTranslucency.html">GlobeIndependentTranslucency</a><span style="display: none;"><p>单独控制地表透明度和影像图层的透明度，能够在开启地表透明后使部分影像图层不受地表透明的影响。</p>
+<p>实例化该类的对象同时也能够使用原生的地表透明参数，能够直接在实例化对象上修改 <code>GlobeTranslucency</code> 的参数（原生的
+viewer.scene.globe.translucency依然能够使用，但两者同时使用时会造成相互干扰，推荐仅使用GlobeIndependentTranslucency来实现地表透明），
+使用原生的地表透明方式还是该类的地表透明方式由 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 数组是否为空来区分。</p>
+<p>1. 当 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 不为空数组时，使用该类的地表透明方式，此时能够设置并生效的地表透明参数如下：</p>
+<ul>
+<li><code>globeFaceAlpha</code>：地表的透明度，若设置该参数则<code>globeFaceAlphaByDistance</code>不生效；</li>
+<li><code>globeFaceAlphaByDistance</code>：地表的透明度根据视点距离的变化范围，当<code>globeFaceAlpha</code>为<code>undefined</code>时生效；</li>
+</ul>
+<p>2. 当 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 为空数组时，使用原生的地表透明方式，此时能够设置并生效的地表透明参数如下：</p>
+<ul>
+<li><code>frontFaceAlpha</code>：地表正面的透明度；</li>
+<li><code>frontFaceAlphaByDistance </code>：地表正面的透明度根据视点距离的变化范围；</li>
+<li><code>backFaceAlpha</code>：地表背面的透明度；</li>
+<li><code>backFaceAlphaByDistance</code>：地表背面的透明度根据视点距离的变化范围；</li>
+<li><code>rectangle</code>：将地表透明的区域限制在一个矩形范围内。</li>
+</ul></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="HeightLimited.html">HeightLimited</a><span style="display: none;"><p>限高分析</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="KeyboardCameraController.html">KeyboardCameraController</a><span style="display: none;"><p>场景相机漫游工具，可以实现沉浸式的鼠标键盘漫游功能，具体操作方法如下：</p>
+<p>1. 相机平移操作，这类操作不会改变相机的朝向，只会改变相机的位置：</p>
+<ul>
+<li><code>W</code>：相机位置向前移动</li>
+<li><code>S</code>：相机位置向后移动</li>
+<li><code>A</code>：相机位置向左移动</li>
+<li><code>D</code>：相机位置向右移动</li>
+<li><code>Q</code>：相机位置升高</li>
+<li><code>E</code>：相机位置降低</li>
+</ul>
+<p>2. 相对于相机视点操作，其中<code>U</code>，<code>O</code>，<code>J</code>，<code>L</code>操作会改变相机的位置，也会改变相机的朝向，而<code>I</code>，<code>K</code>操作只会改变相机相较视点的距离（在执行<code>U</code>，<code>O</code>，<code>J</code>，<code>L</code>操作时请勿同时执行其他按键操作）：</p>
+<ul>
+<li><code>I</code>：相机视角靠近屏幕中心点</li>
+<li><code>K</code>：相机视角远离屏幕中心点</li>
+<li><code>J</code>：绕屏幕中心点向左旋转</li>
+<li><code>L</code>：绕屏幕中心点向右旋转</li>
+<li><code>U</code>：绕屏幕中心点向上旋转</li>
+<li><code>O</code>：绕屏幕中心点向下旋转</li>
+</ul>
+<p>3. 相机自身操作，这类操作不会改变相机的位置，只会改变相机的朝向（在全屏状态下可使用鼠标调整相机视角）：</p>
+<ul>
+<li><code>↑</code>：向上抬高视角</li>
+<li><code>↓</code>：向下降低视角</li>
+<li><code>←</code>：向左移动视角</li>
+<li><code>→</code>：向右移动视角</li>
+</ul>
+<p>4. 鼠标操作：</p>
+<ul>
+<li>开启鼠标操作功能后，页面将进入全屏模式，此时相机视角可通过鼠标移动进行操作</li>
+</ul>
+<p>5. 辅助操作：</p>
+<ul>
+<li><code>Shift</code>：加速相机平移操作，调整移动步长为原来的两倍</li>
+<li><code>R</code>：重置视角到初始视角，仅在参数<code>initView</code>定义时有效</li>
+</ul></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISM3DSet.html">MapGISM3DSet</a><span style="display: none;"><p>MapGISM3DSet</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISMapServerImageryProvider.html">MapGISMapServerImageryProvider</a><span style="display: none;"><p>MapGIS地图服务</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTerrainProvider.html">MapGISTerrainProvider</a><span style="display: none;">undefined</span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTileServerImageryProvider.html">MapGISTileServerImageryProvider</a><span style="display: none;"><p>MapGIS瓦片服务</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISVectorTileImageryProvider.html">MapGISVectorTileImageryProvider</a><span style="display: none;"><p>MapGIS矢量瓦片服务</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureAreaTool.html">MeasureAreaTool</a><span style="display: none;"><p>面积测量工具</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureLengthTool.html">MeasureLengthTool</a><span style="display: none;"><p>距离测量</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureSlopeTool.html">MeasureSlopeTool</a><span style="display: none;"><p>坡度测量</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelEditor.html">ModelEditor</a><span style="display: none;"><p>模型矩阵编辑工具</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelFilterTool.html">ModelFilterTool</a><span style="display: none;"><p>模型空间过滤工具</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelTransformTool.html">ModelTransformTool</a><span style="display: none;"><p>模型变换工具集</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="PostProcessStageLibrary.html">PostProcessStageLibrary</a><span style="display: none;"><p>用于创建后处理特效的扩展库</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ReImg.html">ReImg</a><span style="display: none;"><p>截图(保存图片)</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="S3MTileset.html">S3MTileset</a><span style="display: none;"><p>S3MTileSet类</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TerrainProfile.html">TerrainProfile</a><span style="display: none;"><p>地形剖切功能的主要类</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TriangulationTool.html">TriangulationTool</a><span style="display: none;"><p>三角测量</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="UrlTemplateImageryProvider.html">UrlTemplateImageryProvider</a><span style="display: none;"><p>UrlTemplateImageryProvider对象，详细API参考Cesium的UrlTemplateImageryProvider的API文档</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="VisiblityAnalysis.html">VisiblityAnalysis</a><span style="display: none;"><p>通视分析</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WaterReflection.html">WaterReflection</a><span style="display: none;"><p>创建反射水面的实例化对象</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapServiceImageryProvider.html">WebMapServiceImageryProvider</a><span style="display: none;"><p>WMS地图图层，具体API请参考Cesium的WebMapServiceImageryProvider</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapTileServiceImageryProvider.html">WebMapTileServiceImageryProvider</a><span style="display: none;"><p>WMTS地图图层，具体API请参考Cesium的WebMapTileServiceImageryProvider</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Wind3D.html">Wind3D</a><span style="display: none;"><p>风场系统</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">工具类模块</div><ul class="mapgis-sidebar-menus"><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GeoJSONLayerUtil.html">GeoJSONLayerUtil</a><span style="display: none;"><p>GeoJSON图层的工具类</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GraphicsLayerUtil.html">GraphicsLayerUtil</a><span style="display: none;"><p>几何图层的工具类</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="IGSFeatureLayerUtil.html">IGSFeatureLayerUtil</a><span style="display: none;"><p>IGSFeature图层的工具类</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WFSLayerUtil.html">WFSLayerUtil</a><span style="display: none;"><p>WFS图层的工具类</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">视图模块</div><ul class="mapgis-sidebar-menus"><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ISSceneLayerUtil.html">ISSceneLayerUtil</a><span style="display: none;"><p>IS场景图层的工具类</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Popup.html">Popup</a><span style="display: none;"><p>场景信息弹窗(cesium引擎)
+参考示例：
+<a href='#SceneView'>[初始化三维场景视图]</a>
+<br>[ES5引入方式]：<br/>
+zondy.cesium.SceneView() <br/>
+[ES6引入方式]：<br/>
+import { SceneView } from '@mapgis/webclient-cesium-plugin' <br/>
+自定义样式说明：<br/>
+zondy-popup__content 弹窗容器样式<br/>
+zondy-popup__tip 弹窗对话框箭头样式<br/>
+zondy-popup__header 弹窗头部样式<br/>
+zondy-popup__content 弹窗主体样式<br/>
+zondy-popup__footer 弹窗底部样式<br/></p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SceneViewCesium.html">SceneViewCesium</a><span style="display: none;"><p>视图类</p></span></li><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Screenshot.html">Screenshot</a><span style="display: none;"><p>屏幕打印工具</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">草图编辑模块</div><ul class="mapgis-sidebar-menus"><li><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SketchEditorCesium.html">SketchEditorCesium</a><span style="display: none;"><p>Cesium引擎草图编辑类<br/>
+<br>[ES5引入方式]：<br/>
+const { SketchEditor } = zondy.tool.sketch  <br/>
+[ES6引入方式]：<br/>
+import { SketchEditor } from &quot;@mapgis/webclient-leaflet-plugin&quot; <br/></p></span></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header id="page-title" class="page-title">
+                    <span class="page-title-main">类名</span>
+                    <span class="page-title-sub">SkyLineAnalysis</span>
+                </header>
+                
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="SkyLineAnalysis">
+        <a class="href-link" href="#SkyLineAnalysis">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                new SkyLineAnalysis<span class="signature">(options)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>天际线分析</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+            <th style="min-width: 100px;">默认值</th>
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>附加选项</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>scene</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>场景</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>color</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Color</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          new Cesium.Color(1.0,0.0,0.0,1.0)
+      
+      </td>
+  
+
+  <td class="description last"><p>天际线颜色</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>analysisEndCallBack</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>回调函数,返回天际线点坐标数组,点坐标为世界坐标</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">作者:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>韩彦生</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>示例</h5>
+    
+    
+        <pre class="prettyprint"><code>var manager = scene.VisualAnalysisManager;var skyLineAn = new zondy.cesium.SkyLineAnalysis(     {          scene: scene,          color: new Cesium.Cesium.Color(0.5, 0.8, 0.3),          analysisEndCallBack: getPositionCallBack     });  manager.add(skyLineAn);  function getPositionCallBack(result) {}</code></pre>
+    
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='member'>成员变量</h3>
+            <div class="members">
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Cesium.Color</span>
+
+
+    </span>
+
+<h4 class="name" id="color">
+    <a class="href-link" href="#color">#</a>
+    
+    <span class="code-name">
+        color
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>天际线颜色</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Array</span>
+
+
+    </span>
+
+<h4 class="name" id="positions2D">
+    <a class="href-link" href="#positions2D">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        positions2D
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>获取天际线的 2d  屏幕坐标点 用于2d展示</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>文档生成<a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="http://www.smaryun.com" target="_blank">司马云</a> <span>© 2023 云生态圈</span>
+                        <a href="http://webclient.smaryun.com:8086/#/index" target="_blank">MapGIS Client for JavaScript</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#page-title">构造函数</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#member">成员变量</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#function">方法</a>
+            </div>
+            <div>
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#event">事件</a>
+            </div>
+        </div>
+    </div>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

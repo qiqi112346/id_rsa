@@ -1,0 +1,19 @@
+.decimal-slider{
+  width: 195px;
+}
+.decimal-slider .decimal-slider-layui-input {
+  width: 49px;
+  height: 32px;
+  position: absolute;
+  right: 21px;
+  top: 0px;
+}
+
+.decimal-slider .decimal-slider-layui-input:hover,
+.decimal-slider .decimal-slider-layui-input:focus {
+  border-color: rgba(68, 68, 68, 1) !important;
+}
+
+.decimal-slider .layui-slider-input {
+  top: 0px;
+}

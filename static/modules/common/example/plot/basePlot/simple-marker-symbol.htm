@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>简单Marker符号</title>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/graphic.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view, graphicsLayer, simpleMarkerSymbol
+      const { IGSTileLayer, GraphicsLayer } = zondy.layer
+      const { Map, Feature, Color } = zondy
+      const { Point } = zondy.geometry
+      const { SimpleMarkerSymbol, SimpleLineSymbol } = zondy.symbol
+      // 取得jquery对象
+      let $ = layui.$
+      // 颜色管理器对象
+      let colorpicker = layui.colorpicker
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加瓦片图层
+        addIGSTileLayer()
+        // 添加标绘图层
+        addGraphicsLayer()
+        // 添加几何要素
+        addFeature()
+        // 初始化示例UI
+        initUI()
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+        // 设置图元检测
+        initHitTest()
+      }
+
+      // 添加瓦片图层
+      function addIGSTileLayer() {
+        const igsTileLayer = new IGSTileLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        })
+        map.add(igsTileLayer)
+        igsTileLayer.on('layerview-created', (result) => {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+        })
+      }
+
+      // 添加标绘图层
+      function addGraphicsLayer() {
+        // 创建Graphics图层对象
+        graphicsLayer = new GraphicsLayer({
+          graphics: []
+        })
+        // 添加图层对象到地图文档中
+        map.add(graphicsLayer)
+      }
+
+      // 添加几何要素
+      function addFeature() {
+        // 设置几何样式
+        simpleMarkerSymbol = new SimpleMarkerSymbol({
+          // 设置填充颜色
+          color: new Color(0, 0, 255, 1),
+          // 设置Marker形状，默认'circle',可选"circle"|"square"|"cross"|"x"|"diamond"|"triangle"
+          style: 'triangle',
+          // 设置半径，单位像素
+          size: 30,
+          // 设置外边线样式
+          outline: new SimpleLineSymbol({
+            // 设置外边线颜色
+            color: new Color(255, 0, 0, 1),
+            // 设置外边线宽度，单位像素
+            width: 2
+          })
+        })
+
+        // 创建几何要素
+        const feature = new Feature({
+          // 创建几何对象
+          geometry: new Point({
+            coordinates: [113.2, 30.5]
+          }),
+          // 设置几何样式
+          symbol: simpleMarkerSymbol
+        })
+        // 添加要素
+        graphicsLayer.add(feature)
+      }
+
+      //初始化示例UI
+      function initUI() {
+        //示例UI相关
+        layui.use('colorpicker', function () {
+          //半径，单位像素
+          $('#point-pixelSize').bind('input propertychange', function () {
+            simpleMarkerSymbol.size = clampNumberValue(
+              $('#point-pixelSize').val()
+            )
+          })
+          //外边框宽度
+          $('#point-outlineWidth').bind('input propertychange', function () {
+            simpleMarkerSymbol.outline.width = clampNumberValue(
+              $('#point-outlineWidth').val()
+            )
+          })
+          //Marker形状的更改
+          layui.form.on('select(markerStyle)', function (data) {
+            simpleMarkerSymbol.style = $('#point-markerStyle').val()
+          })
+          //填充颜色
+          colorpicker.render({
+            elem: '#point-color',
+            format: 'rgb',
+            alpha: true,
+            color: 'rgb(0,0,255)',
+            done: function (color) {
+              $('#point-color-input').val(color)
+              simpleMarkerSymbol.color = Color.fromColor(color)
+            }
+          })
+          //外边框颜色
+          colorpicker.render({
+            elem: '#point-outline-color',
+            format: 'rgb',
+            alpha: true,
+            color: 'rgb(255,0,0)',
+            done: function (color) {
+              $('#point-outline-color-input').val(color)
+              simpleMarkerSymbol.outline.color = Color.fromColor(color)
+            }
+          })
+        })
+      }
+
+      // 设置图元检测
+      function initHitTest() {
+        view.on('click', function (event) {
+          const result = view.hitTest({
+            x: event.x,
+            y: event.y
+          })
+          if (result.length > 0) {
+            //这个时候展开编辑面板
+            $('#editPanel').show()
+          }
+        })
+      }
+
+      // 获取合法的number数据输入
+      function clampNumberValue(inputValue, limits) {
+        let max, min
+        if (Array.isArray(limits) && limits.length > 0) {
+          if (limits.length === 1) {
+            min = limits[0]
+          } else {
+            max = limits[1]
+          }
+        }
+        let value = Number(inputValue)
+        if (Number.isNaN(value)) {
+          if (typeof min === 'number') {
+            return min
+          } else {
+            return 0
+          }
+        }
+        if (typeof min === 'number' && value <= min) {
+          return min
+        }
+        if (typeof max === 'number' && value >= max) {
+          return max
+        }
+        return value
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <div class="layui-panel layui-panel-right" id="editPanel">
+      <form class="layui-form" action="" lay-filter="example">
+        <div class="sample-main-panel">
+          <div class="layui-form-item">
+            <label class="layui-form-label">Marker形状</label>
+            <div class="layui-input-block" style="width: 183px">
+              <select
+                id="point-markerStyle"
+                name="markerStyle"
+                lay-filter="markerStyle"
+              >
+                <option value="triangle">三角形</option>
+                <option value="circle">圆形</option>
+                <option value="square">正方形</option>
+                <option value="cross">十字形</option>
+                <option value="x">X形</option>
+                <option value="diamond">菱形</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">填充颜色</label>
+            <div
+              class="layui-input-inline"
+              style="width: 145px; margin-left: 10px"
+            >
+              <input
+                disabled
+                type="text"
+                value="#0000ff"
+                placeholder="填充颜色"
+                class="layui-input"
+                id="point-color-input"
+              />
+            </div>
+            <div class="layui-inline">
+              <div id="point-color"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">外边框颜色</label>
+            <div
+              class="layui-input-inline"
+              style="width: 145px; margin-left: 10px"
+            >
+              <input
+                disabled
+                type="text"
+                value="#ff0000"
+                placeholder="外边框颜色"
+                class="layui-input"
+                id="point-outline-color-input"
+              />
+            </div>
+            <div class="layui-inline">
+              <div id="point-outline-color"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">半径</label>
+            <div class="layui-input-block" style="width: 183px">
+              <input
+                id="point-pixelSize"
+                value="30"
+                type="text"
+                name="title"
+                lay-verify="title"
+                autocomplete="off"
+                placeholder="30"
+                class="layui-input"
+              />
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">外边框宽度</label>
+            <div class="layui-input-block" style="width: 183px">
+              <input
+                id="point-outlineWidth"
+                value="2"
+                type="text"
+                name="title"
+                lay-verify="title"
+                autocomplete="off"
+                placeholder="2"
+                class="layui-input"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="sample-button-panel">
+          <button
+            onclick="$('#editPanel').hide()"
+            style="float: right; width: auto; margin-right: 0 !important"
+            type="button"
+            class="layui-btn layui-btn-normal graphic-button-margin"
+          >
+            关闭面板
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

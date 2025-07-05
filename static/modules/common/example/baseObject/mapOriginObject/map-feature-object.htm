@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>点几何</title>
+  <!-- 引入地图引擎库 -->
+  <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+  <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css" />
+  <script type="text/javascript">
+    //使用严格模式
+    'use strict'
+    // 定义二维视图的主要类
+    let map, view, graphicsLayer, feature, point
+    const { IGSTileLayer, GraphicsLayer } = zondy.layer
+    const { Map, Feature, Color } = zondy
+    const { Point } = zondy.geometry
+    const { SimpleMarkerSymbol, SimpleLineSymbol } = zondy.symbol
+    let $ = layui.jquery
+
+    // 初始化地图
+    function init() {
+      // 初始化地图视图
+      initView()
+      // 添加几何图层
+      addGraphicsLayer()
+      // 创建几何要素
+      point = newPoint()
+      // 添加几何要素
+      addFeature(point)
+    }
+
+    // 初始二维地图
+    function initView() {
+      // 初始化图层管理容器
+      map = new Map()
+      // 初始化地图视图对象
+      view = createView('mapgis-viewer', map)
+    }
+
+    // 创建Point
+    function newPoint() {
+      return new Point({
+        // 几何点坐标
+        coordinates: [113.2, 30.5]
+      })
+    }
+
+    // 添加几何图层
+    function addGraphicsLayer() {
+      // 创建Graphics图层对象
+      graphicsLayer = new GraphicsLayer({
+        graphics: []
+      })
+      // 添加图层对象到地图文档中
+      map.add(graphicsLayer)
+    }
+
+    // 添加几何要素
+    function addFeature(point) {
+      if (feature) {
+        graphicsLayer.remove(feature)
+        feature = undefined
+      }
+      // 创建几何要素
+      feature = new Feature({
+        // 创建几何对象
+        geometry: point,
+        // 设置几何样式
+        symbol: new SimpleMarkerSymbol({
+          // 设置填充颜色
+          color: new Color(0, 0, 255, 1),
+          // 设置半径，单位像素
+          size: 30,
+          // 设置外边线样式
+          outline: new SimpleLineSymbol({
+            // 设置外边线颜色
+            color: new Color(255, 0, 0, 1),
+            // 设置外边线宽度，单位像素
+            width: 2
+          })
+        })
+      })
+      // 添加要素
+      graphicsLayer.add(feature)
+      feature.on('feature-add', (result) => {
+        // Cesium.Promitive
+        const innerLayer = view.getInnerLayer(feature)
+        // 这里有bug
+        console.log("feature-add:", innerLayer)
+      });
+      graphicsLayer.on('layer-loaded', (result) => {
+        // Cesium.Promitive
+        const innerLayer = view.getInnerLayer(feature)
+        // 这里有bug
+        console.log("layer-loaded:", innerLayer)
+      })
+    }
+
+    // 自动获取当前几何点位置
+    function getViewParams() {
+      $('#point-lon-input').val(point.coordinates[0])
+      $('#point-lat-input').val(point.coordinates[1])
+    }
+
+    // 修改点坐标
+    function setPointCoord() {
+      let newPointLon = Number($('#point-lon-input').val())
+      let newPointLat = Number($('#point-lat-input').val())
+      point = new Point({
+        coordinates: [newPointLon, newPointLat]
+      })
+      addFeature(point)
+      view.flyTo({
+        center: [newPointLon, newPointLat],
+        zoom: 6
+      })
+    }
+  </script>
+  <style>
+    .layui-panel {
+      width: auto;
+    }
+  </style>
+</head>
+
+<body onload="init();">
+  <!--  视图容器div  -->
+  <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+  <div class="layui-panel layui-panel-right">
+    <form class="layui-form" action="">
+      <div class="layui-form-item">
+        <label class="layui-form-label">经度:</label>
+        <div class="layui-input-block" style="margin-bottom: 6px">
+          <input id="point-lon-input" value="0" autocomplete="off" class="layui-input" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">纬度:</label>
+        <div class="layui-input-block" style="margin-bottom: 6px">
+          <input id="point-lat-input" value="0" autocomplete="off" class="layui-input" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <button type="button" class="layui-btn" style="float: right; width: auto" onclick="setPointCoord()">
+          修改坐标
+        </button>
+      </div>
+    </form>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>泛光线</title>
+    <!--该库集成了leaflet与MapGIS IGServer for JavaScript脚本库-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/leaflet/leaflet.css"/>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/leaflet/leaflet.js"></script>
+    <!--plugin库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-leaflet-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css" />
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <!--css-->
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      let map
+      const { WebTileLayer } = zondy.layer
+      const { initializeCRS, initializeOptions } = zondy.leaflet.util
+      // 初始化示例
+      function init() {
+        // 添加图层
+        addLayer()
+      }
+
+      // 添加图层
+      function addLayer() {
+        // 构造一个网路瓦片图层对象
+        const layer = new WebTileLayer({
+          // 服务基地址
+          url: 'http://t1.tianditu.com/DataServer?T=img_w&x={col}&y={row}&l={level}',
+          // token名
+          tokenKey: 'tk',
+          // token值
+          tokenValue: getTDTToken()
+        })
+        // 加载元数据
+        layer.load().then(function () {
+          // 构造Leaflet地图视图的初始化参数
+          const crs = initializeCRS(layer)
+          const mapViewOptions = {
+            // 地图视图参考系
+            crs: crs,
+            // 初始化中心点
+            center: [30.65,114.3],
+            // 初始化级数
+            zoom: 11
+          }
+          // 构造Leaflet地图视图对象
+          map = L.map('mapgis-viewer', mapViewOptions)
+          // 构造Leaflet瓦片图层的初始化参数
+          const layerOptions = initializeOptions(layer)
+          // 添加Leaflet瓦片图层到地图视图中
+          new zondy.leaflet.layer.WebTileLayer(layer.url, layerOptions).addTo(map)
+          // 添加泛光线
+          addFloorLayer()
+        })
+      }
+
+      function addFloorLayer() {
+        const data = getGeoJSONData()
+        // 添加geojson图层
+        const geojson = L.geoJSON(data, {
+          onEachFeature: function (feature, layer) {
+            // 设置css类样式为line,此要素用于渲染泛光线和默认泛光效果
+            layer.options.className = 'line'
+          }
+        })
+        const geojson1 = L.geoJSON(data, {
+          onEachFeature: function (feature, layer) {
+            // 设置css类样式为line1,此要素用于处理内发光
+            layer.options.className = 'line1'
+          }
+        })
+        // 获取leaflet svg渲染器
+        const svgDom = map.getRenderer(geojson)._container
+        // 创建svg滤镜定义
+        const defs = document.createElementNS(
+          'http://www.w3.org/2000/svg',
+          'defs'
+        )
+        defs.innerHTML =
+          defs.innerHTML +
+          `<filter id="default-shadow" x="-25%" y="-25%" width="150%" height="150%">
+            <!-- 高斯模糊选项 -->
+            <feMorphology operator="dilate" radius="3" in="SourceAlpha" result="thicken" />
+            <!-- 设置高斯模糊范围为8 -->
+            <feGaussianBlur in="thicken" stdDeviation="8" result="blurred" />
+             <!-- 设置泛光的颜色（也就是模糊的颜色值）为rgba(0,96,172,1) -->
+            <feFlood flood-color="rgba(0,96,172,1)" result="glowColor" />
+            <!-- operator选用in，类似于canvas上的gloablCompositeOperation属性，将glowColor和blur叠加，形成默认的内外泛光效果 -->
+            <feComposite in="glowColor" in2="blurred" operator="in" result="softGlowColored" />
+            <feMerge>
+                <!-- 叠加内外泛光效果 -->
+                <feMergeNode in="softGlowColored"/>
+                <!-- 叠加默认的SourceGraphic -->
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        <filter id='inset-shadow' x="-25%" y="-25%" width="150%" height="150%">
+            <!-- 泛光线内发光偏移 -->
+            <feOffset dx='0' dy='0' />
+            <!-- 泛光线内发光幅度25 -->
+            <feGaussianBlur stdDeviation='25' result='offset-blur' />
+            <!-- operator选用out，类似于canvas上的gloablCompositeOperation属性，将SourceGraphic和blur叠加，选取SourceGraphic内部范围的图形 -->
+            <feComposite operator='out' in='SourceGraphic' in2='offset-blur' result='inverse' />
+            <feMerge>
+                <!-- 重复添加内发光效果三次，多次添加可能造成性能卡顿 -->
+                <feMergeNode in="inverse"/>
+                <feMergeNode in="inverse"/>
+                <feMergeNode in="inverse"/>
+            </feMerge>
+        </filter>
+    `
+        // 在svg渲染器中添加defs
+        svgDom.insertBefore(defs, svgDom.firstChild)
+        /** --------------------------添加图层--------------------------------*/
+        geojson1.addTo(map)
+        geojson.addTo(map)
+      }
+
+      // 获取geojson data
+      function getGeoJSONData() {
+        return {
+          type: 'FeatureCollection',
+          features: [
+            {
+              type: 'Feature',
+              properties: {
+                adcode: 420102,
+                name: '江岸区',
+                center: [114.30304, 30.594911],
+                centroid: [114.319956, 30.642014],
+                childrenNum: 0,
+                level: 'district',
+                subFeatureIndex: 0,
+                acroutes: [100000, 420000, 420100],
+                parent: {
+                  adcode: 420100
+                },
+                czrk: 96.24,
+                ldrk: 30.4,
+                zrk: 126.64
+              },
+              geometry: {
+                type: 'MultiPolygon',
+                coordinates: [
+                  [
+                    [
+                      [114.256999, 30.641623],
+                      [114.267779, 30.647848],
+                      [114.272735, 30.652874],
+                      [114.279305, 30.658138],
+                      [114.282383, 30.660017],
+                      [114.289505, 30.663067],
+                      [114.287959, 30.66865],
+                      [114.292942, 30.670418],
+                      [114.296241, 30.672979],
+                      [114.29297, 30.676056],
+                      [114.289271, 30.681123],
+                      [114.293039, 30.681346],
+                      [114.297635, 30.67465],
+                      [114.301818, 30.673814],
+                      [114.308429, 30.676139],
+                      [114.31257, 30.678937],
+                      [114.315759, 30.683322],
+                      [114.318243, 30.685438],
+                      [114.32168, 30.685689],
+                      [114.324317, 30.683796],
+                      [114.330142, 30.675109],
+                      [114.334724, 30.673327],
+                      [114.338341, 30.674761],
+                      [114.342661, 30.681374],
+                      [114.350529, 30.687011],
+                      [114.353496, 30.688556],
+                      [114.357499, 30.687944],
+                      [114.358452, 30.690421],
+                      [114.361557, 30.691674],
+                      [114.364042, 30.69056],
+                      [114.369756, 30.69823],
+                      [114.377403, 30.695766],
+                      [114.384608, 30.693901],
+                      [114.389191, 30.691744],
+                      [114.393373, 30.687596],
+                      [114.39739, 30.680705],
+                      [114.38338, 30.675123],
+                      [114.381102, 30.672924],
+                      [114.371344, 30.664974],
+                      [114.366237, 30.657344],
+                      [114.362758, 30.648641],
+                      [114.360991, 30.644547],
+                      [114.357223, 30.637765],
+                      [114.344083, 30.627612],
+                      [114.316338, 30.591741],
+                      [114.303681, 30.573445],
+                      [114.297207, 30.576371],
+                      [114.286413, 30.584969],
+                      [114.281996, 30.58777],
+                      [114.273922, 30.591365],
+                      [114.272086, 30.596492],
+                      [114.280685, 30.600672],
+                      [114.285627, 30.606175],
+                      [114.280354, 30.611649],
+                      [114.276724, 30.616664],
+                      [114.273494, 30.623448],
+                      [114.272417, 30.623197],
+                      [114.27014, 30.628727],
+                      [114.267048, 30.628532],
+                      [114.264108, 30.632292],
+                      [114.266634, 30.633921],
+                      [114.263445, 30.638545],
+                      [114.258504, 30.639228],
+                      [114.256999, 30.641623]
+                    ]
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      }
+    </script>
+</head>
+
+<body onload="init();">
+<div
+        id="mapgis-viewer"
+        style="position: absolute; display: flex; width: 100%; height: 100%"
+></div>
+<style type="text/css">
+    .line {
+        /* 线划颜色 */
+        stroke: #ffffff;
+        /* 填充颜色 */
+        fill: none;
+        /* 填充透明度颜色 */
+        fill-opacity: 1;
+        /* 添加滤镜，此处索引svg预定义的滤镜效果（用于控制默认滤镜颜色） */
+        filter: url(#default-shadow);
+        /* 觉得性能卡就把动画关闭，核心原因还是数据量点太多了，优化的策略就是减少区域边界的复杂度 */
+        stroke-dasharray: 80, 10;
+        stroke-dashoffset: 0;
+        /* animation: move 2s infinite linear; */
+    }
+
+    .line1 {
+        /* 线划颜色 */
+        stroke: none;
+        /* 滤镜填充颜色 */
+        fill: #fee9e9;
+        /* 滤镜填充透明度 */
+        fill-opacity: 1;
+        /* 内发光滤镜 */
+        filter: url(#inset-shadow);
+    }
+
+    @keyframes move {
+        0% {
+            stroke-dashoffset: 0;
+        }
+
+        100% {
+            stroke-dashoffset: -90;
+        }
+    }
+</style>
+</body>
+</html>

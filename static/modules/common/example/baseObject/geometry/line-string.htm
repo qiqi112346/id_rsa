@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>线几何</title>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+
+      let map, view, graphicsLayer, lineString, feature
+      const { IGSTileLayer, GraphicsLayer } = zondy.layer
+      const { Map, Feature, Color } = zondy
+      const { LineString } = zondy.geometry
+      const { SimpleLineSymbol } = zondy.symbol
+      let $ = layui.jquery
+
+      // 初始化地图
+      function init() {
+        // 初始化地图视图
+        initView()
+        // 添加瓦片图层
+        addIGSTileLayer()
+        // 添加几何图层
+        addGraphicsLayer()
+        // 创建几何要素
+        lineString = newlineString()
+        // 添加几何要素
+        addFeature(lineString)
+      }
+
+      // 初始二维地图
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+        // 获取地图引擎类型
+        const engineType = localStorage.getItem('engine-type', 'cesium')
+        // 针对三维进行特殊处理
+        if (engineType === 'cesium'){
+          // 获取三维场景视图对象
+          const viewer = view.getInnerView()
+          // 判断是否支持图像渲染像素化处理
+          if(Cesium.FeatureDetection.supportsImageRenderingPixelated()){
+            // 使得该值和浏览器保持一致，文字或者图形的渲染结果会更加平滑
+            viewer.resolutionScale = window.devicePixelRatio
+          }
+          // 开启抗锯齿，文字或者图形的渲染结果会更加平滑
+          viewer.scene.fxaa = true
+          viewer.scene.postProcessStages.fxaa.enabled = true
+        }
+      }
+
+      // 添加瓦片图层
+      function addIGSTileLayer() {
+        const igsTileLayer = new IGSTileLayer({
+          url: 'http://webclient.smaryun.com:8089/igs/rest/services/Tile/湖北省_4326_normal_3-10/TileServer'
+        })
+        map.add(igsTileLayer)
+        igsTileLayer.on('layerview-created', (result) => {
+          view.flyTo({
+            extent: result.layer.extent
+          })
+          getViewParams()
+        })
+      }
+
+      // 添加几何图层
+      function addGraphicsLayer() {
+        // 创建Graphics图层对象
+        graphicsLayer = new GraphicsLayer({
+          graphics: []
+        })
+        // 添加图层对象到地图文档中
+        map.add(graphicsLayer)
+      }
+
+      // 创建一个lineString要素
+      function newlineString() {
+        return new LineString({
+          // 几何点坐标
+          coordinates: [
+            [113.1, 30],
+            [113.5, 31]
+          ]
+        })
+      }
+
+      // 添加几何要素
+      function addFeature(lineString) {
+        if (feature) {
+          graphicsLayer.remove(feature)
+          feature = undefined
+        }
+        // 创建线几何要素
+        feature = new Feature({
+          // 创建线几何对象
+          geometry: lineString,
+          // 设置线的符号
+          symbol: new SimpleLineSymbol({
+            // 设置线颜色
+            color: new Color(0, 0, 255, 1),
+            // 设置线宽，单位像素
+            width: 4
+          })
+        })
+        // 添加要素
+        graphicsLayer.add(feature)
+      }
+
+      // 自动获取当前几何点位置
+      function getViewParams() {
+        $('#lineStringCoord').val(JSON.stringify(lineString.coordinates))
+      }
+
+      // 修改线要素坐标
+      function setLineCoord() {
+        let coords = JSON.parse(
+          $('#lineStringCoord')
+            .val()
+            .split(/[\t\r\f\n\s]*/g)
+            .join('')
+        )
+        lineString = new LineString({
+          coordinates: coords
+        })
+        // 将修改坐标后的几何要素添加到图层中
+        addFeature(lineString)
+        $('#lineStringCoord').val(JSON.stringify(lineString.coordinates))
+      }
+    </script>
+    <style>
+      .layui-panel {
+        width: auto;
+      }
+    </style>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="layui-form-item layui-form-text">
+          <label class="layui-form-label">线要素坐标</label>
+          <div class="layui-input-block">
+            <textarea
+              placeholder="请输入内容"
+              id="lineStringCoord"
+              class="layui-textarea"
+            ></textarea>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <button
+            type="button"
+            class="layui-btn"
+            style="float: right; width: auto; margin-top: 10px"
+            onclick="setLineCoord()"
+          >
+            修改坐标
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

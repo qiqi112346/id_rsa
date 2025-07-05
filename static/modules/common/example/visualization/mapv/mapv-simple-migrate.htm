@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>单一迁移轨迹</title>
+    <!--引入mapv-->
+    <script
+      type="text/javascript"
+      src="http://webclient.smaryun.com/static/libs/cdn/mapv/mapv.min.js"
+    ></script>
+    <!-- 引入地图引擎库 -->
+    <script src="http://webclient.smaryun.com/static/libs/include-lib-local-upgrade.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"
+    />
+    <!--示例公共样式-->
+    <link
+      rel="stylesheet"
+      href="http://webclient.smaryun.com/static/libs/css/style.css"
+    />
+    <script type="text/javascript">
+      //使用严格模式
+      'use strict'
+      // 定义二维视图的主要类
+      let view, map, wmtsLayer
+
+      const {
+        WMTSLayer, MapVLayer
+      } = zondy.layer
+      const { Map, SpatialReference } = zondy
+      const { Point } = zondy.geometry
+
+      // 初始化示例
+      function init() {
+        //初始化图层管理容器
+        initView()
+        // 添加WMTS底图
+        addWMTSLayer()
+        // 添加MapV图层
+        initMapVData()
+      }
+
+      // 初始化MapV数据，并加载图层
+      function initMapVData() {
+        httpGetPromise(
+          'http://webclient.smaryun.com:8200/Vector/json/simpleMigrate/china.json'
+        ).then((geojson) => {
+          let geojsonOptions = {
+            context: '2d',
+            gradient: {
+              0: 'rgba(55, 50, 250, 0.4)',
+              1: 'rgba(55, 50, 250, 1)'
+            },
+            max: 354551,
+            draw: 'intensity'
+          }
+
+          let geojsonDataSet = mapv.geojson.getDataSet(geojson)
+
+          let to = '北京'
+
+          let qianxi = new mapv.DataSet([
+            {
+              from: '河北',
+              count: 354551,
+              to: to
+            },
+            {
+              from: '天津',
+              count: 97323,
+              to: to
+            },
+            {
+              from: '山东',
+              count: 28664,
+              to: to
+            },
+            {
+              from: '山西',
+              count: 16650,
+              to: to
+            },
+            {
+              from: '辽宁',
+              count: 14379,
+              to: to
+            },
+            {
+              from: '河南',
+              count: 10980,
+              to: to
+            },
+            {
+              from: '内蒙古',
+              count: 9603,
+              to: to
+            },
+            {
+              from: '江苏',
+              count: 4536,
+              to: to
+            },
+            {
+              from: '上海',
+              count: 3556,
+              to: to
+            },
+            {
+              from: '广东',
+              count: 2600,
+              to: to
+            }
+          ])
+
+          let qianxiData = qianxi.get()
+
+          let lineData = []
+          let pointData = []
+          let textData = []
+          let timeData = []
+
+          let citys = {}
+
+          for (let i = 0; i < qianxiData.length; i++) {
+            let fromCenter = mapv.utilCityCenter.getCenterByCityName(
+              qianxiData[i].from
+            )
+            let toCenter = mapv.utilCityCenter.getCenterByCityName(
+              qianxiData[i].to
+            )
+            if (!fromCenter || !toCenter) {
+              continue
+            }
+            citys[qianxiData[i].from] = qianxiData[i].count
+            citys[qianxiData[i].to] = 100
+            pointData.push({
+              geometry: {
+                type: 'Point',
+                coordinates: [fromCenter.lng, fromCenter.lat]
+              }
+            })
+            pointData.push({
+              geometry: {
+                type: 'Point',
+                coordinates: [toCenter.lng, toCenter.lat]
+              }
+            })
+            textData.push({
+              geometry: {
+                type: 'Point',
+                coordinates: [fromCenter.lng, fromCenter.lat]
+              },
+              text: qianxiData[i].from
+            })
+            textData.push({
+              geometry: {
+                type: 'Point',
+                coordinates: [toCenter.lng, toCenter.lat]
+              },
+              text: qianxiData[i].to
+            })
+
+            let curve = mapv.utilCurve.getPoints([fromCenter, toCenter])
+
+            for (let j = 0; j < curve.length; j++) {
+              timeData.push({
+                geometry: {
+                  type: 'Point',
+                  coordinates: curve[j]
+                },
+                count: 1,
+                time: j
+              })
+            }
+
+            lineData.push({
+              geometry: {
+                type: 'LineString',
+                coordinates: curve
+                //coordinates: [[fromCenter.lng, fromCenter.lat], [toCenter.lng, toCenter.lat]]
+              },
+              count: 30 * Math.random()
+            })
+          }
+
+          let data = geojsonDataSet.get({
+            filter: function (item) {
+              if (!citys[item.name]) {
+                return false
+              }
+
+              item.count = citys[item.name]
+              return true
+            }
+          })
+          geojsonDataSet = new mapv.DataSet(data)
+          let layer = new MapVLayer({
+            data: geojsonDataSet,
+            mapVOptions: geojsonOptions
+          })
+
+          map.add(layer)
+          // 构建对应的dataset
+          let textDataSet = new mapv.DataSet(textData)
+          // 设置对应的参数
+          // https://github.com/huiyan-fe/mapv/blob/master/API.md
+          let textOptions = {
+            draw: 'text',
+            font: '14px Arial',
+            fillStyle: 'white',
+            shadowColor: 'yellow',
+            shadowBlue: 10,
+            zIndex: 11,
+            shadowBlur: 10
+          }
+          let textLayer = new MapVLayer({
+            data: textDataSet,
+            mapVOptions: textOptions
+          })
+
+          map.add(textLayer)
+
+          let lineDataSet = new mapv.DataSet(lineData)
+          // https://github.com/huiyan-fe/mapv/blob/master/API.md
+          let lineOptions = {
+            strokeStyle: 'rgba(255, 250, 50, 0.8)',
+            shadowColor: 'rgba(255, 250, 50, 1)',
+            shadowBlur: 20,
+            lineWidth: 2,
+            zIndex: 100,
+            draw: 'simple'
+          }
+          let lineLayer = new MapVLayer({
+            data: lineDataSet,
+            mapVOptions: lineOptions
+          })
+
+          map.add(lineLayer)
+
+          // https://github.com/huiyan-fe/mapv/blob/master/API.md
+          let pointOptions = {
+            fillStyle: 'rgba(254,175,3,0.7)',
+            shadowColor: 'rgba(55, 50, 250, 0.5)',
+            shadowBlur: 10,
+            size: 5,
+            zIndex: 10,
+            draw: 'simple'
+          }
+
+          let pointDataSet = new mapv.DataSet(pointData)
+          let pointLayer = new MapVLayer({
+            data: pointDataSet,
+            mapVOptions: pointOptions
+          })
+
+          map.add(pointLayer)
+
+          let timeDataSet = new mapv.DataSet(timeData)
+
+          // https://github.com/huiyan-fe/mapv/blob/master/API.md
+          let timeOptions = {
+            fillStyle: 'rgba(255, 250, 250, 0.5)',
+            zIndex: 200,
+            size: 2.5,
+            animation: {
+              type: 'time',
+              stepsRange: {
+                start: 0,
+                end: 50
+              },
+              trails: 10,
+              duration: 2
+            },
+            draw: 'simple'
+          }
+          let timeLayer = new MapVLayer({
+            data: timeDataSet,
+            mapVOptions: timeOptions
+          })
+
+          map.add(timeLayer)
+        })
+      }
+      // 添加WMTS图层
+      function addWMTSLayer() {
+        wmtsLayer = new WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(wmtsLayer)
+
+        // 图层加载完毕
+        wmtsLayer.on('layerview-created', function (result) {
+          console.log('加载完毕:', result.layer)
+          view.flyTo({
+            center: new Point({
+              coordinates: [12520996.73, 3637179.55, 4000000],
+              spatialReference: new SpatialReference({
+                wkid: 3857
+              })
+            }),
+            zoom: 5
+          })
+        })
+      }
+
+      // 初始化地图视图对象
+      function initView() {
+        // 初始化图层管理容器
+        map = new Map()
+        // 初始化地图视图对象
+        view = createView('mapgis-viewer', map)
+      }
+
+      // 发送请求获取数据
+      function httpGetPromise(url) {
+        return new Promise(function (resolve, reject) {
+          const handler = function () {
+            if (this.readyState !== 4) {
+              return
+            }
+            if (this.status === 200) {
+              resolve(this.response)
+            } else {
+              reject(new Error(this.statusText))
+            }
+          }
+          const client = new XMLHttpRequest()
+          client.open('GET', url)
+          client.onreadystatechange = handler
+          client.responseType = 'json'
+          client.setRequestHeader('Accept', 'application/json')
+          client.send()
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init();">
+    <!--  视图容器div  -->
+    <div id="mapgis-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+  </body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>动态单体化</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, graphicsLayer
+
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加M3D数据
+        addModel()
+        //初始化查询操作
+        initQuery()
+      }
+
+      //构造三维视图类（视图容器div的id，三维视图设置参数）
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        graphicsLayer = new zondy.cesium.GraphicsLayer(viewer, {})
+      }
+
+      //添加M3D数据
+      function addModel() {
+        let url =
+          'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D/1.0/DaYanTa-动态单体化/大雁塔OSGB_depth6_m3d.mcj'
+        let m3dLayer = new zondy.layer.M3DModelCacheLayer({
+          url: url,
+          extensionOptions: {
+            // 开启自动跳转
+            autoReset: true
+          }
+        })
+        map.add(m3dLayer)
+      }
+
+      //初始化查询操作
+      function initQuery() {
+        //创建OID提示框
+        var nameOverlay = document.createElement('div')
+        viewer.container.appendChild(nameOverlay)
+        nameOverlay.className = 'backdrop'
+        nameOverlay.style.display = 'none'
+        nameOverlay.style.position = 'absolute'
+        nameOverlay.style.bottom = '0'
+        nameOverlay.style.left = '0'
+        nameOverlay.style['pointer-events'] = 'none'
+        nameOverlay.style.padding = '4px'
+        nameOverlay.style.backgroundColor = 'white'
+
+        //设置点击函数
+        viewer.screenSpaceEventHandler.setInputAction(function onLeftClick(
+          movement
+        ) {
+          //根据鼠标点击拾取坐标
+          let cartesian = viewer.scene.pickPosition(movement.position)
+          if (Cesium.defined(cartesian)) {
+            let cartographic = Cesium.Cartographic.fromCartesian(cartesian)
+            let lng = Cesium.Math.toDegrees(cartographic.longitude)
+            let lat = Cesium.Math.toDegrees(cartographic.latitude)
+            let queryUrl = getFeatureQueryUrl(lng, lat)
+            httpGetPromise(queryUrl).then((result) => {
+              removeHighLightPolygon()
+              //解析result
+              if (result.features.length === 0) {
+                nameOverlay.style.display = 'none'
+                return
+              }
+              let feature = result.features[0]
+              let points = feature.geometry.coordinates[0]
+              addHighLightPolygon(points)
+              //更新OID弹框数据
+              nameOverlay.style.display = 'block'
+              nameOverlay.style.bottom =
+                viewer.canvas.clientHeight - movement.position.y + 'px'
+              nameOverlay.style.left = movement.position.x + 'px'
+              nameOverlay.innerHTML =
+                '<table><tbody>' +
+                '<tr><th>FID</th><td>' +
+                feature.attributes.FID +
+                '</td></tr>' +
+                '<tr><th>名称</th><td>' +
+                feature.attributes.mpName +
+                '</td></tr>' +
+                '<tr><th>楼层</th><td>' +
+                feature.attributes['楼层'] +
+                '</td></tr>' +
+                '<tr><th>层高</th><td>' +
+                feature.attributes['层高'] +
+                '</td></tr>' +
+                '</tbody></table>'
+            })
+          }
+        },
+        Cesium.ScreenSpaceEventType.LEFT_CLICK)
+      }
+
+      function removeHighLightPolygon() {
+        graphicsLayer.removeAllGraphic()
+      }
+
+      function addHighLightPolygon(points) {
+        let positions = []
+        for (let item of points) {
+          positions.push(Cesium.Cartesian3.fromDegrees(item[0], item[1], 0))
+        }
+        let polygonGraphic = new zondy.cesium.Graphic({
+          type: 'polygon',
+          positions: positions,
+          style: {
+            translucent: true,
+            color: Cesium.Color.RED.withAlpha(0.4),
+            classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(polygonGraphic)
+      }
+
+      //要素查询的url地址
+      function getFeatureQueryUrl(lon, lat) {
+        return `http://webclient.smaryun.com:8089/igs/rest/services/Map/大雁塔单体化/FeatureServer/0/query?f=json&where=&outFields=&objectIds=&geometry=${lon}%2C${lat}&geometryType=point&distance=0.00001&units=&geometryPrecision=&spatialRel=&returnGeometry=true&returnAttribute=true&returnStyle=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnZ=false&orderByFields=&outStatistics=&groupByFieldsForStatistics=&resultRecordCount=20&resultOffset=0`
+      }
+
+      // 发送请求获取数据
+      function httpGetPromise(url) {
+        return new Promise(function (resolve, reject) {
+          const handler = function () {
+            if (this.readyState !== 4) {
+              return
+            }
+            if (this.status === 200) {
+              resolve(this.response)
+            } else {
+              reject(new Error(this.statusText))
+            }
+          }
+          const client = new XMLHttpRequest()
+          client.open('GET', url)
+          client.onreadystatechange = handler
+          client.responseType = 'json'
+          client.setRequestHeader('Accept', 'application/json')
+          client.send()
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+  </body>
+</html>

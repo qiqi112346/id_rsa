@@ -1,0 +1,5098 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> AnimationTool</title>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+                <h1> MapGIS Client for JavaScript API</h1>
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/common/api/common-mapgis/index.html"
+                        >
+                            Common
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/cesium/api/cesium-mapgis/index.html"
+                        >
+                            Cesium-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/mapboxgl/api/mapboxgl-mapgis/index.html"
+                        >
+                            MapboxGL-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/leaflet/api/leaflet-mapgis/index.html"
+                        >
+                            Leaflet-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/openlayers/api/openLayers-mapgis/index.html"
+                        >
+                            OpenLayers-Plugin
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="/static/modules/video/api/video-mapgis/index.html"
+                        >
+                            Video-Plugin
+                        </a>
+                    
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            <div>
+                <span class="mapgis-api-document-span"><a href="index.html">API文档</a></span>
+            </div>
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="搜索文档..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <div class="category"><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">扩展模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="AlgorithmLib"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AlgorithmLib.html">AlgorithmLib</a><span style="display: none;"><p>通用算法工具集</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="AngulationTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AngulationTool.html">AngulationTool</a><span style="display: none;"><p>角度测量工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="AnimationTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="AnimationTool.html">AnimationTool</a><span style="display: none;"><p>场景漫游工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISMapServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISMapServerImageryProvider.html">ArcGISMapServerImageryProvider</a><span style="display: none;"><p>ArcGIS地图图片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISTileServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISTileServerImageryProvider.html">ArcGISTileServerImageryProvider</a><span style="display: none;"><p>ArcGIS瓦片图层，现已不支持通过构造函数(new ArcGISTileServerImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ArcGISVectorTileImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ArcGISVectorTileImageryProvider.html">ArcGISVectorTileImageryProvider</a><span style="display: none;"><p>ArcGIS矢量瓦片图层，现已不支持通过构造函数(new ArcGISVectorTileImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Cesium3DTileset"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Cesium3DTileset.html">Cesium3DTileset</a><span style="display: none;"><p>Cesium3DTileset对象，现已不支持通过构造函数(new Cesium3DTileset())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Cesium.Material"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Cesium.Material.html">Material</a><span style="display: none;"><p>新增了部分Cesium材质<br>
+《PolylineTrailLink材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-polyline'>《线示例》</a>
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-wall'>《墙示例》</a><br>
+color: 材质颜色，Cesium.Color.WHITE<br>
+image: 材质使用的图片，Cesium.Material.PolylineTrailLinkImage<br>
+duration: 持续时间，100.0<br>
+direction: 方向，1.0<br>
+repeat: 重复次数，new Cesium.Cartesian2(1.0, 1.0)<br><br>
+《CircleWaveMaterial材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a>
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circular'>《圆锥示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+duration: 持续时间，100.0<br>
+count: 方向，1.0<br>
+gradient: 渐变因子，0.1<br><br>
+《RadarMaterial材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color.WHITE<br>
+speed: 速度，1<br><br>
+《AspectArrow材质》
+AspectArrowMap: 箭头图片，Cesium.Material.DefaultImageId<br>
+repeat: 箭头重复次数，Cesium.Cartesian2(1.0, 1.0)<br><br>
+《TextImage材质》<br>
+image: 文字图片，Cesium.Material.DefaultImageId<br>
+repeat: 图片重复次数，Cesium.Cartesian2(1.0, 1.0)<br>
+breathingLight: 是否开启呼吸灯，false<br>
+duration: 运行周期，1000<br><br>
+《LineFlickerMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，5<br><br>
+《CircleScanMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CirclePulseMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleDiffuseMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《ScanlineType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleFadeMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleColorfulMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleSpiralMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《CircleBlurMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《RadarScanMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《RadarLineMaterialType材质》<br>
+参考示例：
+<a href='http://webclient.smaryun.com/#/modules/cesium/tdGraph/tdGraphBase/td-graph-circle'>《圆示例》</a><br>
+color: 材质颜色，Cesium.Color(1.0, 0.0, 0.0, 1.0)<br>
+speed: 速度，10<br><br>
+《RiverCoveringMaterial材质》<br>
+color: 材质颜色，Cesium.Color(1, 1, 1, 0.7)<br>
+animationSpeed: 播放速度，0.01<br>
+image: 材质图片，CustomMaterial.DefaultImageId<br>
+repeat: 重复次数，2.0<br><br></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Cesium.Viewer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Cesium.Viewer.html">Viewer</a><span style="display: none;"><p>重写Cesium.Viewer的方法</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CesiumHeatmap"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CesiumHeatmap.html">CesiumHeatmap</a><span style="display: none;"><p>热力图</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CesiumTerrainProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CesiumTerrainProvider.html">CesiumTerrainProvider</a><span style="display: none;"><p>Cesium地形图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CircleWaveMaterialProperty"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CircleWaveMaterialProperty.html">CircleWaveMaterialProperty</a><span style="display: none;"><p>动态圆波纹材质</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CollisionDetectionByRender"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CollisionDetectionByRender.html">CollisionDetectionByRender</a><span style="display: none;">undefined</span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CompatibleFunc"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CompatibleFunc.html">CompatibleFunc</a><span style="display: none;"><p>适配不同版本Cesium接口方法类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="createColorTexture"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="createColorTexture.html">createColorTexture</a><span style="display: none;"><p>天际线分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CustomProjection"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CustomProjection.html">CustomProjection</a><span style="display: none;"><p>实现自定义投影坐标系与地理坐标系经纬度（弧度表示）之间的投影变换</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CustomTilingScheme"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CustomTilingScheme.html">CustomTilingScheme</a><span style="display: none;"><p>自定义瓦片平铺方案，在使用时有如下限制：</p>
+<ol>
+<li>裁图原点必须在地图范围的左上角区域；</li>
+<li>仅支持如同谷歌地图的瓦片组织方式，即Y轴编号从上到下递增，X轴编号从左到右递增；</li>
+</ol></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CutFillAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CutFillAnalysis.html">CutFillAnalysis</a><span style="display: none;"><p>填挖方分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="CuttingTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="CuttingTool.html">CuttingTool</a><span style="display: none;"><p>三维场景裁剪工具集</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="DrawElement"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="DrawElement.html">DrawElement</a><span style="display: none;"><p>几何绘制类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="DrawTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="DrawTool.html">DrawTool</a><span style="display: none;"><p>绘制工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="DynamicEntityVisualizer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="DynamicEntityVisualizer.html">DynamicEntityVisualizer</a><span style="display: none;"><p>动态实体视图类封装
+1、支持BillBoard、Label、GroundPrimitive等动态显示，处理覆盖问题
+2、动态显隐效果
+3、视窗内性能优化</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="EditTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="EditTool.html">EditTool</a><span style="display: none;"><p>标绘编辑工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="FloodAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FloodAnalysis.html">FloodAnalysis</a><span style="display: none;"><p>洪水淹没分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="FloodAnalysisReflection"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="FloodAnalysisReflection.html">FloodAnalysisReflection</a><span style="display: none;"><p>创建反射水面淹没分析的实例化对象</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GlobeIndependentTranslucency"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GlobeIndependentTranslucency.html">GlobeIndependentTranslucency</a><span style="display: none;"><p>单独控制地表透明度和影像图层的透明度，能够在开启地表透明后使部分影像图层不受地表透明的影响。</p>
+<p>实例化该类的对象同时也能够使用原生的地表透明参数，能够直接在实例化对象上修改 <code>GlobeTranslucency</code> 的参数（原生的
+viewer.scene.globe.translucency依然能够使用，但两者同时使用时会造成相互干扰，推荐仅使用GlobeIndependentTranslucency来实现地表透明），
+使用原生的地表透明方式还是该类的地表透明方式由 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 数组是否为空来区分。</p>
+<p>1. 当 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 不为空数组时，使用该类的地表透明方式，此时能够设置并生效的地表透明参数如下：</p>
+<ul>
+<li><code>globeFaceAlpha</code>：地表的透明度，若设置该参数则<code>globeFaceAlphaByDistance</code>不生效；</li>
+<li><code>globeFaceAlphaByDistance</code>：地表的透明度根据视点距离的变化范围，当<code>globeFaceAlpha</code>为<code>undefined</code>时生效；</li>
+</ul>
+<p>2. 当 <a href="GlobeIndependentTranslucency.html#imageryLayers"><code>GlobeIndependentTranslucency#imageryLayers</code></a> 为空数组时，使用原生的地表透明方式，此时能够设置并生效的地表透明参数如下：</p>
+<ul>
+<li><code>frontFaceAlpha</code>：地表正面的透明度；</li>
+<li><code>frontFaceAlphaByDistance </code>：地表正面的透明度根据视点距离的变化范围；</li>
+<li><code>backFaceAlpha</code>：地表背面的透明度；</li>
+<li><code>backFaceAlphaByDistance</code>：地表背面的透明度根据视点距离的变化范围；</li>
+<li><code>rectangle</code>：将地表透明的区域限制在一个矩形范围内。</li>
+</ul></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Graphic"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Graphic.html">Graphic</a><span style="display: none;"><p>标绘图元对象<br>
+请参考以下示例:<br>
+<a href='#example1'>1、初始化标绘图层</a><br>
+<a href='#example2'>2、添加一个多边形图元</a><br>
+<a href='#example3'>3、新增一个类型为div的标绘对象</a><br>
+<a href='http://webclient.smaryun.com/#/example-gallery/cesium#tdGraphBase' target='_blank'>4、更多示例</a></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GraphicsLayer"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GraphicsLayer.html">GraphicsLayer</a><span style="display: none;"><p>标绘图层<br>
+请参考以下示例:<br>
+<a href='#example1'>1、初始化标绘图层</a><br>
+<a href='#example2'>2、重写提示框对象</a><br>
+<a href='http://webclient.smaryun.com/#/example-gallery/cesium#tdGraphBase' target='_blank'>3、更多示例</a></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="HeightLimited"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="HeightLimited.html">HeightLimited</a><span style="display: none;"><p>限高分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="initializeOptions"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="initializeOptions.html">initializeOptions</a><span style="display: none;"><p>构建实例化对象的配置参数</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="isCounterClockwise"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="isCounterClockwise.html">isCounterClockwise</a><span style="display: none;"><p>地形剖切工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="KeyboardCameraController"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="KeyboardCameraController.html">KeyboardCameraController</a><span style="display: none;"><p>场景相机漫游工具，可以实现沉浸式的鼠标键盘漫游功能，具体操作方法如下：</p>
+<p>1. 相机平移操作，这类操作不会改变相机的朝向，只会改变相机的位置：</p>
+<ul>
+<li><code>W</code>：相机位置向前移动</li>
+<li><code>S</code>：相机位置向后移动</li>
+<li><code>A</code>：相机位置向左移动</li>
+<li><code>D</code>：相机位置向右移动</li>
+<li><code>Q</code>：相机位置升高</li>
+<li><code>E</code>：相机位置降低</li>
+</ul>
+<p>2. 相对于相机视点操作，其中<code>U</code>，<code>O</code>，<code>J</code>，<code>L</code>操作会改变相机的位置，也会改变相机的朝向，而<code>I</code>，<code>K</code>操作只会改变相机相较视点的距离（在执行<code>U</code>，<code>O</code>，<code>J</code>，<code>L</code>操作时请勿同时执行其他按键操作）：</p>
+<ul>
+<li><code>I</code>：相机视角靠近屏幕中心点</li>
+<li><code>K</code>：相机视角远离屏幕中心点</li>
+<li><code>J</code>：绕屏幕中心点向左旋转</li>
+<li><code>L</code>：绕屏幕中心点向右旋转</li>
+<li><code>U</code>：绕屏幕中心点向上旋转</li>
+<li><code>O</code>：绕屏幕中心点向下旋转</li>
+</ul>
+<p>3. 相机自身操作，这类操作不会改变相机的位置，只会改变相机的朝向（在全屏状态下可使用鼠标调整相机视角）：</p>
+<ul>
+<li><code>↑</code>：向上抬高视角</li>
+<li><code>↓</code>：向下降低视角</li>
+<li><code>←</code>：向左移动视角</li>
+<li><code>→</code>：向右移动视角</li>
+</ul>
+<p>4. 鼠标操作：</p>
+<ul>
+<li>开启鼠标操作功能后，页面将进入全屏模式，此时相机视角可通过鼠标移动进行操作</li>
+</ul>
+<p>5. 辅助操作：</p>
+<ul>
+<li><code>Shift</code>：加速相机平移操作，调整移动步长为原来的两倍</li>
+<li><code>R</code>：重置视角到初始视角，仅在参数<code>initView</code>定义时有效</li>
+</ul></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISM3DSet"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISM3DSet.html">MapGISM3DSet</a><span style="display: none;"><p>MapGISM3DSet对象</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISMapServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISMapServerImageryProvider.html">MapGISMapServerImageryProvider</a><span style="display: none;"><p>MapGIS地图图片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISTerrainProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTerrainProvider.html">MapGISTerrainProvider</a><span style="display: none;"><p>MapGIS地形图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISTileAvailability"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTileAvailability.html">MapGISTileAvailability</a><span style="display: none;"><p>MapGIS的TileAvailability类，重写了Cesium.TileAvailability的所有方法，支持在内部自动筛选要使用的地形图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISTileServerImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISTileServerImageryProvider.html">MapGISTileServerImageryProvider</a><span style="display: none;"><p>MapGIS瓦片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MapGISVectorTileImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MapGISVectorTileImageryProvider.html">MapGISVectorTileImageryProvider</a><span style="display: none;"><p>MapGIS矢量瓦片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MeasureAreaTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureAreaTool.html">MeasureAreaTool</a><span style="display: none;"><p>面积测量工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MeasureLengthTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureLengthTool.html">MeasureLengthTool</a><span style="display: none;"><p>距离测量</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="MeasureSlopeTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="MeasureSlopeTool.html">MeasureSlopeTool</a><span style="display: none;"><p>坡度测量</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ModelEditor"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelEditor.html">ModelEditor</a><span style="display: none;"><p>模型矩阵编辑工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ModelFilterTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelFilterTool.html">ModelFilterTool</a><span style="display: none;"><p>模型空间过滤工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ModelTransformTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ModelTransformTool.html">ModelTransformTool</a><span style="display: none;"><p>模型变换工具集</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="PolylineTrailLinkMaterialProperty"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="PolylineTrailLinkMaterialProperty.html">PolylineTrailLinkMaterialProperty</a><span style="display: none;"><p>流动纹理线材质</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="PostProcessStageLibrary"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="PostProcessStageLibrary.html">PostProcessStageLibrary</a><span style="display: none;"><p>用于创建后处理特效的扩展库</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="RadarMaterialProperty"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="RadarMaterialProperty.html">RadarMaterialProperty</a><span style="display: none;"><p>雷达扫描材质</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ReImg"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ReImg.html">ReImg</a><span style="display: none;"><p>截图(保存图片)</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="RoamParticle"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="RoamParticle.html">RoamParticle</a><span style="display: none;"><p>跟随模型移动粒子特效</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="S3MTileset"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="S3MTileset.html">S3MTileset</a><span style="display: none;"><p>S3MTileset类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SelectTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SelectTool.html">SelectTool</a><span style="display: none;"><p>绘制工具</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ShadowRateAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ShadowRateAnalysis.html">ShadowRateAnalysis</a><span style="display: none;">undefined</span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="StableParticle"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="StableParticle.html">StableParticle</a><span style="display: none;"><p>固定位置粒子特效，可通过更改image与附加参数来实现火焰、喷泉、烟雾等粒子特效</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Style"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Style.html">Style</a><span style="display: none;"><p>标绘图元样式</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TerrainAnalyse"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TerrainAnalyse.html">TerrainAnalyse</a><span style="display: none;"><p>地形分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TerrainProfile"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TerrainProfile.html">TerrainProfile</a><span style="display: none;">undefined</span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ThemeManager"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ThemeManager.html">ThemeManager</a><span style="display: none;"><p>统计图</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="TriangulationTool"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="TriangulationTool.html">TriangulationTool</a><span style="display: none;"><p>三角测量</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="UrlTemplateImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="UrlTemplateImageryProvider.html">UrlTemplateImageryProvider</a><span style="display: none;"><p>网络瓦片图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="VisiblityAnalysis"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="VisiblityAnalysis.html">VisiblityAnalysis</a><span style="display: none;"><p>通视分析</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WaterReflection"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WaterReflection.html">WaterReflection</a><span style="display: none;"><p>创建反射水面的实例化对象</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebMapServiceImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapServiceImageryProvider.html">WebMapServiceImageryProvider</a><span style="display: none;"><p>WMS图层，现已不支持通过构造函数(new WebMapServiceImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WebMapTileServiceImageryProvider"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WebMapTileServiceImageryProvider.html">WebMapTileServiceImageryProvider</a><span style="display: none;"><p>WMTS图层，现已不支持通过构造函数(new WebMapTileServiceImageryProvider())的方式初始化图层，而是使用fromUrl方法构造图层</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Wind3D"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Wind3D.html">Wind3D</a><span style="display: none;"><p>风场系统</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">工具类模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GeoJSONLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GeoJSONLayerUtil.html">GeoJSONLayerUtil</a><span style="display: none;"><p>GeoJSON图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="GraphicsLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="GraphicsLayerUtil.html">GraphicsLayerUtil</a><span style="display: none;"><p>几何图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="IGSFeatureLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="IGSFeatureLayerUtil.html">IGSFeatureLayerUtil</a><span style="display: none;"><p>IGSFeature图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="WFSLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="WFSLayerUtil.html">WFSLayerUtil</a><span style="display: none;"><p>WFS图层的工具类</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">视图模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="ISSceneLayerUtil"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="ISSceneLayerUtil.html">ISSceneLayerUtil</a><span style="display: none;"><p>IS场景图层的工具类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Popup"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Popup.html">Popup</a><span style="display: none;"><p>场景信息弹窗(cesium引擎)
+参考示例：
+<a href='#SceneView'>[初始化三维场景视图]</a>
+<br>[ES5引入方式]：<br/>
+zondy.cesium.SceneView() <br/>
+[ES6引入方式]：<br/>
+import { SceneView } from '@mapgis/webclient-cesium-plugin' <br/>
+自定义样式说明：<br/>
+zondy-popup__content 弹窗容器样式<br/>
+zondy-popup__tip 弹窗对话框箭头样式<br/>
+zondy-popup__header 弹窗头部样式<br/>
+zondy-popup__content 弹窗主体样式<br/>
+zondy-popup__footer 弹窗底部样式<br/></p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SceneView"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SceneView.html">SceneView</a><span style="display: none;"><p>视图类</p></span></li><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="Screenshot"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="Screenshot.html">Screenshot</a><span style="display: none;"><p>屏幕打印工具</p></span></li></ul><div style="font-weight: bold;vertical-align: middle;padding: 0.4rem 0;" class="mapgis-menu-span"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/m.png" alt="">草图编辑模块</div><ul class="mapgis-sidebar-menus"><li style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="SketchEditorCesium"><img style="width: 20px;margin-right: 6px;vertical-align: middle;" src="./styles/c.png" alt=""><a href="SketchEditorCesium.html">SketchEditorCesium</a><span style="display: none;"><p>Cesium引擎草图编辑类<br/>
+<br>[ES5引入方式]：<br/>
+const { SketchEditor } = zondy.tool.sketch  <br/>
+[ES6引入方式]：<br/>
+import { SketchEditor } from &quot;@mapgis/webclient-leaflet-plugin&quot; <br/></p></span></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header id="page-title" class="page-title">
+                    <span class="page-title-main">类名</span>
+                    <span class="page-title-sub">AnimationTool</span>
+                </header>
+                
+
+
+
+
+<section>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        
+
+
+    
+    <h4 class="name" id="AnimationTool">
+        <a class="href-link" href="#AnimationTool">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                new AnimationTool<span class="signature">(viewer<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>场景漫游工具</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h4>参数:</h4>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>名称</th>
+            
+
+            <th>类型</th>
+
+            
+            <th style="min-width: 100px;">默认值</th>
+            
+
+            <th class="last">描述</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>viewer</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="Cesium.Viewer.html">Cesium.Viewer</a></span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          null
+      
+      </td>
+  
+
+  <td class="description last"><p>场景视图，<a href='http://webclient.smaryun.com/static/modules/cesium/api/cesium/index.html' target='_blank'>详见Cesium.Viewer</a></p></td>
+</tr>
+
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          {}
+      
+      </td>
+  
+
+  <td class="description last"><p>额外初始化参数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>toolType</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          'routes'
+      
+      </td>
+  
+
+  <td class="description last"><p>工具类型，routes：动画漫游，point：绕点旋转</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>heading</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          90
+      
+      </td>
+  
+
+  <td class="description last"><p>航向角（相机视角），绕Z轴旋转的弧度值。路径漫游时:跟随视角、第一视角、上帝视角下实时生效；绕视点旋转时:这个值是自增的，因此只有初始化时生效，不可实时修改</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>pitch</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0
+      
+      </td>
+  
+
+  <td class="description last"><p>俯仰角（相机视角），绕Y轴旋转的弧度值。路径漫游时:跟随视角，第一视角实时生效；绕视点旋转时:这个值可实时修改。</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>range</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0
+      
+      </td>
+  
+
+  <td class="description last"><p>相机距离，相机距离视点的距离，单位米。路径漫游时:跟随视角，上帝视角实时生效</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>distance</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0
+      
+      </td>
+  
+
+  <td class="description last"><p>绕点旋转时，相机定位点的平移距离（沿着相机视角的相反方向），米。绕视点旋转时，这个值可实时修改。不能为空或者是0。</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>duration</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          8
+      
+      </td>
+  
+
+  <td class="description last"><p>绕点旋转时，动画持续时间</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>moveToStop</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          true
+      
+      </td>
+  
+
+  <td class="description last"><p>绕点旋转时，移动鼠标，停止旋转。true激活该特性，false，不激活该特性。</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>animationType</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          2
+      
+      </td>
+  
+
+  <td class="description last"><p>0：一般场景，不操作相机；1：跟随；2：锁定第一视角；3：上帝视角</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>isLoop</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          false
+      
+      </td>
+  
+
+  <td class="description last"><p>是否循环</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>showPath</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          false
+      
+      </td>
+  
+
+  <td class="description last"><p>是否显示路径 (默认不显示路径)</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>positions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>漫游路径点  初始化可以不设置 但一定要在开始前设置好</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>speed</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          1
+      
+      </td>
+  
+
+  <td class="description last"><p>漫游速度或者绕点旋转速度，默认1m/s(1米/秒)或1度/秒 特别提醒（漫游场景范围很大的时候，这个一定要设置大，比如飞机可能就是真实的几千米每秒
+如果不按真实设置，会导致内部时间点插值过密，造成卡顿）。</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>speedupFactor</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          1
+      
+      </td>
+  
+
+  <td class="description last"><p>加速因子(加速倍数) 默认为1</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>exHeight</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          2
+      
+      </td>
+  
+
+  <td class="description last"><p>附加高程</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>showInfo</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          false
+      
+      </td>
+  
+
+  <td class="description last"><p>是否显示提示信息</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>modelUrl</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>模型路径 默认为空不显示</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>model</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>动画漫游中的模型对象参数，详见<code>ModelGraphics</code></p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>complete</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>完成回调   完成后的回调函数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>interpolationAlgorithm</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          LagrangePolynomialApproximation
+      
+      </td>
+  
+
+  <td class="description last"><p>插值算法 默认拉格朗日 还有线性插值 Cesium.LinearApproximation(埃尔米特插值插值)Cesium.HermitePolynomialApproximation</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>isProcessCorner</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          false
+      
+      </td>
+  
+
+  <td class="description last"><p>是否需要将较大转弯点处理为圆弧</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>maxAngle</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          150.0
+      
+      </td>
+  
+
+  <td class="description last"><p>设置判断为转弯点的角度的最大值，不超过150的转角会被执行插值，处理为圆弧</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>curveStep</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0.05
+      
+      </td>
+  
+
+  <td class="description last"><p>转弯处往圆弧曲线上插值点的步长，点个数=1/curveStep</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>headingTargetPosition</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0.0
+      
+      </td>
+  
+
+  <td class="description last"><p>动态可视域目标点绕Z轴旋转，角度制</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>pitchTargetPosition</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0.0
+      
+      </td>
+  
+
+  <td class="description last"><p>动态可视域目标点绕Y轴旋转，角度制</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>rollTargetPosition</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0.0
+      
+      </td>
+  
+
+  <td class="description last"><p>动态可视域目标点绕X轴旋转，角度制</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>rangeTargetPosition</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          1.0
+      
+      </td>
+  
+
+  <td class="description last"><p>视点与目标点距离按照倍数增加</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>isAddScanEffect</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          false
+      
+      </td>
+  
+
+  <td class="description last"><p>是否挂载动态扫描特效</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>scanEffect</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>扫描特效实例，可以是动态圆，也可以是雷达扫描</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>isGetRealHeight</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          false
+      
+      </td>
+  
+
+  <td class="description last"><p>是否获取路径点的真实高程</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>speedArray</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          [this._speed]
+      
+      </td>
+  
+
+  <td class="description last"><p>速度不同时，各个路径点的对应速度</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>timeArray</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          []
+      
+      </td>
+  
+
+  <td class="description last"><p>路径点与时间相对应</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>accelerationArray</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          [0]
+      
+      </td>
+  
+
+  <td class="description last"><p>加速度数组</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>运动过程中的回调函数</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback.result</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>回调结果：对应的运动动画信息</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback.result.routePointIndex</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>模型在路径点哪个分段，是当前分段的第一个点的索引</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback.result.currenPositionStatus</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>当前点状态:0代表点在线上，1代表点在拐点处</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback.result.position</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.Cartesian3</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>实时位置，<a href='http://webclient.smaryun.com/static/modules/cesium/api/cesium/index.html?classFilter=Cartesian3' target='_blank'>详见Cesium.Cartesian3</a></p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback.result.startTime</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.JulianDate</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>运动开始时间，<a href='http://webclient.smaryun.com/static/modules/cesium/api/cesium/index.html?classFilter=JulianDate' target='_blank'>详见Cesium.JulianDate</a></p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback.result.currentTime</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.JulianDate</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>当前时间，<a href='http://webclient.smaryun.com/static/modules/cesium/api/cesium/index.html?classFilter=JulianDate' target='_blank'>详见Cesium.JulianDate</a></p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback.result.stopTime</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Cesium.JulianDate</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>运动结束时间，<a href='http://webclient.smaryun.com/static/modules/cesium/api/cesium/index.html?classFilter=JulianDate' target='_blank'>详见Cesium.JulianDate</a></p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback.result.remainDistance</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>剩余运动距离</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback.result.totalDistance</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>运动总距离</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback.result.speed</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>运动速度</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>isSetModelPosture</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Boolean</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          true
+      
+      </td>
+  
+
+  <td class="description last"><p>是否设置模型运动姿态，保持朝向与运动方向一致，默认为true，设置为false时，模型姿态不改变</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>startTime</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>Date类型，用于设置漫游开始时间</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>startPositionIndex</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0
+      
+      </td>
+  
+
+  <td class="description last"><p>Number类型，默认是0，是开始路径漫游跳转点的上一个路径点的索引，和offestStartPositionDistance一起用于判断漫游的具体跳转点位</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>offsetStartPositionDistance</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0
+      
+      </td>
+  
+
+  <td class="description last"><p>Number类型，默认是0，是距离startPositionIndex索引点的距离，单位是meter</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>modelHeading</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0
+      
+      </td>
+  
+
+  <td class="description last"><p>Number类型,默认是0，模型的方位角</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>modelPitch</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0
+      
+      </td>
+  
+
+  <td class="description last"><p>Number类型,默认是0，模型的俯仰角</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>modelRoll</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Number</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          0
+      
+      </td>
+  
+
+  <td class="description last"><p>Number类型,默认是0，模型的倾斜角</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>firstPersonCameraFocusOffset</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          {offsetX: 0,offsetY: 0,offsetZ: 0}
+      
+      </td>
+  
+
+  <td class="description last"><p>第一人称视角下，相机焦点的偏移值。向前：offsetX；向左：offsetY；向上:offsetZ</p></td>
+</tr>
+
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>modelOffset</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="default">
+      
+          {offsetX: 0,offsetY: 0,offsetZ: 0}
+      
+      </td>
+  
+
+  <td class="description last"><p>模型相对自身的平移值，单位为米。向前：offsetX；向左：offsetY；向上:offsetZ</p></td>
+</tr>
+
+
+  
+
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p class="summary"><p>请参考以下示例:<br>
+<a href='#example1'>1、路径漫游</a><br>
+<a href='#example2'>2、绕点旋转</a><br>
+<a href='#example3'>3、飞行漫游</a><br>
+<a href='#example4'>4、实时漫游</a><br>
+<a href='#example5'>5、室内漫游</a><br>
+<a href='#example6'>6、模型沿地形漫游</a><br></p></p>
+
+
+
+    <h5>示例</h5>
+    
+        <p class="code-caption"><h7 id='example1'>路径漫游</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// 参考示例：
+http://webclient.smaryun.com/#/modules/cesium/analyse/commonAnalyse/path-roaming
+
+// ES5引入方式
+const { AnimationTool } = zondy.cesium
+// ES6引入方式
+import { AnimationTool } from "@mapgis/webclient-cesium-plugin"
+
+// 1 构造漫游路径数组，单位为笛卡尔3
+const pathPositions = [...]
+
+// 2 定义漫游工具对象
+animationTool = new AnimationTool(viewer, {
+  //类型指定为routes
+  toolType: 'routes',
+  // 漫游路径(笛卡尔3数组)
+  positions: pathPositions,
+  ...
+})
+
+// 3 开始漫游
+animationTool.start()
+
+// 4 暂停漫游
+animationTool.pause
+
+// 5 结束漫游
+animationTool.stop()</code></pre>
+    
+
+        <p class="code-caption"><h7 id='example2'>绕点旋转</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// 参考示例：
+http://webclient.smaryun.com/#/modules/cesium/sceneControl/camera/point-rotate
+
+// ES5引入方式
+const { AnimationTool } = zondy.cesium
+// ES6引入方式
+import { AnimationTool } from "@mapgis/webclient-cesium-plugin"
+
+// 1 定义漫游工具对象
+animationTool = new AnimationTool(viewer, {
+  //类型指定为point
+  toolType: 'point',
+  //旋转中心点
+  positions: new Cesium.Cartesian3(0, 0, 0),
+  ...
+})
+
+// 2 开始旋转
+animationTool.start()
+
+// 3 暂停旋转
+animationTool.pause
+
+// 4 结束旋转
+animationTool.stop()</code></pre>
+    
+
+        <p class="code-caption"><h7 id='example3'>飞行漫游</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// 参考示例：
+http://webclient.smaryun.com/#/modules/cesium/analyse/commonAnalyse/fly-roaming
+
+// ES5引入方式
+const { AnimationTool } = zondy.cesium
+// ES6引入方式
+import { AnimationTool } from "@mapgis/webclient-cesium-plugin"
+
+// 1 构造漫游路径数组，单位为笛卡尔3
+const pathPositions = [...]
+
+// 2 定义漫游工具对象
+animationTool = new AnimationTool(viewer, {
+  //类型指定为routes
+  toolType: 'routes',
+  // 漫游路径(笛卡尔3数组)
+  positions: pathPositions,
+  // 设置漫游的视角类型。0：正常，不移动相机；1：跟随；2：锁定第一视角；3：上帝视角
+  animationType: 2,
+  // 设置漫游模型
+  modelUrl: 'http://webclient.smaryun.com:8200/3DData/Model/glb/TravelPlane.glb',
+  //模型对象参数，详见ModelGraphics对象的文档
+  model: {
+    //放大比例
+    scale: 30,
+    //固定大小设为0
+    minimumPixelSize: 0
+  },
+  ...
+})
+
+// 3 开始漫游
+animationTool.start()
+
+// 4 暂停漫游
+animationTool.pause
+
+// 5 结束漫游
+animationTool.stop()</code></pre>
+    
+
+        <p class="code-caption"><h7 id='example4'>实时漫游</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// 参考示例：
+http://webclient.smaryun.com/#/modules/cesium/analyse/commonAnalyse/real-time-roaming
+
+// ES5引入方式
+const { AnimationTool } = zondy.cesium
+// ES6引入方式
+import { AnimationTool } from "@mapgis/webclient-cesium-plugin"
+
+// 1 构造漫游路径数组，单位为笛卡尔3
+const pathPositions = [...]
+
+// 2 定义漫游工具对象
+animationTool = new AnimationTool(viewer, {
+  //类型指定为routes
+  toolType: 'routes',
+  // 漫游路径(笛卡尔3数组)
+  positions: pathPositions,
+  // 设置漫游的视角类型。0：正常，不移动相机；1：跟随；2：锁定第一视角；3：上帝视角
+  animationType: 3,
+  ...
+})
+
+// 3 开始漫游
+animationTool.start()
+
+// 4 暂停漫游
+animationTool.pause
+
+// 5 结束漫游
+animationTool.stop()</code></pre>
+    
+
+        <p class="code-caption"><h7 id='example5'>室内漫游</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// 参考示例：
+http://webclient.smaryun.com/#/modules/cesium/analyse/commonAnalyse/indoor-roaming
+
+// ES5引入方式
+const { AnimationTool } = zondy.cesium
+// ES6引入方式
+import { AnimationTool } from "@mapgis/webclient-cesium-plugin"
+
+// 1 构造漫游路径数组，单位为笛卡尔3
+const pathPositions = [...]
+
+// 2 定义漫游工具对象
+animationTool = new AnimationTool(viewer, {
+  //类型指定为routes
+  toolType: 'routes',
+  // 漫游路径(笛卡尔3数组)
+  positions: pathPositions,
+  // 设置漫游的视角类型。0：正常，不移动相机；1：跟随；2：锁定第一视角；3：上帝视角
+  animationType: 1,
+  ...
+})
+
+// 3 开始漫游
+animationTool.start()
+
+// 4 暂停漫游
+animationTool.pause
+
+// 5 结束漫游
+animationTool.stop()</code></pre>
+    
+
+        <p class="code-caption"><h7 id='example6'>模型沿地形漫游</h7></p>
+    
+    
+        <pre class="prettyprint"><code>// 参考示例：
+http://webclient.smaryun.com/#/modules/cesium/analyse/commonAnalyse/model-terrain-roaming
+
+// ES5引入方式
+const { AnimationTool } = zondy.cesium
+// ES6引入方式
+import { AnimationTool } from "@mapgis/webclient-cesium-plugin"
+
+// 1 构造漫游路径数组，单位为笛卡尔3
+const pathPositions = [...]
+
+// 2 定义漫游工具对象
+animationTool = new AnimationTool(viewer, {
+  //类型指定为routes
+  toolType: 'routes',
+  // 漫游路径(笛卡尔3数组)
+  positions: pathPositions,
+  // 设置漫游的视角类型。0：正常，不移动相机；1：跟随；2：锁定第一视角；3：上帝视角
+  animationType: 0,
+   // 是否获取路径点的真实高程
+  isGetRealHeight: true,
+  // 漫游的模型对象的url，为空表示不显示
+  modelUrl:'http://webclient.smaryun.com:8200/3DData/Model/glb/CesiumMilkTruck.glb',
+  //模型对象参数，详见ModelGraphics对象的文档
+  model: {
+    //放大比例
+    scale: 20,
+    //固定大小设为0
+    minimumPixelSize: 0,
+    // 模型贴地显示
+    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
+  },
+  ...
+})
+
+// 3 开始漫游
+animationTool.start()
+
+// 4 暂停漫游
+animationTool.pause
+
+// 5 结束漫游
+animationTool.stop()</code></pre>
+    
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='member'>成员变量</h3>
+            <div class="members">
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="animationModel">
+    <a class="href-link" href="#animationModel">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        animationModel
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>动画模型</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="animationType">
+    <a class="href-link" href="#animationType">#</a>
+    
+    <span class="code-name">
+        animationType
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>动画漫游的类型</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">function</span>
+
+
+    </span>
+
+<h4 class="name" id="callback">
+    <a class="href-link" href="#callback">#</a>
+    
+    <span class="code-name">
+        callback
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>回调函数，返回一组动画信息</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+    <h5>示例</h5>
+    
+    
+        <pre class="prettyprint"><code>callback: function (result) {
+     console.log('到达站点' + result.index + '，站点坐标：' + result.position);
+     console.log('当前点状态' + result.currenPositionStatus);
+     console.log('实时位置' + result.position);
+     console.log('运动开始时间' + result.startTime);
+     console.log('当前时间' + result.currentTime);
+     console.log('剩余运动距离' + result.remainDistance);
+     console.log('运动总距离' + result.totalDistance);
+     console.log('运动速度' + result.speed);
+ }</code></pre>
+    
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="disFactor">
+    <a class="href-link" href="#disFactor">#</a>
+    
+    <span class="code-name">
+        disFactor
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>用于判断当前点是否到达路径点</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>在16.7.2版本中移除, 请使用<a href="AnimationTool.html#callback"><code>AnimationTool#callback</code></a>替代</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="distance">
+    <a class="href-link" href="#distance">#</a>
+    
+    <span class="code-name">
+        distance
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>偏移距离 （单位米）</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="exHeight">
+    <a class="href-link" href="#exHeight">#</a>
+    
+    <span class="code-name">
+        exHeight
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>附加高程</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="firstPersonCameraFocusOffset">
+    <a class="href-link" href="#firstPersonCameraFocusOffset">#</a>
+    
+    <span class="code-name">
+        firstPersonCameraFocusOffset
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>第一人称视角下，相机焦点的偏移值。向前：offsetX；向左：offsetX；向上:offsetZ</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="followSwitchMouseEvent">
+    <a class="href-link" href="#followSwitchMouseEvent">#</a>
+    
+    <span class="code-name">
+        followSwitchMouseEvent
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>布尔类型，默认为false，切换跟随视角下的鼠标点击事件</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>在16.7.2版本中移除, 用户需要自定义鼠标控制逻辑，可在应用层参考<code>screenSpaceCameraController</code>鼠标事件设置</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="followViewCameraHPR">
+    <a class="href-link" href="#followViewCameraHPR">#</a>
+    
+        
+            <span class='tag'>readonly</span>
+        
+    
+    <span class="code-name">
+        followViewCameraHPR
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>跟随视角下，相机的初始heading，pitch，range</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="heading">
+    <a class="href-link" href="#heading">#</a>
+    
+    <span class="code-name">
+        heading
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>航向角 （单位弧度）</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="headingTargetPosition">
+    <a class="href-link" href="#headingTargetPosition">#</a>
+    
+    <span class="code-name">
+        headingTargetPosition
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>根据Z轴旋转</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="isAddViewshedAnalysis">
+    <a class="href-link" href="#isAddViewshedAnalysis">#</a>
+    
+    <span class="code-name">
+        isAddViewshedAnalysis
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>是否挂载动态可视域</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="isGetPositionNow">
+    <a class="href-link" href="#isGetPositionNow">#</a>
+    
+    <span class="code-name">
+        isGetPositionNow
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>是否获取当前点坐标，默认为false，为true时，需配合返回当前点坐标的回调函数一起使用</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>在16.7.2版本中移除, 请使用<a href="AnimationTool.html#callback"><code>AnimationTool#callback</code></a>替代</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="isLoop">
+    <a class="href-link" href="#isLoop">#</a>
+    
+    <span class="code-name">
+        isLoop
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>是否循环</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="isSetModelPosture">
+    <a class="href-link" href="#isSetModelPosture">#</a>
+    
+    <span class="code-name">
+        isSetModelPosture
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>是否设置模型运动姿态，保持朝向与运动方向一致</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="isShowPath">
+    <a class="href-link" href="#isShowPath">#</a>
+    
+    <span class="code-name">
+        isShowPath
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>是否显示漫游路径，计划废弃，请使用 <a href="AnimationTool.html#showPath"><code>AnimationTool#showPath</code></a> 来控制漫游路径的显隐</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="important tag-deprecated">Deprecated:</dt><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="modelHeading">
+    <a class="href-link" href="#modelHeading">#</a>
+    
+    <span class="code-name">
+        modelHeading
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>模型的方位角</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="modelOffset">
+    <a class="href-link" href="#modelOffset">#</a>
+    
+    <span class="code-name">
+        modelOffset
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>模型相对自身的平移值，单位为米。向前：offsetX；向左：offsetY；向上:offsetZ</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="modelPitch">
+    <a class="href-link" href="#modelPitch">#</a>
+    
+    <span class="code-name">
+        modelPitch
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>模型的俯仰角</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="modelRoll">
+    <a class="href-link" href="#modelRoll">#</a>
+    
+    <span class="code-name">
+        modelRoll
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>模型的倾斜角</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="offsetStartPositionDistance">
+    <a class="href-link" href="#offsetStartPositionDistance">#</a>
+    
+    <span class="code-name">
+        offsetStartPositionDistance
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>距离startPositionIndex索引点在当前分段线上的距离,单位是meter</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="onPositionTag">
+    <a class="href-link" href="#onPositionTag">#</a>
+    
+    <span class="code-name">
+        onPositionTag
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>是否执行回调函数的功能，默认为false不执行</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>在16.7.2版本中移除, 请使用<a href="AnimationTool.html#callback"><code>AnimationTool#callback</code></a>替代</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="pause">
+    <a class="href-link" href="#pause">#</a>
+    
+    <span class="code-name">
+        pause
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>控制动画的暂停</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="pitch">
+    <a class="href-link" href="#pitch">#</a>
+    
+    <span class="code-name">
+        pitch
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>俯仰角 （单位弧度）</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="pitchTargetPosition">
+    <a class="href-link" href="#pitchTargetPosition">#</a>
+    
+    <span class="code-name">
+        pitchTargetPosition
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>根据Y轴旋转</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Array</span>
+
+
+    </span>
+
+<h4 class="name" id="positions">
+    <a class="href-link" href="#positions">#</a>
+    
+    <span class="code-name">
+        positions
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>坐标点</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="range">
+    <a class="href-link" href="#range">#</a>
+    
+    <span class="code-name">
+        range
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>距离 (单位米)</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="rangeTargetPosition">
+    <a class="href-link" href="#rangeTargetPosition">#</a>
+    
+    <span class="code-name">
+        rangeTargetPosition
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>可视域视点到目标点视距增加倍数</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="rollTargetPosition">
+    <a class="href-link" href="#rollTargetPosition">#</a>
+    
+    <span class="code-name">
+        rollTargetPosition
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>根据X轴旋转</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="scanEffect">
+    <a class="href-link" href="#scanEffect">#</a>
+    
+    <span class="code-name">
+        scanEffect
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>扫描特效实例</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="showInfo">
+    <a class="href-link" href="#showInfo">#</a>
+    
+    <span class="code-name">
+        showInfo
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>是否显示提示信息</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="showPath">
+    <a class="href-link" href="#showPath">#</a>
+    
+    <span class="code-name">
+        showPath
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>是否显示漫游路径</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="speed">
+    <a class="href-link" href="#speed">#</a>
+    
+    <span class="code-name">
+        speed
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>漫游速度</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Array</span>
+
+
+    </span>
+
+<h4 class="name" id="speedArray">
+    <a class="href-link" href="#speedArray">#</a>
+    
+    <span class="code-name">
+        speedArray
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>用于变速漫游中，设定各个点的速度</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="speedupFactor">
+    <a class="href-link" href="#speedupFactor">#</a>
+    
+    <span class="code-name">
+        speedupFactor
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>快进（设置倍数）</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Number</span>
+
+
+    </span>
+
+<h4 class="name" id="startPositionIndex">
+    <a class="href-link" href="#startPositionIndex">#</a>
+    
+    <span class="code-name">
+        startPositionIndex
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>用于记录开始路径漫游跳转点的上一个路径点的索引</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Array</span>
+
+
+    </span>
+
+<h4 class="name" id="timeArray">
+    <a class="href-link" href="#timeArray">#</a>
+    
+    <span class="code-name">
+        timeArray
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>用于变速漫游中，设定各个点通过的时间数组，时间使用Date()对象</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>类型:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="viewshedAnalysis">
+    <a class="href-link" href="#viewshedAnalysis">#</a>
+    
+    <span class="code-name">
+        viewshedAnalysis
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>可视域实例</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+        <div class='vertical-section'>
+            <h3 id='function'>方法</h3>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="start">
+        <a class="href-link" href="#start">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                start<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>开始漫游</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="stop">
+        <a class="href-link" href="#stop">#</a>
+        
+        <span class="code-name" style="font-size:30px">
+            
+                stop<span class="signature">()</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    <div class="description">
+        <p>结束漫游</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>文档生成<a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="http://www.smaryun.com" target="_blank">司马云</a> <span>© 2023 云生态圈</span>
+                        <a href="http://webclient.smaryun.com:8086/#/index" target="_blank">MapGIS Client for JavaScript</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#page-title">构造函数</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#member">成员变量</a>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#function">方法</a>
+            </div>
+            <div>
+                <img style="vertical-align: middle;margin-right: 10px;width: 30px;" src="./styles/anchor.png"/><a href="#event">事件</a>
+            </div>
+        </div>
+    </div>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

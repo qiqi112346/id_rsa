@@ -1,0 +1,654 @@
+
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+                    <script src="scripts/prettify/prettify.js"></script>
+                    <script src="scripts/prettify/lang-css.js"></script>
+                    <title> MapGIS Client for JavaScript API </title>
+                <script type="text/javascript">
+
+                </script>
+                    <!--[if lt IE 9]>
+                    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+                    <![endif]-->
+                        <script src="scripts/jquery.min.js"></script>
+                    <script src="scripts/adminlte/app.min.js"></script>
+                    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/adminlte/AdminLTE.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/adminlte/skin-blue.min.css">
+                    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+                    <link type="text/css" rel="stylesheet" href="styles/common.css">
+                    <link type="text/css" rel="stylesheet" href="styles/header.css">
+                    <link type="text/css" rel="stylesheet" href="styles/examples.css">
+                    <link type="text/css" rel="stylesheet" href="styles/style.customize.css">
+                    <link type="text/css" rel="stylesheet" href="styles/font-awesome.css">
+                    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+                    <script src="scripts/bootstrap.min.js"></script>
+                </head>
+                <body class='sidebar-mini'>
+
+                <div id="wrap" class="clearfix">
+                    <header class="header-wrapper main-header mapgis-header">
+                        <nav class="navbar navbar-static-top lite">
+                            <div class="nav-header">
+                                <div class="navbar-header">
+                                    <div class="navbar-title">
+                                        <a class="navbar-brand">
+                                            <span class="mapgis-webclient-text"> MapGIS Client for JavaScript API </span>
+                                        </a>
+                                        <div id="suffix-title">for MapboxGL</div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="navbar-toggle collapsed"
+                                        data-toggle="collapse"
+                                        data-target="#navbar-collapse"
+                                        aria-expanded="false"
+                                    >
+                                        <i class="fa fa-bars"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </nav>
+                    </header>
+                    <div class="navigationDiv">
+                    </div>
+                    <div class="main content-wrapper examples-container">
+                        <h1 class="page-title" data-filename="sources.md">sources.md</h1>
+                            <section>
+                        <article class="readme">
+                        <h1 id="sources" tabindex="-1">Sources</h1>
+<p>Data source specifications.</p>
+<pre><code class="language-json">sources: {
+    &quot;mapbox-streets&quot;: {
+        &quot;type&quot;: &quot;vector&quot;,
+        &quot;url&quot;: &quot;mapbox://mapbox.mapbox-streets-v6&quot;
+    }
+}
+</code></pre>
+<h2 id="vector" tabindex="-1">vector</h2>
+<p>A vector tile source. Tiles must be in <a href="https://github.com/mapbox/vector-tile-spec">Mapbox Vector Tile format</a>. All geometric coordinates in vector tiles must be between <code>-1 * extent</code> and <code>(extent * 2) - 1</code> inclusive. All layers that use a vector source must specify a <a href="layers.html#source-layer"><code>source-layer</code></a> value.</p>
+<pre><code class="language-json">sources: {
+    &quot;streets&quot;: {
+        &quot;type&quot;: &quot;vector&quot;,
+        &quot;tiles&quot;: [
+            &quot;http://a.example.com/tiles/{z}/{x}/{y}.pbf&quot;
+        ]
+    }
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="type" tabindex="-1">type</h3>
+<p><em>Required <a href="types.html#enum">enum</a>. Possible values: <code>vector</code>.</em></p>
+<p>The type of the source.</p>
+<ul>
+<li><code>vector</code>: A vector tile source.</li>
+</ul>
+<h3 id="url" tabindex="-1">url</h3>
+<p><em>Optional <a href="types.html#string">string</a>.</em></p>
+<p>A URL to a TileJSON resource. Supported protocols are <code>http:</code>, <code>https:</code>, and <code>mapbox://&lt;Tileset ID&gt;</code>.</p>
+<h3 id="tiles" tabindex="-1">tiles</h3>
+<p><em>Optional <a href="types.html#array">array</a>.</em></p>
+<p>An array of one or more tile source URLs, as in the TileJSON spec.</p>
+<h3 id="bounds" tabindex="-1">bounds</h3>
+<p><em>Optional <a href="types.html#array">array</a>. Defaults to <code>-180,-85.051129,180,85.051129</code>.</em></p>
+<p>An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: <code>[sw.lng, sw.lat, ne.lng, ne.lat]</code>. When this property is included in a source, no tiles outside of the given bounds are requested by Mapbox GL.</p>
+<h3 id="scheme" tabindex="-1">scheme</h3>
+<p><em>Optional <a href="types.html#enum">enum</a>. Possible values: <code>xyz</code>, <code>tms</code>. Defaults to <code>xyz</code>.</em></p>
+<p>Influences the y direction of the tile coordinates. The global-mercator (aka Spherical Mercator) profile is assumed.</p>
+<ul>
+<li><code>xyz</code>: Slippy map tilenames scheme.</li>
+<li><code>tms</code>: OSGeo spec scheme.</li>
+</ul>
+<h3 id="minzoom" tabindex="-1">minzoom</h3>
+<p><em>Optional <a href="types.html#number">number</a>. Defaults to <code>0</code>.</em></p>
+<p>Minimum zoom level for which tiles are available, as in the TileJSON spec.</p>
+<h3 id="maxzoom" tabindex="-1">maxzoom</h3>
+<p><em>Optional <a href="types.html#number">number</a>. Defaults to <code>22</code>.</em></p>
+<p>Maximum zoom level for which tiles are available, as in the TileJSON spec. Data from tiles at the maxzoom are used when displaying the map at higher zoom levels.</p>
+<h3 id="attribution" tabindex="-1">attribution</h3>
+<p><em>Optional <a href="types.html#string">string</a>.</em></p>
+<p>Contains an attribution to be displayed when the map is shown to a user.</p>
+<h3 id="promoteid" tabindex="-1">promoteId</h3>
+<p><em>Optional <a href="types.html">promoteId</a>.</em></p>
+<p>A property to use as a feature id (for feature state). Either a property name, or an object of the form <code>{&lt;sourceLayer&gt;: &lt;propertyName&gt;}</code>. If specified as a string for a vector tile source, the same property is used across all its source layers.</p>
+<h3 id="clippingarea---mapgisextension--" tabindex="-1">clippingArea <span class="mapgis-extend-tag">MapGISExtension</span></h3>
+<p><em>Optional.</em></p>
+<p>裁剪区几何，目前仅支持区和多区传入</p>
+<pre><code class="language-json">clippingArea: {
+    &quot;type&quot;: &quot;Polygon&quot;,
+    &quot;coordinates&quot;: [
+        [
+            [111.36341, 29.032578],
+            [113, 30],
+            [114.13094, 29.032578],
+            [114.13094, 31.273224],
+            [111.36341, 31.273224],
+            [111.36341, 29.032578]
+        ]
+    ]
+}
+</code></pre>
+<h3 id="crs---mapgisextension--" tabindex="-1">crs <span class="mapgis-extend-tag">MapGISExtension</span></h3>
+<p><em>Optional.</em></p>
+<p>source上增加空间参考系对象，实现同空间参考系下不同裁图方案瓦片的叠加。默认不传入时source上CRS和地图CRS保持一致。目前支持传入crs字符串，也可以传入CRS对象，详情请参考CRS api</p>
+<pre><code class="language-json">crs: &quot;EPSG:4326&quot;
+</code></pre>
+<h2 id="raster" tabindex="-1">raster</h2>
+<p>A raster tile source.</p>
+<pre><code class="language-json">sources: {
+    &quot;satellite&quot;: {
+        &quot;type&quot;: &quot;raster&quot;,
+        &quot;tiles&quot;: [
+            &quot;http://a.example.com/tiles/{z}/{x}/{y}.png&quot;
+        ],
+        &quot;tileSize&quot;: 256
+    }
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="type-1" tabindex="-1">type</h3>
+<p><em>Required <a href="types.html#enum">enum</a>. Possible values: <code>raster</code>.</em></p>
+<p>The type of the source.</p>
+<ul>
+<li><code>raster</code>: A raster tile source.</li>
+</ul>
+<h3 id="url-1" tabindex="-1">url</h3>
+<p><em>Optional <a href="types.html#string">string</a>.</em></p>
+<p>A URL to a TileJSON resource. Supported protocols are <code>http:</code>, <code>https:</code>, and <code>mapbox://&lt;Tileset ID&gt;</code>.</p>
+<h3 id="tiles-1" tabindex="-1">tiles</h3>
+<p><em>Optional <a href="types.html#array">array</a>.</em></p>
+<p>An array of one or more tile source URLs, as in the TileJSON spec.</p>
+<h3 id="bounds-1" tabindex="-1">bounds</h3>
+<p><em>Optional <a href="types.html#array">array</a>. Defaults to <code>-180,-85.051129,180,85.051129</code>.</em></p>
+<p>An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: <code>[sw.lng, sw.lat, ne.lng, ne.lat]</code>. When this property is included in a source, no tiles outside of the given bounds are requested by Mapbox GL.</p>
+<h3 id="minzoom-1" tabindex="-1">minzoom</h3>
+<p><em>Optional <a href="types.html#number">number</a>. Defaults to <code>0</code>.</em></p>
+<p>Minimum zoom level for which tiles are available, as in the TileJSON spec.</p>
+<h3 id="maxzoom-1" tabindex="-1">maxzoom</h3>
+<p><em>Optional <a href="types.html#number">number</a>. Defaults to <code>22</code>.</em></p>
+<p>Maximum zoom level for which tiles are available, as in the TileJSON spec. Data from tiles at the maxzoom are used when displaying the map at higher zoom levels.</p>
+<h3 id="tilesize" tabindex="-1">tileSize</h3>
+<p><em>Optional <a href="types.html#number">number</a>. Units in pixels. Defaults to <code>512</code>.</em></p>
+<p>The minimum visual size to display tiles for this layer. Only configurable for raster layers.</p>
+<h3 id="scheme-1" tabindex="-1">scheme</h3>
+<p><em>Optional <a href="types.html#enum">enum</a>. Possible values: <code>xyz</code>, <code>tms</code>. Defaults to <code>xyz</code>.</em></p>
+<p>Influences the y direction of the tile coordinates. The global-mercator (aka Spherical Mercator) profile is assumed.</p>
+<ul>
+<li><code>xyz</code>: Slippy map tilenames scheme.</li>
+<li><code>tms</code>: OSGeo spec scheme.</li>
+</ul>
+<h3 id="attribution-1" tabindex="-1">attribution</h3>
+<p><em>Optional <a href="types.html#string">string</a>.</em></p>
+<p>Contains an attribution to be displayed when the map is shown to a user.</p>
+<h3 id="clippingarea---mapgisextension---1" tabindex="-1">clippingArea <span class="mapgis-extend-tag">MapGISExtension</span></h3>
+<p><em>Optional.</em></p>
+<p>裁剪区几何，目前仅支持区和多区传入</p>
+<pre><code class="language-json">clippingArea: {
+    &quot;type&quot;: &quot;Polygon&quot;,
+    &quot;coordinates&quot;: [
+        [
+            [111.36341, 29.032578],
+            [113, 30],
+            [114.13094, 29.032578],
+            [114.13094, 31.273224],
+            [111.36341, 31.273224],
+            [111.36341, 29.032578]
+        ]
+    ]
+}
+</code></pre>
+<h3 id="crs---mapgisextension---1" tabindex="-1">crs <span class="mapgis-extend-tag">MapGISExtension</span></h3>
+<p><em>Optional.</em></p>
+<p>source上增加空间参考系对象，实现同空间参考系下不同裁图方案瓦片的叠加。默认不传入时source上CRS和地图CRS保持一致。目前支持传入crs字符串，也可以传入CRS对象，详情请参考CRS api</p>
+<pre><code class="language-json">crs: &quot;EPSG:4326&quot;
+</code></pre>
+<h2 id="raster-dem" tabindex="-1">raster-dem</h2>
+<p>A raster DEM source. Only supports <a href="https://blog.mapbox.com/global-elevation-data-6689f1d0ba65">Mapbox Terrain RGB</a> and Mapzen Terrarium tiles.</p>
+<pre><code class="language-json">sources: {
+    &quot;terrain-rgb&quot;: {
+        &quot;type&quot;: &quot;raster-dem&quot;,
+        &quot;encoding&quot;: &quot;mapbox&quot;,
+        &quot;tiles&quot;: [
+            &quot;http://a.example.com/dem-tiles/{z}/{x}/{y}.png&quot;
+        ]
+    }
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.43.0</td>
+<td>6.0.0</td>
+<td>4.0.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="type-2" tabindex="-1">type</h3>
+<p><em>Required <a href="types.html#enum">enum</a>. Possible values: <code>raster-dem</code>.</em></p>
+<p>The type of the source.</p>
+<ul>
+<li><code>raster-dem</code>: A RGB-encoded raster DEM source</li>
+</ul>
+<h3 id="url-2" tabindex="-1">url</h3>
+<p><em>Optional <a href="types.html#string">string</a>.</em></p>
+<p>A URL to a TileJSON resource. Supported protocols are <code>http:</code>, <code>https:</code>, and <code>mapbox://&lt;Tileset ID&gt;</code>.</p>
+<h3 id="tiles-2" tabindex="-1">tiles</h3>
+<p><em>Optional <a href="types.html#array">array</a>.</em></p>
+<p>An array of one or more tile source URLs, as in the TileJSON spec.</p>
+<h3 id="bounds-2" tabindex="-1">bounds</h3>
+<p><em>Optional <a href="types.html#array">array</a>. Defaults to <code>-180,-85.051129,180,85.051129</code>.</em></p>
+<p>An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: <code>[sw.lng, sw.lat, ne.lng, ne.lat]</code>. When this property is included in a source, no tiles outside of the given bounds are requested by Mapbox GL.</p>
+<h3 id="minzoom-2" tabindex="-1">minzoom</h3>
+<p><em>Optional <a href="types.html#number">number</a>. Defaults to <code>0</code>.</em></p>
+<p>Minimum zoom level for which tiles are available, as in the TileJSON spec.</p>
+<h3 id="maxzoom-2" tabindex="-1">maxzoom</h3>
+<p><em>Optional <a href="types.html#number">number</a>. Defaults to <code>22</code>.</em></p>
+<p>Maximum zoom level for which tiles are available, as in the TileJSON spec. Data from tiles at the maxzoom are used when displaying the map at higher zoom levels.</p>
+<h3 id="tilesize-1" tabindex="-1">tileSize</h3>
+<p><em>Optional <a href="types.html#number">number</a>. Units in pixels. Defaults to <code>512</code>.</em></p>
+<p>The minimum visual size to display tiles for this layer. Only configurable for raster layers.</p>
+<h3 id="attribution-2" tabindex="-1">attribution</h3>
+<p><em>Optional <a href="types.html#string">string</a>.</em></p>
+<p>Contains an attribution to be displayed when the map is shown to a user.</p>
+<h3 id="encoding" tabindex="-1">encoding</h3>
+<p><em>Optional <a href="types.html#enum">enum</a>. Possible values: <code>terrarium</code>, <code>mapbox</code>. Defaults to <code>mapbox</code>.</em></p>
+<p>The encoding used by this source. Mapbox Terrain RGB is used by default</p>
+<ul>
+<li><code>terrarium</code>: Terrarium format PNG tiles. See https://aws.amazon.com/es/public-datasets/terrain/ for more info.</li>
+<li><code>mapbox</code>: Mapbox Terrain RGB tiles. See https://www.mapbox.com/help/access-elevation-data/#mapbox-terrain-rgb for more info.</li>
+</ul>
+<h3 id="clippingarea---mapgisextension---2" tabindex="-1">clippingArea <span class="mapgis-extend-tag">MapGISExtension</span></h3>
+<p><em>Optional.</em></p>
+<p>裁剪区几何，目前仅支持区和多区传入</p>
+<pre><code class="language-json">clippingArea: {
+    &quot;type&quot;: &quot;Polygon&quot;,
+    &quot;coordinates&quot;: [
+        [
+            [111.36341, 29.032578],
+            [113, 30],
+            [114.13094, 29.032578],
+            [114.13094, 31.273224],
+            [111.36341, 31.273224],
+            [111.36341, 29.032578]
+        ]
+    ]
+}
+</code></pre>
+<h3 id="crs---mapgisextension---2" tabindex="-1">crs <span class="mapgis-extend-tag">MapGISExtension</span></h3>
+<p><em>Optional.</em></p>
+<p>source上增加空间参考系对象，实现同空间参考系下不同裁图方案瓦片的叠加。默认不传入时source上CRS和地图CRS保持一致。目前支持传入crs字符串，也可以传入CRS对象，详情请参考CRS api</p>
+<pre><code class="language-json">crs: &quot;EPSG:4326&quot;
+</code></pre>
+<h2 id="geojson" tabindex="-1">geojson</h2>
+<p>A <a href="http://geojson.org/">GeoJSON</a> source. Data must be provided via a <code>&quot;data&quot;</code> property, whose value can be a URL or inline GeoJSON. When using in a browser, the GeoJSON data must be on the same domain as the map or served with <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">CORS</a> headers.</p>
+<pre><code class="language-json">sources: {
+    &quot;geojson-marker&quot;: {
+        &quot;type&quot;: &quot;geojson&quot;,
+        &quot;data&quot;: {
+            &quot;type&quot;: &quot;Feature&quot;,
+            &quot;geometry&quot;: {
+                &quot;type&quot;: &quot;Point&quot;,
+                &quot;coordinates&quot;: [12.550343, 55.665957]
+            },
+            &quot;properties&quot;: {
+                &quot;title&quot;: &quot;Somewhere&quot;,
+                &quot;marker-symbol&quot;: &quot;monument&quot;
+            }
+        }
+    },
+    &quot;geojson-lines&quot;: {
+        &quot;type&quot;: &quot;geojson&quot;,
+        &quot;data&quot;: &quot;./lines.geojson&quot;
+    }
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>2.0.1</td>
+<td>2.0.0</td>
+</tr>
+<tr>
+<td>clustering</td>
+<td>0.14.0</td>
+<td>4.2.0</td>
+<td>3.4.0</td>
+</tr>
+<tr>
+<td>line distance metrics</td>
+<td>0.45.0</td>
+<td>6.5.0</td>
+<td>4.4.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="type-3" tabindex="-1">type</h3>
+<p><em>Required <a href="types.html#enum">enum</a>. Possible values: <code>geojson</code>.</em></p>
+<p>The data type of the GeoJSON source.</p>
+<ul>
+<li><code>geojson</code>: A GeoJSON data source.</li>
+</ul>
+<h3 id="data" tabindex="-1">data</h3>
+<p><em>Optional.</em></p>
+<p>A URL to a GeoJSON file, or inline GeoJSON.</p>
+<h3 id="maxzoom-3" tabindex="-1">maxzoom</h3>
+<p><em>Optional <a href="types.html#number">number</a>. Defaults to <code>18</code>.</em></p>
+<p>Maximum zoom level at which to create vector tiles (higher means greater detail at high zoom levels).</p>
+<h3 id="attribution-3" tabindex="-1">attribution</h3>
+<p><em>Optional <a href="types.html#string">string</a>.</em></p>
+<p>Contains an attribution to be displayed when the map is shown to a user.</p>
+<h3 id="buffer" tabindex="-1">buffer</h3>
+<p><em>Optional <a href="types.html#number">number</a> in range [0, 512]. Defaults to <code>128</code>.</em></p>
+<p>Size of the tile buffer on each side. A value of 0 produces no buffer. A value of 512 produces a buffer as wide as the tile itself. Larger values produce fewer rendering artifacts near tile edges and slower performance.</p>
+<h3 id="tolerance" tabindex="-1">tolerance</h3>
+<p><em>Optional <a href="types.html#number">number</a>. Defaults to <code>0.375</code>.</em></p>
+<p>Douglas-Peucker simplification tolerance (higher means simpler geometries and faster performance).</p>
+<h3 id="cluster" tabindex="-1">cluster</h3>
+<p><em>Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>false</code>.</em></p>
+<p>If the data is a collection of point features, setting this to true clusters the points by radius into groups. Cluster groups become new <code>Point</code> features in the source with additional properties:</p>
+<ul>
+<li><code>cluster</code> Is <code>true</code> if the point is a cluster</li>
+<li><code>cluster_id</code> A unqiue id for the cluster to be used in conjunction with the <a href="https://www.mapbox.com/mapbox-gl-js/api/#geojsonsource#getclusterexpansionzoom">cluster inspection methods</a></li>
+<li><code>point_count</code> Number of original points grouped into this cluster</li>
+<li><code>point_count_abbreviated</code> An abbreviated point count</li>
+</ul>
+<h3 id="clusterradius" tabindex="-1">clusterRadius</h3>
+<p><em>Optional <a href="types.html#number">number</a> in range [0, ∞). Defaults to <code>50</code>.</em></p>
+<p>Radius of each cluster if clustering is enabled. A value of 512 indicates a radius equal to the width of a tile.</p>
+<h3 id="clustermaxzoom" tabindex="-1">clusterMaxZoom</h3>
+<p><em>Optional <a href="types.html#number">number</a>.</em></p>
+<p>Max zoom on which to cluster points if clustering is enabled. Defaults to one zoom less than maxzoom (so that last zoom features are not clustered).</p>
+<h3 id="clusterproperties" tabindex="-1">clusterProperties</h3>
+<p><em>Optional.</em></p>
+<p>An object defining custom properties on the generated clusters if clustering is enabled, aggregating values from clustered points. Has the form <code>{&quot;property_name&quot;: [operator, map_expression]}</code>. <code>operator</code> is any expression function that accepts at least 2 operands (e.g. <code>&quot;+&quot;</code> or <code>&quot;max&quot;</code>) — it accumulates the property value from clusters/points the cluster contains; <code>map_expression</code> produces the value of a single point.</p>
+<p>Example: <code>{&quot;sum&quot;: [&quot;+&quot;, [&quot;get&quot;, &quot;scalerank&quot;]]}</code>.</p>
+<p>For more advanced use cases, in place of <code>operator</code>, you can use a custom reduce expression that references a special <code>[&quot;accumulated&quot;]</code> value, e.g.:
+<code>{&quot;sum&quot;: [[&quot;+&quot;, [&quot;accumulated&quot;], [&quot;get&quot;, &quot;sum&quot;]], [&quot;get&quot;, &quot;scalerank&quot;]]}</code></p>
+<h3 id="linemetrics" tabindex="-1">lineMetrics</h3>
+<p><em>Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>false</code>.</em></p>
+<p>Whether to calculate line distance metrics. This is required for line layers that specify <code>line-gradient</code> values.</p>
+<h3 id="generateid" tabindex="-1">generateId</h3>
+<p><em>Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>false</code>.</em></p>
+<p>Whether to generate ids for the geojson features. When enabled, the <code>feature.id</code> property will be auto assigned based on its index in the <code>features</code> array, over-writing any previous values.</p>
+<h3 id="promoteid-1" tabindex="-1">promoteId</h3>
+<p><em>Optional <a href="types.html">promoteId</a>.</em></p>
+<p>A property to use as a feature id (for feature state). Either a property name, or an object of the form <code>{&lt;sourceLayer&gt;: &lt;propertyName&gt;}</code>.</p>
+<h3 id="iswrapdata" tabindex="-1">isWrapData</h3>
+<p><em>Optional <a href="types.html#boolean">boolean</a>. Defaults to <code>false</code>.</em></p>
+<p>是否对geojson数据进行分段处理。如果为true，则会对超出范围的数据重新计算，保证其在世界范围内显示。如果为false，则不处理。</p>
+<h3 id="clippingarea---mapgisextension---3" tabindex="-1">clippingArea <span class="mapgis-extend-tag">MapGISExtension</span></h3>
+<p><em>Optional.</em></p>
+<p>裁剪区几何，目前仅支持区和多区传入</p>
+<pre><code class="language-json">clippingArea: {
+    &quot;type&quot;: &quot;Polygon&quot;,
+    &quot;coordinates&quot;: [
+        [
+            [111.36341, 29.032578],
+            [113, 30],
+            [114.13094, 29.032578],
+            [114.13094, 31.273224],
+            [111.36341, 31.273224],
+            [111.36341, 29.032578]
+        ]
+    ]
+}
+</code></pre>
+<h2 id="video" tabindex="-1">video</h2>
+<p>A video source. The <code>urls</code> value is an array. For each URL in the array, a video element <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source">source</a> will be created. To support the video across browsers, supply URLs in multiple formats.</p>
+<p>The <code>coordinates</code> array contains <code>[longitude, latitude]</code> pairs for the video corners listed in clockwise order: top left, top right, bottom right, bottom left.</p>
+<p>When rendered as a <a href="layers.html#raster">raster layer</a>, the layer's <a href="layers.html#raster-fade-duration"><code>raster-fade-duration</code></a> property will cause the video to fade in. This happens when playback is started, paused and resumed, or when the video's coordinates are updated. To avoid this behavior, set the layer's <a href="layers.html#raster-fade-duration"><code>raster-fade-duration</code></a> property to <code>0</code>.</p>
+<pre><code class="language-json">sources: {
+    &quot;video&quot;: {
+        &quot;type&quot;: &quot;video&quot;,
+        &quot;urls&quot;: [
+            &quot;https://static-assets.mapbox.com/mapbox-gl-js/drone.mp4&quot;,
+            &quot;https://static-assets.mapbox.com/mapbox-gl-js/drone.webm&quot;
+        ],
+        &quot;coordinates&quot;: [
+            [-122.51596391201019, 37.56238816766053],
+            [-122.51467645168304, 37.56410183312965],
+            [-122.51309394836426, 37.563391708549425],
+            [-122.51423120498657, 37.56161849366671]
+        ]
+    }
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>Not supported yet</td>
+<td>Not supported yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="type-4" tabindex="-1">type</h3>
+<p><em>Required <a href="types.html#enum">enum</a>. Possible values: <code>video</code>.</em></p>
+<p>The data type of the video source.</p>
+<ul>
+<li><code>video</code>: A video data source.</li>
+</ul>
+<h3 id="urls" tabindex="-1">urls</h3>
+<p><em>Required <a href="types.html#array">array</a>.</em></p>
+<p>URLs to video content in order of preferred format.</p>
+<h3 id="coordinates" tabindex="-1">coordinates</h3>
+<p><em>Required <a href="types.html#array">array</a>.</em></p>
+<p>Corners of video specified in longitude, latitude pairs.</p>
+<h2 id="image" tabindex="-1">image</h2>
+<p>An image source. The <code>url</code> value contains the image location. The <code>coordinates</code> array contains <code>[longitude, latitude]</code> pairs for the image corners listed in clockwise order: top left, top right, bottom right, bottom left.</p>
+<pre><code class="language-json">sources: {
+    &quot;image&quot;: {
+        &quot;type&quot;: &quot;image&quot;,
+        &quot;url&quot;: &quot;https://a.example.org/a.example/docs/assets/radar.gif&quot;,
+        &quot;coordinates&quot;: [
+            [-80.425, 46.437],
+            [-71.516, 46.437],
+            [-71.516, 37.936],
+            [-80.425, 37.936]
+        ]
+    }
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>5.2.0</td>
+<td>3.7.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="type-5" tabindex="-1">type</h3>
+<p><em>Required <a href="types.html#enum">enum</a>. Possible values: <code>image</code>.</em></p>
+<p>The data type of the image source.</p>
+<ul>
+<li><code>image</code>: An image data source.</li>
+</ul>
+<h3 id="url-3" tabindex="-1">url</h3>
+<p><em>Required <a href="types.html#string">string</a>.</em></p>
+<p>URL that points to an image.</p>
+<h3 id="coordinates-1" tabindex="-1">coordinates</h3>
+<p><em>Required <a href="types.html#array">array</a>.</em></p>
+<p>Corners of image specified in longitude, latitude pairs.</p>
+<h3 id="clippingarea---mapgisextension---4" tabindex="-1">clippingArea <span class="mapgis-extend-tag">MapGISExtension</span></h3>
+<p><em>Optional.</em></p>
+<p>裁剪区几何，目前仅支持区和多区传入</p>
+<pre><code class="language-json">clippingArea: {
+    &quot;type&quot;: &quot;Polygon&quot;,
+    &quot;coordinates&quot;: [
+        [
+            [111.36341, 29.032578],
+            [113, 30],
+            [114.13094, 29.032578],
+            [114.13094, 31.273224],
+            [111.36341, 31.273224],
+            [111.36341, 29.032578]
+        ]
+    ]
+}
+</code></pre>
+<h2 id="image-map---mapgisextension--" tabindex="-1">image-map <span class="mapgis-extend-tag">MapGISExtension</span></h2>
+<p>An image source. The <code>url</code> value contains the image location. The <code>coordinates</code> array contains <code>[longitude, latitude]</code> pairs for the image corners listed in clockwise order: top left, top right, bottom right, bottom left.</p>
+<pre><code class="language-json">sources: {
+    &quot;image&quot;: {
+        &quot;type&quot;: &quot;image-map&quot;,
+        &quot;rebaseRequestUrl&quot;: &quot;*&quot;,
+        &quot;url&quot;: &quot;https://a.example.org/a.example/docs/assets/radar.gif&quot;,
+        &quot;coordinates&quot;: [
+            [-80.425, 46.437],
+            [-71.516, 46.437],
+            [-71.516, 37.936],
+            [-80.425, 37.936]
+        ]
+    }
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>SDK Support</th>
+<th>MapGIS Mapbox GL JS</th>
+<th>--</th>
+<th>--</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic functionality</td>
+<td>0.10.0</td>
+<td>5.2.0</td>
+<td>3.7.0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="type-6" tabindex="-1">type</h3>
+<p><em>Required <a href="types.html#enum">enum</a>. Possible values: <code>image-map</code>.</em></p>
+<p>The data type of the image source.</p>
+<ul>
+<li><code>image-map</code>: An image data source.</li>
+</ul>
+<h3 id="url-4" tabindex="-1">url</h3>
+<p><em>Required <a href="types.html#string">string</a>.</em></p>
+<p>URL that points to an image.</p>
+<h3 id="coordinates-2" tabindex="-1">coordinates</h3>
+<p><em>Optional <a href="types.html#array">array</a>.</em></p>
+<p>Corners of image specified in longitude, latitude pairs.</p>
+<h3 id="clippingarea---mapgisextension---5" tabindex="-1">clippingArea <span class="mapgis-extend-tag">MapGISExtension</span></h3>
+<p><em>Optional.</em></p>
+<p>裁剪区几何，目前仅支持区和多区传入</p>
+<pre><code class="language-json">clippingArea: {
+    &quot;type&quot;: &quot;Polygon&quot;,
+    &quot;coordinates&quot;: [
+        [
+            [111.36341, 29.032578],
+            [113, 30],
+            [114.13094, 29.032578],
+            [114.13094, 31.273224],
+            [111.36341, 31.273224],
+            [111.36341, 29.032578]
+        ]
+    ]
+}
+</code></pre>
+<h3 id="rebaserequesturl---mapgisextension--" tabindex="-1">rebaseRequestUrl <span class="mapgis-extend-tag">MapGISExtension</span></h3>
+<p><em>Optional.</em></p>
+<p>url回调函数，支持动态修改url链接.</p>
+<pre><code class="language-json">rebaseRequestUrl: &quot;function(url,params){// 根据不同服务构建url，参考组件层实现}&quot;
+</code></pre>
+
+                        </article>
+                    </section>
+    
+                        <footer>
+                            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> on <span id="generated-date"></span>
+                        <script>
+                        // 获取当前日期并插入到页面中
+                        setInterval(function(){
+                            document.getElementById('generated-date').textContent = new Date().toLocaleString();
+                        }, 1000);
+
+                        </script>
+                        </footer>
+                    </div>
+                </div>
+
+                <script>prettyPrint();</script>
+                <script src="scripts/linenumber.js"></script>
+                <script src="scripts/main.js"></script>
+                </body>
+                </html>
+            

@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>视频调绘</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!-- videojs -->
+    <link rel="stylesheet" type="text/css" href="http://webclient.smaryun.com/static/libs/cdn/videojs/video-js.min.css"/>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/videojs/video.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/videojs/videojs-flash.min.js"></script>
+    <!-- fabric -->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/fabric/fabric.min.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/tool.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, options, TDTLayer, handler
+      let videoMapView, sketchEditorVideo, mockData, graphicsLayer, drawElement
+      //取得jquery对象
+      let $ = layui.$
+      //地图初始化函数
+      function init() {
+        //初始化球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //加载天地图
+        addTDT()
+        //飞到指定视角
+        flyTo()
+        //添加几何图形图层
+        addGraphicsLayer()
+        //添加绘制工具
+        addDrawElement()
+        //初始化示例UI操作
+        initUI()
+      }
+
+      //初始化球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        // 打开深度检测
+        viewer.scene.globe.depthTestAgainstTerrain = true
+      }
+
+      //添加天地图
+      function addTDT() {
+        let TDTLayer = new zondy.layer.WMTSLayer({
+          // 加载经纬度的影像地图
+          url: 'http://t6.tianditu.gov.cn/img_c/wmts',
+          // 天地图必须加token，且token名为tk
+          tokenKey: 'tk',
+          // token请在天地图官网申请
+          tokenValue: getTDTToken()
+        })
+        map.add(TDTLayer)
+      }
+
+      //飞到指定视角
+      function flyTo() {
+        sceneView.flyTo({
+          center: [114.40111920507957, 30.466058607106746, 391.0768025318122],
+          duration: 2, // 持续时间
+          orientation: {
+            heading: Cesium.Math.toRadians(132.78), //方位角
+            pitch: Cesium.Math.toRadians(-83.31), //俯仰角
+            roll: Cesium.Math.toRadians(0) //翻滚角
+          },
+          complete: () => {
+            // 打开视频调绘
+            addVideo()
+          }
+        })
+      }
+
+      // 添加几何图形图层
+      function addGraphicsLayer() {
+        graphicsLayer = new zondy.layer.GraphicsLayer()
+        map.add(graphicsLayer)
+      }
+
+      // 添加地图绘制工具
+      function addDrawElement() {
+        drawElement = new Cesium.DrawElement(viewer)
+        // 设置在绘制时贴地
+        drawElement.setGroundPrimitiveType('TERRAIN')
+      }
+
+      // 初始化视频标定数据mockData
+      function initMockData() {
+        mockData = {
+          videoID: 'xxxx-xxxx-xxxx-xxxx', // 视频id
+          videoName: 'zondy_garden', // 视频名称
+          // 视频源信息
+          videoSource: {
+            protocol: 'mp4', // 视频传输协议
+            videoUrl:
+              'http://webclient.smaryun.com:8200/NoneSpatialData/video/zondy_garden.mp4' // 视频服务地址
+            // videoUrl: 'rtmp://127.0.0.1:1935/live/hls' // 视频服务地址
+            // videoUrl: 'http://webclient.smaryun.com:8200/NoneSpatialData/video/scenePro.m3u8' // 视频服务地址
+          },
+          // 视频配准参数
+          videoRegistrationParam: {
+            videoRegistrationType: '', // 视频配准的类型：几何多项式模型、有理函数数学模型、局部区域校正模型、卫星传感器模型
+            calibrationParam: {
+              // 标定配准参数
+              groundControlPointList: [
+                {
+                  id: 'GCP1', // 控制点标识
+                  description: '路弯外侧', // 控制点描述
+                  pixelX: 896.64, // 控制点在图像上的像素坐标x分量
+                  pixelY: 446.2429866666666, // 控制点在图像上的像素坐标y分量
+                  x: 114.40164113946422, // 控制点的地理坐标x分量
+                  y: 30.466590219808978, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP2', // 控制点标识
+                  description: '路弯内侧', // 控制点描述
+                  pixelX: 808.32, // 控制点在图像上的像素坐标x分量
+                  pixelY: 405.95882666666665, // 控制点在图像上的像素坐标y分量
+                  x: 114.40169366227067, // 控制点的地理坐标x分量
+                  y: 30.466554799756626, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP3', // 控制点标识
+                  description: '花园内道路1', // 控制点描述
+                  pixelX: 839.04, // 控制点在图像上的像素坐标x分量
+                  pixelY: 170.00874666666664, // 控制点在图像上的像素坐标y分量
+                  x: 114.40176655091467, // 控制点的地理坐标x分量
+                  y: 30.465983254331473, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP4', // 控制点标识
+                  description: '花园内道路2', // 控制点描述
+                  pixelX: 737.28, // 控制点在图像上的像素坐标x分量
+                  pixelY: 233.31242666666665, // 控制点在图像上的像素坐标y分量
+                  x: 114.4018273347862, // 控制点的地理坐标x分量
+                  y: 30.466208839683667, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP5', // 控制点标识
+                  description: '花园内道路3', // 控制点描述
+                  pixelX: 629.76, // 控制点在图像上的像素坐标x分量
+                  pixelY: 311.96245333333326, // 控制点在图像上的像素坐标y分量
+                  x: 114.40190659346297, // 控制点的地理坐标x分量
+                  y: 30.46645065731433, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP6', // 控制点标识
+                  description: '花园内道路4', // 控制点描述
+                  pixelX: 359.03999999999996, // 控制点在图像上的像素坐标x分量
+                  pixelY: 344.57343999999995, // 控制点在图像上的像素坐标y分量
+                  x: 114.40211147397734, // 控制点的地理坐标x分量
+                  y: 30.466598382883507, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP7', // 控制点标识
+                  description: '花园内道路5', // 控制点描述
+                  pixelX: 57.599999999999994, // 控制点在图像上的像素坐标x分量
+                  pixelY: 371.4295466666666, // 控制点在图像上的像素坐标y分量
+                  x: 114.40232548399688, // 控制点的地理坐标x分量
+                  y: 30.466748498130617, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP8', // 控制点标识
+                  description: '花园内小径1', // 控制点描述
+                  pixelX: 744.9599999999999, // 控制点在图像上的像素坐标x分量
+                  pixelY: 168.0904533333333, // 控制点在图像上的像素坐标y分量
+                  x: 114.40189179175361, // 控制点的地理坐标x分量
+                  y: 30.465992939350418, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP9', // 控制点标识
+                  description: '花园内小径2', // 控制点描述
+                  pixelX: 683.52, // 控制点在图像上的像素坐标x分量
+                  pixelY: 200.70144, // 控制点在图像上的像素坐标y分量
+                  x: 114.40192898490477, // 控制点的地理坐标x分量
+                  y: 30.46613512202163, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP10', // 控制点标识
+                  description: '花园内小径3', // 控制点描述
+                  pixelX: 637.4399999999999, // 控制点在图像上的像素坐标x分量
+                  pixelY: 225.6392533333333, // 控制点在图像上的像素坐标y分量
+                  x: 114.40196776994985, // 控制点的地理坐标x分量
+                  y: 30.466237705623186, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP11', // 控制点标识
+                  description: '花园内小径4', // 控制点描述
+                  pixelX: 547.1999999999999, // 控制点在图像上的像素坐标x分量
+                  pixelY: 271.6782933333333, // 控制点在图像上的像素坐标y分量
+                  x: 114.40201696007567, // 控制点的地理坐标x分量
+                  y: 30.46638409698472, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP12', // 控制点标识
+                  description: '花园内小径5', // 控制点描述
+                  pixelX: 399.35999999999996, // 控制点在图像上的像素坐标x分量
+                  pixelY: 283.1880533333333, // 控制点在图像上的像素坐标y分量
+                  x: 114.4021436510831, // 控制点的地理坐标x分量
+                  y: 30.466484759320235, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP13', // 控制点标识
+                  description: '花园内小径6', // 控制点描述
+                  pixelX: 299.52, // 控制点在图像上的像素坐标x分量
+                  pixelY: 296.61610666666667, // 控制点在图像上的像素坐标y分量
+                  x: 114.40223611073817, // 控制点的地理坐标x分量
+                  y: 30.466552606846683, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP14', // 控制点标识
+                  description: '花园内小径7', // 控制点描述
+                  pixelX: 122.88, // 控制点在图像上的像素坐标x分量
+                  pixelY: 313.88074666666665, // 控制点在图像上的像素坐标y分量
+                  x: 114.40236898366899, // 控制点的地理坐标x分量
+                  y: 30.466648994333596, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP15', // 控制点标识
+                  description: '花园外道路1', // 控制点描述
+                  pixelX: 618.24, // 控制点在图像上的像素坐标x分量
+                  pixelY: 164.25386666666665, // 控制点在图像上的像素坐标y分量
+                  x: 114.40206822528047, // 控制点的地理坐标x分量
+                  y: 30.46605646043939, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP16', // 控制点标识
+                  description: '花园外道路2', // 控制点描述
+                  pixelX: 577.92, // 控制点在图像上的像素坐标x分量
+                  pixelY: 183.43679999999998, // 控制点在图像上的像素坐标y分量
+                  x: 114.40209620617678, // 控制点的地理坐标x分量
+                  y: 30.466151993167, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP17', // 控制点标识
+                  description: '花园外道路3', // 控制点描述
+                  pixelX: 493.43999999999994, // 控制点在图像上的像素坐标x分量
+                  pixelY: 221.80266666666662, // 控制点在图像上的像素坐标y分量
+                  x: 114.40214557052504, // 控制点的地理坐标x分量
+                  y: 30.466316742758217, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP18', // 控制点标识
+                  description: '花园外道路4', // 控制点描述
+                  pixelX: 341.76, // 控制点在图像上的像素坐标x分量
+                  pixelY: 239.06730666666664, // 控制点在图像上的像素坐标y分量
+                  x: 114.40228934952393, // 控制点的地理坐标x分量
+                  y: 30.466407142080268, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP19', // 控制点标识
+                  description: '花园外道路5', // 控制点描述
+                  pixelX: 261.12, // 控制点在图像上的像素坐标x分量
+                  pixelY: 244.82218666666662, // 控制点在图像上的像素坐标y分量
+                  x: 114.402354530087, // 控制点的地理坐标x分量
+                  y: 30.466455553818882, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                },
+                {
+                  id: 'GCP20', // 控制点标识
+                  description: '道路叉口', // 控制点描述
+                  pixelX: 372.47999999999996, // 控制点在图像上的像素坐标x分量
+                  pixelY: 450.0795733333333, // 控制点在图像上的像素坐标y分量
+                  x: 114.40197627221453, // 控制点的地理坐标x分量
+                  y: 30.46673837176252, // 控制点的地理坐标y分量
+                  z: 0 // 控制点的地理坐标的高程
+                }
+              ]
+            },
+            // 相机内外参数（预留，用于实现通过相机参数配准）
+            cameraParam: {
+              cameraPosition: ['x', 'y', 'z'], // 相机位置
+              // 相机姿态
+              orientation: {
+                heading: '', // 方向角
+                pitch: '', // 俯仰角
+                roll: '' // 滚动角
+              },
+              hFOV: '', // 水平视场角
+              vFOV: '' // 垂直视场角
+            }
+          },
+          version: '' // 元数据的版本，用于实现版本的兼容。
+        }
+      }
+
+      // 打开视频调绘
+      function addVideo() {
+        // 初始化视频标定数据mockData
+        initMockData()
+        let videoMap = new zondy.Map()
+        videoMapView = new zondy.VideoMapView({
+          viewId: 'videoMapView-container',
+          map: videoMap
+        })
+        // 初始化视频地图视图
+        videoMapView.init(mockData)
+        // 显示视频区域
+        $('#videoMapView-container').show()
+        // 新建草图编辑器
+        sketchEditorVideo = new zondy.SketchEditorVideo({
+          mapView: videoMapView
+        })
+        //通过video四个顶点，在地图上用虚线绘制视频区域
+        addVideoArea()
+      }
+
+      // 通过video四个顶点，在地图上用虚线绘制视频区域
+      function addVideoArea() {
+        videoMapView.on(zondy.enum.ViewEventType.loaded, () => {
+          // 加载完后执行
+          let videoEleWidth = $('#videoMapView-container video').width()
+          let videoEleHeight = $('#videoMapView-container video').height()
+          // 视频像素坐标转地理坐标
+          let geoCoord1 = pixelCoordToGeoCoord(0, 0)
+          let geoCoord2 = pixelCoordToGeoCoord(videoEleWidth, 0)
+          let geoCoord3 = pixelCoordToGeoCoord(videoEleWidth, videoEleHeight)
+          let geoCoord4 = pixelCoordToGeoCoord(0, videoEleHeight)
+          let positions = [
+            Cesium.Cartesian3.fromDegrees(
+              geoCoord1.coordinates[0],
+              geoCoord1.coordinates[1],
+              1
+            ),
+            Cesium.Cartesian3.fromDegrees(
+              geoCoord2.coordinates[0],
+              geoCoord2.coordinates[1],
+              1
+            ),
+            Cesium.Cartesian3.fromDegrees(
+              geoCoord3.coordinates[0],
+              geoCoord3.coordinates[1],
+              1
+            ),
+            Cesium.Cartesian3.fromDegrees(
+              geoCoord4.coordinates[0],
+              geoCoord4.coordinates[1],
+              1
+            ),
+            Cesium.Cartesian3.fromDegrees(
+              geoCoord1.coordinates[0],
+              geoCoord1.coordinates[1],
+              1
+            )
+          ]
+          // 绘制虚线
+          addRectangleTrailPolyline(positions)
+        })
+      }
+
+      //虚线
+      function addRectangleTrailPolyline(positions) {
+        let graphicsLayer = new zondy.cesium.GraphicsLayer(viewer, {})
+        let polylineGraphic = new zondy.cesium.Graphic({
+          //类型
+          type: 'polyline',
+          //线几何
+          positions: positions,
+          //样式
+          style: {
+            //线宽
+            width: 1,
+            //虚线材质
+            material: Cesium.Material.fromType('PolylineDash', {
+              //线颜色
+              color: new Cesium.Color(1.0, 1.0, 1.0, 0),
+              //间隔颜色
+              gapColor: Cesium.Color.RED,
+              //间隔长度
+              dashPattern: 240
+            })
+          }
+        })
+        //将标绘点添加入标绘图层
+        graphicsLayer.addGraphic(polylineGraphic)
+      }
+
+      // 草图编辑，绘制点
+      function startDrawPointOfVideo() {
+        layer.msg('左键选点绘制')
+        sketchEditorVideo.start(zondy.enum.SketchDataType.POINT)
+        // 设置样式
+        setSketchStyleOfPoint()
+      }
+
+      // 草图编辑，绘制线
+      function startDrawLineOfVideo() {
+        layer.msg('左键选点绘制，双击结束')
+        sketchEditorVideo.start(zondy.enum.SketchDataType.POLYLINE)
+        // 设置样式
+        setSketchStyleOfLineString()
+      }
+
+      // 草图编辑，绘制区
+      function startDrawPolygonOfVideo() {
+        layer.msg('左键选点绘制，双击结束')
+        sketchEditorVideo.start(zondy.enum.SketchDataType.POLYGON)
+        // 设置样式
+        setSketchStyleOfPolygon()
+      }
+
+      // 设置视频地图草图编辑样式
+      function setSketchStyleOfPoint() {
+        let vertexStyle = new zondy.symbol.SimpleMarkerSymbol({
+          color: new zondy.Color(241, 188, 0, 1),
+          size: 5,
+          outline: new zondy.symbol.SimpleLineSymbol({
+            color: new zondy.Color(241, 188, 0, 1),
+            width: 0
+          })
+        })
+        let sketchStyle = new zondy.SketchStyle({
+          vertexStyle: vertexStyle
+        })
+        sketchEditorVideo.setSketchStyle(sketchStyle)
+      }
+
+      // 设置视频地图草图编辑样式
+      function setSketchStyleOfLineString() {
+        let lineStyle = new zondy.symbol.SimpleLineSymbol({
+          color: new zondy.Color(157, 70, 254, 1),
+          width: 2
+        })
+        let sketchStyle = new zondy.SketchStyle({
+          lineStyle: lineStyle,
+          isShowSegmentLength: true
+        })
+        sketchEditorVideo.setSketchStyle(sketchStyle)
+      }
+
+      // 设置视频地图草图编辑样式
+      function setSketchStyleOfPolygon() {
+        let fillStyle = new zondy.symbol.SimpleFillSymbol({
+          color: new zondy.Color(190, 45, 140, 0.5),
+          outline: new zondy.symbol.SimpleLineSymbol({
+            color: new zondy.Color(190, 45, 140, 0.5),
+            width: 1
+          })
+        })
+        let sketchStyle = new zondy.SketchStyle({
+          fillStyle: fillStyle,
+          isShowSegmentLength: true,
+          isShowArea: true
+        })
+        sketchEditorVideo.setSketchStyle(sketchStyle)
+      }
+
+      // 添加点、线、面要素
+      function addFeature(geometry, symbol) {
+        // 创建要素
+        let feature = new zondy.Feature({
+          //构建几何
+          geometry: geometry,
+          //设置样式
+          symbol: symbol
+        })
+        // 添加要素图层
+        graphicsLayer.add(feature)
+        // 添加视频要素
+        videoMapView.graphics.add(feature)
+      }
+
+      // 完成草图编辑
+      function finishEditor() {
+        // 获得草图编辑的geometry
+        let geometry = sketchEditorVideo.getGeometry()
+        let sketchDataType = sketchEditorVideo.getSketchDataType()
+        // 获取草图编辑样式，只能获取当前正在编辑中的style，再在地图上增加对应的点、线、区
+        let sketchStyle = sketchEditorVideo.getSketchStyle()
+        if (geometry) {
+          switch (sketchDataType) {
+            case zondy.enum.SketchDataType.POINT:
+              addFeature(geometry, sketchStyle.vertexStyle)
+              break
+            case zondy.enum.SketchDataType.POLYLINE:
+              addFeature(geometry, sketchStyle.lineStyle)
+              break
+            case zondy.enum.SketchDataType.POLYGON:
+              addFeature(geometry, sketchStyle.fillStyle)
+              break
+            default:
+              break
+          }
+        }
+        // 结束草图编辑
+        sketchEditorVideo.stop()
+      }
+
+      /*地图调绘内容*/
+      // 地图调绘添加点
+      function startAddPointOfMap() {
+        drawElement.startDrawingMarker({
+          addDefaultMark: true,
+          color: new Cesium.Color(0.5, 0.2, 0.8, 1.0),
+          callback: function (result) {
+            let tempPoint = Cesium.Cartographic.fromCartesian(result.position)
+            let long = Cesium.Math.toDegrees(tempPoint.longitude)
+            let lat = Cesium.Math.toDegrees(tempPoint.latitude)
+            console.log('x:', long, '  y:', lat)
+            let spot = [long, lat, 0]
+            let geometry = new zondy.geometry.Point({
+              coordinates: spot
+            })
+            let symbol = new zondy.symbol.SimpleMarkerSymbol({
+              color: new zondy.Color(241, 188, 0, 1),
+              size: 5,
+              outline: new zondy.symbol.SimpleLineSymbol({
+                color: new zondy.Color(241, 188, 0, 1),
+                width: 0
+              })
+            })
+            addFeature(geometry, symbol)
+            drawElement.stopDrawing()
+          }
+        })
+      }
+
+      // 地图调绘添加线
+      function startAddLineOfMap() {
+        drawElement.startDrawingPolyline({
+          width: 2,
+          color: new Cesium.Color(157 / 255, 70 / 255, 254 / 255, 1.0),
+          callback: function (result) {
+            let positions = result.positions
+            let lineSpots = []
+            for (let i = 0; i < positions.length; i++) {
+              let tempPoint = Cesium.Cartographic.fromCartesian(positions[i])
+              let long = Cesium.Math.toDegrees(tempPoint.longitude)
+              let lat = Cesium.Math.toDegrees(tempPoint.latitude)
+              let spot = [long, lat]
+              lineSpots.push(spot)
+              console.log(
+                'long:',
+                long,
+                '  lat:',
+                lat,
+                '  height:',
+                tempPoint.height
+              )
+            }
+            let geometry = new zondy.geometry.LineString({
+              coordinates: lineSpots
+            })
+            let symbol = new zondy.symbol.SimpleLineSymbol({
+              color: new zondy.Color(157, 70, 254, 1),
+              width: 2
+            })
+            addFeature(geometry, symbol)
+            drawElement.stopDrawing()
+          }
+        })
+      }
+
+      // 地图调绘添加区
+      function startAddPolygonOfMap() {
+        drawElement.startDrawingPolygon({
+          color: new Cesium.Color(190 / 255, 45 / 255, 140 / 255, 0.5),
+          callback: function (result) {
+            let positions = result.positions
+            let polygonSpots = []
+            for (let i = 0; i < positions.length; i++) {
+              let tempPoint = Cesium.Cartographic.fromCartesian(positions[i])
+              let long = Cesium.Math.toDegrees(tempPoint.longitude)
+              let lat = Cesium.Math.toDegrees(tempPoint.latitude)
+              let spot = [long, lat]
+              polygonSpots.push(spot)
+              console.log(
+                'long:',
+                long,
+                '  lat:',
+                lat,
+                '  height:',
+                tempPoint.height
+              )
+            }
+            let geometry = new zondy.geometry.Polygon({
+              coordinates: [polygonSpots]
+            })
+            let symbol = new zondy.symbol.SimpleFillSymbol({
+              color: new zondy.Color(190, 45, 140, 0.5),
+              outline: new zondy.symbol.SimpleLineSymbol({
+                color: new zondy.Color(190, 45, 140, 0.5),
+                width: 1
+              })
+            })
+            addFeature(geometry, symbol)
+            drawElement.stopDrawing()
+          }
+        })
+      }
+
+      // 删除视频地图视图中所有的geometry
+      function clearAllGeoMetry() {
+        let items = videoMapView.graphics.items
+        while (items.length > 0) {
+          videoMapView.graphics.remove(items[0])
+        }
+      }
+
+      // 清除所有
+      function clearAll() {
+        // 删除视频地图视图中所有的geometry
+        clearAllGeoMetry()
+        // 清除地图图层
+        graphicsLayer.removeAll()
+      }
+
+      // 像素坐标转地理坐标
+      function pixelCoordToGeoCoord(x, y) {
+        let geoCoord = videoMapView.pixelCoordToGeoCoord(
+          new zondy.geometry.Point({ coordinates: [x, y] })
+        )
+        return geoCoord
+      }
+
+      // 初始化示例UI操作
+      function initUI() {
+        layui.use(function () {
+          let form = layui.form
+          //监听选择框
+          form.on('select(type)', function (data) {
+            // 切换视频调绘/地图调绘
+            if (data.value === 'video') {
+              $('.video-panel').show()
+              $('.map-panel').hide()
+            } else {
+              $('.video-panel').hide()
+              $('.map-panel').show()
+            }
+          })
+        })
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <div class="layui-input-block" style="width: 180px">
+            <select name="type" lay-verify="required" lay-filter="type">
+              <option value="video" selected>视频调绘</option>
+              <option value="map">地图调绘</option>
+            </select>
+          </div>
+        </div>
+      </form>
+      <div class="sample-button-panel video-panel">
+        <button
+          type="button"
+          class="layui-btn"
+          onclick="startDrawPointOfVideo()"
+        >
+          点
+        </button>
+        <button
+          type="button"
+          class="layui-btn"
+          onclick="startDrawLineOfVideo()"
+        >
+          线
+        </button>
+        <button
+          type="button"
+          class="layui-btn"
+          onclick="startDrawPolygonOfVideo()"
+        >
+          区
+        </button>
+        <button type="button" class="layui-btn" onclick="finishEditor()">
+          完成
+        </button>
+        <button type="button" class="layui-btn" onclick="clearAll()">
+          清除
+        </button>
+      </div>
+      <div class="sample-button-panel map-panel">
+        <button type="button" class="layui-btn" onclick="startAddPointOfMap()">
+          点
+        </button>
+        <button type="button" class="layui-btn" onclick="startAddLineOfMap()">
+          线
+        </button>
+        <button
+          type="button"
+          class="layui-btn"
+          onclick="startAddPolygonOfMap()"
+        >
+          区
+        </button>
+        <button type="button" class="layui-btn" onclick="clearAll()">
+          清除
+        </button>
+      </div>
+    </div>
+    <div id="videoMapView-container"></div>
+    <style>
+      .layui-panel {
+        width: auto;
+      }
+
+      .sample-button-panel {
+        margin-top: 8px;
+      }
+
+      .map-panel {
+        display: none;
+      }
+
+      #videoMapView-container {
+        width: 500px;
+        height: 281px;
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+        border: 2px solid #89898a;
+        display: none;
+      }
+    </style>
+  </body>
+</html>

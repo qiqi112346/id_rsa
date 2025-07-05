@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>上海房价图</title>
+  <!--引入Echarts-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/echarts/echarts.min-4.0.js"></script>
+  <script src="http://webclient.smaryun.com/static/libs/cdn/echarts/echartsgl.min.js"></script>
+  <!--引入Mapboxgl库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.js"></script>
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/mapboxgl/mapbox-gl.css"/>
+  <!--引入shapefile库-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/shapefile/shapefile.js"></script>
+  <!--示例公共样式-->
+  <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+  <!--引入jquery-->
+  <script src="http://webclient.smaryun.com/static/libs/cdn/jquery/jquery-3.7.1.min.js"></script>
+  <style>
+    #mapid {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <div id="mouse-position">
+  </div>
+  <script>
+    var mousePosition = document.getElementById('mouse-position')
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var myChart = echarts.init(document.getElementById('mapid'), null, {
+      devicePixelRatio: 1
+    });
+    var uploadedDataURL = "http://webclient.smaryun.com:8200/Vector/echartsgl/shanghai/data.json";
+
+    myChart.showLoading();
+
+    $.getJSON(uploadedDataURL, function (linedata) {
+
+      myChart.hideLoading();
+
+      myChart.setOption({
+
+        visualMap: {
+          show: false,
+          calculable: true,
+          realtime: false,
+          inRange: {
+            color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61',
+              '#f46d43', '#d73027', '#a50026'
+            ]
+          },
+          outOfRange: {
+            colorAlpha: 0
+          },
+          max: linedata[1]
+        },
+        mapbox: {
+          center: [121.4693, 31.123070],
+          zoom: 10,
+          pitch: 50,
+          bearing: -10,
+          style: 'mapbox://styles/mapbox/light-v9',
+          boxHeight: 50,
+          // altitudeScale: 3e2,
+          postEffect: {
+            enable: true,
+            SSAO: {
+              enable: true,
+              radius: 2,
+              intensity: 1.5
+            }
+          },
+          light: {
+            main: {
+              intensity: 1,
+              shadow: true,
+              shadowQuality: 'high'
+            },
+            ambient: {
+              intensity: 0.
+            },
+            ambientCubemap: {
+              texture: 'http://webclient.smaryun.com:8200/Vector/echartsgl/shanghai/data.hdr',
+              exposure: 1,
+              diffuseIntensity: 0.5
+            }
+          }
+        },
+        series: [{
+          type: 'bar3D',
+          shading: 'realistic',
+          coordinateSystem: 'mapbox',
+          barSize: 0.2,
+          silent: true,
+          data: linedata[0]
+        }]
+      });
+      var mapbox = myChart.getModel().getComponent('mapbox3D').getMapbox();
+      mapbox.addControl(new MapboxLanguage(), 'top-right'); //中文支持
+      //注册鼠标移动事件
+      mapbox.on('mousemove', function (e) {
+        //经纬度坐标转web墨卡托
+        const earthRad = 6378137.0;
+        const x = e.lngLat.lng * Math.PI / 180 * earthRad;
+        const a = e.lngLat.lat * Math.PI / 180;
+        const y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
+        mousePosition.innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
+      });
+    });
+    window.addEventListener('keydown', function () {
+      myChart.dispatchAction({
+        type: 'lines3DToggleEffect',
+        seriesIndex: 0
+      });
+    });
+  </script>
+</body>
+
+</html>

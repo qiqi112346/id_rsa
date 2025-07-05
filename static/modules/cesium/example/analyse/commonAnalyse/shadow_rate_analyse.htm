@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>阴影率分析</title>
+    <!--加载不同版本Cesium库-->
+    <script src="http://webclient.smaryun.com/static/libs/loadCesium.js"></script>
+    <!--plugin脚本库-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-common.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"></script>
+    <script src="http://webclient.smaryun.com/static/assets/js/TDT-token.js"></script>
+    <!--示例中面板、按钮等，第三方layui的js库与css样式-->
+    <script src="http://webclient.smaryun.com/static/libs/cdn/layui/layui.js"></script>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/cdn/layui/css/layui.css"/>
+    <!--示例公共样式-->
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/style.css"/>
+    <link rel="stylesheet" href="http://webclient.smaryun.com/static/libs/css/analyse.css"/>
+    <script>
+      'use strict'
+      //定义三维视图的主要类
+      let map, sceneView, viewer, m3dLayer
+      //取得jquery对象
+      let $ = layui.$
+      //滑动条管理器对象
+      let slider = layui.slider
+      let multiplierSlider, spacingSlider, minHeightSlider, maxHeightSlider
+      //Cesium的鼠标事件
+      let handler = null
+      //绘制多边形的工具
+      let drawElement = null
+      //阴影率分析
+      let shadowRateAnalysis = null
+      //选择的日期
+      let selectDate = '2024-04-01'
+      let selectTime = ['06:00:00', '18:00:00']
+      //地图初始化函数
+      function init() {
+        //初始化三维球体
+        initViewer()
+        //创建切换Cesium版本的按钮
+        createChangeTab()
+        //添加一个模型
+        addModel()
+        //初始化UI
+        initUI()
+        //初始化阴影率分析类
+        addshadowRateAnalysis()
+      }
+
+      function initUI() {
+        layui.use(function () {
+          var laydate = layui.laydate
+          // 日期选择
+          laydate.render({
+            elem: '#select-date',
+            value: selectDate,
+            btns: ['now', 'confirm'],
+            done: function (value) {
+              selectDate = value
+              shadowRateAnalysis.startTime = Cesium.JulianDate.fromDate(
+                new Date(`${selectDate} ${selectTime[0]}`)
+              )
+              shadowRateAnalysis.endTime = Cesium.JulianDate.fromDate(
+                new Date(`${selectDate} ${selectTime[1]}`)
+              )
+            }
+          })
+          // 时间选择
+          laydate.render({
+            elem: '#select-time',
+            type: 'time',
+            range: true,
+            btns: ['confirm'],
+            value: selectTime.join(' - '),
+            done: function (value) {
+              selectTime = value.split(' - ')
+              shadowRateAnalysis.startTime = Cesium.JulianDate.fromDate(
+                new Date(`${selectDate} ${selectTime[0]}`)
+              )
+              shadowRateAnalysis.endTime = Cesium.JulianDate.fromDate(
+                new Date(`${selectDate} ${selectTime[1]}`)
+              )
+            }
+          })
+          // 时间流逝速度
+          multiplierSlider = slider.render({
+            elem: '#multiplier',
+            value: 14400,
+            min: 1.0,
+            max: 20000.0,
+            step: 1,
+            theme: 'rgb(102 147 251)',
+            input: true,
+            change: function (value) {
+              shadowRateAnalysis.multiplier = parseInt(value)
+            }
+          })
+          // 插值间隔
+          spacingSlider = slider.render({
+            elem: '#spacing',
+            value: 5,
+            min: 3.0,
+            max: 20.0,
+            step: 1,
+            theme: 'rgb(102 147 251)',
+            input: true,
+            change: function (value) {
+              shadowRateAnalysis.spacing = parseInt(value)
+            }
+          })
+          // 底部高度
+          minHeightSlider = slider.render({
+            elem: '#minHeight',
+            value: 10,
+            min: 1.0,
+            max: 10.0,
+            step: 1,
+            theme: 'rgb(102 147 251)',
+            input: true,
+            change: function (value) {
+              shadowRateAnalysis.minHeight = parseInt(value)
+            }
+          })
+          // 拉伸高度
+          maxHeightSlider = slider.render({
+            elem: '#maxHeight',
+            value: 50,
+            min: 10.0,
+            max: 100.0,
+            step: 1,
+            theme: 'rgb(102 147 251)',
+            input: true,
+            change: function (value) {
+              shadowRateAnalysis.maxHeight = parseInt(value)
+            }
+          })
+          // 切换配色方案
+          layui.form.on('switch(color)', function (data) {
+            if (data.elem.checked) {
+              shadowRateAnalysis.colorScheme = undefined
+            } else {
+              shadowRateAnalysis.colorScheme = [
+                { color: 'rgba(181, 15, 38,0.5)', rate: 0.15 },
+                { color: 'rgba(246,121, 73,0.5)', rate: 0.3 },
+                { color: 'rgba(254,219,135,0.5)', rate: 0.45 },
+                { color: 'rgba(141,206,103,0.5)', rate: 0.6 },
+                { color: 'rgba(227,243,153,0.5)', rate: 0.75 },
+                { color: 'rgba(9,121, 64,0.5)', rate: 0.9 }
+              ]
+            }
+          })
+          // 开启关闭软阴影
+          layui.form.on('switch(softShadows)', function (data) {
+            viewer.shadowMap.softShadows = data.elem.checked
+          })
+          // 显示隐藏地球
+          layui.form.on('switch(globe)', function (data) {
+            viewer.scene.globe.show = data.elem.checked
+            viewer.scene.skyAtmosphere.show = data.elem.checked
+          })
+          // 显示隐藏模型
+          layui.form.on('switch(model)', function (data) {
+            if (data.elem.checked) {
+              addModel()
+            } else {
+              map.remove(m3dLayer)
+            }
+          })
+        })
+      }
+      //初始化三维球体
+      function initViewer() {
+        //初始化图层管理容器
+        map = new zondy.Map()
+        //初始化地图视图对象
+        sceneView = new zondy.cesium.SceneView({
+          //视图id
+          viewId: 'mapgis-3d-viewer',
+          //图层管理容器
+          map: map
+        })
+        //获取视图对象
+        viewer = sceneView.getInnerView()
+        // 开启抗锯齿
+        viewer.scene.fxaa = true
+        viewer.scene.postProcessStages.fxaa.enabled = true
+        if (Cesium.FeatureDetection.supportsImageRenderingPixelated()) {
+          //判断是否支持图像渲染像素化处理
+          viewer.resolutionScale = window.devicePixelRatio
+        }
+      }
+
+      function addDrawElement() {
+        if (drawElement === null) {
+          drawElement = new zondy.cesium.DrawElement(viewer)
+          drawElement.setGroundPrimitiveType('BOTH')
+        }
+        drawElement.startDrawingPolygon({
+          callback: function (result) {
+            let points = result.positions
+            shadowRateAnalysis.pointsArray = points
+            shadowRateAnalysis.shadowRate()
+            drawElement.stopDrawing()
+            addMouseClickEvent()
+          }
+        })
+      }
+
+      let startTimeDate = new Date(`${selectDate} ${selectTime[0]}`)
+      let endTimeDate = new Date(`${selectDate} ${selectTime[1]}`)
+      //创建一个阴影率分析的对象
+      function addshadowRateAnalysis() {
+        // 参考API: http://webclient.smaryun.com/static/modules/cesium/api/cesium-mapgis/ShadowRateAnalysis.html
+        shadowRateAnalysis = new zondy.cesium.ShadowRateAnalysis(viewer, {
+          startTime: Cesium.JulianDate.fromDate(startTimeDate),
+          endTime: Cesium.JulianDate.fromDate(endTimeDate),
+          spacing: 5,
+          pointSize: 10,
+          minHeight: 10,
+          maxHeight: 50
+        })
+      }
+
+      //日照效果
+      function sunLightEffect() {
+        shadowRateAnalysis.sunLightEffect()
+      }
+      //添加拾取事件
+      function addMouseClickEvent() {
+        if (handler !== null) {
+          return
+        }
+        handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas)
+        handler.setInputAction(function (movement) {
+          let pickedFeature = viewer.scene.pick(movement.position)
+          if (
+            pickedFeature &&
+            pickedFeature.primitive &&
+            pickedFeature.primitive.constructor.name === 'PointPrimitive'
+          ) {
+            let id = pickedFeature.primitive.id
+            let position = pickedFeature.primitive.position
+            let index = pickedFeature.primitive.id.index
+            let information = pickedFeature.primitive.id.information
+            let shadowRatio = pickedFeature.primitive.id.shadowRatio
+            let timeInSun = pickedFeature.primitive.id.timeInSun
+            let timeInShadow = pickedFeature.primitive.id.timeInShadow
+            layer.msg(information)
+          }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
+      }
+
+      //添加模型
+      function addModel() {
+        m3dLayer = new zondy.layer.M3DModelCacheLayer({
+          // 服务基地址
+          url: 'http://webclient.smaryun.com:8200/3DData/ModelCache/M3D//1.0/ZondyFaceModels/ZondyFaceModels.mcj',
+          // 初始化参数
+          extensionOptions: {
+            // 开启自动跳转
+            autoReset: true
+          }
+        })
+        map.add(m3dLayer)
+      }
+
+      function removeAnalysisRes() {
+        shadowRateAnalysis.clear()
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+    <div class="layui-panel layui-panel-right">
+      <form class="layui-form" action="">
+        <div class="sample-main-panel">
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">日期选择</label>
+              <div class="layui-input-inline">
+                <input
+                  type="text"
+                  class="layui-input"
+                  id="select-date"
+                  placeholder="yyyy-MM-dd"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">时间范围</label>
+              <div class="layui-input-inline">
+                <input
+                  type="text"
+                  class="layui-input"
+                  id="select-time"
+                  placeholder=" - "
+                />
+              </div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="slideBarDiv">
+              时间流逝速度
+              <div id="multiplier" class="demo-slider"></div>
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="slideBarDiv">
+              插值间隔
+              <div id="spacing" class="demo-slider"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="slideBarDiv">
+              底部高度
+              <div id="minHeight" class="demo-slider"></div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="slideBarDiv">
+              拉伸高度
+              <div id="maxHeight" class="demo-slider"></div>
+            </div>
+          </div>
+          <div></div>
+          <div class="layui-form-item form-item1">
+            <div class="item1">
+              <label class="layui-form-label">配色方案</label>
+              <div class="layui-input-block">
+                <input
+                  type="checkbox"
+                  lay-filter="color"
+                  lay-skin="switch"
+                  checked
+                  lay-text="默认|自定义"
+                />
+              </div>
+            </div>
+            <div class="item1">
+              <label class="layui-form-label">软阴影</label>
+              <div class="layui-input-block">
+                <input
+                  type="checkbox"
+                  lay-filter="softShadows"
+                  lay-skin="switch"
+                  lay-text="开启|关闭"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="layui-form-item form-item2">
+            <div class="item2">
+              <label class="layui-form-label">模型</label>
+              <div class="layui-input-block">
+                <input
+                  type="checkbox"
+                  lay-filter="model"
+                  lay-skin="switch"
+                  checked
+                  lay-text="显示|隐藏"
+                />
+              </div>
+            </div>
+            <div class="item2">
+              <div class="layui-form-item">
+                <label class="layui-form-label">地球</label>
+                <div class="layui-input-block">
+                  <input
+                    type="checkbox"
+                    lay-filter="globe"
+                    lay-skin="switch"
+                    checked
+                    lay-text="显示|隐藏"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sample-button-panel">
+          <button
+            type="button"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="addDrawElement()"
+          >
+            阴影率分析
+          </button>
+          <button
+            type="button"
+            class="layui-btn layui-btn-sm layui-btn-normal pause-continue-btn"
+            onclick="sunLightEffect()"
+          >
+            日照效果
+          </button>
+          <button
+            type="button"
+            class="layui-btn layui-btn-sm layui-btn-normal"
+            onclick="removeAnalysisRes()"
+          >
+            移除分析结果
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <style type="text/css">
+      .layui-form-item {
+        line-height: 38px;
+      }
+      .layui-panel-right {
+        width: 350px;
+      }
+
+      .sample-main-panel {
+        height: auto;
+      }
+
+      .layui-form-label {
+        width: 100px;
+      }
+
+      .layui-input-block {
+        width: 195px;
+      }
+      .layui-slider {
+        top: -20px;
+        width: 120px;
+        left: 116px;
+      }
+
+      .layui-slider-input {
+        top: -34px;
+      }
+      .layui-form-item .layui-input-inline {
+        width: 204px;
+      }
+
+      .form-item1 {
+        display: flex;
+        justify-content: space-between;
+      }
+      .item1 {
+        height: 38px;
+        display: flex;
+      }
+
+      .item1 .layui-form-label {
+        width: 70px;
+        line-height: 24px;
+      }
+
+      .item1 .layui-input-block {
+        width: 70px;
+      }
+
+      .item1 .layui-form-switch {
+        margin-top: 0px;
+      }
+
+      .form-item2 {
+        display: flex;
+        justify-content: space-between;
+      }
+      .item2 {
+        height: 38px;
+        display: flex;
+      }
+
+      .item2 .layui-form-label {
+        width: 70px;
+        line-height: 24px;
+      }
+
+      .item2 .layui-input-block {
+        width: 70px;
+      }
+
+      .item2 .layui-form-switch {
+        margin-top: 0px;
+      }
+      .layui-laydate,
+      .layui-laydate .layui-laydate-list,
+      .layui-laydate-footer span {
+        background-color: #2c2c2c;
+      }
+
+      .layui-laydate-content th {
+        color: #777;
+      }
+
+      .layui-laydate-list li:hover {
+        color: #777;
+      }
+    </style>
+  </body>
+</html>
